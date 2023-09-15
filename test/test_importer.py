@@ -9,6 +9,8 @@ class ImporterTestCase(unittest.TestCase):
         importer.doImportFile('resource_dir/minimal.json')
         # self.assertEqual(1, len(ts.files))
 
+def test():
+    unittest.main()
 
 if __name__ == '__main__':
     unittest.main()
