@@ -186,8 +186,8 @@ sectionName: (CHAR_A | CHAR_B | CHAR_C | CHAR_D | CHAR_E | CHAR_F | CHAR_G | CHA
     CHAR_U | CHAR_V | CHAR_W | CHAR_X | CHAR_Y | CHAR_Z |
     CHAR_a | CHAR_b | CHAR_c | CHAR_d | CHAR_e | CHAR_f | CHAR_g | CHAR_h | CHAR_i | CHAR_j | CHAR_k | CHAR_l |
     CHAR_m | CHAR_n | CHAR_o | CHAR_p | CHAR_q | CHAR_r | CHAR_s | CHAR_t |
-    CHAR_u | CHAR_v | CHAR_w | CHAR_x | CHAR_y | CHAR_z |
-    number)+;
+    CHAR_u | CHAR_v | CHAR_w | CHAR_x | CHAR_y | CHAR_z | SPACE // space for things like *>1st ending
+    | number)+;
 
 transposition: TANDEM_TRANSPOSITION CHAR_d MINUS? number CHAR_c MINUS? number;
 
@@ -216,9 +216,25 @@ keySignaturePitchClass: pitchClass;
 keySignatureCancel:  CHAR_X;
 
 keyMode: (minorKey | majorKey);
-key: ASTERISK  keyMode keySignatureCancel? COLON;
+key: ASTERISK  keyMode keySignatureCancel? COLON modal?;
 minorKey: lowerCasePitch accidental?;
 majorKey: upperCasePitch accidental?;
+modal: dorian | phrygian | lydian | mixolydian | aeolian | ionian | locrian;
+
+locrian: CHAR_l CHAR_o CHAR_c; //it could be used with literals, but this way we avoid possible ambiguities in bottom-up parsing
+
+ionian: CHAR_i CHAR_o CHAR_n;
+
+aeolian: CHAR_a CHAR_e CHAR_o;
+
+mixolydian: CHAR_m CHAR_i CHAR_x;
+
+lydian: CHAR_l CHAR_y CHAR_d;
+
+phrygian: CHAR_p CHAR_h CHAR_r;
+
+dorian: CHAR_d CHAR_o CHAR_r;
+
 
 timeSignature: TANDEM_TIMESIGNATURE  (standardTimeSignature | additiveTimeSignature | mixedTimeSignature | alternatingTimeSignature | interchangingTimeSignature) ('%' '2')?; //TODO %2
 numerator: number;
@@ -242,7 +258,7 @@ nullInterpretation: ASTERISK; // a null interpretation (placeholder) will have j
 
 //barline: EQUAL+ (NUMBER)? (COLON? barlineWidth? partialBarLine? COLON?) ; // COLON = repetition mark
 barline: EQUAL EQUAL? // sometimes found == to denote system break
-    number?
+    number? (CHAR_a? CHAR_b?) //TODO repetitions?
     MINUS? // hidden
     barLineType?
     fermata?
@@ -356,13 +372,16 @@ noteDecoration:
     | barLineCrossedNoteStart
     | beam
     | editorialIntervention
-    | fermata  
+    | fermata
+    | footnote
     | glissando   
     | graceNote
     | ligatureTie
     | mordent
+    | augmentationDot // sometimes found TODO Verlo con la duración
+    | phrase
     | sforzando // sforzando should be in a dynanics spine, but it is sometimes found here
-    | slurStart staffChange?
+    | slurStart
     | slurEnd  
     | staffChange 
     | stem
@@ -376,7 +395,10 @@ noteDecoration:
     | CHAR_O // sometimes found - generic ornament
     | CHAR_l // sometimes found - ???
     | CHAR_V // sometimes found - ???
-    | CHAR_x CHAR_x?; // sometimes found - ???
+    | CHAR_x CHAR_x? // sometimes found - ???
+    ;
+
+phrase: LEFT_CURLY_BRACES | RIGHT_CURLY_BRACES; // see https://www.humdrum.org/Humdrum/guide03.html
 
 
 diatonicPitchAndOctave:
