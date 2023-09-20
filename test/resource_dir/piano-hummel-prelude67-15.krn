@@ -1,0 +1,237 @@
+!!!COM: Hummel, Johann Nepomuk
+!!!CDT: 1778/11/14/-1837/10/17/
+!!!OTL: Prelude in D-flat Major, Op. 67, No. 15
+!!!OPS: Op. 67
+!!!ONM: No. 15
+!!!OMD: Allegro moderato
+!!!ODT: 1815///
+!!!AIN: piano
+**kern	**kern	**dynam
+*staff2	*staff1	*staff1/2
+*Ipiano	*Ipiano	*
+*clefF4	*clefG2	*
+*k[b-e-a-d-g-]	*k[b-e-a-d-g-]	*
+*D-:	*D-:	*
+*met(c)	*met(c)	*
+*M4/4	*M4/4	*
+*MM116	*MM116	*
+=1-	=1-	=1-
+*	*^	*
+*ped	*	*	*
+1DD-: 1FF: 1AA-: 1D-:	16r	16r	f
+.	(16d-LL	[8.d-	.
+.	16f	.	.
+.	16a-JJ	.	.
+.	16b-LL	2.d-]	.
+.	16f	.	.
+.	16a-	.	.
+.	16fJJ	.	.
+.	16b-LL	.	.
+.	16f	.	.
+.	16a-	.	.
+.	16fJJ	.	.
+.	16b-LL	.	.
+.	16f	.	.
+.	16a-	.	.
+.	16fJJ)	.	.
+=2	=2	=2	=2
+*ped	*	*	*
+1FF: 1AA-: 1D-: 1F:	16r	16r	.
+.	(16d-LL	[8.d-	.
+.	16a-	.	.
+.	16dd-JJ	.	.
+.	16ee-LL	2.d-]	.
+.	16a-	.	.
+.	16dd-	.	.
+.	16a-JJ	.	.
+.	16ee-LL	.	.
+.	16a-	.	.
+.	16dd-	.	.
+.	16a-JJ	.	.
+.	16ee-LL	.	.
+.	16a-	.	.
+.	16dd-	.	.
+.	16a-JJ)	.	.
+=3	=3	=3	=3
+*ped	*	*	*
+1EE-: 1AA-: 1C: 1E-:	16r	16r	.
+.	(16g-LL	[8.g-	.
+.	16a-	.	.
+.	16ccJJ	.	.
+.	16dd-LL	2.g-]	.
+.	16a-	.	.
+.	16cc	.	.
+.	16a-JJ	.	.
+.	16dd-LL	.	.
+.	16a-	.	.
+.	16cc	.	.
+.	16a-JJ	.	.
+.	16dd-LL	.	.
+.	16a-	.	.
+.	16cc	.	.
+.	16a-JJ)	.	.
+*	*v	*v	*
+=4	=4	=4
+*	*^	*
+*ped	*	*	*
+1GG-: 1AA-: 1E-: 1G-:	16r	16r	.
+.	(16a-LL	[8.a-	.
+.	16cc	.	.
+.	16ee-JJ	.	.
+.	16ffLL	2.a-]	.
+.	16cc	.	.
+.	16ee-	.	.
+.	16ccJJ	.	.
+.	16ffLL	.	.
+.	16cc	.	.
+.	16ee-	.	.
+.	16ccJJ	.	.
+.	16ffLL	.	.
+.	16cc	.	.
+.	16ee-	.	.
+.	16ccJJ)	.	.
+=5	=5	=5	=5
+*ped	*	*	*
+2FF: 2AA-: 2D-: 2F:	16r	16r	.
+!	!	!LO:N:vis=4.	!
+.	(16d-LL	8.d-	.
+!	!LO:TX:b:i:t=espress.	!	!
+.	16a-	.	.
+.	16dd-JJ	.	.
+.	16ee-LL	8ee-L	.
+.	16a-	.	.
+.	16dd-	8dd-J	.
+.	16a-JJ)	.	.
+!!LO:PED:vg=1
+*ped	*	*	*
+2GG-: 2BB-: 2D-: 2G-:	16r	16r	.
+!	!	!LO:N:vis=4.	!
+.	(16d-LL	8.d-	.
+.	16g-	.	.
+.	16b-JJ	.	.
+!	!	!	!LO:HP:vg=none
+.	16ccLL	8ccL	>
+.	16g-	.	.
+.	16b-	8b-J	.
+.	16g-JJ)	.	]
+=6	=6	=6	=6
+!!LO:PED:vg=1
+*ped	*	*	*
+2AA-: 2D-: 2F:	16r	16r	.
+!	!	!LO:N:vis=4.	!
+.	(16d-LL	8.d-	>
+.	16f	.	.
+.	16a-JJ	.	.
+.	16b-LL	8b-L	.
+.	16f	.	.
+.	16a-	8a-J	.
+.	16fJJ)	.	.
+!!LO:PED:vg=1
+*ped	*	*	*
+2AAn: 2C: 2E-:	16r	16r	.
+!	!	!LO:N:vis=4.	!
+.	(16cLL	8.c	.
+.	16e-	.	.
+.	16g-JJ	.	.
+.	16a-LL	8a-L	.
+.	16e-	.	.
+.	16g-	8g-J	.
+.	16e-JJ)	.	.
+=7	=7	=7	=7
+!!LO:PED:vg=1
+*ped	*	*	*
+2BB-: 2D-:	16r	16r	.
+!	!	!LO:N:vis=4.	!
+.	(16B-LL	8.B-	.
+.	16d-	.	.
+.	16fJJ	.	.
+.	16g-LL	8g-L	.
+.	16d-	.	.
+.	16f	8fJ	.
+.	16d-JJ)	.	.
+!!LO:PED:vg=2
+*ped	*	*	*
+*^	*	*	*
+*^	*	*	*	*
+2GGG-:\ 2GG-:\	16ryy	16ryy	16r	2ryy	] p
+!	!	!LO:N:vis=4.	!	!	!
+.	(>16G-LL/	8.G-	8.ryy	.	.
+.	16B-	.	.	.	.
+.	16e-JJ	.	.	.	.
+.	16fLL/	8fL	4ryy	.	.
+.	16B-	.	.	.	.
+.	16e-	8e-J	.	.	.
+.	16B-JJ)	.	.	.	.
+*	*	*	*v	*v	*
+=8	=8	=8	=8	=8
+!!LO:PED:vg=none
+*ped	*	*	*	*
+!	!	!	!	!LO:DY:vg=20
+2GGGn:\^< 2GGn:	16ryy	16rB	1ryy	rfz
+!	!	!LO:N:vis=4.	!	!
+.	(>16F-LL/	8.F-	.	.
+.	16B-	.	.	.
+.	16d-JJ	.	.	.
+.	16e-LL/	8e-L	.	.
+.	16B-	.	.	.
+.	16d-	8d-J	.	.
+.	16B-JJ)	.	.	.
+!!LO:PED:vg=2
+*ped	*	*	*	*
+!	!	!	!	!LO:DY:vg=20
+2AAA-:\ 2AA-:\	16ryy	16rB	.	p
+!	!	!LO:N:vis=4.	!	!
+.	(>16E-LL/	8.E-	.	.
+.	16G-	.	.	.
+.	16cJJ	.	.	.
+.	16d-LL/	8d-L	.	.
+.	16G-	.	.	.
+.	16c	8cJ	.	.
+.	16G-JJ)	.	.	.
+*v	*v	*v	*	*
+=9	=9	=9
+!M5/4	!M5/4	!M5/4
+*^	*	*
+!!LO:PED:vg=3
+*ped	*	*	*
+!! Removing slur on this note since verovio does not display nicely
+!! [<4DD-\	(>16DD-LL>	1ryy	pp
+!	!	!	!LO:DY:vg=20
+[<4DD-\	16DD-LL>	1ryy	pp
+.	[[16AA-	.	.
+.	[[16D-	.	.
+.	16FJJ	.	.
+16A-LL	2DD-] 2AA-]] 2D-]]	.	.
+16d-	.	.	.
+!!LO:PED:vg=3
+*Xped	*	*	*
+16f	.	.	.
+16cJJ	.	.	.
+16d-LL	.	.	.
+16Gn	.	.	.
+16A-	.	.	.
+16En	.	.	.
+16F	2ryy	.	.
+16C	.	.	.
+16D-	.	.	.
+16GGn	.	.	.
+16AA-	.	4ryy	.
+16EEn	.	.	.
+16FFJJ	.	.	.
+16CC\	.	.	.
+*v	*v	*	*
+=10	=10	=10
+!M4/4	!M4/4	!M4/4
+!! Removing slur on this note since verovio does not display nicely
+!!1DD-)	1r	.
+1DD-	1r	.
+==	==	==
+*-	*-	*-
+!!!ENC: Craig Stuart Sapp
+!!!EED: 2008/06/13/
+!!!EEV: 2018/12/04/
+!!!YEC: Copyright 2008 by Craig Stuart Sapp
+!!!YEN: United States of America
+!!!RDF**kern: > = above
+!!!RDF**kern: < = below
+!!!RDF**kern: N = linked

@@ -4,112 +4,29 @@
 lexer grammar kernLexer;
 
 @lexer::header {
-    import es.ua.dlsi.grfia.moosicae.io.kern.grammar.KernSpines;
-    import es.ua.dlsi.grfia.moosicae.io.kern.grammar.EKernHeaders;
-    import es.ua.dlsi.grfia.moosicae.IMException;
 }
 
 
 //Non context free grammar needs semantic predicates to handle text and harm spines
 @lexer::members {
-    int currentSpine = -1;
-    boolean debugLexer = false;
-    boolean headersDefined = false;
-    int lexerLine = 1;
-    boolean relaxSpineRestrictions;
-    KernSpines kernSpines = new KernSpines(false);
-
-    public void setDebug(boolean debug) {
-        this.debugLexer = debug;
-    }
-
-    public void setRelaxSpineRestrictions(boolean relaxSpineRestrictions) {
-        this.relaxSpineRestrictions = relaxSpineRestrictions;
-        kernSpines.setRelaxSpineRestrictions(relaxSpineRestrictions);
-    }
-
-    public boolean inTextSpine(String rule) {
-        if (debugLexer) {
-            System.err.println("Line " + lexerLine + ", inTextSpine: " + rule + ", currentSpine = " + currentSpine + ", spines=" + kernSpines);
-        }
-        try {
-            EKernHeaders spineType = kernSpines.getSpineType(currentSpine);
-            return spineType != EKernHeaders.kern && spineType != EKernHeaders.mens && spineType != EKernHeaders.dynam;
-        } catch (IMException e) {
-            System.err.println("Line #" + this.currentSpine + ": " + e.getMessage());
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void incSpine(String rule) {
-        if (debugLexer) {
-            System.err.println("Line " + lexerLine + ", incSpine: " + rule + ", currentSpine = " + currentSpine+ ", spines=" + kernSpines);
-        }
-
-        currentSpine++;
-        if (headersDefined) {
-            if (inTextSpine(rule)) {
-                changeMode(FREE_TEXT);
-            } else {
-                changeMode(0);
-            }
-        }
-    }
-
-    private void changeMode(int modeNumber) {
-        if (debugLexer) {
-            System.err.println("Line " + lexerLine + ", Setting mode " + modeNumber);
-        }
-        mode(modeNumber);
-    }
-
-    private void resetMode(String rule) {
-        if (debugLexer) {
-            System.err.println("Line " + lexerLine + ", resetMode: " + rule + ", currentSpine = " + currentSpine+ ", spines=" + kernSpines);
-        }
-
-        changeMode(0);
-    }
-
-    private void onEOL(String rule) {
-        if (debugLexer) {
-            System.err.println("Line " + lexerLine + ", resetSpineAndMode: " + rule + ", currentSpine = " + currentSpine+ ", spines=" + kernSpines);
-        }
-
-         try {
-            kernSpines.recordEnd();
-        } catch (IMException e) {
-            System.err.println("Line #" + lexerLine + ": " + e.getMessage());
-       	    throw new RuntimeException(e);
-       	}
-        resetMode(rule);
-        currentSpine=-1;
-
-        // after EOL, check whether there are spines defined
-        headersDefined = kernSpines.getSpineCount() > 0;
-
-        incSpine(rule);
-        lexerLine ++;
-    }
-
 }
 
 SPACE: ' ';
-TAB: '\t' {incSpine("tab");}; // incSpine changes mode depending on the spine type
-EOL : '\r'?'\n' {onEOL("eol");};
+TAB: '\t'; // incSpine changes mode depending on the spine type
+EOL : '\r'?'\n';
 
 
 fragment ASTERISK_FRAGMENT : '*';
 EXCLAMATION : '!';
 
-MENS: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'mens' {kernSpines.addSpine("**mens");};
-KERN: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'kern' {kernSpines.addSpine("**kern");};
-TEXT: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'text' {kernSpines.addSpine("**text");};
-HARM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'harm' {kernSpines.addSpine("**harm");};
-MXHM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'mxhm' {kernSpines.addSpine("**mxhm");};
-ROOT: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'root' {kernSpines.addSpine("**root");};
-DYN: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'dyn' {kernSpines.addSpine("**dyn");};
-DYNAM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'dynam'{kernSpines.addSpine("**dynam");};
+MENS: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'mens';
+KERN: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'kern';
+TEXT: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'text';
+HARM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'harm';
+MXHM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'mxhm';
+ROOT: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'root';
+DYN: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'dyn';
+DYNAM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'dynam';
 
 TANDEM_LIG_START: ASTERISK_FRAGMENT 'lig';
 TANDEM_LIG_END: ASTERISK_FRAGMENT 'Xlig';
@@ -220,11 +137,11 @@ DIGIT_7: '7';
 DIGIT_8: '8';
 DIGIT_9: '9';
 
-SPINE_TERMINATOR: ASTERISK_FRAGMENT MINUS {kernSpines.addOperator("*-");};
-SPINE_ADD: ASTERISK_FRAGMENT PLUS {kernSpines.addOperator("*+");};
-SPINE_SPLIT: ASTERISK_FRAGMENT CIRCUMFLEX {kernSpines.addOperator("*^");};
-SPINE_JOIN: ASTERISK_FRAGMENT CHAR_v {kernSpines.addOperator("*v");};
-ASTERISK: ASTERISK_FRAGMENT {kernSpines.addOperator("*");};
+SPINE_TERMINATOR: ASTERISK_FRAGMENT MINUS;
+SPINE_ADD: ASTERISK_FRAGMENT PLUS;
+SPINE_SPLIT: ASTERISK_FRAGMENT CIRCUMFLEX;
+SPINE_JOIN: ASTERISK_FRAGMENT CHAR_v;
+ASTERISK: ASTERISK_FRAGMENT;
 
 QUOTATION_MARK: '"';
 APOSTROPHE: '\'';
@@ -281,19 +198,7 @@ ANY: . ;
 
 
 mode FREE_TEXT;
-    FIELD_TEXT: ~[\t\n\r]+ {
-            switch (this.getText()) {
-                case "*":
-                case "*-":
-                case "*^":
-                case "*v":
-                case "*+":
-                    kernSpines.addOperator(this.getText());
-                    break;
-                // else nothing
-            }
-            resetMode("free_text mode field text");
-        }; // must reset mode here to let lexer recognize the tab or newline
+    FIELD_TEXT: ~[\t\n\r]+; // must reset mode here to let lexer recognize the tab or newline
 //FREE_TEXT_TAB: '\t' {incSpine("free_text mode tab");}; // incSpine changes mode depending on the spine type
 //FREE_TEXT_EOL : '\r'?'\n' {onEOL("free_text mode eol");};
 

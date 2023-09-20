@@ -1,5 +1,6 @@
 /*
 @author: David Rizo (drizo@dlsi.ua.es) Oct, 2020. Patch on Oct, 2022
+Modified for conersion to bekern in Python on September, 15th 2023
 */
 parser grammar kernParser;
 options { tokenVocab=kernLexer; } // use tokens from kernLexer.g4
@@ -8,10 +9,6 @@ options { tokenVocab=kernLexer; } // use tokens from kernLexer.g4
 }
 
 @rulecatch {
-    // ANTLR does not generate its normal rule try/catch
-    catch(RecognitionException e) {
-        throw e;
-    }
 }
 //TODO ff lo coge en dynam como fortísimo
 // The rule .*? is used as a non-greedy lexer rule (see the ? is used to set the non greedy mode (https://github.com/antlr/antlr4/blob/master/doc/wildcard.md)
@@ -19,21 +16,22 @@ options { tokenVocab=kernLexer; } // use tokens from kernLexer.g4
 //**kern	**kern	**dynam
 //*staff2	*staff1	*staff1/2 - véase sonata07-1.krn de humdrum-data
 
-// start rule - in this version of **skm we are forcing each column starts with a *part after the **smens or **kern
+// start rule
 start: (METACOMMENT EOL)* header (EOL (record | METACOMMENT))* EOL* EOF;
 
+/* ------ HEADER -------*/
 header: headerField (TAB headerField)*;
-
-record: fields | spineOperations;
 
 headerField: MENS | KERN | TEXT | HARM | MXHM | ROOT | DYN | DYNAM;
 
-//tab: TAB | FREE_TEXT_TAB;
-
-// field can be null to allow the parsing of the OMR output - it will be checked in the semantic code
-fields: field? (TAB field?)*;
+/* ----- CONTENT  ------ */
+record: spineOperations | fields;
 
 spineOperations:  spineOperation (TAB | spineOperation)*;
+
+//tab: TAB | FREE_TEXT_TAB;
+// field can be null to allow the parsing of the OMR output - it will be checked in the semantic code
+fields: field? (TAB field?)*;
 
 field
     :
@@ -44,28 +42,15 @@ field
     placeHolder
     |
     dynamics
-    // |
-    //spineOperation // used for invalid OMR output - David - no vale porque se solapa con spine operations
+    |
+    nonVisualTandemInterpretation
     ;
 
-
-fieldComment:
-    LAYOUT
-    | FIELDCOMMENT
-    | EXCLAMATION; // empty comment
-
-associatedIDS: number (COMMA associatedIDS)*; // used for agnostic IDS in semantic mens
-
-placeHolder: DOT;
-
 graphicalToken:
-    (tandemInterpretation
-    |
-    part
+    (
+    visualTandemInterpretation
     |
     barline
-    |
-    octaveShift
     |
     lyricsText
     |
@@ -75,19 +60,29 @@ graphicalToken:
     |
     chord
     )
-     (AT associatedIDS)?
+     (AT associatedIDS)? // skm
     ;
 
-octaveShift: OCTAVE_SHIFT;
+rest: slurStart? duration CHAR_r CHAR_r?  staffChange? restPosition? fermata? editorialIntervention? slurEnd? // slur end sometimes found
+    CHAR_j*; // sometimes found - user assignable?;
 
+// we allow the chordSpace to be null for allowing invalid outputs of the OMR
+chord: note (chordSpace note)+;
 
-tandemInterpretation:
-    visualTandemInterpretation
-    |
-    nonVisualTandemInterpretation;
+// The correct orderEntities of notes is: beforeNote duration pitch staffChange afterNote, however, if changes in some encodings - as it does not work, we use noteDecorations? for any decoration in any position
+note:
+    noteDecoration* // TODO Regla semantica (boolean) para que no se repitan
+    duration? // grace notes can be specified without durations
+    noteDecoration*
+    pitch
+    noteDecoration*;
+    // TODO in aferNote staffChange? // it must be placed immediately after the pitch+accidental tokens. This is because they also can modify the beam, as well as articulation, slur and tie positions
+
 
 // those ones that are not engraved
 nonVisualTandemInterpretation:
+    part
+    |
     instrument
     |
     transposition
@@ -99,14 +94,6 @@ nonVisualTandemInterpretation:
     pianoHand
     ;
 
-pianoHand: TANDEM_LEFT_HAND | TANDEM_RIGHT_HAND;
-
-tandemTuplet: TANDEM_TUPLET_START | TANDEM_TUPLET_END;
-
-tandemCue: TANDEM_CUE_START | TANDEM_CUE_END;
-
-tandemTremolo: TANDEM_TREMOLO_START | TANDEM_TREMOLO_END;
-
 // those ones that are engraved
 visualTandemInterpretation:
     TANDEM_LIG_START
@@ -116,6 +103,8 @@ visualTandemInterpretation:
     TANDEM_COL_START
     |
     TANDEM_COL_END
+    |
+    octaveShift
     |
     dynamics_position // TODO: what is it for?
     |
@@ -149,6 +138,30 @@ visualTandemInterpretation:
     |
     TANDEM_TSTART | TANDEM_TEND // sometimes found
     ;
+
+
+/* ----- LEAF RULES ----- */
+
+fieldComment:
+    LAYOUT
+    | FIELDCOMMENT
+    | EXCLAMATION; // empty comment
+
+associatedIDS: number (COMMA associatedIDS)*; // used for agnostic IDS in semantic mens
+
+placeHolder: DOT;
+
+
+octaveShift: OCTAVE_SHIFT;
+
+pianoHand: TANDEM_LEFT_HAND | TANDEM_RIGHT_HAND;
+
+tandemTuplet: TANDEM_TUPLET_START | TANDEM_TUPLET_END;
+
+tandemCue: TANDEM_CUE_START | TANDEM_CUE_END;
+
+tandemTremolo: TANDEM_TREMOLO_START | TANDEM_TREMOLO_END;
+
 
 
 rscale: TANDEM_RSCALE COLON number (SLASH number)?;
@@ -273,9 +286,6 @@ spineJoin: SPINE_JOIN;
 spinePlaceholder: ASTERISK | FIELD_TEXT; // when no operation is done in this spine but there are operations on other spines
 
 //rest: duration CHAR_r CHAR_r? fermata? restLinePosition?;
-rest: slurStart? duration CHAR_r CHAR_r?  staffChange? restPosition? fermata? editorialIntervention? slurEnd? // slur end sometimes found
-    CHAR_j*; // sometimes found - user assignable?;
-
 restPosition: diatonicPitchAndOctave;
 //restLinePosition: UNDERSCORE clefLine;
 
@@ -305,41 +315,29 @@ arationDot: COLON;
 
 custos: TANDEM_CUSTOS pitch;
 pitch: diatonicPitchAndOctave
-    graceNote? // sometimes found here
-    appoggiatura? // sometimes found here
-    staffChange? // sometimes found here
-    accent? // sometimes found here
-    fermata? // sometimes found here
-    trill? // sometimes found here
+    graceNote? 
+    appoggiatura? 
+    staffChange? 
+    accent? 
+    fermata? 
+    trill? 
     alteration?
     CHAR_x?; // sometimes found
 alteration: accidental alterationDisplay?;
 
-// The correct orderEntities of notes is: beforeNote duration pitch staffChange afterNote, however, if changes in some encodings
-
-note:
-    beforeNote
-    duration? // grace notes can be specified without durations
-    // in beforeNote staffChange? // not correct here, but sometimes found
-    // in before note slurStart? // sometimes found here
-    // in beforeNote stem? // sometimes found here
-    // in before note ligatureTie? // sometimes found here
-    pitch
-    // in aferNote staffChange? // it must be placed immediately after the pitch+accidental tokens. This is because they also can modify the beam, as well as articulation, slur and tie positions
-    afterNote;
 
 staffChange: ANGLE_BRACKET_OPEN | ANGLE_BRACKET_CLOSE;
 
-// we allow the chordSpace to be null for allowing invalid outputs of the OMR
-chord: note (chordSpace note)+;
 
 chordSpace: SPACE?; // required for ekern translation
 
+//TODO
 // it may appear after or before the note
 // sometimes the duration is found before or after the note
 graceNote:
     duration? CHAR_q CHAR_q? duration?;
 
+//TODO
 // it may appear after or before the note
 // sometimes the duration is found before or after the note
 appoggiatura:
@@ -348,45 +346,37 @@ appoggiatura:
 // The appoggiatura note itself is designated by the upper-case letter P, whereas the subsequent note (whose notated duration has been shortened) is designated by the lower-case letter p
 appoggiaturaMode: CHAR_p | CHAR_P;
 
-beforeNote:  //TODO Regla semantica (boolean) para que no se repitan
-    (
-    accent // sometimes found here
-    | beam // sometimes found here
-    | fermata  // sometimes found here
-    | slurStart staffChange?
-    | ligatureTie
-    | slurEnd  // sometimes found here
-    | glissando   // sometimes found here
-    | barLineCrossedNoteStart
-    | graceNote
-    | appoggiatura
-    | stem
-    | staffChange // sometimes found here
-    | articulation // sometimes found here
-    | CHAR_N // sometimes found - user assignable?
-    | CHAR_j // sometimes found - user assignable?
-    | CHAR_X // sometimes found - it does nothing
-    )*
-    ;
-
 ligatureTie:
     (ligatureTieStart | ligatureTieEnd | tieContinue) staffChange?;
 
-afterNote:
-	     (staffChange | slurEnd | stem| ligatureTie | beam | fermata | barLineCrossedNoteEnd | mordent | turn | trill | articulation | glissando | editorialIntervention | userAssignable |
-	     graceNote duration? // sometimes we've found the duration of the graceNote after it
-	     appoggiatura duration? // sometimes we've found the duration of the graceNote after it
-	     |
-	     sforzando // sforzando should be in a dynanics spine, but it is sometimes found here
-	     | staffChange // it should never be here, but we've found in some files
-	     | CHAR_N // sometimes found - user assignable?
-	     | CHAR_j // sometimes found - user assignable?
-	     | CHAR_Z // sometimes found - user assignable?
-	     | CHAR_O // sometimes found - generic ornament
-	     | CHAR_l // sometimes found - ???
-	     | CHAR_V // sometimes found - ???
-	     | CHAR_x CHAR_x? // sometimes found - ???
-	     )*;
+noteDecoration:
+    accent 
+    | appoggiatura
+    | articulation 
+    | barLineCrossedNoteStart
+    | beam
+    | editorialIntervention
+    | fermata  
+    | glissando   
+    | graceNote
+    | ligatureTie
+    | mordent
+    | sforzando // sforzando should be in a dynanics spine, but it is sometimes found here
+    | slurStart staffChange?
+    | slurEnd  
+    | staffChange 
+    | stem
+    | turn
+    | trill
+    | userAssignable
+    | CHAR_N // sometimes found - user assignable?
+    | CHAR_j // sometimes found - user assignable?
+    | CHAR_X // sometimes found - it does nothing
+    | CHAR_Z // sometimes found - user assignable?
+    | CHAR_O // sometimes found - generic ornament
+    | CHAR_l // sometimes found - ???
+    | CHAR_V // sometimes found - ???
+    | CHAR_x CHAR_x?; // sometimes found - ???
 
 
 diatonicPitchAndOctave:
@@ -508,7 +498,7 @@ dynamics_symbol:
     crescendoBegin | crescendoEnd | diminuendoBegin | diminuendoEnd | crescendoContinue | diminuendoContinue |
     piano | pianissimo | triplePiano | quadruplePiano | forte |  fortissimo | tripleForte | quadrupleForte |
     mezzoPiano | mezzoForte | sforzando | fortePiano | footnote | rinforzando)
-    ((CHAR_y CHAR_y?) | CHAR_X)?; // sometimes found here
+    ((CHAR_y CHAR_y?) | CHAR_X)?; 
 
 footnote: QUESTION_MARK+; //TODO -- ???
 
