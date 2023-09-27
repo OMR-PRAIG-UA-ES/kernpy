@@ -63,11 +63,20 @@ graphicalToken:
      (AT associatedIDS)? // skm
     ;
 
-rest: slurStart? duration CHAR_r CHAR_r?  staffChange? restPosition? fermata? editorialIntervention? slurEnd? // slur end sometimes found
-    CHAR_j*; // sometimes found - user assignable?;
+rest: restDecoration* duration? CHAR_r CHAR_r? // duration not used in some grace notes (rests)
+    restDecoration*; // sometimes found - user assignable?;
 
-// we allow the chordSpace to be null for allowing invalid outputs of the OMR
-chord: note (chordSpace note)+;
+restDecoration: (slurStart | graceNote | staffChange | restPosition | fermata | editorialIntervention | slurEnd | // slur sometimes found
+    staccato | // staccato found in a rest in beethoven/quartets/quartet14-5.krn
+    phrase |
+    CHAR_j);
+
+// We allow the chordSpace to be null for allowing invalid outputs of the OMR
+// Rests are allowed to be in chords for cases such as bach/wtc/wtc1f06.krn:
+// !! Four-voice material to the end:
+//2.D	8r 8r	8r 8r	2.dd
+chord: (note | rest) (chordSpace (note | rest))+;
+
 
 // The correct orderEntities of notes is: beforeNote duration pitch staffChange afterNote, however, if changes in some encodings - as it does not work, we use noteDecorations? for any decoration in any position
 note:
@@ -81,6 +90,14 @@ note:
 
 // those ones that are not engraved
 nonVisualTandemInterpretation:
+    timebase
+    |
+    solo
+    |
+    accomp
+    |
+    strophe
+    |
     part
     |
     instrument
@@ -92,7 +109,10 @@ nonVisualTandemInterpretation:
     sections
     |
     pianoHand
+    |
+    ossia //TODO bach/wtc/wtc1f01.krn
     ;
+
 
 // those ones that are engraved
 visualTandemInterpretation:
@@ -162,6 +182,7 @@ tandemCue: TANDEM_CUE_START | TANDEM_CUE_END;
 
 tandemTremolo: TANDEM_TREMOLO_START | TANDEM_TREMOLO_END;
 
+ossia: TANDEM_SIC | TANDEM_OSSIA | TANDEM_FIN | TANDEM_SMINUS;
 
 
 rscale: TANDEM_RSCALE COLON number (SLASH number)?;
@@ -199,6 +220,11 @@ upperCasePitch: (CHAR_A | CHAR_B | CHAR_C | CHAR_D | CHAR_E | CHAR_F | CHAR_G);
 
 pitchClass: lowerCasePitch accidental;
 
+accomp: TANDEM_ACCOMP; // found in bach/brandenburg/bwv1050c.krn
+solo: TANDEM_SOLO;
+strophe: TANDEM_STROPHE;
+
+timebase: TANDEM_TIMEBASE number;
 part: TANDEM_PART  number;
 
 staff: TANDEM_STAFF
@@ -215,8 +241,9 @@ keySignature: TANDEM_KEY_SIGNATURE  LEFT_BRACKET keySignaturePitchClass* RIGHT_B
 keySignaturePitchClass: pitchClass;
 keySignatureCancel:  CHAR_X;
 
-keyMode: (minorKey | majorKey);
-key: ASTERISK  keyMode keySignatureCancel? COLON modal?;
+keyMode: (minorKey | majorKey | QUESTION_MARK); // *?: found in corelli/op1/op01n01c.krn
+key: ASTERISK singleKey (SLASH singleKey)?; // found *C/a: in haydn/quartets/op54n2-03.krn
+singleKey: keyMode keySignatureCancel? ((COLON modal?) | number?); // sometimes we've found a1, a3 (e.g. bwv1046g.krn)
 minorKey: lowerCasePitch accidental?;
 majorKey: upperCasePitch accidental?;
 modal: dorian | phrygian | lydian | mixolydian | aeolian | ionian | locrian;
@@ -263,7 +290,8 @@ barline: EQUAL EQUAL? // sometimes found == to denote system break
     barLineType?
     fermata?
     CHAR_j? // sometimes found
-    DOT?; // sometimes found
+    DOT? // sometimes found
+    footnote?; // sometimes found -- TODO should it be after any symbol?
 
 //barlineWidth: (EXCLAMATION? PIPE EXCLAMATION?);
 
@@ -272,11 +300,15 @@ barLineType:
     |
     PIPE EXCLAMATION COLON? // sometimes found
     |
+    PIPE COLON // left-repeat sometimes found
+    |
     EXCLAMATION PIPE COLON // left-repeat
     |
     EQUAL? COLON PIPE EXCLAMATION // right-repeat -- sometimes we've found the structure ==:|!
     |
     COLON PIPE EXCLAMATION? PIPE COLON // left-right repeat
+    |
+    COLON EXCLAMATION EXCLAMATION COLON
     |
     EQUAL // end bar line (the first equal is encoded in the skmBarLine rule)
     ;
@@ -519,7 +551,8 @@ dynamics_symbol:
     subito? (
     crescendoBegin | crescendoEnd | diminuendoBegin | diminuendoEnd | crescendoContinue | diminuendoContinue |
     piano | pianissimo | triplePiano | quadruplePiano | forte |  fortissimo | tripleForte | quadrupleForte |
-    mezzoPiano | mezzoForte | sforzando | fortePiano | footnote | rinforzando)
+    mezzoPiano | mezzoForte | sforzando | fortePiano | footnote | rinforzando |
+    (CHAR_v | CHAR_X | CHAR_p | CHAR_m)) // ¿all these appear in beethoven/quartets/quartet07-4.krn - line 153
     ((CHAR_y CHAR_y?) | CHAR_X)?; 
 
 footnote: QUESTION_MARK+; //TODO -- ???
@@ -556,7 +589,7 @@ mezzoPiano: CHAR_m CHAR_p;
 
 mezzoForte: CHAR_m CHAR_f;
 
-sforzando: CHAR_s CHAR_f | CHAR_f CHAR_z | CHAR_s CHAR_f CHAR_z | CHAR_z;
+sforzando: CHAR_s CHAR_f | CHAR_f CHAR_z | CHAR_s CHAR_f CHAR_z | CHAR_z | CHAR_Z;
 
 fortePiano: CHAR_f CHAR_p;
 
