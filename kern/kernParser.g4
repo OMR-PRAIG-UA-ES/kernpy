@@ -231,7 +231,9 @@ staff: TANDEM_STAFF
     PLUS? // sometimes found
     number (SLASH number)?;
 
+// e.g. *clefG2
 clef: TANDEM_CLEF  clefValue;
+
 clefValue: clefSign ( clefLine)? ( clefOctave)?;
 clefSign: CHAR_C | CHAR_F | CHAR_G | CHAR_P | CHAR_T;
 clefLine: DIGIT_1 | DIGIT_2 | DIGIT_3 | DIGIT_4 | DIGIT_5;
