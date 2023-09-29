@@ -14,12 +14,32 @@ class ImporterTestCase(unittest.TestCase):
     # it loads a simple JSON file
     def testReadMinimalKern(self):
         importer = Kern2bekernConverter()
-        importer.doImportFile('test/resource_dir/unit/minimal.krn')
+        importer.doImportFile('resource_dir/unit/minimal.krn')
         # self.assertEqual(1, len(ts.files))
 
     def testClefs(self):
         importer = Kern2bekernConverter()
-        importer.doImportFile('test/resource_dir/unit/clefs.krn')
+        importer.doImportFile('resource_dir/unit/clefs.krn')
+        # self.assertEqual(1, len(ts.files))
+
+    def testOctaves(self):
+        importer = Kern2bekernConverter()
+        importer.doImportFile('resource_dir/unit/octaves.krn')
+        # self.assertEqual(1, len(ts.files))
+
+    def testBars(self):
+        importer = Kern2bekernConverter()
+        importer.doImportFile('resource_dir/unit/bars.krn')
+        # self.assertEqual(1, len(ts.files))
+
+    def testTime(self):
+        importer = Kern2bekernConverter()
+        importer.doImportFile('resource_dir/unit/time.krn')
+        # self.assertEqual(1, len(ts.files))
+
+    def testMensurations(self):
+        importer = Kern2bekernConverter()
+        importer.doImportFile('resource_dir/unit/mensurations.krn')
         # self.assertEqual(1, len(ts.files))
 
 

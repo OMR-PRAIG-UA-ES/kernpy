@@ -264,7 +264,7 @@ phrygian: CHAR_p CHAR_h CHAR_r;
 
 dorian: CHAR_d CHAR_o CHAR_r;
 
-
+// e.g *M4/4
 timeSignature: TANDEM_TIMESIGNATURE  (standardTimeSignature | additiveTimeSignature | mixedTimeSignature | alternatingTimeSignature | interchangingTimeSignature) ('%' '2')?; //TODO %2
 numerator: number;
 denominator: number;
@@ -275,16 +275,19 @@ alternatingTimeSignature: alternatingTimeSignatureItem (COLON alternatingTimeSig
 alternatingTimeSignatureItem: standardTimeSignature (SEMICOLON number)?;
 interchangingTimeSignature: standardTimeSignature PIPE standardTimeSignature;
 
+// e.g. *met(c) *met(O|)
 //meterSymbol: TANDEM_MET LEFT_PARENTHESIS (modernMeterSymbolSign | mensuration) RIGHT_PARENTHESIS;
 meterSymbol: (TANDEM_TIMESIGNATURE | TANDEM_MET)  LEFT_PARENTHESIS (modernMeterSymbolSign | mensuration) RIGHT_PARENTHESIS;
 modernMeterSymbolSign: CHAR_c | CHAR_c PIPE;
 //mensuration: CHAR_C (DIGIT2 | (CHAR_C PIPE) | DOT | CHAR_O DOT? (SLASH | PIPE)? DIGIT_3? | CHAR_C DIGIT_3 SLASH DIGIT_2 | CHAR_C PIPE DIGIT_3 SLASH DIGIT_2 | DIGIT_3); //TODO
-mensuration: (CHAR_C | CHAR_O | DOT | PIPE | SLASH | DIGIT_2 | DIGIT_3)+; // now any combination, we should do it better ;)
+mensuration: (CHAR_C | CHAR_O | DOT | PIPE | SLASH | DIGIT_2 | DIGIT_3)+; // now any combination, we should do it better ;) TODO: include CHAR_r for some mensural signs
 
 metronome: METRONOME number ((DOT | MINUS) number)?;
 
 nullInterpretation: ASTERISK; // a null interpretation (placeholder) will have just an ASTERISK_FRAGMENT
 
+
+// e.g. == =-
 //barline: EQUAL+ (NUMBER)? (COLON? barlineWidth? partialBarLine? COLON?) ; // COLON = repetition mark
 barline: EQUAL EQUAL? // sometimes found == to denote system break
     number? (CHAR_a? CHAR_b?) //TODO repetitions?
@@ -297,12 +300,14 @@ barline: EQUAL EQUAL? // sometimes found == to denote system break
 
 //barlineWidth: (EXCLAMATION? PIPE EXCLAMATION?);
 
+// e.g. !|:
 barLineType:
     PIPE PIPE // double thin bar line
     |
     PIPE EXCLAMATION COLON? // sometimes found
     |
     PIPE COLON // left-repeat sometimes found
+
     |
     EXCLAMATION PIPE COLON // left-repeat
     |
