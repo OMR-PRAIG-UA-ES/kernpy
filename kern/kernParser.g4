@@ -218,6 +218,7 @@ number: (DIGIT_0 | DIGIT_1 | DIGIT_2 | DIGIT_3 | DIGIT_4 | DIGIT_5 | DIGIT_6 | D
 lowerCasePitch: (CHAR_a | CHAR_b | CHAR_c | CHAR_d | CHAR_e | CHAR_f | CHAR_g); // we cannot use a generic rule because c is used both pitch and as common time symbol
 upperCasePitch: (CHAR_A | CHAR_B | CHAR_C | CHAR_D | CHAR_E | CHAR_F | CHAR_G);
 
+// e.g. f-
 pitchClass: lowerCasePitch accidental;
 
 accomp: TANDEM_ACCOMP; // found in bach/brandenburg/bwv1050c.krn
@@ -239,6 +240,7 @@ clefSign: CHAR_C | CHAR_F | CHAR_G | CHAR_P | CHAR_T;
 clefLine: DIGIT_1 | DIGIT_2 | DIGIT_3 | DIGIT_4 | DIGIT_5;
 clefOctave: CHAR_v CHAR_v? DIGIT_2 | CIRCUMFLEX CIRCUMFLEX? DIGIT_2;
 
+// e.g. *k[f#c#]
 keySignature: TANDEM_KEY_SIGNATURE  LEFT_BRACKET keySignaturePitchClass* RIGHT_BRACKET keySignatureCancel?;
 keySignaturePitchClass: pitchClass;
 keySignatureCancel:  CHAR_X;
@@ -378,6 +380,8 @@ pitch: diatonicPitchAndOctave
     trill? 
     alteration?
     CHAR_x?; // sometimes found
+
+// e.g. 4e#j -> this is for accidental in brackets
 alteration: accidental alterationDisplay?;
 
 
@@ -449,6 +453,7 @@ diatonicPitchAndOctave:
 trebleNotes: lowerCasePitch+;
 bassNotes: upperCasePitch+;
 
+// e.g. 4c--
 accidental: OCTOTHORPE (OCTOTHORPE OCTOTHORPE?)? | MINUS MINUS? | CHAR_n;
 
 // x is show, xx is shows editorial

@@ -42,6 +42,36 @@ class ImporterTestCase(unittest.TestCase):
         importer.doImportFile('resource_dir/unit/mensurations.krn')
         # self.assertEqual(1, len(ts.files))
 
+    def testAccidentals(self):
+        importer = Kern2bekernConverter()
+        importer.doImportFile('resource_dir/unit/accidentals.krn')
+        # self.assertEqual(1, len(ts.files))
+
+    def testAccidentalsWithAlterationDisplay(self):
+        importer = Kern2bekernConverter()
+        importer.doImportFile('resource_dir/unit/accidentals_alterationDisplay.krn')
+        # self.assertEqual(1, len(ts.files))
+
+    def testKey(self):
+        importer = Kern2bekernConverter()
+        importer.doImportFile('resource_dir/unit/key.krn')
+        # self.assertEqual(1, len(ts.files))
+
+    def testKeyDesignation(self):
+        importer = Kern2bekernConverter()
+        importer.doImportFile('resource_dir/unit/key_designation.krn')
+        # self.assertEqual(1, len(ts.files))
+
+    def testModal(self):
+        importer = Kern2bekernConverter()
+        importer.doImportFile('resource_dir/unit/modal.krn')
+        # self.assertEqual(1, len(ts.files))
+
+    def testChords(self):
+        importer = Kern2bekernConverter()
+        importer.doImportFile('resource_dir/unit/chords.krn')
+        # self.assertEqual(1, len(ts.files))
+
 
 def test():
     unittest.main()
