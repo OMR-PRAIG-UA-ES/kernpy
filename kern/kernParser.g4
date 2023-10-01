@@ -438,8 +438,10 @@ noteDecoration:
     | CHAR_O // sometimes found - generic ornament
     | CHAR_l // sometimes found - ???
     | CHAR_V // sometimes found - ???
-    | CHAR_x CHAR_x? // sometimes found - ???
+    | noteDecorationCharX // TODO?
     ;
+
+noteDecorationCharX: CHAR_x CHAR_x?; // sometimes found - ???
 
 phrase: LEFT_CURLY_BRACES | RIGHT_CURLY_BRACES; // see https://www.humdrum.org/Humdrum/guide03.html
 

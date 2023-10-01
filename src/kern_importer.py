@@ -5,7 +5,12 @@ from src.generated.kern.kernParser import kernParser
 import logging
 
 
-class Kern2bekernVisitor(kernParserVisitor):
+# TODO Añadir modos para que pueda trabajar con spines text
+# TODO - pasar lo leído a una matriz / grafo
+class HumdrumImporterVisitor(kernParserVisitor):
+    def __init__(self):
+        pass
+
     def visitStart(self, ctx: kernParser.StartContext):
         logging.debug('Visit start ')
         return self.visitChildren(ctx)
@@ -32,25 +37,22 @@ class Kern2bekernVisitor(kernParserVisitor):
 
     def visitNote(self, ctx: kernParser.NoteContext):
         logging.debug('Visit note')
-        self.visit
+        return self.visitChildren(ctx)
 
-    def visitDuration(self, ctx:kernParser.DurationContext):
+    def visitDuration(self, ctx: kernParser.DurationContext):
         logging.debug('Visit duration')
 
-    def visitDiatonicPitchAndOctave(self, ctx:kernParser.DiatonicPitchAndOctaveContext):
+    def visitDiatonicPitchAndOctave(self, ctx: kernParser.DiatonicPitchAndOctaveContext):
         logging.debug('Visit pitch and octave')
 
 
-
-class Kern2bekernConverter:
-    def doImportFile(self, filename):
-        logging.info(f'Converting filename {filename}')
-        input_stream = FileStream(filename)
+class HumdrumImporter:
+    def doImportFile(self, input):
+        logging.info(f'Importing filename {input}')
+        input_stream = FileStream(input)
         lexer = kernLexer(input_stream)
         token_stream = CommonTokenStream(lexer)
         parser = kernParser(token_stream)
-
         tree = parser.start()
-
-        visitor = Kern2bekernVisitor()
-        result = visitor.visit(tree)
+        visitor = HumdrumImporterVisitor()
+        visitor.visit(tree)
