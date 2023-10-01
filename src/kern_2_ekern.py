@@ -13,6 +13,8 @@ class Kern2EkernListener(kernParserListener):
     SEPARATOR = '·'
 
     def __init__(self, output):
+        self.firstChordElement = None
+        self.inChord = None
         self.output = output
         self.line = None
 
@@ -74,10 +76,13 @@ class Kern2EkernListener(kernParserListener):
         decorations = {}
 
         for child in ctx.getChildren():
-            if not isinstance(child, kernParser.PitchContext) and not isinstance(child, kernParser.DurationContext):
+            if not isinstance(child, kernParser.PitchContext) and not isinstance(child, kernParser.DurationContext) \
+                    and not isinstance(child, kernParser.RestChar_rContext):
                 # all decorations have just a child
                 if child.getChildCount() != 1:
-                    raise Exception('Only 1 decoration child expected, and found ' + child.getChildren().len() + ', check the grammar')
+                    raise Exception('Only 1 decoration child expected, and found ' + child.getChildCount() + ', check '
+                                                                                                             'the '
+                                                                                                             'grammar')
                 clazz = type(child.getChild(0))
                 decoration_type = clazz.__name__
                 if decoration_type in decorations:
@@ -88,11 +93,38 @@ class Kern2EkernListener(kernParserListener):
             self.writeText(decorations[key])
 
     def exitNote(self, ctx:kernParser.NoteContext):
+        if self.inChord:
+            self.addChordSeparator()
+
         if ctx.duration():
             self.writeContext(ctx.duration())
             self.writeSeparator()
         self.writeContext(ctx.pitch())
         self.process_decorations(ctx)
+
+    def exitRest(self, ctx:kernParser.RestContext):
+        if self.inChord:
+            self.addChordSeparator()
+
+        self.writeText('r')
+        if ctx.duration():
+            self.writeContext(ctx.duration())
+            self.writeSeparator()
+        self.process_decorations(ctx)
+
+    def enterChord(self, ctx:kernParser.ChordContext):
+        self.inChord = True
+        self.firstChordElement = True
+        
+    def exitChord(self, ctx:kernParser.ChordContext):
+        self.inChord = False
+
+    def addChordSeparator(self):
+        if self.firstChordElement:
+            self.firstChordElement = False
+        else:
+            self.writeText(' ')
+
 
 #TODO Recordar cuando aparece la posición del silencio en modo pitch
 

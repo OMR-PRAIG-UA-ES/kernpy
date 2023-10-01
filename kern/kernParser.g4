@@ -63,8 +63,10 @@ graphicalToken:
      (AT associatedIDS)? // skm
     ;
 
-rest: restDecoration* duration? CHAR_r CHAR_r? // duration not used in some grace notes (rests)
-    restDecoration*; // sometimes found - user assignable?;
+rest: restDecoration* duration? restChar_r // duration not used in some grace notes (rests)
+    restDecoration*;
+
+restChar_r: CHAR_r CHAR_r?;
 
 restDecoration: (slurStart | graceNote | staffChange | restPosition | fermata | editorialIntervention | slurEnd | // slur sometimes found
     staccato | // staccato found in a rest in beethoven/quartets/quartet14-5.krn
