@@ -72,6 +72,46 @@ class ImporterTestCase(unittest.TestCase):
         importer.doImportFile('resource_dir/unit/chords.krn')
         # self.assertEqual(1, len(ts.files))
 
+    def testRythm(self):
+        importer = HumdrumImporter()
+        importer.doImportFile('resource_dir/unit/rythm.krn')
+        # self.assertEqual(1, len(ts.files))
+
+    def testTies(self):
+        importer = HumdrumImporter()
+        importer.doImportFile('resource_dir/unit/ties.krn')
+        # self.assertEqual(1, len(ts.files))
+
+    def testBeams(self):
+        importer = HumdrumImporter()
+        importer.doImportFile('resource_dir/unit/beaming.krn')
+        # self.assertEqual(1, len(ts.files))
+
+    def testAutoBeam(self):
+        importer = HumdrumImporter()
+        importer.doImportFile('resource_dir/unit/auto_beaming.krn')
+        # self.assertEqual(1, len(ts.files))
+
+    def testRests(self):
+        importer = HumdrumImporter()
+        importer.doImportFile('resource_dir/unit/rests.krn')
+        # self.assertEqual(1, len(ts.files))
+
+    def testSlurs(self):
+        importer = HumdrumImporter()
+        importer.doImportFile('resource_dir/unit/slurs.krn')
+        # self.assertEqual(1, len(ts.files))
+
+    def testArticulations(self):
+        importer = HumdrumImporter()
+        importer.doImportFile('resource_dir/unit/articulations.krn')
+        # self.assertEqual(1, len(ts.files))
+
+    def testOrnaments(self):
+        importer = HumdrumImporter()
+        importer.doImportFile('resource_dir/unit/ornaments.krn')
+        # self.assertEqual(1, len(ts.files))
+
 
 def test():
     unittest.main()
