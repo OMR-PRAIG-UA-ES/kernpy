@@ -112,7 +112,6 @@ class ImporterTestCase(unittest.TestCase):
         importer.doImportFile('resource_dir/unit/ornaments.krn')
         # self.assertEqual(1, len(ts.files))
 
-
 def test():
     unittest.main()
 

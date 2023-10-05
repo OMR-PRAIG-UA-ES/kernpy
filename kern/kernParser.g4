@@ -71,6 +71,7 @@ restChar_r: CHAR_r CHAR_r?;
 restDecoration: (slurStart | graceNote | staffChange | restPosition | fermata | editorialIntervention | slurEnd | // slur sometimes found
     staccato | // staccato found in a rest in beethoven/quartets/quartet14-5.krn
     phrase |
+    augmentationDot |
     CHAR_j);
 
 // We allow the chordSpace to be null for allowing invalid outputs of the OMR
@@ -280,11 +281,12 @@ alternatingTimeSignatureItem: standardTimeSignature (SEMICOLON number)?;
 interchangingTimeSignature: standardTimeSignature PIPE standardTimeSignature;
 
 // e.g. *met(c) *met(O|)
+// Changed to accept r character to reverse the mensural symbol
 //meterSymbol: TANDEM_MET LEFT_PARENTHESIS (modernMeterSymbolSign | mensuration) RIGHT_PARENTHESIS;
 meterSymbol: (TANDEM_TIMESIGNATURE | TANDEM_MET)  LEFT_PARENTHESIS (modernMeterSymbolSign | mensuration) RIGHT_PARENTHESIS;
 modernMeterSymbolSign: CHAR_c | CHAR_c PIPE;
 //mensuration: CHAR_C (DIGIT2 | (CHAR_C PIPE) | DOT | CHAR_O DOT? (SLASH | PIPE)? DIGIT_3? | CHAR_C DIGIT_3 SLASH DIGIT_2 | CHAR_C PIPE DIGIT_3 SLASH DIGIT_2 | DIGIT_3); //TODO
-mensuration: (CHAR_C | CHAR_O | DOT | PIPE | SLASH | DIGIT_2 | DIGIT_3)+; // now any combination, we should do it better ;) TODO: include CHAR_r for some mensural signs
+mensuration: (CHAR_C | CHAR_O | DOT | PIPE | SLASH | DIGIT_2 | DIGIT_3 | CHAR_r)+; // now any combination, we should do it better ;) TODO: include CHAR_r for some mensural signs
 
 metronome: METRONOME number ((DOT | MINUS) number)?;
 
@@ -458,7 +460,8 @@ trebleNotes: lowerCasePitch+;
 bassNotes: upperCasePitch+;
 
 // e.g. 4c--
-accidental: OCTOTHORPE (OCTOTHORPE OCTOTHORPE?)? | MINUS MINUS? | CHAR_n;
+// Changed to accept triple bemol
+accidental: OCTOTHORPE (OCTOTHORPE OCTOTHORPE?)? | MINUS (MINUS MINUS?)? | CHAR_n;
 
 // x is show, xx is shows editorial
 //alterationVisualMode: CHAR_x CHAR_x?;
@@ -509,11 +512,11 @@ editorialIntervention:
     |
     CHAR_X; // associated no a note
 
-slurStart: AMPERSAND? LEFT_PARENTHESIS staffChange?; // ampersand for ellision - staffChange sometimes found
+slurStart: AMPERSAND* LEFT_PARENTHESIS staffChange?; // ampersand for ellision - staffChange sometimes found
 ligatureTieStart: ANGLE_BRACKET_OPEN | LEFT_BRACKET CHAR_y?; // y for hidden;
 tieContinue: UNDERSCORE;
 ligatureTieEnd: ANGLE_BRACKET_CLOSE | RIGHT_BRACKET;
-slurEnd: AMPERSAND? RIGHT_PARENTHESIS; // ampersand for ellision
+slurEnd: AMPERSAND* RIGHT_PARENTHESIS; // ampersand for ellision
 barLineCrossedNoteStart: CHAR_T;
 barLineCrossedNoteEnd: CHAR_t;
 
