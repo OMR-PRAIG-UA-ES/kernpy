@@ -17,7 +17,7 @@ options { tokenVocab=kernLexer; } // use tokens from kernLexer.g4
 //*staff2	*staff1	*staff1/2 - véase sonata07-1.krn de humdrum-data
 
 // start rule
-start: (METACOMMENT EOL)* header (EOL (record | METACOMMENT))* EOL* EOF;
+start: (METACOMMENT EOL)* header (EOL (record | METACOMMENT))* EOL* EOF?;
 
 /* ------ HEADER -------*/
 header: headerField (TAB headerField)*;
