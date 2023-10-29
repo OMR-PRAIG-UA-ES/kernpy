@@ -6,27 +6,57 @@ lexer grammar kernLexer;
 @lexer::header {
 }
 
-
-//Non context free grammar needs semantic predicates to handle text and harm spines
 @lexer::members {
+# These methods are added just as a base methods that will be overriden
+def inTextSpine(self):
+    pass
+
+def incSpine(self):
+    pass
+
+def splitSpine(self):
+    pass
+
+def joinSpine(self):
+    pass
+
+def resetMode(self):
+    pass
+
+def resetSpineAndMode(self):
+    pass
+
+def addMusicSpine(self):
+    pass
+
+def addTextSpine(self):
+    pass
+
+def terminateSpine(self):
+    pass
+
+def addSpine(self):
+    pass
 }
 
 SPACE: ' ';
-TAB: '\t'; // incSpine changes mode depending on the spine type
-EOL : '\r'?'\n';
+// with pushMode, the lexer uses the rules below FREE_TEXT
+TAB: '\t' {self.incSpine();}; // incSpine changes mode depending on the spine type
+EOL : '\r'?'\n' {self.resetSpineAndMode();};
 
 
 fragment ASTERISK_FRAGMENT : '*';
 EXCLAMATION : '!';
 
-MENS: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'mens';
-KERN: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'kern';
-TEXT: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'text';
-HARM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'harm';
-MXHM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'mxhm';
-ROOT: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'root';
-DYN: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'dyn';
-DYNAM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'dynam';
+//TODO Tipos de spines para armonía y dinámica
+MENS: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'mens' {self.addMusicSpine();};
+KERN: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'kern' {self.addMusicSpine();};
+TEXT: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'text' {self.addTextSpine();};
+HARM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'harm' {self.addTextSpine();};
+MXHM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'mxhm' {self.addTextSpine();};
+ROOT: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'root' {self.addTextSpine();};
+DYN: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'dyn' {self.addTextSpine();};
+DYNAM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'dynam' {self.addTextSpine();};
 
 TANDEM_LIG_START: ASTERISK_FRAGMENT 'lig';
 TANDEM_LIG_END: ASTERISK_FRAGMENT 'Xlig';
@@ -145,10 +175,10 @@ DIGIT_7: '7';
 DIGIT_8: '8';
 DIGIT_9: '9';
 
-SPINE_TERMINATOR: ASTERISK_FRAGMENT MINUS;
-SPINE_ADD: ASTERISK_FRAGMENT PLUS;
-SPINE_SPLIT: ASTERISK_FRAGMENT CIRCUMFLEX;
-SPINE_JOIN: ASTERISK_FRAGMENT CHAR_v;
+SPINE_TERMINATOR: ASTERISK_FRAGMENT MINUS {self.terminateSpine();};
+SPINE_ADD: ASTERISK_FRAGMENT PLUS {self.addSpine();};
+SPINE_SPLIT: ASTERISK_FRAGMENT CIRCUMFLEX {self.splitSpine();};
+SPINE_JOIN: ASTERISK_FRAGMENT CHAR_v {self.joinSpine();};
 ASTERISK: ASTERISK_FRAGMENT;
 
 QUOTATION_MARK: '"';
@@ -208,8 +238,14 @@ ANY: . ;
 // FIELD_TEXT: RAW_TEXT;
 
 
-mode FREE_TEXT;
+/*29 oct 2023 mode FREE_TEXT;
     FIELD_TEXT: ~[\t\n\r]+; // must reset mode here to let lexer recognize the tab or newline
 //FREE_TEXT_TAB: '\t' {incSpine("free_text mode tab");}; // incSpine changes mode depending on the spine type
 //FREE_TEXT_EOL : '\r'?'\n' {onEOL("free_text mode eol");};
+*/
+
+mode FREE_TEXT;
+FIELD_TEXT: ~[\t\n\r]+ -> mode(0); // must reset mode here to let lexer recognize the tab or newline
+FREE_TEXT_TAB: '\t' {self.incSpine();}; // incSpine changes mode depending on the spine type
+FREE_TEXT_EOL : '\r'?'\n' {self.resetSpineAndMode();};
 

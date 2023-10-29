@@ -5,13 +5,23 @@ from src.generated.kern.kernLexer import kernLexer
 from src.generated.kern.kernParser import kernParser
 import logging
 
-# This file checks that the provided kern file is correct according to the **kern grammar.
+from src.generated.kern.kernParserListener import kernParserListener
+from src.kern_lexer_with_spines import KernLexerWithSpines
+
+
+# David Rizo, October 29th, 2023
+# This file checks that the provided kern file is correct according to the **kern grammar and the spines provided are consistent
+
 class MyErrorListener(ErrorListener.ErrorListener):
     def syntaxError(self, recognizer, offending_symbol, line, column, msg, e):
         logging.warning(f"Syntax error in symbol {offending_symbol} at line {line}:{column}: {msg}")
 
+
+class KernCheckerListener(kernParserListener):
+    pass
+
 def do_check(stream):
-    lexer = kernLexer(stream)
+    lexer = KernLexerWithSpines(stream)
     lexer.removeErrorListeners()
     lexer.addErrorListener(MyErrorListener())
     token_stream = CommonTokenStream(lexer)
@@ -45,4 +55,3 @@ def check_string(input_string):
     do_check(input_stream)
     correct = do_check(input_stream)
     return correct
-
