@@ -5,6 +5,12 @@ Modified for conersion to bekern in Python on September, 15th 2023
 parser grammar kernParser;
 options { tokenVocab=kernLexer; } // use tokens from kernLexer.g4
 
+/**
+Version 1.0
+Last update: 30 nov 2023
+Maintain the version updated as this file is used both in mOOsicae and pykern
+*/
+
 @parser::header {
 }
 
