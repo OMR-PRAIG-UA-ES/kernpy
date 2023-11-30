@@ -4,7 +4,7 @@
 lexer grammar kernLexer;
 
 /**
-Version 1.0
+Version 1.0 - with semantic actions written in Python
 Last update: 30 nov 2023
 Maintain the version updated as this file is used both in mOOsicae and pykern
 */
