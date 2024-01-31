@@ -3,11 +3,10 @@
 Modified for conersion to bekern in Python on September, 15th 2023
 */
 parser grammar kernParser;
-options { tokenVocab=kernLexer; } // use tokens from kernLexer.g4
-
+options { tokenVocab=kernLexer;} // use tokens from kernLexer.g4
 /**
-Version 1.0
-Last update: 30 nov 2023
+Version 1.1
+Last update: 31 jan 2024
 Maintain the version updated as this file is used both in mOOsicae and pykern
 */
 
@@ -23,12 +22,14 @@ Maintain the version updated as this file is used both in mOOsicae and pykern
 //*staff2	*staff1	*staff1/2 - véase sonata07-1.krn de humdrum-data
 
 // start rule
-start: (METACOMMENT EOL)* header (EOL (record | METACOMMENT))* EOL* EOF?;
+start: (metacomment EOL)* header (EOL (record | metacomment))* EOL* EOF?;
+
+metacomment: METACOMMENT;
 
 /* ------ HEADER -------*/
 header: headerField (TAB headerField)*;
 
-headerField: MENS | KERN | TEXT | HARM | MXHM | ROOT | DYN | DYNAM;
+headerField: MENS | KERN | TEXT | HARM | MXHM | ROOT | DYN | DYNAM | FING;
 
 /* ----- CONTENT  ------ */
 record: spineOperations | fields;
@@ -120,8 +121,18 @@ nonVisualTandemInterpretation:
     pianoHand
     |
     ossia //TODO bach/wtc/wtc1f01.krn
+    |
+    boundingBox
     ;
 
+    boundingBox: TANDEM_BOUNDING_BOX MINUS pageNumber COLON xywh;
+
+    xywh: x COMMA y COMMA w COMMA h;
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    pageNumber: ~':'*; // anything until the ':'
 
 // those ones that are engraved
 visualTandemInterpretation:

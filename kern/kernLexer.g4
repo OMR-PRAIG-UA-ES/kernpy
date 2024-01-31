@@ -4,8 +4,9 @@
 lexer grammar kernLexer;
 
 /**
+Version 1.1 - fingering spine added
 Version 1.0 - with semantic actions written in Python
-Last update: 30 nov 2023
+Last update: 31 jan 2024
 Maintain the version updated as this file is used both in mOOsicae and pykern
 */
 
@@ -63,6 +64,7 @@ MXHM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'mxhm' {self.addTextSpine();};
 ROOT: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'root' {self.addTextSpine();};
 DYN: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'dyn' {self.addTextSpine();};
 DYNAM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'dynam' {self.addTextSpine();};
+FING: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'fing' {self.addTextSpine();};
 
 TANDEM_LIG_START: ASTERISK_FRAGMENT 'lig';
 TANDEM_LIG_END: ASTERISK_FRAGMENT 'Xlig';
@@ -108,6 +110,7 @@ TANDEM_OSSIA: ASTERISK_FRAGMENT 'S/ossia'; // bach/wtc/wtc1f01.krn
 TANDEM_FIN: ASTERISK_FRAGMENT 'S/fin'; // bach/wtc/wtc1f01.krn
 TANDEM_SMINUS: ASTERISK_FRAGMENT 'S-'; // bach/wtc/wtc1f01.krn TODO ???
 TANDEM_TIMEBASE: ASTERISK_FRAGMENT 'tb';
+TANDEM_BOUNDING_BOX: ASTERISK_FRAGMENT 'xywh';
 LAYOUT: EXCLAMATION 'LO:' RAW_TEXT;
 
 OCTAVE_SHIFT: ASTERISK_FRAGMENT 'X'?'8'[vb]+'a';
@@ -222,7 +225,7 @@ QUESTION_MARK: '?';
 // with pushMode, the lexer uses the rules below FREE_TEXT
 INSTRUMENT: '*I' '"'? RAW_TEXT;
 //METACOMMENT: '!!' '!'?  RAW_TEXT_UNTIL_EOL?;
-METACOMMENT: '!!' '!'?  RAW_TEXT_NOT_BARLINE;
+METACOMMENT: '!!' '!'* '!'? RAW_TEXT_NOT_BARLINE;
 FIELDCOMMENT: '!' RAW_TEXT_NOT_BARLINE;
 fragment RAW_TEXT: ~([\t\n\r])+;
 fragment RAW_TEXT_UNTIL_EOL: ~([\n\r])+; // !: or !| belong to bar lines
