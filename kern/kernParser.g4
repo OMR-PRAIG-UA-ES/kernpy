@@ -66,9 +66,13 @@ graphicalToken:
     note
     |
     chord
+    |
+    fingering
     )
      (AT associatedIDS)? // skm
     ;
+
+fingering: DIGIT_1 | DIGIT_2 | DIGIT_3 | DIGIT_4 | DIGIT_5;
 
 rest: restDecoration* duration? restChar_r // duration not used in some grace notes (rests)
     restDecoration*;
@@ -111,6 +115,8 @@ nonVisualTandemInterpretation:
     part
     |
     instrument
+    |
+    instrumentTitle
     |
     transposition
     |
@@ -233,6 +239,8 @@ sectionName: (CHAR_A | CHAR_B | CHAR_C | CHAR_D | CHAR_E | CHAR_F | CHAR_G | CHA
 transposition: TANDEM_TRANSPOSITION CHAR_d MINUS? number CHAR_c MINUS? number;
 
 instrument: INSTRUMENT;
+
+instrumentTitle: INSTRUMENT_TITLE;
 
 number: (DIGIT_0 | DIGIT_1 | DIGIT_2 | DIGIT_3 | DIGIT_4 | DIGIT_5 | DIGIT_6 | DIGIT_7 | DIGIT_8 | DIGIT_9)+;
 lowerCasePitch: (CHAR_a | CHAR_b | CHAR_c | CHAR_d | CHAR_e | CHAR_f | CHAR_g); // we cannot use a generic rule because c is used both pitch and as common time symbol

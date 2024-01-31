@@ -223,6 +223,7 @@ QUESTION_MARK: '?';
 
 
 // with pushMode, the lexer uses the rules below FREE_TEXT
+INSTRUMENT_TITLE: '*mI' '"'? RAW_TEXT;
 INSTRUMENT: '*I' '"'? RAW_TEXT;
 //METACOMMENT: '!!' '!'?  RAW_TEXT_UNTIL_EOL?;
 METACOMMENT: '!!' '!'* '!'? RAW_TEXT_NOT_BARLINE;
