@@ -1,0 +1,19 @@
+**kern	**text
+*^	*
+*clefF4	*clefF4	a
+*k[b-]	*k[b-]	*
+*M4/4	*M4/4	*
+=21-	=21-	=21-
+*	*	*
+(4A	1F	This
+4B-	.	is
+4A	.	a
+4G	.	test
+=22	=22	=22
+!	!LO:TX:b:t=a tempo	!
+1A;)	1F	of spi
+*v	*v	*
+1C	nes
+*	*
+==	==
+*-	*-

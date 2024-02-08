@@ -51,14 +51,10 @@ class KernLexerWithSpines(kernLexer):
     def addTextSpine(self):
         self.textSpines.append(True)
 
-    ## TODO DEFINIR DESDE AQUÍ
+    ## Revisar este comportamiento
     def terminateSpine(self):
-        pass
+        self.textSpines.pop(self.currentSpine)
 
     def addSpine(self):
-        pass
-
-    def spineJoin(self):
-        pass
-
+        self.textSpines.append(False)
 

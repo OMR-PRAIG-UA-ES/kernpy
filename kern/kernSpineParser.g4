@@ -1,44 +1,14 @@
 /*
-@author: David Rizo (drizo@dlsi.ua.es) Oct, 2020. Patch on Oct, 2022
-Modified for conersion to bekern in Python on September, 15th 2023
+@author: David Rizo (drizo@dlsi.ua.es) Feb, 2024.
+It parses just a token inside a **kern spine
 */
-parser grammar kernParser;
-options { tokenVocab=kernLexer;} // use tokens from kernLexer.g4
-/**
-Version 1.2
-Last update: 3 jan 2024
-Maintain the version updated as this file is used both in mOOsicae and pykern
-*/
+parser grammar kernSpineParser;
 
-@parser::header {
-}
+options { tokenVocab=kernSpineLexer;} // use tokens from kernSpineLexer.g4
 
-@rulecatch {
-}
-//TODO ff lo coge en dynam como fortísimo
-// The rule .*? is used as a non-greedy lexer rule (see the ? is used to set the non greedy mode (https://github.com/antlr/antlr4/blob/master/doc/wildcard.md)
-//TODO - cuidado porque hay veces que puede aparecer esto
-//**kern	**kern	**dynam
-//*staff2	*staff1	*staff1/2 - véase sonata07-1.krn de humdrum-data
-
-// start rule
-start: (metacomment EOL)* header (EOL (record | metacomment))* EOL* EOF?;
+start: metacomment | spineOperation | field;
 
 metacomment: METACOMMENT;
-
-/* ------ HEADER -------*/
-header: headerField (TAB headerField)*;
-
-headerField: MENS | KERN | TEXT | HARM | MXHM | ROOT | DYN | DYNAM | FING;
-
-/* ----- CONTENT  ------ */
-record: spineOperations | fields;
-
-spineOperations:  spineOperation (TAB | spineOperation)*;
-
-//tab: TAB | FREE_TEXT_TAB;
-// field can be null to allow the parsing of the OMR output - it will be checked in the semantic code
-fields: field? (TAB field?)*;
 
 field
     :
@@ -57,22 +27,17 @@ graphicalToken:
     (
     visualTandemInterpretation
     |
-    barline
+    contextualTandemInterpretation
     |
-    lyricsText
+    barline
     |
     rest
     |
     note
     |
     chord
-    |
-    fingering
     )
-     (AT associatedIDS)? // skm
     ;
-
-fingering: DIGIT_1 | DIGIT_2 | DIGIT_3 | DIGIT_4 | DIGIT_5;
 
 rest: restDecoration* duration? restChar_r // duration not used in some grace notes (rests)
     restDecoration*;
@@ -140,29 +105,9 @@ nonVisualTandemInterpretation:
     h: number;
     pageNumber: ~':'*; // anything until the ':'
 
-// those ones that are engraved
-visualTandemInterpretation:
-    TANDEM_LIG_START
-    |
-    TANDEM_LIG_END
-    |
-    TANDEM_COL_START
-    |
-    TANDEM_COL_END
-    |
+// those that must be maintained if the file is divided into segments
+contextualTandemInterpretation:
     octaveShift
-    |
-    dynamics_position // TODO: what is it for?
-    |
-    tandemCue
-    |
-    tandemTremolo
-    |
-    rscale
-    |
-    pedal
-    |
-    ela // sometimes found
     |
     staff
     |
@@ -176,13 +121,24 @@ visualTandemInterpretation:
     |
     meterSymbol
     |
-    metronome
+    metronome;
+
+
+// those ones that are engraved
+visualTandemInterpretation:
+    dynamics_position // TODO: what is it for?
+    |
+    tandemCue
+    |
+    tandemTremolo
+    |
+    rscale
+    |
+    pedal
+    |
+    ela // sometimes found
     |
     nullInterpretation // it is not engraved, but required to correctly engrave the score
-    |
-    custos
-    |
-    plainChant
     |
     TANDEM_TSTART | TANDEM_TEND // sometimes found
     ;
@@ -403,7 +359,6 @@ augmentationDot: DOT;
 
 arationDot: COLON;
 
-custos: TANDEM_CUSTOS pitch;
 pitch: diatonicPitchAndOctave
     graceNote? 
     appoggiatura? 
@@ -574,10 +529,6 @@ beam:
 staffPosition: lineSpace number;
 
 lineSpace: CHAR_L | CHAR_S; // l = line, s = space
-
-lyricsText: FIELD_TEXT;
-
-plainChant: TANDEM_BEGIN_PLAIN_CHANT | TANDEM_END_PLAIN_CHANT;
 
 mordent:
     //LETTER_W

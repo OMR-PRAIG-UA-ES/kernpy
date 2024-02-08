@@ -1,0 +1,40 @@
+!!!COM: Chopin, Frederic
+!!!OTL: Etude, Op. 10, No. 6
+!!!OPS: Op. 10
+!!!ONM: No. 6
+!!!SCT: Piston 70
+!!!citation: Harmony by Walter Piston.  W.W.Norton: New York; 1941.
+!!!label: Ex. 70.  Chopin -- <i>Etude, op. 10, no. 6</i>
+!!!chapter: Chapter 4 (Tonality and Modality)
+!!!page: 37
+!!!ENC: Craig Stuart Sapp
+**kern	**kern	**root	**harm
+*staff2	*staff1	*staff2	*staff2
+*clefF4	*clefG2	*clefF4	*
+*M6/8	*M6/8	*M6/8	*M6/8
+*MM80	*MM80	*MM80	*MM80
+*k[b-e-a-d-g-c-]	*k[b-e-a-d-g-c-]	*k[b-e-a-d-g-c-]	*k[b-e-a-d-g-c-]
+*e-:	*e-:	*e-:	*e-:
+*^	*^	*	*
+4.AA-	16A-	4.c	4.f-	4.FF-	ii
+.	16B-	.	.	.	.
+.	16Gn	.	.	.	.
+.	16B-	.	.	.	.
+.	16A-	.	.	.	.
+.	16F-	.	.	.	.
+4.BB-	16Fn	4.A-	[4dn	4.BB-	V
+.	16G-	.	.	.	.
+.	16En	.	.	.	.
+.	16G-	.	.	.	.
+.	16F	.	16d]	.	.
+.	[16BB-	.	16e-	.	.
+=	=	=	=	=	=
+4.EE-	16BB-]	4.G-	4.e-	4.EE-	I
+.	16C	.	.	.	.
+.	16AAn	.	.	.	.
+.	16C	.	.	.	.
+.	16BB-	.	.	.	.
+.	16GG-	.	.	.	.
+*v	*v	*	*	*	*
+*	*v	*v	*	*
+*-	*-	*-	*-

@@ -1,87 +1,21 @@
 /*
-@author: David Rizo (drizo@dlsi.ua.es) Oct, 2020.
+@author: David Rizo (drizo@dlsi.ua.es) Feb, 2024.
 */
-lexer grammar kernLexer;
-
-/**
-Version 1.1 - fingering spine added
-Version 1.0 - with semantic actions written in Python
-Last update: 31 jan 2024
-Maintain the version updated as this file is used both in mOOsicae and pykern
-*/
-
-@lexer::header {
-}
-
-@lexer::members {
-# These methods are added just as a base methods that will be overriden
-def inTextSpine(self):
-    pass
-
-def incSpine(self):
-    pass
-
-def splitSpine(self):
-    pass
-
-def joinSpine(self):
-    pass
-
-def resetMode(self):
-    pass
-
-def resetSpineAndMode(self):
-    pass
-
-def addMusicSpine(self):
-    pass
-
-def addTextSpine(self):
-    pass
-
-def terminateSpine(self):
-    pass
-
-def addSpine(self):
-    pass
-}
-
-SPACE: ' ';
-// with pushMode, the lexer uses the rules below FREE_TEXT
-TAB: '\t' {self.incSpine();}; // incSpine changes mode depending on the spine type
-EOL : '\r'?'\n' {self.resetSpineAndMode();};
-
+lexer grammar kernSpineLexer;
 
 fragment ASTERISK_FRAGMENT : '*';
 EXCLAMATION : '!';
 
-//TODO Tipos de spines para armonía y dinámica
-MENS: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'mens' {self.addMusicSpine();};
-KERN: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'kern' {self.addMusicSpine();};
-TEXT: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'text' {self.addTextSpine();};
-HARM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'harm' {self.addTextSpine();};
-MXHM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'mxhm' {self.addTextSpine();};
-ROOT: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'root' {self.addTextSpine();};
-DYN: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'dyn' {self.addTextSpine();};
-DYNAM: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'dynam' {self.addTextSpine();};
-FING: ASTERISK_FRAGMENT ASTERISK_FRAGMENT 'fing' {self.addTextSpine();};
-
-TANDEM_LIG_START: ASTERISK_FRAGMENT 'lig';
-TANDEM_LIG_END: ASTERISK_FRAGMENT 'Xlig';
 TANDEM_COL_START: ASTERISK_FRAGMENT 'col';
 TANDEM_COL_END: ASTERISK_FRAGMENT 'Xcol';
 TANDEM_PART: ASTERISK_FRAGMENT 'part';
 TANDEM_ACCOMP: ASTERISK_FRAGMENT 'accomp';
 TANDEM_SOLO: ASTERISK_FRAGMENT 'solo';
 TANDEM_STROPHE: ASTERISK_FRAGMENT 'strophe';
-//2020 fragment TANDEM_INSTRUMENT: ASTERISK_FRAGMENT CHAR_I;
-// TANDEM_INSTRUMENT: ASTERISK_FRAGMENT CHAR_I;
 TANDEM_STAFF: ASTERISK_FRAGMENT 'staff';
 TANDEM_TRANSPOSITION: ASTERISK_FRAGMENT CHAR_I? 'Tr';
 TANDEM_CLEF: ASTERISK_FRAGMENT 'clef';
-TANDEM_CUSTOS: ASTERISK_FRAGMENT 'custos';
 TANDEM_KEY_SIGNATURE: ASTERISK_FRAGMENT 'k';
-//TANDEM_KEY: ASTERISK_FRAGMENT 'K';
 TANDEM_MET: ASTERISK_FRAGMENT 'met';
 METRONOME: ASTERISK_FRAGMENT 'MM';
 TANDEM_SECTION: ASTERISK_FRAGMENT '>';
@@ -104,8 +38,6 @@ TANDEM_TSTART: ASTERISK_FRAGMENT 'tstart'; // sometimes found
 TANDEM_TEND: ASTERISK_FRAGMENT 'tend'; // sometimes found
 TANDEM_RSCALE: ASTERISK_FRAGMENT 'rscale';
 TANDEM_TIMESIGNATURE: ASTERISK_FRAGMENT 'M';
-TANDEM_BEGIN_PLAIN_CHANT: ASTERISK_FRAGMENT 'bpc';
-TANDEM_END_PLAIN_CHANT: ASTERISK_FRAGMENT 'epc';
 TANDEM_SIC: ASTERISK_FRAGMENT 'S/sic'; // bach/wtc/wtc1f01.krn
 TANDEM_OSSIA: ASTERISK_FRAGMENT 'S/ossia'; // bach/wtc/wtc1f01.krn
 TANDEM_FIN: ASTERISK_FRAGMENT 'S/fin'; // bach/wtc/wtc1f01.krn
@@ -185,10 +117,10 @@ DIGIT_7: '7';
 DIGIT_8: '8';
 DIGIT_9: '9';
 
-SPINE_TERMINATOR: ASTERISK_FRAGMENT MINUS {self.terminateSpine();};
-SPINE_ADD: ASTERISK_FRAGMENT PLUS {self.addSpine();};
-SPINE_SPLIT: ASTERISK_FRAGMENT CIRCUMFLEX {self.splitSpine();};
-SPINE_JOIN: ASTERISK_FRAGMENT CHAR_v {self.joinSpine();};
+SPINE_TERMINATOR: ASTERISK_FRAGMENT MINUS;
+SPINE_ADD: ASTERISK_FRAGMENT PLUS;
+SPINE_SPLIT: ASTERISK_FRAGMENT CIRCUMFLEX;
+SPINE_JOIN: ASTERISK_FRAGMENT CHAR_v;
 ASTERISK: ASTERISK_FRAGMENT;
 
 QUOTATION_MARK: '"';
@@ -218,15 +150,12 @@ RIGHT_PARENTHESIS: ')';
 COLON: ':';
 SEMICOLON: ';';
 COMMA: ',';
-SEP: '·'; // only used in SKM
 QUESTION_MARK: '?';
-
-
+SPACE: ' ';
 
 // with pushMode, the lexer uses the rules below FREE_TEXT
 INSTRUMENT_TITLE: '*mI' '"'? RAW_TEXT;
 INSTRUMENT: '*I' '"'? RAW_TEXT;
-//METACOMMENT: '!!' '!'?  RAW_TEXT_UNTIL_EOL?;
 METACOMMENT: '!!' '!'* '!'? RAW_TEXT_NOT_BARLINE;
 FIELDCOMMENT: '!' RAW_TEXT_NOT_BARLINE;
 fragment RAW_TEXT: ~([\t\n\r])+;
@@ -235,28 +164,8 @@ fragment RAW_TEXT_NOT_BARLINE: (~[!|=:;\t\n\r])~([\t\n\r])*; // !:, !; or !| bel
 
 ANY: . ;
 
-
-//2020 METADATACOMMENT: '!!!' RAW_TEXT;
-//2020 FIELDCCOMMENT_EMPTY: EXCLAMATION;
-//2020 FIELDCCOMMENT: EXCLAMATION RAW_TEXT;
-//2020 INSTRUMENT: TANDEM_INSTRUMENT '"'? RAW_TEXT;
-
-// | and ! to avoid confusing a comment with a bar line
-// the ? is used to set the non greedy mode (https://github.com/antlr/antlr4/blob/master/doc/wildcard.md)
-//2020 fragment RAW_TEXT: (~[\t\n\r!|])+;
-//fragment RAW_TEXT: .*?;
-
-// FIELD_TEXT: RAW_TEXT;
-
-
-/*29 oct 2023 mode FREE_TEXT;
-    FIELD_TEXT: ~[\t\n\r]+; // must reset mode here to let lexer recognize the tab or newline
-//FREE_TEXT_TAB: '\t' {incSpine("free_text mode tab");}; // incSpine changes mode depending on the spine type
-//FREE_TEXT_EOL : '\r'?'\n' {onEOL("free_text mode eol");};
-*/
-
 mode FREE_TEXT;
 FIELD_TEXT: ~[\t\n\r]+ -> mode(0); // must reset mode here to let lexer recognize the tab or newline
-FREE_TEXT_TAB: '\t' {self.incSpine();}; // incSpine changes mode depending on the spine type
-FREE_TEXT_EOL : '\r'?'\n' {self.resetSpineAndMode();};
+FREE_TEXT_TAB: '\t';
+FREE_TEXT_EOL : '\r'?'\n';
 
