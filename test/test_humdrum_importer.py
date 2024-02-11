@@ -5,7 +5,8 @@ import unittest
 import logging
 import sys
 
-from src.import_humdrum import HumdrumImporter
+from src.import_humdrum import HumdrumImporter, ExportOptions
+from src.tokens import BEKERN_CATEGORIES
 
 logger = logging.getLogger()
 logger.level = logging.DEBUG
@@ -29,7 +30,18 @@ class ImporterTestCase(unittest.TestCase):
         with open(ekern, 'r') as file1:
             expected_content = file1.read()
 
-        exported_ekern = importer.doExportProcessed()
+        export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
+        exported_ekern = importer.doExportProcessed(export_options)
+
+        if exported_ekern != expected_content:
+            print('---- Expected content ----')
+            print('--------------------------')
+            print(expected_content)
+
+            print('---- Exported content ----')
+            print('--------------------------')
+            print(exported_ekern)
+
         self.assertEquals(expected_content, exported_ekern)
 
     # it loads a simple file
@@ -114,15 +126,15 @@ class ImporterTestCase(unittest.TestCase):
         # self.assertEqual(1, len(ts.files))
 
     def testLegacyTests(self):
+        self.doEKernTest('resource_dir/legacy/guide02-example2-1.krn')
+        self.doEKernTest('resource_dir/legacy/guide02-example2-3.krn')
+        self.doEKernTest('resource_dir/legacy/guide02-example2-4.krn')
+        self.doEKernTest('resource_dir/legacy/guide06-example6-1.krn')
+        self.doEKernTest('resource_dir/legacy/guide06-example6-2.krn')
         self.doEKernTest('resource_dir/legacy/base_tuplet.krn')
-        self.doJustImportTest('resource_dir/legacy/chor001.krn')
+        self.doEKernTest('resource_dir/legacy/chor001.krn')
         self.doJustImportTest('resource_dir/legacy/chor009.krn')
         self.doJustImportTest('resource_dir/legacy/chor048.krn')
-        self.doJustImportTest('resource_dir/legacy/guide02-example2-1.krn')
-        self.doJustImportTest('resource_dir/legacy/guide02-example2-3.krn')
-        self.doJustImportTest('resource_dir/legacy/guide02-example2-4.krn')
-        self.doJustImportTest('resource_dir/legacy/guide06-example6-1.krn')
-        self.doJustImportTest('resource_dir/legacy/guide06-example6-2.krn')
 
 
 

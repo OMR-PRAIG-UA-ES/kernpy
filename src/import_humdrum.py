@@ -2,37 +2,48 @@ import csv
 import string
 
 from src.importer_factory import createImporter
+from src.tokens import HeaderToken, SpineOperationToken, TokenCategory
+
+
+class ExportOptions:
+    def __init__(self, spine_types=[], token_categories=[], from_measure=None, to_measure=None):
+        """
+        :spine_types: **kern, **mens, etc...
+        :token_types: TokenCategory
+        """
+        self.spine_types = spine_types
+        self.from_measure = from_measure
+        self.to_measure = to_measure
+        self.token_categories = token_categories
 
 
 class Spine:
-    def __init__(self, header, importer):
-        self.header = header  # **mens, **kern, etc...
-        self.processed_rows = []  # each row will contain just one item or an array of items
-        self.unprocessed_rows = []  # each row will contain just one item or an array of items
+    def __init__(self, spine_type, importer):
+        self.spine_type = spine_type  # **mens, **kern, etc...
+        self.rows = []  # each row will contain just one item or an array of items of type Token
         self.importer = importer
         self.subspines = 1  # 0 for terminated subspines
 
     def size(self):
-        return len(self.processed_rows)
+        return len(self.rows)
 
     def addRow(self):
         if self.subspines != 0: # if not terminated
-            self.processed_rows.append([])
-            self.unprocessed_rows.append([])
+            self.rows.append([])
 
-    def addToken(self, unprocessed_token, processed_token):
-        if not unprocessed_token:
-            raise Exception('Trying to add a None unprocessed token')
+    def addToken(self, encoding, token):
+        if not encoding:
+            raise Exception('Trying to add an empty encoding')
 
-        if not processed_token:
-            raise Exception('Trying to add a None processed token')
+        if not token:
+            raise Exception('Trying to add a empty token')
 
-        row = len(self.processed_rows)-1
-        if len(self.processed_rows[row]) >= self.subspines:
+        row = len(self.rows)-1
+        if len(self.rows[row]) >= self.subspines:
             raise Exception(
-                f'There are already {len(self.processed_rows[row])} subspines, and this spine should have at most {self.subspines}')
-        self.processed_rows[row].append(processed_token)
-        self.unprocessed_rows[row].append(unprocessed_token)
+                f'There are already {len(self.rows[row])} subspines, and this spine should have at most {self.subspines}')
+
+        self.rows[row].append(token)
 
     def increaseSubspines(self):
         self.subspines = self.subspines + 1
@@ -47,32 +58,41 @@ class Spine:
         if self.subspines == 0:
             return True
         else:
-            row = len(self.processed_rows)-1
-            return len(self.processed_rows[row]) >= self.subspines
+            row = len(self.rows)-1
+            return len(self.rows[row]) >= self.subspines
 
-    def getRowContent(self, row, content_array) -> string:
+    def getRowContent(self, row, just_encoding: bool, token_categories) -> string:
         if row < 0:
             raise Exception(f'Negative row {row}')
-        if row >= len(content_array):
-            raise Exception(f'Row {row} out of bounds {len(content_array)}')
+        if row >= len(self.rows):
+            raise Exception(f'Row {row} out of bounds {len(self.rows)}')
 
         result = ''
-        for subspine in content_array[row]:
-            if len(result) > 0:
-                result += '\t'
-            result += subspine
+        for subspine in self.rows[row]:
+            if subspine.category == TokenCategory.STRUCTURAL or subspine.category in token_categories:
+                if len(result) > 0:
+                    result += '\t'
+                if just_encoding:
+                    result += subspine.encoding
+                else:
+                    exp = subspine.export()
+                    if not exp:
+                        raise Exception(f'Subspine {subspine.encoding} is exported as None')
+                    result += subspine.export()
 
         return result
 
-    def getProcessedRow(self, row: int) -> string:
-        return self.getRowContent(row, self.processed_rows)
+    def getProcessedRow(self, row: int, token_categories) -> string:
+        return self.getRowContent(row, False, token_categories)
 
-    def getUnprocessedRow(self, row: int) -> string:
-        return self.getRowContent(row, self.unprocessed_rows)
+    def getUnprocessedRow(self, row: int, token_categories) -> string:
+        return self.getRowContent(row, True, token_categories)
+
 
 
 class HumdrumImporter:
     HEADERS = {"**mens", "**kern", "**text", "**harm", "**mxhm", "**root", "**dyn", "**dynam", "**fing"}
+    SPINE_OPERATIONS = {"*-", "*+", "*^", "*v"}
 
     def __init__(self):
         self.spines = []
@@ -101,17 +121,31 @@ class HumdrumImporter:
                                 importer = createImporter(column)
                                 importers[column] = importer
                             spine = Spine(column, importer)
-                            extended_header = '**e' + column[2:] # remove the **, and append the e
+                            token = HeaderToken(column)
                             spine.addRow()
-                            spine.addToken(column, extended_header)
+                            spine.addToken(column, token)
                             self.spines.append(spine)
                         else:
                             try:
                                 current_spine = self.getNextSpine()
                             except ValueError:
                                 raise Exception(f'Cannot get next spine at row {row_number}: {ValueError}')
-                            processed_token = current_spine.importer.doImport(column)
-                            current_spine.addToken(column, processed_token)
+
+                            if column in self.SPINE_OPERATIONS:
+                                current_spine.addToken(column, SpineOperationToken(column))
+
+                                if column == '*-':
+                                    current_spine.terminate()
+                                elif column == "*+" or column == "*^":
+                                    current_spine.increaseSubspines()
+                                elif column == "*v":
+                                    current_spine.decreaseSubspines()
+
+
+                            else:
+                                token = current_spine.importer.doImport(column)
+                                if token:
+                                    current_spine.addToken(column, token)
 
                 row_number = row_number + 1
 
@@ -133,30 +167,36 @@ class HumdrumImporter:
 
         return spine
 
-    def doExportProcessed(self) -> string:
-        return self.doExport(True)
+    def doExportProcessed(self, options: ExportOptions) -> string:
+        return self.doExport(True, options)
 
-    def doExportUnprocessed(self) -> string:
-        return self.doExport(False)
+    def doExportUnprocessed(self, options: ExportOptions) -> string:
+        return self.doExport(False, options)
 
-    def doExport(self, use_processed: bool) -> string:
+    def doExport(self, use_processed: bool, options: ExportOptions) -> string:
         result = ''
         max_rows = max(spine.size() for spine in self.spines)
         for i in range(max_rows):
-            first_col = True
+            row_result = ''
+            empty = True
             for spine in self.spines:
-                if i < spine.size():
-                    if first_col:
-                        first_col = False
-                    else:
-                        result += '\t'
+                if spine.spine_type in options.spine_types:
+                    if i < spine.size(): # required because the spine may be terminated
+                        if len(row_result) > 0:
+                            row_result += '\t'
 
-                    if use_processed:
-                        content = spine.getProcessedRow(i)
-                    else:
-                        content = spine.getUnprocessedRow(i)
+                        if use_processed:
+                            content = spine.getProcessedRow(i, options.token_categories)
+                        else:
+                            content = spine.getUnprocessedRow(i, options.token_categories)
 
-                    result += content
-            result += '\n'
+                        if content and content != '.' and content != '*':
+                            empty = False
+
+                        row_result += content
+            if not empty:
+                result += row_result
+                result += '\n'
 
         return result
+

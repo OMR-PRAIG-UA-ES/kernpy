@@ -6,38 +6,50 @@ parser grammar kernSpineParser;
 
 options { tokenVocab=kernSpineLexer;} // use tokens from kernSpineLexer.g4
 
-start: metacomment | spineOperation | field;
+start: metacomment | field;
 
 metacomment: METACOMMENT;
 
 field
     :
-    graphicalToken
+    notes_rests_chords
     |
-    fieldComment // it includes an empty comment
+    structural
     |
-    placeHolder
-    |
-    dynamics
-    |
-    nonVisualTandemInterpretation
-    ;
-
-graphicalToken:
-    (
-    visualTandemInterpretation
-    |
-    contextualTandemInterpretation
+    contextual
     |
     barline
     |
-    rest
+    empty
     |
-    note
+    visualTandemInterpretation
     |
-    chord
-    )
+    fieldComment // it includes an empty comment
+    |
+    nonVisualTandemInterpretation
+    |
+    boundingBox
     ;
+
+notes_rests_chords: note | rest | chord;
+
+structural: staff;
+// those that must be maintained if the file is divided into segments
+contextual:
+    signatures
+    |
+    otherContextual
+    ;
+
+signatures: clef | timeSignature | meterSymbol | keySignature;
+otherContextual: octaveShift
+                     |
+                     key
+                     |
+                     metronome;
+
+empty: nullInterpretation | placeHolder;
+
 
 rest: restDecoration* duration? restChar_r // duration not used in some grace notes (rests)
     restDecoration*;
@@ -62,7 +74,10 @@ note:
     noteDecoration* // TODO Regla semantica (boolean) para que no se repitan
     duration? // grace notes can be specified without durations
     noteDecoration*
-    pitch
+    diatonicPitchAndOctave
+    noteDecoration*
+    alteration?
+    //pitch
     noteDecoration*;
     // TODO in aferNote staffChange? // it must be placed immediately after the pitch+accidental tokens. This is because they also can modify the beam, as well as articulation, slur and tie positions
 
@@ -85,15 +100,11 @@ nonVisualTandemInterpretation:
     |
     transposition
     |
-    tandemTuplet // sometimes found
-    |
     sections
     |
     pianoHand
     |
     ossia //TODO bach/wtc/wtc1f01.krn
-    |
-    boundingBox
     ;
 
     boundingBox: TANDEM_BOUNDING_BOX MINUS pageNumber COLON xywh;
@@ -105,23 +116,6 @@ nonVisualTandemInterpretation:
     h: number;
     pageNumber: ~':'*; // anything until the ':'
 
-// those that must be maintained if the file is divided into segments
-contextualTandemInterpretation:
-    octaveShift
-    |
-    staff
-    |
-    clef
-    |
-    keySignature
-    |
-    key
-    |
-    timeSignature
-    |
-    meterSymbol
-    |
-    metronome;
 
 
 // those ones that are engraved
@@ -138,7 +132,7 @@ visualTandemInterpretation:
     |
     ela // sometimes found
     |
-    nullInterpretation // it is not engraved, but required to correctly engrave the score
+    tandemTuplet // sometimes found
     |
     TANDEM_TSTART | TANDEM_TEND // sometimes found
     ;
@@ -312,62 +306,30 @@ barLineType:
     ;
 
 
-spineOperation:
-     spineTerminator
-     |
-     spineAdd
-     |
-     spineSplit
-     |
-     spineJoin
-     |
-     spinePlaceholder
-     ;
-
-
-spineTerminator: SPINE_TERMINATOR;
-spineAdd: SPINE_ADD;
-spineSplit: SPINE_SPLIT;
-spineJoin: SPINE_JOIN;
-spinePlaceholder: ASTERISK | FIELD_TEXT; // when no operation is done in this spine but there are operations on other spines
-
 //rest: duration CHAR_r CHAR_r? fermata? restLinePosition?;
 restPosition: diatonicPitchAndOctave;
 //restLinePosition: UNDERSCORE clefLine;
 
 //duration: mensuralDuration | modernDuration;
-duration: modernDuration (graceNote | appoggiatura)?; // sometimes we've found a grace note between the duration and the pitch
-//TODO Cambiar de modo cuando estemos en mensural, no aparecerán dynamics y no se confundirá con la dinámica sf
-// dot: arationDot | augmentationDot;
+duration: modernDuration augmentationDot* (graceNote | appoggiatura)?; // sometimes we've found a grace note between the duration and the pitch
 
 fermata: SEMICOLON; // pause
 
-mensuralDuration: mensuralFigure coloured? mensuralPerfection? mensuralDot;
-
-mensuralDot: (augmentationDot | arationDot)?;
-
-modernDuration: number (PERCENT number)? augmentationDot*; //TODO 40%3...
-
-coloured: TILDE;
-
-mensuralFigure: CHAR_X | CHAR_L | CHAR_S | CHAR_s | CHAR_M | CHAR_m | CHAR_U | CHAR_u;
+modernDuration: number (PERCENT number)?; //TODO 40%3...
 
 // p=perfect, i=imperfect, I=imperfect by alteratio
-mensuralPerfection: CHAR_p | CHAR_i | CHAR_I;
-
 augmentationDot: DOT;
 
-arationDot: COLON;
 
-pitch: diatonicPitchAndOctave
-    graceNote? 
+/*pitch: diatonicPitchAndOctave - lo quito porque creo que está repetido con noteDecorations
+    graceNote?
     appoggiatura? 
     staffChange? 
     accent? 
     fermata? 
     trill? 
     alteration?
-    CHAR_x?; // sometimes found
+    CHAR_x?; // sometimes found*/
 
 // e.g. 4e#j -> this is for accidental in brackets
 alteration: accidental alterationDisplay?;
@@ -543,16 +505,6 @@ trill:
      |
      CHAR_t;
 
-dynamics:
-    dynamics_symbol (SPACE? dynamics_symbol)*;
-
-dynamics_symbol:
-    subito? (
-    crescendoBegin | crescendoEnd | diminuendoBegin | diminuendoEnd | crescendoContinue | diminuendoContinue |
-    piano | pianissimo | triplePiano | quadruplePiano | forte |  fortissimo | tripleForte | quadrupleForte |
-    mezzoPiano | mezzoForte | sforzando | fortePiano | footnote | rinforzando |
-    (CHAR_v | CHAR_X | CHAR_p | CHAR_m)) // ¿all these appear in beethoven/quartets/quartet07-4.krn - line 153
-    ((CHAR_y CHAR_y?) | CHAR_X)?; 
 
 footnote: QUESTION_MARK+; //TODO -- ???
 

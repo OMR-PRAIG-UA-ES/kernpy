@@ -1,7 +1,10 @@
 import string
 from abc import ABC, abstractmethod
 
+from src.tokens import Token
+
 
 class SpineImporter(ABC):
-    def doImport(self, token: string):
-        return token # by default, it returns the token itself
+    @abstractmethod
+    def doImport(self, encoding: string)->Token:
+        pass

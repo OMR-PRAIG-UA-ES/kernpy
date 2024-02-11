@@ -8,6 +8,7 @@ from src.generated.kernSpineLexer import kernSpineLexer
 from src.generated.kernSpineParser import kernSpineParser
 from src.generated.kernSpineParserListener import kernSpineParserListener
 from src.spine_importer import SpineImporter
+from src.tokens import SimpleToken, TokenCategory, Subtoken, SubTokenCategory, CompoundToken, ChordToken
 
 
 class KernSpineListener(kernSpineParserListener):
@@ -15,88 +16,141 @@ class KernSpineListener(kernSpineParserListener):
     def __init__(self):
         self.SEPARATOR = '·'
         self.first_chord_element = None
-        self.processed_token = None
+        self.token = None
+        self.chord_tokens = None
+        self.duration_subtokens = []
+        self.diatonic_pitch_and_octave_subtoken = None
+        self.accidental_subtoken = None
+        self.decorations = {} # in order to standardize the order of decorators, we map the different properties to their class names
         self.in_chord = False
 
     def enterStart(self, ctx: kernSpineParser.StartContext):
-        self.processed_token = None
+        self.token = None
+        self.duration_subtokens = []
+        self.diatonic_pitch_and_octave_subtoken = None
+        self.accidental_subtoken = None
+        self.decorations = {}
 
-    def exitStart(self, ctx: kernSpineParser.StartContext):
-        if not self.processed_token: # if not rule has processed it, generate the input itself
-            self.processed_token = ctx.getText()
+    # def process_decorations(self, ctx: ParserRuleContext):
+    #     # in order to standardize the order of note decorators, we map the different properties to their class names
+    #     decorations = {}
+    #
+    #     for child in ctx.getChildren():
+    #         # all decorations have just a child
+    #         if child.getChildCount() != 1:
+    #             raise Exception('Only 1 decoration child expected, and found ' + child.getChildCount() + ', check '
+    #                                                                                                      'the '
+    #                                                                                                      'grammar')
+    #         clazz = type(child.getChild(0))
+    #         decoration_type = clazz.__name__
+    #         if decoration_type in decorations:
+    #             logging.warning(
+    #                 f'The decoration {decoration_type} is duplicated')  # TODO Dar información de línea, columna - ¿lanzamos excepción? - hay algunas que sí pueden estar duplicadas? Barrados?
+    #         decorations[decoration_type] = child.getText()
+    #     for key in sorted(decorations.keys()):
+    #         subtoken = Subtoken(decorations[key], SubTokenCategory.DECORATION)
+    #         self.duration_subtoken.append(subtoken)
 
-    def exitEveryRule(self, ctx: ParserRuleContext):
-        super().exitEveryRule(ctx)
+    def exitDuration(self, ctx: kernSpineParser.DurationContext):
+        self.duration_subtokens = [Subtoken(ctx.modernDuration().getText(), SubTokenCategory.DURATION)]
+        for i in range(len(ctx.augmentationDot())):
+            self.duration_subtokens.append(Subtoken(".", SubTokenCategory.DURATION))
 
-    def process_decorations(self, ctx: ParserRuleContext):
-        # in order to standardize the order of note decorators, we map the different properties to their class names
-        decorations = {}
+        if ctx.graceNote():
+            self.duration_subtokens.append(Subtoken(ctx.graceNote().getText(), SubTokenCategory.DURATION))
 
-        for child in ctx.getChildren():
-            if not isinstance(child, kernSpineParser.PitchContext) and not isinstance(child,
-                                                                                      kernSpineParser.DurationContext) \
-                    and not isinstance(child, kernSpineParser.RestChar_rContext):
-                # all decorations have just a child
-                if child.getChildCount() != 1:
-                    raise Exception('Only 1 decoration child expected, and found ' + child.getChildCount() + ', check '
-                                                                                                             'the '
-                                                                                                             'grammar')
-                clazz = type(child.getChild(0))
-                decoration_type = clazz.__name__
-                if decoration_type in decorations:
-                    logging.warning(
-                        f'The decoration {decoration_type} is duplicated')  # TODO Dar información de línea, columna - ¿lanzamos excepción? - hay algunas que sí pueden estar duplicadas? Barrados?
-                decorations[decoration_type] = child.getText()
-        for key in sorted(decorations.keys()):
-            self.writeSeparator()
-            self.writeText(decorations[key])
+        if ctx.appoggiatura():
+            self.duration_subtokens.append(Subtoken(ctx.appoggiatura().getText(), SubTokenCategory.DURATION))
+
+    def exitDiatonicPitchAndOctave(self, ctx: kernSpineParser.DiatonicPitchAndOctaveContext):
+        self.diatonic_pitch_and_octave_subtoken = Subtoken(ctx.getText(), SubTokenCategory.PITCH)
+
+    def exitNoteDecoration(self, ctx: kernSpineParser.NoteDecorationContext):
+        clazz = type(ctx.getChild(0))
+        decoration_type = clazz.__name__
+        if decoration_type in self.decorations:
+            logging.warning(
+                f'The decoration {decoration_type} is duplicated')  # TODO Dar información de línea, columna - ¿lanzamos excepción? - hay algunas que sí pueden estar duplicadas? Barrados?
+
+        self.decorations[decoration_type] = ctx.getText()
+
+    def addNoteRest(self, ctx, subtokens):
+        for key in sorted(self.decorations.keys()):
+            subtoken = Subtoken(self.decorations[key], SubTokenCategory.DECORATION)
+            subtokens.append(subtoken)
+
+        token = CompoundToken(ctx.getText(), TokenCategory.CORE, subtokens)
+        if self.in_chord:
+            self.chord_tokens.append(token)
+        else:
+            self.token = token
 
     def exitNote(self, ctx: kernSpineParser.NoteContext):
-        if self.in_chord:
-            self.addChordSeparator()
+        subtokens = []
+        for duration_subtoken in self.duration_subtokens:
+            subtokens.append(duration_subtoken)
+        subtokens.append(self.diatonic_pitch_and_octave_subtoken)
+        if ctx.alteration():
+            subtokens.append(Subtoken(ctx.alteration().getText(), SubTokenCategory.PITCH))
 
-        if ctx.duration():
-            self.writeContext(ctx.duration())
-            self.writeSeparator()
-        self.writeContext(ctx.pitch())
-        self.process_decorations(ctx)
+        self.addNoteRest(ctx, subtokens)
 
     def exitRest(self, ctx: kernSpineParser.RestContext):
         if self.in_chord:
             self.addChordSeparator()
 
-        self.writeText('r')
-        if ctx.duration():
-            self.writeContext(ctx.duration())
-            self.writeSeparator()
-        self.process_decorations(ctx)
+        subtokens = []
+        for duration_subtoken in self.duration_subtokens:
+            subtokens.append(duration_subtoken)
+        subtokens.append(Subtoken('r', SubTokenCategory.PITCH))
+        self.addNoteRest(ctx, subtokens)
 
     def enterChord(self, ctx: kernSpineParser.ChordContext):
         self.in_chord = True
-        self.first_chord_element = True
+        self.chord_tokens = []
 
     def exitChord(self, ctx: kernSpineParser.ChordContext):
         self.in_chord = False
+        self.token = ChordToken(ctx.getText(), TokenCategory.CORE, self.chord_tokens)
 
-    def addChordSeparator(self):
-        if self.first_chord_element:
-            self.first_chord_element = False
-        else:
-            self.writeText(' ')
+    def exitBarline(self, ctx: kernSpineParser.BarlineContext):
+        if not "-" in ctx.getText(): # hidden
+            txt_without_number = ''
+            if ctx.EQUAL(0) and ctx.EQUAL(1):
+                txt_without_number = '=='
+            elif ctx.EQUAL(0):
+                txt_without_number = '='
+            if ctx.barLineType():
+                txt_without_number += ctx.barLineType().getText()
+            if ctx.fermata():
+                txt_without_number += ctx.fermata().getText()
 
-    def writeSeparator(self):
-        if not self.processed_token:
-            raise Exception('Cannot add a separator to an empty processed token')
-        self.processed_token += self.SEPARATOR
+            self.token = SimpleToken(txt_without_number, TokenCategory.SEPARATORS)
 
-    def writeContext(self, ctx: ParserRuleContext):
-        self.writeText(ctx.getText())
+    def exitEmpty(self, ctx:kernSpineParser.EmptyContext):
+        self.token = SimpleToken(ctx.getText(), TokenCategory.EMPTY)
 
-    def writeText(self, text: string):
-        if not self.processed_token:
-            self.processed_token = text
-        else:
-            self.processed_token += text
+    def exitNonVisualTandemInterpretation(self, ctx: kernSpineParser.NonVisualTandemInterpretationContext):
+        self.token = SimpleToken(ctx.getText(), TokenCategory.OTHER)
+
+    def exitVisualTandemInterpretation(self, ctx: kernSpineParser.VisualTandemInterpretationContext):
+        self.token = SimpleToken(ctx.getText(), TokenCategory.OTHER)
+
+    def exitFieldComment(self, ctx: kernSpineParser.FieldCommentContext):
+        self.token = SimpleToken(ctx.getText(), TokenCategory.FIELD_COMMENTS)
+
+    def exitOtherContextual(self, ctx: kernSpineParser.ContextualContext):
+        self.token = SimpleToken(ctx.getText(), TokenCategory.OTHER_CONTEXTUAL)
+
+    def exitSignatures(self, ctx: kernSpineParser.SignaturesContext):
+        self.token = SimpleToken(ctx.getText(), TokenCategory.SIGNATURES)
+
+    def exitStructural(self, ctx: kernSpineParser.StructuralContext):
+        self.token = SimpleToken(ctx.getText(), TokenCategory.STRUCTURAL)
+
+    def exitBoundingBox(self, ctx: kernSpineParser.BoundingBoxContext):
+        super().exitBoundingBox(ctx)
+        #TODO páginas , ....
 
 
 class KernListenerImporter(BaseANTLRListenerImporter):
@@ -127,5 +181,5 @@ class KernSpineImporter(SpineImporter):
         walker = ParseTreeWalker()
         listener = KernSpineListener()
         walker.walk(listener, tree)
-        return listener.processed_token
+        return listener.token
 
