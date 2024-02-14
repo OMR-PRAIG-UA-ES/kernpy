@@ -138,7 +138,8 @@ class ImporterTestCase(unittest.TestCase):
         self.doJustImportTest('resource_dir/legacy/chor009.krn') #, [23, 32, 39, 48, 53, 57, 65, 74, 83, 90, 99, 107, 116, 122])
         self.doJustImportTest('resource_dir/legacy/chor048.krn') #, [22, 27, 32, 41, 46, 56, 65, 74, 83, 91, 98])
 
-
+    def testBoundingBoxes(self):
+        self.doJustImportTest('resource_dir/polish/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn')
 
 def test():
     unittest.main()

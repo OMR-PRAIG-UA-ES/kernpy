@@ -18,6 +18,7 @@ class TokenCategory(Enum):
     HARMONY = auto()
     FINGERING = auto()
     LYRICS = auto()
+    BOUNDING_BOXES = auto()
     OTHER = auto()
 
 BEKERN_CATEGORIES = [TokenCategory.STRUCTURAL, TokenCategory.CORE, TokenCategory.EMPTY, TokenCategory.SIGNATURES, TokenCategory.BARLINES]
@@ -113,3 +114,37 @@ class ChordToken(SimpleToken):
             result += note_token.export()
 
         return result
+
+class BoundingBox:
+    def __init__(self, x, y, w, h):
+        self.from_x = x
+        self.from_y = y
+        self.to_x = x + w
+        self.to_y = y + h
+
+    def w(self):
+        return self.to_x - self.from_x
+
+    def h(self):
+        return self.to_y - self.from_y
+
+    def extend(self, bounding_box):
+        self.from_x = min(self.from_x, bounding_box.from_x)
+        self.from_y = min(self.from_y, bounding_box.from_y)
+        self.to_x = max(self.to_x, bounding_box.to_x)
+        self.to_y = max(self.to_y, bounding_box.to_y)
+
+    def __str__(self):
+        return f'(x={self.from_x}, y={self.from_y}, w={self.w()}, h={self.h()}), from bar {self.from_bar}, to bar {self.to_bar}'
+
+    def xywh(self):
+        return f'{self.from_x},{self.from_y},{self.w()},{self.h()}'
+
+class BoundingBoxToken(AbstractToken):
+    def __init__(self, encoding, page_number, bounding_box):
+        super().__init__(encoding, TokenCategory.BOUNDING_BOXES)
+        self.page_number = page_number
+        self.bounding_box = bounding_box
+
+    def export(self) -> string:
+        return self.encoding

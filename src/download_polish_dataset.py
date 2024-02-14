@@ -78,10 +78,10 @@ class BoundingBox:
         return self.toY - self.fromY
 
     def extend(self, bounding_box):
-        self.fromX = min(self.fromX, bounding_box.fromX)
-        self.fromY = min(self.fromY, bounding_box.fromY)
-        self.toX = max(self.toX, bounding_box.toX)
-        self.toY = max(self.toY, bounding_box.toY)
+        self.fromX = min(self.fromX, bounding_box.from_x)
+        self.fromY = min(self.fromY, bounding_box.from_y)
+        self.toX = max(self.toX, bounding_box.to_x)
+        self.toY = max(self.toY, bounding_box.to_y)
 
     def __str__(self):
         return f'(x={self.fromX}, y={self.fromY}, w={self.w()}, h={self.h()}), from bar {self.fromBar}, to bar {self.toBar}'
@@ -132,8 +132,8 @@ class Kern2EkernListenerWithDownload(KernListener):
             print(f'Adding {page}')
             if self.lastBarNumber is None:
                 self.lastBarNumber = 0
-            self.lastBoundingBox.fromBar = self.lastBarNumber
-            self.lastBoundingBox.toBar = self.lastBarNumber
+            self.lastBoundingBox.from_bar = self.lastBarNumber
+            self.lastBoundingBox.to_bar = self.lastBarNumber
             self.pageBoundingBoxes[page] = self.lastBoundingBox
         # TODO measures en cada uno
 

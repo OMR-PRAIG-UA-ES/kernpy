@@ -2,7 +2,7 @@ import csv
 import string
 
 from src.importer_factory import createImporter
-from src.tokens import HeaderToken, SpineOperationToken, TokenCategory
+from src.tokens import HeaderToken, SpineOperationToken, TokenCategory, BoundingBoxToken
 
 
 class ExportOptions:
@@ -15,6 +15,12 @@ class ExportOptions:
         self.from_measure = from_measure
         self.to_measure = to_measure
         self.token_categories = token_categories
+
+class BoundingBoxMeasures:
+    def __init__(self, bounding_box, from_measure, to_measure):
+        self.from_measure = from_measure
+        self.to_measure = to_measure
+        self.bounding_box = bounding_box
 
 
 class Spine:
@@ -92,7 +98,6 @@ class Spine:
         return self.getRowContent(row, True, token_categories)
 
 
-
 class HumdrumImporter:
     HEADERS = {"**mens", "**kern", "**text", "**harm", "**mxhm", "**root", "**dyn", "**dynam", "**fing"}
     SPINE_OPERATIONS = {"*-", "*+", "*^", "*v"}
@@ -102,6 +107,9 @@ class HumdrumImporter:
         self.current_spine_index = 0
         #self.page_start_rows = []
         self.measure_start_rows = [] # starting from 1
+        self.page_bounding_boxes = {}
+        self.last_measure_number = None
+        self.last_bounding_box = None
 
 
     def doImportFile(self, file_path: string):
@@ -156,9 +164,12 @@ class HumdrumImporter:
                                 current_spine.addToken(column, token)
                                 if token.category == TokenCategory.BARLINES or token.category == TokenCategory.CORE and len(self.measure_start_rows) == 0:
                                     is_barline = True
+                                elif isinstance(token, BoundingBoxToken):
+                                    self.handleBoundingBox(token)
 
                 if is_barline:
                     self.measure_start_rows.append(row_number)
+                    self.last_measure_number = len(self.measure_start_rows)
                 row_number = row_number + 1
 
     def getSpine(self, index: int)->Spine:
@@ -184,6 +195,20 @@ class HumdrumImporter:
 
     def doExportUnprocessed(self, options: ExportOptions) -> string:
         return self.doExport(False, options)
+
+    def handleBoundingBox(self, token: BoundingBoxToken):
+        page_number = token.page_number
+        last_page_bb = self.page_bounding_boxes.get(page_number)
+        if last_page_bb is None:
+            print(f'Adding {page_number}')
+            if self.last_measure_number is None:
+                self.last_measure_number = 0
+            self.last_bounding_box = BoundingBoxMeasures(token.bounding_box, self.last_measure_number, self.last_measure_number)
+            self.page_bounding_boxes[page_number] = self.last_bounding_box
+        else:
+            print(f'Extending page {page_number}')
+            last_page_bb.bounding_box.extend(self.last_bounding_box.bounding_box)
+            last_page_bb.to_measure = self.last_measure_number
 
     def doExport(self, use_processed: bool, options: ExportOptions) -> string:
         result = ''

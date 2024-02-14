@@ -8,7 +8,8 @@ from src.generated.kernSpineLexer import kernSpineLexer
 from src.generated.kernSpineParser import kernSpineParser
 from src.generated.kernSpineParserListener import kernSpineParserListener
 from src.spine_importer import SpineImporter
-from src.tokens import SimpleToken, TokenCategory, Subtoken, SubTokenCategory, CompoundToken, ChordToken
+from src.tokens import SimpleToken, TokenCategory, Subtoken, SubTokenCategory, CompoundToken, ChordToken, BoundingBox, \
+    BoundingBoxToken
 
 
 class KernSpineListener(kernSpineParserListener):
@@ -25,6 +26,7 @@ class KernSpineListener(kernSpineParserListener):
         self.in_chord = False
         #self.page_start_rows = [] # TODO
         self.measure_start_rows = []
+        self.last_bounding_box = None
 
 
     def enterStart(self, ctx: kernSpineParser.StartContext):
@@ -152,9 +154,14 @@ class KernSpineListener(kernSpineParserListener):
     def exitStructural(self, ctx: kernSpineParser.StructuralContext):
         self.token = SimpleToken(ctx.getText(), TokenCategory.STRUCTURAL)
 
+    def exitXywh(self, ctx: kernSpineParser.XywhContext):
+        self.last_bounding_box = BoundingBox(int(ctx.x().getText()), int(ctx.y().getText()), int(ctx.w().getText()),
+                                           int(ctx.h().getText()))
+
     def exitBoundingBox(self, ctx: kernSpineParser.BoundingBoxContext):
-        super().exitBoundingBox(ctx)
-        #TODO páginas , ....
+        page = ctx.pageNumber().getText()
+        bbox = BoundingBox(int(ctx.xywh().x().getText()), int(ctx.xywh().y().getText()), int(ctx.xywh().w().getText()), int(ctx.xywh().h().getText()))
+        self.token = BoundingBoxToken(ctx.getText(), page, bbox)
 
 
 class KernListenerImporter(BaseANTLRListenerImporter):
