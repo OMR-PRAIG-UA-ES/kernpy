@@ -75,10 +75,13 @@ class Spine:
                 if just_encoding:
                     result += subspine.encoding
                 else:
-                    exp = subspine.export()
+                    if subspine.hidden:
+                        exp = '.'
+                    else:
+                        exp = subspine.export()
                     if not exp:
                         raise Exception(f'Subspine {subspine.encoding} is exported as None')
-                    result += subspine.export()
+                    result += exp
 
         return result
 
@@ -97,6 +100,9 @@ class HumdrumImporter:
     def __init__(self):
         self.spines = []
         self.current_spine_index = 0
+        #self.page_start_rows = []
+        self.measure_start_rows = [] # starting from 1
+
 
     def doImportFile(self, file_path: string):
         importers = {}
@@ -108,6 +114,7 @@ class HumdrumImporter:
                 for spine in self.spines:
                     self.current_spine_index = 0
                     spine.addRow()
+                is_barline = False
                 for column in row:
                     if not column.startswith("!!"):
                         if column in self.HEADERS:
@@ -144,9 +151,14 @@ class HumdrumImporter:
 
                             else:
                                 token = current_spine.importer.doImport(column)
-                                if token:
-                                    current_spine.addToken(column, token)
+                                if not token:
+                                    raise Exception(f'No token generated for input {column}')
+                                current_spine.addToken(column, token)
+                                if token.category == TokenCategory.BARLINES or token.category == TokenCategory.CORE and len(self.measure_start_rows) == 0:
+                                    is_barline = True
 
+                if is_barline:
+                    self.measure_start_rows.append(row_number)
                 row_number = row_number + 1
 
     def getSpine(self, index: int)->Spine:

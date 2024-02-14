@@ -23,6 +23,9 @@ class KernSpineListener(kernSpineParserListener):
         self.accidental_subtoken = None
         self.decorations = {} # in order to standardize the order of decorators, we map the different properties to their class names
         self.in_chord = False
+        #self.page_start_rows = [] # TODO
+        self.measure_start_rows = []
+
 
     def enterStart(self, ctx: kernSpineParser.StartContext):
         self.token = None
@@ -114,18 +117,19 @@ class KernSpineListener(kernSpineParserListener):
         self.token = ChordToken(ctx.getText(), TokenCategory.CORE, self.chord_tokens)
 
     def exitBarline(self, ctx: kernSpineParser.BarlineContext):
-        if not "-" in ctx.getText(): # hidden
-            txt_without_number = ''
-            if ctx.EQUAL(0) and ctx.EQUAL(1):
-                txt_without_number = '=='
-            elif ctx.EQUAL(0):
-                txt_without_number = '='
-            if ctx.barLineType():
-                txt_without_number += ctx.barLineType().getText()
-            if ctx.fermata():
-                txt_without_number += ctx.fermata().getText()
+        txt_without_number = ''
+        if ctx.EQUAL(0) and ctx.EQUAL(1):
+            txt_without_number = '=='
+        elif ctx.EQUAL(0):
+            txt_without_number = '='
+        if ctx.barLineType():
+            txt_without_number += ctx.barLineType().getText()
+        if ctx.fermata():
+            txt_without_number += ctx.fermata().getText()
 
-            self.token = SimpleToken(txt_without_number, TokenCategory.SEPARATORS)
+        self.token = SimpleToken(txt_without_number, TokenCategory.BARLINES)
+        self.token.hidden = "-" in ctx.getText() # hidden
+
 
     def exitEmpty(self, ctx:kernSpineParser.EmptyContext):
         self.token = SimpleToken(ctx.getText(), TokenCategory.EMPTY)

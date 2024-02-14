@@ -19,7 +19,7 @@ class ImporterTestCase(unittest.TestCase):
         importer = HumdrumImporter()
         importer.doImportFile(kern_file)
 
-    def doEKernTest(self, kern_file):
+    def doEKernTest(self, kern_file, expected_measure_start_rows):
         print(f'Importing {kern_file} and checking the ekern')
         importer = HumdrumImporter()
         importer.doImportFile(kern_file)
@@ -32,6 +32,7 @@ class ImporterTestCase(unittest.TestCase):
 
         export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
         exported_ekern = importer.doExportProcessed(export_options)
+        exported_measure_start_rows = importer.measure_start_rows
 
         if exported_ekern != expected_content:
             print('---- Expected content ----')
@@ -43,6 +44,7 @@ class ImporterTestCase(unittest.TestCase):
             print(exported_ekern)
 
         self.assertEquals(expected_content, exported_ekern)
+        self.assertEquals(expected_measure_start_rows, exported_measure_start_rows)
 
     # it loads a simple file
     def testReadMinimalKern(self):
@@ -126,15 +128,15 @@ class ImporterTestCase(unittest.TestCase):
         # self.assertEqual(1, len(ts.files))
 
     def testLegacyTests(self):
-        self.doEKernTest('resource_dir/legacy/guide02-example2-1.krn')
-        self.doEKernTest('resource_dir/legacy/guide02-example2-3.krn')
-        self.doEKernTest('resource_dir/legacy/guide02-example2-4.krn')
-        self.doEKernTest('resource_dir/legacy/guide06-example6-1.krn')
-        self.doEKernTest('resource_dir/legacy/guide06-example6-2.krn')
-        self.doEKernTest('resource_dir/legacy/base_tuplet.krn')
-        self.doEKernTest('resource_dir/legacy/chor001.krn')
-        self.doJustImportTest('resource_dir/legacy/chor009.krn')
-        self.doJustImportTest('resource_dir/legacy/chor048.krn')
+        self.doEKernTest('resource_dir/legacy/base_tuplet.krn', [5])
+        self.doEKernTest('resource_dir/legacy/guide02-example2-1.krn', [5, 8, 11, 15])
+        self.doEKernTest('resource_dir/legacy/guide02-example2-3.krn', [8, 9, 18, 22, 30, 38])
+        self.doEKernTest('resource_dir/legacy/guide02-example2-4.krn', [6, 12, 16, 23, 27, 33, 37, 47, 51])
+        self.doEKernTest('resource_dir/legacy/guide06-example6-1.krn', [5, 18, 27])
+        self.doEKernTest('resource_dir/legacy/guide06-example6-2.krn', [6, 15, 28, 41])
+        self.doEKernTest('resource_dir/legacy/chor001.krn', [26, 27, 32, 37, 43, 46, 50, 55, 57, 60, 67, 74, 77, 82, 88, 93, 96, 102, 107, 114, 117, 122, 128, 130])
+        self.doJustImportTest('resource_dir/legacy/chor009.krn') #, [23, 32, 39, 48, 53, 57, 65, 74, 83, 90, 99, 107, 116, 122])
+        self.doJustImportTest('resource_dir/legacy/chor048.krn') #, [22, 27, 32, 41, 46, 56, 65, 74, 83, 91, 98])
 
 
 

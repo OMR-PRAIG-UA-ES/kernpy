@@ -12,7 +12,7 @@ class TokenCategory(Enum):
     EMPTY = auto() # placeholders, null interpretation
     SIGNATURES = auto()
     OTHER_CONTEXTUAL = auto()
-    SEPARATORS = auto()
+    BARLINES = auto()
     FIELD_COMMENTS = auto()
     DYNAMICS = auto()
     HARMONY = auto()
@@ -20,7 +20,7 @@ class TokenCategory(Enum):
     LYRICS = auto()
     OTHER = auto()
 
-BEKERN_CATEGORIES = [TokenCategory.STRUCTURAL, TokenCategory.CORE, TokenCategory.EMPTY, TokenCategory.SIGNATURES, TokenCategory.SEPARATORS]
+BEKERN_CATEGORIES = [TokenCategory.STRUCTURAL, TokenCategory.CORE, TokenCategory.EMPTY, TokenCategory.SIGNATURES, TokenCategory.BARLINES]
 
 # TODO - de momento no lo usamos para filtrar
 class SubTokenCategory(Enum):
@@ -43,6 +43,7 @@ class AbstractToken(ABC):
     def __init__(self, encoding, category):
         self.encoding = encoding
         self.category = category
+        self.hidden = False
 
     @abstractmethod
     def export(self) -> string:
