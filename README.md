@@ -19,3 +19,10 @@ pip install urllib3==1.26.6
 ```
 
 It has been tested with version 4.13.1 of the package.
+
+
+## Run tests:
+```shell
+python run-tests.py 
+```
+
