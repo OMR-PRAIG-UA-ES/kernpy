@@ -23,6 +23,6 @@ It has been tested with version 4.13.1 of the package.
 
 ## Run tests:
 ```shell
-python run-tests.py 
+make tests
 ```
 
