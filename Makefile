@@ -1,7 +1,7 @@
 
 
 tests:
-	python run_all_tests.py
+	python pykern/run_all_tests.py
 
 
 
