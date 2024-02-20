@@ -1,0 +1,5 @@
+python -m pip install mkdocs
+python -m pip install "mkdocstrings[python]"
+python -m pip install mkdocs-material
+
+# if not working, uninstall and reinstall all again
