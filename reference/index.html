@@ -63,6 +63,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#pykern.src.import_humdrum" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -218,6 +223,17 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    API Reference
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -227,6 +243,56 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pykern.src.import_humdrum" class="md-nav__link">
+    <span class="md-ellipsis">
+      import_humdrum
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pykern.src.import_humdrum.ExportOptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      ExportOptions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ExportOptions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pykern.src.import_humdrum.ExportOptions.__init__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __init__
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -290,6 +356,47 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pykern.src.import_humdrum" class="md-nav__link">
+    <span class="md-ellipsis">
+      import_humdrum
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pykern.src.import_humdrum.ExportOptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      ExportOptions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ExportOptions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pykern.src.import_humdrum.ExportOptions.__init__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __init__
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -311,6 +418,134 @@ reference for the technical implementation of the
 <code>pyKern</code> project code.</p>
 <p>...
 Soon!</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="pykern.src.import_humdrum"></a>
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="pykern.src.import_humdrum.ExportOptions" class="doc doc-heading">
+          <code>ExportOptions</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+
+            <details class="quote">
+              <summary>Source code in <code>pykern/src/import_humdrum.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ExportOptions</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spine_types</span><span class="o">=</span><span class="p">[],</span> <span class="n">token_categories</span><span class="o">=</span><span class="p">[],</span> <span class="n">from_measure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">to_measure</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :spine_types: **kern, **mens, etc...</span>
+<span class="sd">        :token_types: TokenCategory</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spine_types</span> <span class="o">=</span> <span class="n">spine_types</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">from_measure</span> <span class="o">=</span> <span class="n">from_measure</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_measure</span> <span class="o">=</span> <span class="n">to_measure</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token_categories</span> <span class="o">=</span> <span class="n">token_categories</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="pykern.src.import_humdrum.ExportOptions.__init__" class="doc doc-heading">
+          <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">spine_types</span><span class="o">=</span><span class="p">[],</span> <span class="n">token_categories</span><span class="o">=</span><span class="p">[],</span> <span class="n">from_measure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">to_measure</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>:spine_types: <strong>kern, </strong>mens, etc...
+:token_types: TokenCategory</p>
+
+          <details class="quote">
+            <summary>Source code in <code>pykern/src/import_humdrum.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spine_types</span><span class="o">=</span><span class="p">[],</span> <span class="n">token_categories</span><span class="o">=</span><span class="p">[],</span> <span class="n">from_measure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">to_measure</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :spine_types: **kern, **mens, etc...</span>
+<span class="sd">    :token_types: TokenCategory</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">spine_types</span> <span class="o">=</span> <span class="n">spine_types</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">from_measure</span> <span class="o">=</span> <span class="n">from_measure</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">to_measure</span> <span class="o">=</span> <span class="n">to_measure</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">token_categories</span> <span class="o">=</span> <span class="n">token_categories</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+
+
+
+  </div>
+
+  </div>
+
+</div><p>End</p>
 
 
 
