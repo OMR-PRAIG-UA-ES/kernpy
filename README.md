@@ -1,4 +1,9 @@
 # Python Humdrum **kern and **mens utilities
+
+## Documentation
+Documentation is available at [https://OMR-PRAIG-UA-ES.github.io/pykern/](https://OMR-PRAIG-UA-ES.github.io/pykern/)
+
+
 It requires the `antlr4` package to be installed using:
 ```shell
 pip install antlr4-python3-runtime
