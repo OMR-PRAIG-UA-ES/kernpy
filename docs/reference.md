@@ -5,3 +5,7 @@ reference for the technical implementation of the
 
 ...
 Soon!
+
+::: pykern.src.import_humdrum
+
+End
