@@ -15,7 +15,7 @@ def run_tests():
     ```bash
     python pykern/run_all_tests.py
     ```
-    
+
     """
     working_dir = "./pykern/test"
     os.chdir(working_dir)

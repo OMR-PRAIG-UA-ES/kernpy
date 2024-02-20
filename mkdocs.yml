@@ -1,0 +1,16 @@
+site_name: pyKern
+
+theme:
+  name: "material"
+
+plugins:
+  - mkdocstrings
+
+
+nav:
+  - pyKern Docs: index.md
+  - Getting Started: get-started.md
+  - How-To Guides: how-to-guides.md
+  - API Reference: reference.md
+  - Explanation: explanation.md
+  - About: about.md
