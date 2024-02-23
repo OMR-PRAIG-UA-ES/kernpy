@@ -1,7 +1,6 @@
 # Run from the root project (the 'test' parent folder): python3 -m unittest test/test_importer.py
 # or from the IDE
 import unittest
-from src.kern_importer import HumdrumImporter
 import logging
 import sys
 
