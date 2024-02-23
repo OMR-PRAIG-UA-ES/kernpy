@@ -1,15 +1,15 @@
 import string
 
-from src.dyn_importer import DynSpineImporter
-from src.dynam_spine_importer import DynamSpineImporter
-from src.fing_spine_importer import FingSpineImporter
-from src.harm_spine_importer import HarmSpineImporter
-from src.kern_spine_importer import KernSpineImporter
-from src.mens_spine_importer import MensSpineImporter
-from src.mhxm_spine_importer import MxhmSpineImporter
-from src.root_importer import RootSpineImporter
-from src.spine_importer import SpineImporter
-from src.text_spine_importer import TextSpineImporter
+from .dyn_importer import DynSpineImporter
+from .dynam_spine_importer import DynamSpineImporter
+from .fing_spine_importer import FingSpineImporter
+from .harm_spine_importer import HarmSpineImporter
+from .kern_spine_importer import KernSpineImporter
+from .mens_spine_importer import MensSpineImporter
+from .mhxm_spine_importer import MxhmSpineImporter
+from .root_importer import RootSpineImporter
+from .spine_importer import SpineImporter
+from .text_spine_importer import TextSpineImporter
 
 
 def createImporter(spine_type: string) -> SpineImporter:

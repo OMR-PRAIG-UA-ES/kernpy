@@ -2,8 +2,8 @@
 # or from the IDE
 import unittest
 
-from src.check_kern import check_file
-from src.check_kern import check_string
+
+from pykern import check_file, check_string
 
 import logging
 import sys

@@ -4,6 +4,8 @@ import unittest
 import logging
 import sys
 
+from pykern import HumdrumImporter
+
 logger = logging.getLogger()
 logger.level = logging.DEBUG
 logger.addHandler(logging.StreamHandler(sys.stdout))

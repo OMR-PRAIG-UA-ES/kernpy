@@ -1,7 +1,7 @@
 from antlr4 import *
-from src.generated.kern.kernParserVisitor import kernParserVisitor
-from src.generated.kern.kernLexer import kernLexer
-from src.generated.kern.kernParser import kernParser
+from .generated.kern.kernParserVisitor import kernParserVisitor
+from .generated.kern.kernLexer import kernLexer
+from .generated.kern.kernParser import kernParser
 import logging
 
 

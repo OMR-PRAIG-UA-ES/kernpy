@@ -3,12 +3,12 @@ import string
 
 from antlr4 import ParserRuleContext, InputStream, CommonTokenStream, ParseTreeWalker
 
-from src.base_antlr_importer import BaseANTLRListenerImporter
-from src.generated.kernSpineLexer import kernSpineLexer
-from src.generated.kernSpineParser import kernSpineParser
-from src.generated.kernSpineParserListener import kernSpineParserListener
-from src.spine_importer import SpineImporter
-from src.tokens import SimpleToken, TokenCategory, Subtoken, SubTokenCategory, CompoundToken, ChordToken, BoundingBox, \
+from .base_antlr_importer import BaseANTLRListenerImporter
+from .generated.kernSpineLexer import kernSpineLexer
+from .generated.kernSpineParser import kernSpineParser
+from .generated.kernSpineParserListener import kernSpineParserListener
+from .spine_importer import SpineImporter
+from .tokens import SimpleToken, TokenCategory, Subtoken, SubTokenCategory, CompoundToken, ChordToken, BoundingBox, \
     BoundingBoxToken
 
 

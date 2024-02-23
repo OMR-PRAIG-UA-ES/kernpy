@@ -1,7 +1,7 @@
 import string
 
-from src.spine_importer import SpineImporter
-from src.tokens import Token, SimpleToken, TokenCategory
+from .spine_importer import SpineImporter
+from .tokens import Token, SimpleToken, TokenCategory
 
 
 class FingSpineImporter(SpineImporter):

@@ -4,7 +4,7 @@ install:
 	#pip install -r requirements.txt
 
 tests:
-	python pykern/run_all_tests.py
+	python3 -m unittest discover test/
 
 
 # Docs

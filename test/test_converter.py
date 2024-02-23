@@ -1,11 +1,12 @@
 # Run from the root project (the 'test' parent folder): python3 -m unittest test/test_importer.py
 # or from the IDE
 import unittest
-from src.kern_2_ekern import Kern2EkernConverter
 import logging
 import sys
 import tempfile
 import os
+
+from pykern import Kern2EkernConverter
 
 
 logger = logging.getLogger()

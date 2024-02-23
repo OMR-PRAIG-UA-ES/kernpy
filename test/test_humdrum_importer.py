@@ -5,8 +5,11 @@ import unittest
 import logging
 import sys
 
-from src.import_humdrum import HumdrumImporter, ExportOptions
-from src.tokens import BEKERN_CATEGORIES
+# import pykern # pythonic way: import pykern; pykern.HumdrumImporter...
+from pykern import HumdrumImporter, ExportOptions, BEKERN_CATEGORIES
+#from src.import_humdrum import HumdrumImporter, ExportOptions
+#from src.tokens import BEKERN_CATEGORIES
+
 
 logger = logging.getLogger()
 logger.level = logging.DEBUG

@@ -1,7 +1,7 @@
 import string
 from abc import ABC, abstractmethod
 
-from src.tokens import Token
+from .tokens import Token
 
 
 class SpineImporter(ABC):

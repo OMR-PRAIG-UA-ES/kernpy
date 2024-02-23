@@ -1,4 +1,4 @@
-from src.spine_importer import SpineImporter
+from .spine_importer import SpineImporter
 
 
 class MensSpineImporter(SpineImporter):

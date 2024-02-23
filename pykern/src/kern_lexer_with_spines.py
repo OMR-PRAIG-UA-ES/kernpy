@@ -1,5 +1,5 @@
 # Define a Python class for your lexer with members and methods
-from src.generated.kern.kernLexer import kernLexer
+from .generated.kern.kernLexer import kernLexer
 
 
 class KernLexerWithSpines(kernLexer):

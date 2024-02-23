@@ -1,12 +1,12 @@
 from antlr4 import *
 from antlr4.error import ErrorListener
 
-from src.generated.kern.kernLexer import kernLexer
-from src.generated.kern.kernParser import kernParser
+from .generated.kern.kernLexer import kernLexer
+from .generated.kern.kernParser import kernParser
 import logging
 
-from src.generated.kern.kernParserListener import kernParserListener
-from src.kern_lexer_with_spines import KernLexerWithSpines
+from .generated.kern.kernParserListener import kernParserListener
+from .kern_lexer_with_spines import KernLexerWithSpines
 
 
 # David Rizo, October 29th, 2023

@@ -1,8 +1,8 @@
 import argparse
 
 
-#drizo: TODO
-# Esto tiene que estar en el __main__.py de pykern.
+# drizo: TODO
+# joan: not tested
 def main():
     parser = argparse.ArgumentParser(description="pyKern")
 
@@ -18,5 +18,7 @@ def main():
     print("Verbose mode:", args.verbose)
     print("Number of iterations:", args.num_iterations)
 
+
 if __name__ == "__main__":
     main()
+

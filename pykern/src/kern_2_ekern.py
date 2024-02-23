@@ -3,11 +3,21 @@ import csv
 
 from antlr4 import *
 
-from src.generated.kern.kernParserListener import kernParserListener
-from src.generated.kern.kernParser import kernParser
+from .generated.kern.kernParserListener import kernParserListener
+from .generated.kern.kernParser import kernParser
+# Los dos imports de arriba son los que estaban antes.
+# Lo suyo seria hacer:
+# from .generated import kernSpineParserListener, kernSpineParser, kernSpineParserListener, kernSpineParserVisitor, etc.
+# Lo dejo asi de momento
+
+#from .generated.kernSpineParserListener import kernSpineParserListener
+#from .generated.kernSpineParser import kernSpineParser  # TODO: Convert generated to package using __init__.py
+#from .generated.kernSpineLexer import kernSpineLexer
+
+
 import logging
 
-from src.kern_lexer_with_spines import KernLexerWithSpines
+from .kern_lexer_with_spines import KernLexerWithSpines
 
 
 # Each of the main spines defined in the header with **kern, **dyn, etc...

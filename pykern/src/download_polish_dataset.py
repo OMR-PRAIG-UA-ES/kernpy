@@ -3,9 +3,9 @@ from PIL import Image
 from io import BytesIO
 import os
 
-from src.generated.kern.kernLexer import kernLexer
-from src.generated.kern.kernParser import kernParser
-from src.kern_2_ekern import KernListener
+from .generated.kern.kernLexer import kernLexer
+from .generated.kern.kernParser import kernParser
+from .kern_2_ekern import KernListener
 from antlr4 import *
 
 # This script creates the Polish dataset from the kern files.

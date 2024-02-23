@@ -1,8 +1,8 @@
 import csv
 import string
 
-from src.importer_factory import createImporter
-from src.tokens import HeaderToken, SpineOperationToken, TokenCategory, BoundingBoxToken
+from .importer_factory import createImporter
+from .tokens import HeaderToken, SpineOperationToken, TokenCategory, BoundingBoxToken
 
 
 class ExportOptions:
