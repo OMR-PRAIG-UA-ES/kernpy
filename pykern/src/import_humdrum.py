@@ -170,6 +170,8 @@ class HumdrumImporter:
                 if is_barline:
                     self.measure_start_rows.append(row_number)
                     self.last_measure_number = len(self.measure_start_rows)
+                    if self.last_bounding_box:
+                        self.last_bounding_box.to_measure = self.last_measure_number
                 row_number = row_number + 1
 
     def getSpine(self, index: int)->Spine:
