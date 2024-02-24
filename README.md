@@ -9,6 +9,8 @@ It requires the `antlr4` package to be installed using:
 pip install antlr4-python3-runtime
 ```
 
+For generating the Python code required for parsing the **kern files, the shell script `antlr4.sh` inside the `pykern` package must be run
+
 For visualizing the bounding boxes, the library, the `Pillow` library is required:
 ```shell
 pip install Pillow

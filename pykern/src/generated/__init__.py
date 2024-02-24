@@ -1,5 +1,0 @@
-from .kernSpineParserListener import kernSpineParserListener
-from .kernSpineParser import kernSpineParser
-from .kernSpineParserListener import kernSpineParserListener
-from .kernSpineParserVisitor import kernSpineParserVisitor
-

@@ -3,7 +3,7 @@ import os
 
 
 def run_tests():
-    """"
+    """
     Run all tests in the test directory.
 
     !IMPORTANT: Run this script from the root directory of the project:
@@ -24,8 +24,8 @@ def run_tests():
     runner = unittest.TextTestRunner(verbosity=2)
     runner.run(suite)
 
-    # Por línea de comandos: python -m unittest -v test/test_humdrum_importer.py
-    # Pero configurando el working directory a "test"
+    # In command line: python -m unittest -v test/test_humdrum_importer.py
+    # In IDEs, configure working directory to "test"
 
 
 if __name__ == '__main__':

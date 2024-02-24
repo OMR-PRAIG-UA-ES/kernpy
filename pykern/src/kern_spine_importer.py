@@ -101,9 +101,6 @@ class KernSpineListener(kernSpineParserListener):
         self.addNoteRest(ctx, subtokens)
 
     def exitRest(self, ctx: kernSpineParser.RestContext):
-        if self.in_chord:
-            self.addChordSeparator()
-
         subtokens = []
         for duration_subtoken in self.duration_subtokens:
             subtokens.append(duration_subtoken)
