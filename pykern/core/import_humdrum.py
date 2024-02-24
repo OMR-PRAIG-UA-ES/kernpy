@@ -123,8 +123,8 @@ class HumdrumImporter:
                     self.current_spine_index = 0
                     spine.addRow()
                 is_barline = False
-                for column in row:
-                    if not column.startswith("!!"):
+                if len(row) > 0 and not row[0].startswith("!!"):
+                    for column in row:
                         if column in self.HEADERS:
                             if header_row_number is not None and header_row_number != row_number:
                                 raise Exception(
@@ -143,8 +143,8 @@ class HumdrumImporter:
                         else:
                             try:
                                 current_spine = self.getNextSpine()
-                            except ValueError:
-                                raise Exception(f'Cannot get next spine at row {row_number}: {ValueError}')
+                            except Exception as e:
+                                raise Exception(f'Cannot get next spine at row {row_number}: {e}')
 
                             if column in self.SPINE_OPERATIONS:
                                 current_spine.addToken(column, SpineOperationToken(column))
@@ -160,7 +160,7 @@ class HumdrumImporter:
                             else:
                                 token = current_spine.importer.doImport(column)
                                 if not token:
-                                    raise Exception(f'No token generated for input {column}')
+                                    raise Exception(f'No token generated for input {column} in row number #{row_number} using importer {current_spine.importer}')
                                 current_spine.addToken(column, token)
                                 if token.category == TokenCategory.BARLINES or token.category == TokenCategory.CORE and len(self.measure_start_rows) == 0:
                                     is_barline = True
