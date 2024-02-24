@@ -1,6 +1,6 @@
 /.idea/
 /kern/kernLexer.tokens
-/src/generated/
+/core/generated/
 
 # Created by https://www.toptal.com/developers/gitignore/api/python,pythonvanilla,compressed,venv,pycharm,pydev
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,pythonvanilla,compressed,venv,pycharm,pydev

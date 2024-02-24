@@ -8,8 +8,8 @@ import sys
 # import pykern # pythonic way: import pykern; pykern.HumdrumImporter...
 from pykern import HumdrumImporter, ExportOptions, BEKERN_CATEGORIES
 
-# from src.import_humdrum import HumdrumImporter, ExportOptions
-# from src.tokens import BEKERN_CATEGORIES
+# from core.import_humdrum import HumdrumImporter, ExportOptions
+# from core.tokens import BEKERN_CATEGORIES
 
 
 logger = logging.getLogger()

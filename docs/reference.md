@@ -6,6 +6,6 @@ reference for the technical implementation of the
 ...
 Soon!
 
-::: pykern.src.import_humdrum
+::: pykern.core.import_humdrum
 
 End

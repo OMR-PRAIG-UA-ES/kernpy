@@ -1,17 +1,17 @@
-from .src.import_humdrum import (
+from .core.import_humdrum import (
     HumdrumImporter,
     ExportOptions,
 )
 
-from .src.tokens import (
+from .core.tokens import (
     BEKERN_CATEGORIES,
 )
 
-#from .src.kern_2_ekern import (
+#from .core.kern_2_ekern import (
 #    Kern2EkernConverter,
 #)
 
-#from .src.check_kern import (
+#from .core.check_kern import (
 #    check_file,
 #    check_string,
 #)
