@@ -2,7 +2,7 @@ install:
 	echo "Not implemented yet"
 	#pip install -r requirements.txt
 
-test:
+tests:
 	cd test && python3 -m pytest
 
 
