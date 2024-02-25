@@ -50,6 +50,23 @@ class ImporterTestCase(unittest.TestCase):
         self.assertEquals(expected_content, exported_ekern)
         self.assertEquals(expected_measure_start_rows, exported_measure_start_rows)
 
+    def doTestCountSpines(self, kern_file, row_count, spine_counts):
+        print(f'Importing {kern_file}')
+        importer = HumdrumImporter()
+        importer.doImportFile(kern_file)
+        self.assertEquals(row_count, importer.getMaxRows())
+        num_rows = importer.getMaxRows()
+        num_spines = len(importer.spines)
+        self.assertEquals(num_spines, len(spine_counts))
+        for i in range(num_rows):
+            for j in range(num_spines):
+                subspines = importer.spines[j].getNumSubspines(i)
+                self.assertEquals(spine_counts[j][i], subspines)
+
+
+        #self.assertEquals(len(importer.spines), len(spine_counts))
+        #for i in range(len(spine_counts))
+
     # it loads a simple file
     def testReadMinimalKern(self):
         self.doJustImportTest('resource_dir/unit/minimal.krn')
@@ -149,6 +166,25 @@ class ImporterTestCase(unittest.TestCase):
         self.doJustImportTest(
             'resource_dir/polish/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn')
 
+    def testSamples(self):
+        self.doJustImportTest('resource_dir/samples/bach-brandenburg-bwv1050a.krn')
+        self.doJustImportTest('resource_dir/samples/bach-chorale-chor205.krn')
+        self.doJustImportTest('resource_dir/samples/corelli-op01n12d.krn')
+        self.doJustImportTest('resource_dir/samples/harmonized-song-erk052.krn')
+        self.doJustImportTest('resource_dir/samples/haydn-quartet-op54n2-01.krn')
+        self.doJustImportTest('resource_dir/samples/piano-beethoven-sonata21-3.krn')
+        self.doJustImportTest('resource_dir/samples/piano-chopin-prelude28-17.krn')
+        self.doJustImportTest('resource_dir/samples/piano-hummel-prelude67-15.krn')
+        self.doJustImportTest('resource_dir/samples/piano-joplin-bethena.krn')
+        self.doJustImportTest('resource_dir/samples/piano-mozart-sonata07-3.krn')
+        self.doJustImportTest('resource_dir/samples/piano-scarlatti-L523K205.krn')
+        self.doJustImportTest('resource_dir/samples/quartet-beethoven-quartet13-6.krn')
+        self.doJustImportTest('resource_dir/samples/quartet-mozart-k590-04.krn')
+        self.doJustImportTest('resource_dir/samples/unaccompanied-songs-nova073.krn')
+
+    def testSpines(self):
+        # Tests extracted from the discussion in  https://github.com/humdrum-tools/vhv-documentation/issues/7#event-3236429526
+        self.doTestCountSpines('resource_dir/spines/1.krn', 18, [[1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1]])
 
 #def test():
 #    unittest.main()

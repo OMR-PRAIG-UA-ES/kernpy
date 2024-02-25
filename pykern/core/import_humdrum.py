@@ -16,6 +16,7 @@ class ExportOptions:
         self.to_measure = to_measure
         self.token_categories = token_categories
 
+
 class BoundingBoxMeasures:
     def __init__(self, bounding_box, from_measure, to_measure):
         self.from_measure = from_measure
@@ -28,13 +29,21 @@ class Spine:
         self.spine_type = spine_type  # **mens, **kern, etc...
         self.rows = []  # each row will contain just one item or an array of items of type Token
         self.importer = importer
-        self.subspines = 1  # 0 for terminated subspines
+        self.importing_subspines = 1  # 0 for terminated subspines - used just for importing
 
     def size(self):
         return len(self.rows)
 
+    def getNumSubspines(self, row_number):
+        if row_number < 0:
+            raise Exception(f'Negative row number {row_number}')
+        if row_number >= len(self.rows):
+            raise Exception(f'Row number {row_number} out of bounds {len(self.rows)}')
+
+        return len(self.rows[row_number])
+
     def addRow(self):
-        if self.subspines != 0: # if not terminated
+        if self.importing_subspines != 0:  # if not terminated
             self.rows.append([])
 
     def addToken(self, encoding, token):
@@ -44,28 +53,28 @@ class Spine:
         if not token:
             raise Exception('Trying to add a empty token')
 
-        row = len(self.rows)-1
-        if len(self.rows[row]) >= self.subspines:
+        row = len(self.rows) - 1
+        if len(self.rows[row]) >= self.importing_subspines:
             raise Exception(
-                f'There are already {len(self.rows[row])} subspines, and this spine should have at most {self.subspines}')
+                f'There are already {len(self.rows[row])} subspines, and this spine should have at most {self.importing_subspines}')
 
         self.rows[row].append(token)
 
     def increaseSubspines(self):
-        self.subspines = self.subspines + 1
+        self.importing_subspines = self.importing_subspines + 1
 
     def decreaseSubspines(self):
-        self.subspines = self.subspines + 1
+        self.importing_subspines = self.importing_subspines + 1
 
     def terminate(self):
-        self.subspines = 0
+        self.importing_subspines = 0
 
     def isFullRow(self):
-        if self.subspines == 0:
+        if self.importing_subspines == 0:
             return True
         else:
-            row = len(self.rows)-1
-            return len(self.rows[row]) >= self.subspines
+            row = len(self.rows) - 1
+            return len(self.rows[row]) >= self.importing_subspines
 
     def getRowContent(self, row, just_encoding: bool, token_categories) -> string:
         if row < 0:
@@ -105,12 +114,11 @@ class HumdrumImporter:
     def __init__(self):
         self.spines = []
         self.current_spine_index = 0
-        #self.page_start_rows = []
-        self.measure_start_rows = [] # starting from 1
+        # self.page_start_rows = []
+        self.measure_start_rows = []  # starting from 1
         self.page_bounding_boxes = {}
         self.last_measure_number = None
         self.last_bounding_box = None
-
 
     def doImportFile(self, file_path: string):
         importers = {}
@@ -160,9 +168,11 @@ class HumdrumImporter:
                             else:
                                 token = current_spine.importer.doImport(column)
                                 if not token:
-                                    raise Exception(f'No token generated for input {column} in row number #{row_number} using importer {current_spine.importer}')
+                                    raise Exception(
+                                        f'No token generated for input {column} in row number #{row_number} using importer {current_spine.importer}')
                                 current_spine.addToken(column, token)
-                                if token.category == TokenCategory.BARLINES or token.category == TokenCategory.CORE and len(self.measure_start_rows) == 0:
+                                if token.category == TokenCategory.BARLINES or token.category == TokenCategory.CORE and len(
+                                        self.measure_start_rows) == 0:
                                     is_barline = True
                                 elif isinstance(token, BoundingBoxToken):
                                     self.handleBoundingBox(token)
@@ -174,7 +184,7 @@ class HumdrumImporter:
                         self.last_bounding_box.to_measure = self.last_measure_number
                 row_number = row_number + 1
 
-    def getSpine(self, index: int)->Spine:
+    def getSpine(self, index: int) -> Spine:
         if index < 0:
             raise Exception(f'Negative index {index}')
         elif index >= len(self.spines):
@@ -205,22 +215,26 @@ class HumdrumImporter:
             print(f'Adding {page_number}')
             if self.last_measure_number is None:
                 self.last_measure_number = 0
-            self.last_bounding_box = BoundingBoxMeasures(token.bounding_box, self.last_measure_number, self.last_measure_number)
+            self.last_bounding_box = BoundingBoxMeasures(token.bounding_box, self.last_measure_number,
+                                                         self.last_measure_number)
             self.page_bounding_boxes[page_number] = self.last_bounding_box
         else:
             print(f'Extending page {page_number}')
             last_page_bb.bounding_box.extend(self.last_bounding_box.bounding_box)
             last_page_bb.to_measure = self.last_measure_number
 
+    def getMaxRows(self):
+        return max(spine.size() for spine in self.spines)
+
     def doExport(self, use_processed: bool, options: ExportOptions) -> string:
         result = ''
-        max_rows = max(spine.size() for spine in self.spines)
+        max_rows = self.getMaxRows()
         for i in range(max_rows):
             row_result = ''
             empty = True
             for spine in self.spines:
                 if spine.spine_type in options.spine_types:
-                    if i < spine.size(): # required because the spine may be terminated
+                    if i < spine.size():  # required because the spine may be terminated
                         if len(row_result) > 0:
                             row_result += '\t'
 
@@ -238,4 +252,3 @@ class HumdrumImporter:
                 result += '\n'
 
         return result
-
