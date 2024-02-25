@@ -1,5 +1,7 @@
 import csv
 import string
+import logging
+
 
 from .importer_factory import createImporter
 from .tokens import HeaderToken, SpineOperationToken, TokenCategory, BoundingBoxToken
@@ -46,7 +48,14 @@ class Spine:
     def addRow(self):
         if self.importing_subspines != 0:  # if not terminated
             self.rows.append([])
-            self.importing_subspines = self.importing_subspines + self.next_row_subspine_variation
+            if self.next_row_subspine_variation > 0:
+                new_subspines = self.importing_subspines + self.next_row_subspine_variation
+            elif self.next_row_subspine_variation < 0:
+                new_subspines = self.importing_subspines + (self.next_row_subspine_variation + 1) # e.g. *v *v *v for three spines lead to 1 spine
+            else:
+                new_subspines = self.importing_subspines
+            logging.debug(f'Adding row to spine, previous subspines={self.importing_subspines}, new={new_subspines}')
+            self.importing_subspines = new_subspines
             self.next_row_subspine_variation = 0
 
     def addToken(self, encoding, token):
@@ -64,10 +73,10 @@ class Spine:
         self.rows[row].append(token)
 
     def increaseSubspines(self):
-        self.next_row_subspine_variation = 1
+        self.next_row_subspine_variation = self.next_row_subspine_variation + 1
 
     def decreaseSubspines(self):
-        self.next_row_subspine_variation = -1
+        self.next_row_subspine_variation = self.next_row_subspine_variation - 1
 
     def terminate(self):
         self.importing_subspines = 0
@@ -153,6 +162,7 @@ class HumdrumImporter:
                         else:
                             try:
                                 current_spine = self.getNextSpine()
+                                logging.debug(f'Row #{row_number}, current spine #{self.current_spine_index} of size {current_spine.importing_subspines}, and importer {current_spine.importer}')
                             except Exception as e:
                                 raise Exception(f'Cannot get next spine at row {row_number}: {e}')
 

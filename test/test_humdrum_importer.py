@@ -7,6 +7,14 @@ import sys
 
 # import pykern # pythonic way: import pykern; pykern.HumdrumImporter...
 from pykern import HumdrumImporter, ExportOptions, BEKERN_CATEGORIES
+from pykern.core.dyn_importer import DynSpineImporter
+from pykern.core.dynam_spine_importer import DynamSpineImporter
+from pykern.core.fing_spine_importer import FingSpineImporter
+from pykern.core.harm_spine_importer import HarmSpineImporter
+from pykern.core.kern_spine_importer import KernSpineImporter
+from pykern.core.mens_spine_importer import MensSpineImporter
+from pykern.core.root_importer import RootSpineImporter
+from pykern.core.text_spine_importer import TextSpineImporter
 
 # from core.import_humdrum import HumdrumImporter, ExportOptions
 # from core.tokens import BEKERN_CATEGORIES
@@ -61,7 +69,7 @@ class ImporterTestCase(unittest.TestCase):
         for i in range(num_rows):
             for j in range(num_spines):
                 subspines = importer.spines[j].getNumSubspines(i)
-                self.assertEquals(spine_counts[j][i], subspines, f"Spine in row #{i+1} and column #{j+1}")
+                self.assertEquals(spine_counts[j][i], subspines, f"Spine in row #{i+1} and spine #{j+1}")
 
 
         #self.assertEquals(len(importer.spines), len(spine_counts))
@@ -166,6 +174,19 @@ class ImporterTestCase(unittest.TestCase):
         self.doJustImportTest(
             'resource_dir/polish/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn')
 
+    def testHeader(self):
+        importer = HumdrumImporter()
+        importer.doImportFile('resource_dir/unit/headers.krn')
+        self.assertEquals(8, len(importer.spines))
+        self.assertTrue(isinstance(importer.spines[0].importer, KernSpineImporter))
+        self.assertTrue(isinstance(importer.spines[1].importer, MensSpineImporter))
+        self.assertTrue(isinstance(importer.spines[2].importer, DynamSpineImporter))
+        self.assertTrue(isinstance(importer.spines[3].importer, DynSpineImporter))
+        self.assertTrue(isinstance(importer.spines[4].importer, HarmSpineImporter))
+        self.assertTrue(isinstance(importer.spines[5].importer, RootSpineImporter))
+        self.assertTrue(isinstance(importer.spines[6].importer, TextSpineImporter))
+        self.assertTrue(isinstance(importer.spines[7].importer, FingSpineImporter))
+
     def testSamples(self):
         self.doJustImportTest('resource_dir/samples/bach-brandenburg-bwv1050a.krn')
         self.doJustImportTest('resource_dir/samples/bach-chorale-chor205.krn')
@@ -182,7 +203,11 @@ class ImporterTestCase(unittest.TestCase):
         self.doJustImportTest('resource_dir/samples/quartet-mozart-k590-04.krn')
         self.doJustImportTest('resource_dir/samples/unaccompanied-songs-nova073.krn')
 
+
     def testSpines(self):
+        self.doTestCountSpines('resource_dir/spines/spines-from-piano-joplin-bethena-start.krn', 23, [[1,1,1,1,1,2,2,1,1,2,2,1,1,2,2,1,1,1,1,1,1,1,1,1], [1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,2,2,1,1,1], [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]])
+        self.doTestCountSpines('resource_dir/spines/spines-piano-hummel-prelude67-15.krn', 19, [[1,1,1,1,1,1,1,1,2,3,3,3,3,1,1,2,2,1,1],[1,1,2,2,1,1,2,2,2,2,2,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]])
+
         # Tests extracted from the discussion in  https://github.com/humdrum-tools/vhv-documentation/issues/7#event-3236429526
         self.doTestCountSpines('resource_dir/spines/1.krn', 18, [[1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1]])
         self.doTestCountSpines('resource_dir/spines/2.krn', 18, [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], [1,1,1,1,2,2,2,1,1,1,1,2,2,2,2,2,1,1]])

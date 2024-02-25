@@ -1,5 +1,9 @@
+import string
+
 from .spine_importer import SpineImporter
+from .tokens import Token
 
 
 class MensSpineImporter(SpineImporter):
-    pass
+    def doImport(self, encoding: string) -> Token:
+        pass
