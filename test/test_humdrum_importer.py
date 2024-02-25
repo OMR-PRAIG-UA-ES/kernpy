@@ -57,11 +57,11 @@ class ImporterTestCase(unittest.TestCase):
         self.assertEquals(row_count, importer.getMaxRows())
         num_rows = importer.getMaxRows()
         num_spines = len(importer.spines)
-        self.assertEquals(num_spines, len(spine_counts))
+        self.assertEquals(num_spines, len(spine_counts), "Num. spines")
         for i in range(num_rows):
             for j in range(num_spines):
                 subspines = importer.spines[j].getNumSubspines(i)
-                self.assertEquals(spine_counts[j][i], subspines)
+                self.assertEquals(spine_counts[j][i], subspines, f"Spine in row #{i+1} and column #{j+1}")
 
 
         #self.assertEquals(len(importer.spines), len(spine_counts))
@@ -185,6 +185,10 @@ class ImporterTestCase(unittest.TestCase):
     def testSpines(self):
         # Tests extracted from the discussion in  https://github.com/humdrum-tools/vhv-documentation/issues/7#event-3236429526
         self.doTestCountSpines('resource_dir/spines/1.krn', 18, [[1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1]])
+        self.doTestCountSpines('resource_dir/spines/2.krn', 18, [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], [1,1,1,1,2,2,2,1,1,1,1,2,2,2,2,2,1,1]])
+        self.doTestCountSpines('resource_dir/spines/3.krn', 16, [[1,1,1,1,1,1,1,2,2,2,2,2,2,2,1,1],[1,1,1,1,1,1,1,2,2,2,2,2,2,2,1,1]])
+        self.doTestCountSpines('resource_dir/spines/4.krn',17, [[1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,1,1,], [1,1,1,1,1,1,1,2,2,2,2,2,2,2,1,1,1,1]])
+        self.doTestCountSpines('resource_dir/spines/5.krn',24, [[1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,1,1,1,1], [1,1,1,1,2,2,2,3,3,3,1,1,2,3,3,3,3,3,3,1,1,1,1,1]])
 
 #def test():
 #    unittest.main()

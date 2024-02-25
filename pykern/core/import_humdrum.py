@@ -30,6 +30,7 @@ class Spine:
         self.rows = []  # each row will contain just one item or an array of items of type Token
         self.importer = importer
         self.importing_subspines = 1  # 0 for terminated subspines - used just for importing
+        self.next_row_subspine_variation = 0 # when a spine operation is added or removed, the subspines number must be modified for the next row
 
     def size(self):
         return len(self.rows)
@@ -45,6 +46,8 @@ class Spine:
     def addRow(self):
         if self.importing_subspines != 0:  # if not terminated
             self.rows.append([])
+            self.importing_subspines = self.importing_subspines + self.next_row_subspine_variation
+            self.next_row_subspine_variation = 0
 
     def addToken(self, encoding, token):
         if not encoding:
@@ -61,10 +64,10 @@ class Spine:
         self.rows[row].append(token)
 
     def increaseSubspines(self):
-        self.importing_subspines = self.importing_subspines + 1
+        self.next_row_subspine_variation = 1
 
     def decreaseSubspines(self):
-        self.importing_subspines = self.importing_subspines + 1
+        self.next_row_subspine_variation = -1
 
     def terminate(self):
         self.importing_subspines = 0
@@ -105,7 +108,6 @@ class Spine:
 
     def getUnprocessedRow(self, row: int, token_categories) -> string:
         return self.getRowContent(row, True, token_categories)
-
 
 class HumdrumImporter:
     HEADERS = {"**mens", "**kern", "**text", "**harm", "**mxhm", "**root", "**dyn", "**dynam", "**fing"}
