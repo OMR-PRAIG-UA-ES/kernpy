@@ -23,7 +23,9 @@ class KernSpineListener(kernSpineParserListener):
         self.duration_subtokens = []
         self.diatonic_pitch_and_octave_subtoken = None
         self.accidental_subtoken = None
-        self.decorations = {}  # in order to standardize the order of decorators, we map the different properties to their class names
+        #self.decorations = {}  # in order to standardize the order of decorators, we map the different properties to their class names
+        #We cannot order it using the class name because there are rules with subrules, such as ties, or articulations. We order it using the encoding itself
+        self.decorations = []
         self.in_chord = False
         # self.page_start_rows = [] # TODO
         self.measure_start_rows = []
@@ -34,7 +36,8 @@ class KernSpineListener(kernSpineParserListener):
         self.duration_subtokens = []
         self.diatonic_pitch_and_octave_subtoken = None
         self.accidental_subtoken = None
-        self.decorations = {}
+        #self.decorations = {}
+        self.decorations = []
 
     # def process_decorations(self, ctx: ParserRuleContext):
     #     # in order to standardize the order of note decorators, we map the different properties to their class names
@@ -71,17 +74,22 @@ class KernSpineListener(kernSpineParserListener):
         self.diatonic_pitch_and_octave_subtoken = Subtoken(ctx.getText(), SubTokenCategory.PITCH)
 
     def exitNoteDecoration(self, ctx: kernSpineParser.NoteDecorationContext):
-        clazz = type(ctx.getChild(0))
-        decoration_type = clazz.__name__
-        if decoration_type in self.decorations:
-            logging.warning(
-                f'The decoration {decoration_type} is duplicated')  # TODO Dar información de línea, columna - ¿lanzamos excepción? - hay algunas que sí pueden estar duplicadas? Barrados?
+        #clazz = type(ctx.getChild(0))
+        #decoration_type = clazz.__name__
+        #if decoration_type in self.decorations:
+        #    logging.warning(
+        #        f'The decoration {decoration_type} is duplicated after reading {ctx.getText()}')  # TODO Dar información de línea, columna - ¿lanzamos excepción? - hay algunas que sí pueden estar duplicadas? Barrados?
 
-        self.decorations[decoration_type] = ctx.getText()
+        #self.decorations[decoration_type] = ctx.getText()
+        # We cannot order it using the class name because there are rules with subrules, such as ties, or articulations. We order it using the encoding itself
+        self.decorations.append(ctx.getText())
+
 
     def addNoteRest(self, ctx, subtokens):
-        for key in sorted(self.decorations.keys()):
-            subtoken = Subtoken(self.decorations[key], SubTokenCategory.DECORATION)
+        #for key in sorted(self.decorations.keys()):
+            #subtoken = Subtoken(self.decorations[key], SubTokenCategory.DECORATION)
+        for decoration in sorted(self.decorations):
+            subtoken = Subtoken(decoration, SubTokenCategory.DECORATION)
             subtokens.append(subtoken)
 
         token = CompoundToken(ctx.getText(), TokenCategory.CORE, subtokens)
