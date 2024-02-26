@@ -5,19 +5,19 @@ import unittest
 import logging
 import sys
 
-# import pykern # pythonic way: import pykern; pykern.HumdrumImporter...
-from pykern import HumdrumImporter, ExportOptions, BEKERN_CATEGORIES
-from pykern.core.dyn_importer import DynSpineImporter
-from pykern.core.dynam_spine_importer import DynamSpineImporter
-from pykern.core.fing_spine_importer import FingSpineImporter
-from pykern.core.harm_spine_importer import HarmSpineImporter
-from pykern.core.kern_spine_importer import KernSpineImporter
-from pykern.core.mens_spine_importer import MensSpineImporter
-from pykern.core.root_importer import RootSpineImporter
-from pykern.core.text_spine_importer import TextSpineImporter
-
-# from core.import_humdrum import HumdrumImporter, ExportOptions
-# from core.tokens import BEKERN_CATEGORIES
+from pykern import (
+    HumdrumImporter,
+    ExportOptions,
+    BEKERN_CATEGORIES,
+    DynSpineImporter,
+    DynamSpineImporter,
+    FingSpineImporter,
+    HarmSpineImporter,
+    KernSpineImporter,
+    MensSpineImporter,
+    RootSpineImporter,
+    TextSpineImporter,
+)
 
 
 logger = logging.getLogger()

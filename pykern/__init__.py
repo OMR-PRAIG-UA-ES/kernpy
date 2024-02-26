@@ -1,23 +1,14 @@
-from .core.import_humdrum import (
-    HumdrumImporter,
-    ExportOptions,
-)
+"""
+pyKern
+======
 
-from .core.tokens import (
-    BEKERN_CATEGORIES,
-)
+pyKern documentation
+"""
 
-#from .core.kern_2_ekern import (
-#    Kern2EkernConverter,
-#)
 
-#from .core.check_kern import (
-#    check_file,
-#    check_string,
-#)
+from .core import *
+
+
 
 
 __version__ = '0.1.0'
-
-
-
