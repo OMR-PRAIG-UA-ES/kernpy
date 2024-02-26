@@ -1,7 +1,8 @@
 import logging
 import string
 
-from antlr4 import ParserRuleContext, InputStream, CommonTokenStream, ParseTreeWalker
+from antlr4 import ParserRuleContext, InputStream, CommonTokenStream, ParseTreeWalker, BailErrorStrategy, Parser, \
+    RecognitionException, PredictionMode
 
 from .base_antlr_importer import BaseANTLRListenerImporter
 from .generated.kernSpineLexer import kernSpineLexer
@@ -22,12 +23,11 @@ class KernSpineListener(kernSpineParserListener):
         self.duration_subtokens = []
         self.diatonic_pitch_and_octave_subtoken = None
         self.accidental_subtoken = None
-        self.decorations = {} # in order to standardize the order of decorators, we map the different properties to their class names
+        self.decorations = {}  # in order to standardize the order of decorators, we map the different properties to their class names
         self.in_chord = False
-        #self.page_start_rows = [] # TODO
+        # self.page_start_rows = [] # TODO
         self.measure_start_rows = []
         self.last_bounding_box = None
-
 
     def enterStart(self, ctx: kernSpineParser.StartContext):
         self.token = None
@@ -127,10 +127,9 @@ class KernSpineListener(kernSpineParserListener):
             txt_without_number += ctx.fermata().getText()
 
         self.token = SimpleToken(txt_without_number, TokenCategory.BARLINES)
-        self.token.hidden = "-" in ctx.getText() # hidden
+        self.token.hidden = "-" in ctx.getText()  # hidden
 
-
-    def exitEmpty(self, ctx:kernSpineParser.EmptyContext):
+    def exitEmpty(self, ctx: kernSpineParser.EmptyContext):
         self.token = SimpleToken(ctx.getText(), TokenCategory.EMPTY)
 
     def exitNonVisualTandemInterpretation(self, ctx: kernSpineParser.NonVisualTandemInterpretationContext):
@@ -153,11 +152,12 @@ class KernSpineListener(kernSpineParserListener):
 
     def exitXywh(self, ctx: kernSpineParser.XywhContext):
         self.last_bounding_box = BoundingBox(int(ctx.x().getText()), int(ctx.y().getText()), int(ctx.w().getText()),
-                                           int(ctx.h().getText()))
+                                             int(ctx.h().getText()))
 
     def exitBoundingBox(self, ctx: kernSpineParser.BoundingBoxContext):
         page = ctx.pageNumber().getText()
-        bbox = BoundingBox(int(ctx.xywh().x().getText()), int(ctx.xywh().y().getText()), int(ctx.xywh().w().getText()), int(ctx.xywh().h().getText()))
+        bbox = BoundingBox(int(ctx.xywh().x().getText()), int(ctx.xywh().y().getText()), int(ctx.xywh().w().getText()),
+                           int(ctx.xywh().h().getText()))
         self.token = BoundingBoxToken(ctx.getText(), page, bbox)
 
 
@@ -176,18 +176,25 @@ class KernListenerImporter(BaseANTLRListenerImporter):
         return self.parser.start()
 
 
+# TODO - hacerlo común...
+
 class KernSpineImporter(SpineImporter):
     def doImport(self, token: string):
         if not token:
             raise Exception('Input token is empty')
-        #self.listenerImporter = KernListenerImporter(token) # TODO ¿Por qué no va esto?
-        #self.listenerImporter.start()
+        # self.listenerImporter = KernListenerImporter(token) # TODO ¿Por qué no va esto?
+        # self.listenerImporter.start()
         lexer = kernSpineLexer(InputStream(token))
         stream = CommonTokenStream(lexer)
         parser = kernSpineParser(stream)
-        tree = parser.start()
-        walker = ParseTreeWalker()
-        listener = KernSpineListener()
-        walker.walk(listener, tree)
-        return listener.token
-
+        parser._interp.predictionMode = PredictionMode.SLL  # it improves a lot the parsing
+        parser.removeErrorListeners()
+        parser.errHandler = BailErrorStrategy()
+        try:
+            tree = parser.start()
+            walker = ParseTreeWalker()
+            listener = KernSpineListener()
+            walker.walk(listener, tree)
+            return listener.token
+        except Exception as inst:
+            logging.warning(f'Cannot parse {token}, error: {inst}')

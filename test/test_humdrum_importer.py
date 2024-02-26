@@ -21,18 +21,18 @@ from pykern.core.text_spine_importer import TextSpineImporter
 
 
 logger = logging.getLogger()
-logger.level = logging.DEBUG
+logger.level = logging.INFO # change it DEBUG to trace errors
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
 
 class ImporterTestCase(unittest.TestCase):
     def doJustImportTest(self, kern_file):
-        print(f'Importing {kern_file}')
+        logging.info(f'Importing {kern_file}')
         importer = HumdrumImporter()
         importer.doImportFile(kern_file)
 
     def doEKernTest(self, kern_file, expected_measure_start_rows):
-        print(f'Importing {kern_file} and checking the ekern')
+        logging.info(f'Importing {kern_file} and checking the ekern')
         importer = HumdrumImporter()
         importer.doImportFile(kern_file)
 
@@ -47,19 +47,19 @@ class ImporterTestCase(unittest.TestCase):
         exported_measure_start_rows = importer.measure_start_rows
 
         if exported_ekern != expected_content:
-            print('---- Expected content ----')
-            print('--------------------------')
-            print(expected_content)
+            logging.info('---- Expected content ----')
+            logging.info('--------------------------')
+            logging.info(expected_content)
 
-            print('---- Exported content ----')
-            print('--------------------------')
-            print(exported_ekern)
+            logging.info('---- Exported content ----')
+            logging.info('--------------------------')
+            logging.info(exported_ekern)
 
         self.assertEquals(expected_content, exported_ekern)
         self.assertEquals(expected_measure_start_rows, exported_measure_start_rows)
 
     def doTestCountSpines(self, kern_file, row_count, spine_counts):
-        print(f'Importing {kern_file}')
+        logging.info(f'Importing {kern_file}')
         importer = HumdrumImporter()
         importer.doImportFile(kern_file)
         self.assertEquals(row_count, importer.getMaxRows())
