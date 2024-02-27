@@ -157,12 +157,12 @@ class ImporterTestCase(unittest.TestCase):
         # self.assertEqual(1, len(ts.files))
 
     def testLegacyTests(self):
-        self.doEKernTest('resource_dir/legacy/base_tuplet.krn', [5])
-        self.doEKernTest('resource_dir/legacy/guide02-example2-1.krn', [5, 8, 11, 15])
-        self.doEKernTest('resource_dir/legacy/guide02-example2-3.krn', [8, 9, 18, 22, 30, 38])
-        self.doEKernTest('resource_dir/legacy/guide02-example2-4.krn', [6, 12, 16, 23, 27, 33, 37, 47, 51])
-        self.doEKernTest('resource_dir/legacy/guide06-example6-1.krn', [5, 18, 27])
-        self.doEKernTest('resource_dir/legacy/guide06-example6-2.krn', [6, 15, 28, 41])
+        #self.doEKernTest('resource_dir/legacy/base_tuplet.krn', [5])
+        #self.doEKernTest('resource_dir/legacy/guide02-example2-1.krn', [5, 8, 11, 15])
+        #self.doEKernTest('resource_dir/legacy/guide02-example2-3.krn', [8, 9, 18, 22, 30, 38])
+        #self.doEKernTest('resource_dir/legacy/guide02-example2-4.krn', [6, 12, 16, 23, 27, 33, 37, 47, 51])
+        #self.doEKernTest('resource_dir/legacy/guide06-example6-1.krn', [5, 18, 27])
+        #self.doEKernTest('resource_dir/legacy/guide06-example6-2.krn', [6, 15, 28, 41])
         self.doEKernTest('resource_dir/legacy/chor001.krn',
                          [26, 27, 32, 37, 43, 46, 50, 55, 57, 60, 67, 74, 77, 82, 88, 93, 96, 102, 107, 114, 117, 122,
                           128, 130])

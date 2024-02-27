@@ -4,12 +4,13 @@ from enum import Enum, auto
 
 TOKEN_SEPARATOR = '·'
 
+
 # We don't use inheritance here for all elements but enum, because we don't need any polymorphism mechanism, just a grouping one
-#TODO Poner todos los tipos - p.ej. también comandos de layout - slurs, etc...
+# TODO Poner todos los tipos - p.ej. también comandos de layout - slurs, etc...
 class TokenCategory(Enum):
-    STRUCTURAL = auto() # header, spine operations
-    CORE = auto() # notes, rests, chords
-    EMPTY = auto() # placeholders, null interpretation
+    STRUCTURAL = auto()  # header, spine operations
+    CORE = auto()  # notes, rests, chords
+    EMPTY = auto()  # placeholders, null interpretation
     SIGNATURES = auto()
     OTHER_CONTEXTUAL = auto()
     BARLINES = auto()
@@ -21,13 +22,17 @@ class TokenCategory(Enum):
     BOUNDING_BOXES = auto()
     OTHER = auto()
 
-BEKERN_CATEGORIES = [TokenCategory.STRUCTURAL, TokenCategory.CORE, TokenCategory.EMPTY, TokenCategory.SIGNATURES, TokenCategory.BARLINES]
+
+BEKERN_CATEGORIES = [TokenCategory.STRUCTURAL, TokenCategory.CORE, TokenCategory.EMPTY, TokenCategory.SIGNATURES,
+                     TokenCategory.BARLINES]
+
 
 # TODO - de momento no lo usamos para filtrar
 class SubTokenCategory(Enum):
     PITCH = auto()
     DURATION = auto()
-    DECORATION = auto() # todo, tipos...
+    DECORATION = auto()  # todo, tipos...
+
 
 class Subtoken:
     DECORATION = None
@@ -40,6 +45,7 @@ class Subtoken:
         self.encoding = encoding
         self.category = category
 
+
 class AbstractToken(ABC):
     def __init__(self, encoding, category):
         self.encoding = encoding
@@ -50,13 +56,15 @@ class AbstractToken(ABC):
     def export(self) -> string:
         pass
 
+
 class HeaderToken(AbstractToken):
     def __init__(self, encoding):
         super().__init__(encoding, TokenCategory.STRUCTURAL)
 
     def export(self) -> string:
-        extended_header = '**e' + self.encoding[2:] # remove the **, and append the e
+        extended_header = '**e' + self.encoding[2:]  # remove the **, and append the e
         return extended_header
+
 
 class SpineOperationToken(AbstractToken):
     def __init__(self, encoding):
@@ -65,9 +73,11 @@ class SpineOperationToken(AbstractToken):
     def export(self) -> string:
         return self.encoding
 
-class Token(AbstractToken):
+
+class Token(AbstractToken, ABC):
     def __init__(self, encoding, category):
         super().__init__(encoding, category)
+
 
 class SimpleToken(Token):
     def __init__(self, encoding, category):
@@ -75,6 +85,27 @@ class SimpleToken(Token):
 
     def export(self) -> string:
         return self.encoding
+
+
+class ClefToken(SimpleToken):
+    def __init__(self, encoding):
+        super().__init__(encoding, TokenCategory.SIGNATURES)
+
+
+class TimeSignatureToken(SimpleToken):
+    def __init__(self, encoding):
+        super().__init__(encoding, TokenCategory.SIGNATURES)
+
+
+class MeterSymbolToken(SimpleToken):
+    def __init__(self, encoding):
+        super().__init__(encoding, TokenCategory.SIGNATURES)
+
+
+class KeySignatureToken(SimpleToken):
+    def __init__(self, encoding):
+        super().__init__(encoding, TokenCategory.SIGNATURES)
+
 
 class CompoundToken(Token):
     def __init__(self, encoding, category, subtokens):
@@ -85,7 +116,6 @@ class CompoundToken(Token):
         """
         super().__init__(encoding, category)
         self.subtokens = subtokens
-
 
     def export(self) -> string:
         result = ''
@@ -101,6 +131,7 @@ class ChordToken(SimpleToken):
     """
     It contains a list of compound tokens
     """
+
     def __init__(self, encoding, category, notes_tokens):
         super().__init__(encoding, category)
         self.notes_tokens = notes_tokens
@@ -114,6 +145,7 @@ class ChordToken(SimpleToken):
             result += note_token.export()
 
         return result
+
 
 class BoundingBox:
     def __init__(self, x, y, w, h):
@@ -139,6 +171,7 @@ class BoundingBox:
 
     def xywh(self):
         return f'{self.from_x},{self.from_y},{self.w()},{self.h()}'
+
 
 class BoundingBoxToken(AbstractToken):
     def __init__(self, encoding, page_number, bounding_box):

@@ -4,7 +4,8 @@ import logging
 
 
 from .importer_factory import createImporter
-from .tokens import HeaderToken, SpineOperationToken, TokenCategory, BoundingBoxToken
+from .tokens import HeaderToken, SpineOperationToken, TokenCategory, BoundingBoxToken, KeySignatureToken, \
+    TimeSignatureToken, MeterSymbolToken, ClefToken
 
 
 class ExportOptions:
@@ -88,11 +89,21 @@ class Spine:
             row = len(self.rows) - 1
             return len(self.rows[row]) >= self.importing_subspines
 
-    def getRowContent(self, row, just_encoding: bool, token_categories) -> string:
+    def isContentOfType(self, row, clazz):
+        self.checkRowIndex(row)
+        for subspine in self.rows[row]:
+            if isinstance(subspine, clazz):
+                return True
+        return False
+
+    def checkRowIndex(self, row):
         if row < 0:
             raise Exception(f'Negative row {row}')
         if row >= len(self.rows):
             raise Exception(f'Row {row} out of bounds {len(self.rows)}')
+
+    def getRowContent(self, row, just_encoding: bool, token_categories) -> string:
+        self.checkRowIndex(row)
 
         result = ''
         for subspine in self.rows[row]:
@@ -241,6 +252,13 @@ class HumdrumImporter:
     def doExport(self, use_processed: bool, options: ExportOptions) -> string:
         result = ''
         max_rows = self.getMaxRows()
+        last_header_row = None
+        last_clef_row = None
+        last_key_signature_row = None
+        last_time_signature_row = None
+        last_meter_symbol_row = None
+        row_contents = []
+
         for i in range(max_rows):
             row_result = ''
             empty = True
@@ -257,10 +275,35 @@ class HumdrumImporter:
 
                         if content and content != '.' and content != '*':
                             empty = False
+                            if spine.isContentOfType(i, HeaderToken):
+                                last_header_row = i
+                            elif spine.isContentOfType(i, ClefToken):
+                                last_clef_row = i
+                            elif spine.isContentOfType(i, KeySignatureToken):
+                                last_key_signature_row = i
+                            elif spine.isContentOfType(i, TimeSignatureToken):
+                                last_time_signature_row = i
+                            elif spine.isContentOfType(i, MeterSymbolToken):
+                                last_meter_symbol_row = i
 
                         row_result += content
             if not empty:
-                result += row_result
+                row_contents.append(row_result)
+            else:
+                row_contents.append(None) # in order to maintain the indexes
+
+        if last_header_row is None:
+            raise Exception('No header row found')
+
+        if last_clef_row is None:
+            raise Exception('No clef row found')
+
+        if last_time_signature_row is None and last_meter_symbol_row is None:
+            raise Exception('No time signature or meter symbol row found')
+
+        for row_content in row_contents:
+            if row_content:
+                result += row_content
                 result += '\n'
 
         return result

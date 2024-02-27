@@ -10,7 +10,7 @@ from .generated.kernSpineParser import kernSpineParser
 from .generated.kernSpineParserListener import kernSpineParserListener
 from .spine_importer import SpineImporter
 from .tokens import SimpleToken, TokenCategory, Subtoken, SubTokenCategory, CompoundToken, ChordToken, BoundingBox, \
-    BoundingBoxToken
+    BoundingBoxToken, ClefToken, KeySignatureToken, TimeSignatureToken, MeterSymbolToken
 
 
 class KernSpineListener(kernSpineParserListener):
@@ -152,8 +152,17 @@ class KernSpineListener(kernSpineParserListener):
     def exitOtherContextual(self, ctx: kernSpineParser.ContextualContext):
         self.token = SimpleToken(ctx.getText(), TokenCategory.OTHER_CONTEXTUAL)
 
-    def exitSignatures(self, ctx: kernSpineParser.SignaturesContext):
-        self.token = SimpleToken(ctx.getText(), TokenCategory.SIGNATURES)
+    def exitClef(self, ctx: kernSpineParser.ClefContext):
+        self.token = ClefToken(ctx.getText())
+
+    def exitKeySignature(self, ctx: kernSpineParser.KeySignatureContext):
+        self.token = KeySignatureToken(ctx.getText())
+
+    def exitTimeSignature(self, ctx: kernSpineParser.TimeSignatureContext):
+        self.token = TimeSignatureToken(ctx.getText())
+
+    def exitMeterSymbol(self, ctx:kernSpineParser.MeterSymbolContext):
+        self.token = MeterSymbolToken(ctx.getText())
 
     def exitStructural(self, ctx: kernSpineParser.StructuralContext):
         self.token = SimpleToken(ctx.getText(), TokenCategory.STRUCTURAL)
