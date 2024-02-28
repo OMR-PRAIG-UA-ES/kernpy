@@ -129,6 +129,14 @@ class Spine:
     def getUnprocessedRow(self, row: int, token_categories) -> string:
         return self.getRowContent(row, True, token_categories)
 
+class Signatures:
+    def __init__(self, header_row, clef_row, key_signature_row, time_signature_row, meter_symbol_row):
+        last_header_row = header_row
+        last_clef_row = clef_row
+        last_key_signature_row = key_signature_row
+        last_time_signature_row = time_signature_row
+        last_meter_symbol_row = meter_symbol_row
+
 class HumdrumImporter:
     HEADERS = {"**mens", "**kern", "**text", "**harm", "**mxhm", "**root", "**dyn", "**dynam", "**fing"}
     SPINE_OPERATIONS = {"*-", "*+", "*^", "*v"}
@@ -249,14 +257,19 @@ class HumdrumImporter:
     def getMaxRows(self):
         return max(spine.size() for spine in self.spines)
 
+    def checkMeasure(self, measure_number):
+        if measure_number < 1:
+            raise Exception(f'The measure number must be >=1, and it is {measure_number}')
+
+        max_measures = len(self.measure_start_rows)
+        if measure_number > max_measures:
+            raise Exception(f'The measure number must be <= {max_measures}, and it is {measure_number}')
+
+
     def doExport(self, use_processed: bool, options: ExportOptions) -> string:
-        result = ''
         max_rows = self.getMaxRows()
-        last_header_row = None
-        last_clef_row = None
-        last_key_signature_row = None
-        last_time_signature_row = None
-        last_meter_symbol_row = None
+        current_signature = Signatures(None, None, None, None, None)
+        signatures_at_each_row = []
         row_contents = []
 
         for i in range(max_rows):
@@ -275,16 +288,17 @@ class HumdrumImporter:
 
                         if content and content != '.' and content != '*':
                             empty = False
-                            if spine.isContentOfType(i, HeaderToken):
-                                last_header_row = i
-                            elif spine.isContentOfType(i, ClefToken):
-                                last_clef_row = i
-                            elif spine.isContentOfType(i, KeySignatureToken):
-                                last_key_signature_row = i
-                            elif spine.isContentOfType(i, TimeSignatureToken):
-                                last_time_signature_row = i
-                            elif spine.isContentOfType(i, MeterSymbolToken):
-                                last_meter_symbol_row = i
+                            if options.from_measure: # if not, we don't need to compute this value
+                                if spine.isContentOfType(i, HeaderToken):
+                                    current_signature.last_header_row = i
+                                elif spine.isContentOfType(i, ClefToken):
+                                    current_signature.last_clef_row = i
+                                elif spine.isContentOfType(i, KeySignatureToken):
+                                    current_signature.last_key_signature_row = i
+                                elif spine.isContentOfType(i, TimeSignatureToken):
+                                    current_signature.last_time_signature_row = i
+                                elif spine.isContentOfType(i, MeterSymbolToken):
+                                    current_signature.last_meter_symbol_row = i
 
                         row_result += content
             if not empty:
@@ -292,18 +306,55 @@ class HumdrumImporter:
             else:
                 row_contents.append(None) # in order to maintain the indexes
 
-        if last_header_row is None:
-            raise Exception('No header row found')
+            signatures_at_each_row.append(current_signature)
 
-        if last_clef_row is None:
-            raise Exception('No clef row found')
+        # if last_header_row is None:
+        #     raise Exception('No header row found')
+        #
+        # if last_clef_row is None:
+        #     raise Exception('No clef row found')
+        #
+        # if last_time_signature_row is None and last_meter_symbol_row is None:
+        #     raise Exception('No time signature or meter symbol row found')
 
-        if last_time_signature_row is None and last_meter_symbol_row is None:
-            raise Exception('No time signature or meter symbol row found')
+        result = ''
+        if not options.from_measure and not options.to_measure:
+            for row_content in row_contents:
+                if row_content:
+                    result += row_content
+                    result += '\n'
+        else:
+            if options.from_measure:
+                self.checkMeasure(options.from_measure)
+            else:
+                options.from_measure = 1
 
-        for row_content in row_contents:
-            if row_content:
-                result += row_content
-                result += '\n'
+            if options.to_measure:
+                self.checkMeasure(options.to_measure)
+            else:
+                options.to_measure = len(self.measure_start_rows)
+
+            from_row = self.measure_start_rows[options.from_measure]
+            to_row = self.measure_start_rows[options.to_measure]
+            signature = signatures_at_each_row[from_row]
+
+            # first, attach the signatures if not in the exported range
+            self.addSignatureRowIfRequired(row_contents, result, from_row, signature.last_header_row)
+            self.addSignatureRowIfRequired(row_contents, result, from_row, signature.last_clef_row)
+            self.addSignatureRowIfRequired(row_contents, result, from_row, signature.last_key_signature_row)
+            self.addSignatureRowIfRequired(row_contents, result, from_row, signature.last_time_signature_row)
+            self.addSignatureRowIfRequired(row_contents, result, from_row, signature.last_meter_symbol_row)
+
+            for row in range(from_row, to_row):
+                row_content = row_contents[row]
+                if row_content:
+                    result += row_content
+                    result += '\n'
+
 
         return result
+
+    def addSignatureRowIfRequired(self, row_contents, result, from_row, row):
+        if row is not None and row < from_row:
+            result += row_contents[row]
+            result += '\n'
