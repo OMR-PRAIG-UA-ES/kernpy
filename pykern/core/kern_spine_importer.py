@@ -10,7 +10,7 @@ from .generated.kernSpineParser import kernSpineParser
 from .generated.kernSpineParserListener import kernSpineParserListener
 from .spine_importer import SpineImporter
 from .tokens import SimpleToken, TokenCategory, Subtoken, SubTokenCategory, CompoundToken, ChordToken, BoundingBox, \
-    BoundingBoxToken, ClefToken, KeySignatureToken, TimeSignatureToken, MeterSymbolToken
+    BoundingBoxToken, ClefToken, KeySignatureToken, TimeSignatureToken, MeterSymbolToken, BarToken
 
 
 class KernSpineListener(kernSpineParserListener):
@@ -134,7 +134,7 @@ class KernSpineListener(kernSpineParserListener):
         if ctx.fermata():
             txt_without_number += ctx.fermata().getText()
 
-        self.token = SimpleToken(txt_without_number, TokenCategory.BARLINES)
+        self.token = BarToken(txt_without_number)
         self.token.hidden = "-" in ctx.getText()  # hidden
 
     def exitEmpty(self, ctx: kernSpineParser.EmptyContext):

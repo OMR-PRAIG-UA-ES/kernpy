@@ -2,10 +2,9 @@ import csv
 import string
 import logging
 
-
 from .importer_factory import createImporter
 from .tokens import HeaderToken, SpineOperationToken, TokenCategory, BoundingBoxToken, KeySignatureToken, \
-    TimeSignatureToken, MeterSymbolToken, ClefToken
+    TimeSignatureToken, MeterSymbolToken, ClefToken, BarToken
 
 
 class ExportOptions:
@@ -33,10 +32,13 @@ class Spine:
         self.rows = []  # each row will contain just one item or an array of items of type Token
         self.importer = importer
         self.importing_subspines = 1  # 0 for terminated subspines - used just for importing
-        self.next_row_subspine_variation = 0 # when a spine operation is added or removed, the subspines number must be modified for the next row
+        self.next_row_subspine_variation = 0  # when a spine operation is added or removed, the subspines number must be modified for the next row
 
     def size(self):
         return len(self.rows)
+
+    def isTerminated(self):
+        return self.importing_subspines > 0
 
     def getNumSubspines(self, row_number):
         if row_number < 0:
@@ -52,7 +54,8 @@ class Spine:
             if self.next_row_subspine_variation > 0:
                 new_subspines = self.importing_subspines + self.next_row_subspine_variation
             elif self.next_row_subspine_variation < 0:
-                new_subspines = self.importing_subspines + (self.next_row_subspine_variation + 1) # e.g. *v *v *v for three spines lead to 1 spine
+                new_subspines = self.importing_subspines + (
+                            self.next_row_subspine_variation + 1)  # e.g. *v *v *v for three spines lead to 1 spine
             else:
                 new_subspines = self.importing_subspines
             logging.debug(f'Adding row to spine, previous subspines={self.importing_subspines}, new={new_subspines}')
@@ -129,13 +132,15 @@ class Spine:
     def getUnprocessedRow(self, row: int, token_categories) -> string:
         return self.getRowContent(row, True, token_categories)
 
+
 class Signatures:
     def __init__(self, header_row, clef_row, key_signature_row, time_signature_row, meter_symbol_row):
-        last_header_row = header_row
-        last_clef_row = clef_row
-        last_key_signature_row = key_signature_row
-        last_time_signature_row = time_signature_row
-        last_meter_symbol_row = meter_symbol_row
+        self.last_header_row = header_row
+        self.last_clef_row = clef_row
+        self.last_key_signature_row = key_signature_row
+        self.last_time_signature_row = time_signature_row
+        self.last_meter_symbol_row = meter_symbol_row
+
 
 class HumdrumImporter:
     HEADERS = {"**mens", "**kern", "**text", "**harm", "**mxhm", "**root", "**dyn", "**dynam", "**fing"}
@@ -145,7 +150,7 @@ class HumdrumImporter:
         self.spines = []
         self.current_spine_index = 0
         # self.page_start_rows = []
-        self.measure_start_rows = []  # starting from 1
+        self.measure_start_rows = []  # starting from 1. Rows after removing empty lines and line comments
         self.page_bounding_boxes = {}
         self.last_measure_number = None
         self.last_bounding_box = None
@@ -181,7 +186,8 @@ class HumdrumImporter:
                         else:
                             try:
                                 current_spine = self.getNextSpine()
-                                logging.debug(f'Row #{row_number}, current spine #{self.current_spine_index} of size {current_spine.importing_subspines}, and importer {current_spine.importer}')
+                                logging.debug(
+                                    f'Row #{row_number}, current spine #{self.current_spine_index} of size {current_spine.importing_subspines}, and importer {current_spine.importer}')
                             except Exception as e:
                                 raise Exception(f'Cannot get next spine at row {row_number}: {e}')
 
@@ -194,8 +200,6 @@ class HumdrumImporter:
                                     current_spine.increaseSubspines()
                                 elif column == "*v":
                                     current_spine.decreaseSubspines()
-
-
                             else:
                                 token = current_spine.importer.doImport(column)
                                 if not token:
@@ -208,12 +212,12 @@ class HumdrumImporter:
                                 elif isinstance(token, BoundingBoxToken):
                                     self.handleBoundingBox(token)
 
-                if is_barline:
-                    self.measure_start_rows.append(row_number)
-                    self.last_measure_number = len(self.measure_start_rows)
-                    if self.last_bounding_box:
-                        self.last_bounding_box.to_measure = self.last_measure_number
-                row_number = row_number + 1
+                    if is_barline:
+                        self.measure_start_rows.append(row_number)
+                        self.last_measure_number = len(self.measure_start_rows)
+                        if self.last_bounding_box:
+                            self.last_bounding_box.to_measure = self.last_measure_number
+                    row_number = row_number + 1
 
     def getSpine(self, index: int) -> Spine:
         if index < 0:
@@ -265,7 +269,6 @@ class HumdrumImporter:
         if measure_number > max_measures:
             raise Exception(f'The measure number must be <= {max_measures}, and it is {measure_number}')
 
-
     def doExport(self, use_processed: bool, options: ExportOptions) -> string:
         max_rows = self.getMaxRows()
         current_signature = Signatures(None, None, None, None, None)
@@ -288,7 +291,7 @@ class HumdrumImporter:
 
                         if content and content != '.' and content != '*':
                             empty = False
-                            if options.from_measure: # if not, we don't need to compute this value
+                            if options.from_measure:  # if not, we don't need to compute this value
                                 if spine.isContentOfType(i, HeaderToken):
                                     current_signature.last_header_row = i
                                 elif spine.isContentOfType(i, ClefToken):
@@ -304,7 +307,7 @@ class HumdrumImporter:
             if not empty:
                 row_contents.append(row_result)
             else:
-                row_contents.append(None) # in order to maintain the indexes
+                row_contents.append(None)  # in order to maintain the indexes
 
             signatures_at_each_row.append(current_signature)
 
@@ -334,16 +337,16 @@ class HumdrumImporter:
             else:
                 options.to_measure = len(self.measure_start_rows)
 
-            from_row = self.measure_start_rows[options.from_measure]
-            to_row = self.measure_start_rows[options.to_measure]
+            from_row = self.measure_start_rows[options.from_measure-1]-1
+            to_row = self.measure_start_rows[options.to_measure] # to the next one
             signature = signatures_at_each_row[from_row]
 
             # first, attach the signatures if not in the exported range
-            self.addSignatureRowIfRequired(row_contents, result, from_row, signature.last_header_row)
-            self.addSignatureRowIfRequired(row_contents, result, from_row, signature.last_clef_row)
-            self.addSignatureRowIfRequired(row_contents, result, from_row, signature.last_key_signature_row)
-            self.addSignatureRowIfRequired(row_contents, result, from_row, signature.last_time_signature_row)
-            self.addSignatureRowIfRequired(row_contents, result, from_row, signature.last_meter_symbol_row)
+            result = self.addSignatureRowIfRequired(row_contents, result, from_row, signature.last_header_row)
+            result = self.addSignatureRowIfRequired(row_contents, result, from_row, signature.last_clef_row)
+            result = self.addSignatureRowIfRequired(row_contents, result, from_row, signature.last_key_signature_row)
+            result = self.addSignatureRowIfRequired(row_contents, result, from_row, signature.last_time_signature_row)
+            result = self.addSignatureRowIfRequired(row_contents, result, from_row, signature.last_meter_symbol_row)
 
             for row in range(from_row, to_row):
                 row_content = row_contents[row]
@@ -351,10 +354,26 @@ class HumdrumImporter:
                     result += row_content
                     result += '\n'
 
+            if to_row < max_rows:
+                # if self.spines[0].isContentOfType(to_row+1, BarToken):
+                # result += row_contents[row+1]
+                # result += '\n'
 
+                # terminate all not terminated spines
+                # TODO
+                row_content = ''
+                for spine in self.spines:
+                    if spine.spine_type in options.spine_types and not spine.isTerminated():
+                        if len(row_content) > 0:
+                            row_content += '\t'
+                        row_content += '*-'
+                result += row_content
+                result += '\n'
         return result
 
-    def addSignatureRowIfRequired(self, row_contents, result, from_row, row):
-        if row is not None and row < from_row:
-            result += row_contents[row]
+    def addSignatureRowIfRequired(self, row_contents, result, from_row, signature_row):
+        if signature_row is not None and signature_row < from_row:
+            srow = row_contents[signature_row]
+            result += srow
             result += '\n'
+        return result

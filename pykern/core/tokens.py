@@ -15,6 +15,7 @@ class TokenCategory(Enum):
     OTHER_CONTEXTUAL = auto()
     BARLINES = auto()
     FIELD_COMMENTS = auto()
+    LINE_COMMENTS = auto()
     DYNAMICS = auto()
     HARMONY = auto()
     FINGERING = auto()
@@ -85,6 +86,11 @@ class SimpleToken(Token):
 
     def export(self) -> string:
         return self.encoding
+
+
+class BarToken(SimpleToken):
+    def __init__(self, encoding):
+        super().__init__(encoding, TokenCategory.BARLINES)
 
 
 class ClefToken(SimpleToken):
