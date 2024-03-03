@@ -355,12 +355,6 @@ class HumdrumImporter:
                     result += '\n'
 
             if to_row < max_rows:
-                # if self.spines[0].isContentOfType(to_row+1, BarToken):
-                # result += row_contents[row+1]
-                # result += '\n'
-
-                # terminate all not terminated spines
-                # TODO
                 row_content = ''
                 for spine in self.spines:
                     if spine.spine_type in options.spine_types and not spine.isTerminated():
