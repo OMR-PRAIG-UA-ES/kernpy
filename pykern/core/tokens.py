@@ -173,7 +173,7 @@ class BoundingBox:
         self.to_y = max(self.to_y, bounding_box.to_y)
 
     def __str__(self):
-        return f'(x={self.from_x}, y={self.from_y}, w={self.w()}, h={self.h()}), from bar {self.from_bar}, to bar {self.to_bar}'
+        return f'(x={self.from_x}, y={self.from_y}, w={self.w()}, h={self.h()})'
 
     def xywh(self):
         return f'{self.from_x},{self.from_y},{self.w()},{self.h()}'

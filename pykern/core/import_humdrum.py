@@ -141,6 +141,9 @@ class Signatures:
         self.last_time_signature_row = time_signature_row
         self.last_meter_symbol_row = meter_symbol_row
 
+    def clone(self):
+        return Signatures(self.last_header_row, self.last_clef_row, self.last_key_signature_row, self.last_time_signature_row, self.last_meter_symbol_row)
+
 
 class HumdrumImporter:
     HEADERS = {"**mens", "**kern", "**text", "**harm", "**mxhm", "**root", "**dyn", "**dynam", "**fing"}
@@ -148,6 +151,7 @@ class HumdrumImporter:
 
     def __init__(self):
         self.spines = []
+        self.metacomments = []
         self.current_spine_index = 0
         # self.page_start_rows = []
         self.measure_start_rows = []  # starting from 1. Rows after removing empty lines and line comments
@@ -165,59 +169,62 @@ class HumdrumImporter:
                 for spine in self.spines:
                     self.current_spine_index = 0
                     spine.addRow()
-                is_barline = False
-                if len(row) > 0 and not row[0].startswith("!!"):
-                    for column in row:
-                        if column in self.HEADERS:
-                            if header_row_number is not None and header_row_number != row_number:
-                                raise Exception(
-                                    f"Several header rows not supported, there is a header row in #{header_row_number} and another in #{row_number} ")
-
-                            header_row_number = row_number
-                            importer = importers.get(column)
-                            if not importer:
-                                importer = createImporter(column)
-                                importers[column] = importer
-                            spine = Spine(column, importer)
-                            token = HeaderToken(column)
-                            spine.addRow()
-                            spine.addToken(column, token)
-                            self.spines.append(spine)
-                        else:
-                            try:
-                                current_spine = self.getNextSpine()
-                                logging.debug(
-                                    f'Row #{row_number}, current spine #{self.current_spine_index} of size {current_spine.importing_subspines}, and importer {current_spine.importer}')
-                            except Exception as e:
-                                raise Exception(f'Cannot get next spine at row {row_number}: {e}')
-
-                            if column in self.SPINE_OPERATIONS:
-                                current_spine.addToken(column, SpineOperationToken(column))
-
-                                if column == '*-':
-                                    current_spine.terminate()
-                                elif column == "*+" or column == "*^":
-                                    current_spine.increaseSubspines()
-                                elif column == "*v":
-                                    current_spine.decreaseSubspines()
-                            else:
-                                token = current_spine.importer.doImport(column)
-                                if not token:
+                if len(row) > 0:
+                    if row[0].startswith("!!"):
+                        self.metacomments.append(row[0])
+                    else:
+                        is_barline = False
+                        for column in row:
+                            if column in self.HEADERS:
+                                if header_row_number is not None and header_row_number != row_number:
                                     raise Exception(
-                                        f'No token generated for input {column} in row number #{row_number} using importer {current_spine.importer}')
-                                current_spine.addToken(column, token)
-                                if token.category == TokenCategory.BARLINES or token.category == TokenCategory.CORE and len(
-                                        self.measure_start_rows) == 0:
-                                    is_barline = True
-                                elif isinstance(token, BoundingBoxToken):
-                                    self.handleBoundingBox(token)
+                                        f"Several header rows not supported, there is a header row in #{header_row_number} and another in #{row_number} ")
 
-                    if is_barline:
-                        self.measure_start_rows.append(row_number)
-                        self.last_measure_number = len(self.measure_start_rows)
-                        if self.last_bounding_box:
-                            self.last_bounding_box.to_measure = self.last_measure_number
-                    row_number = row_number + 1
+                                header_row_number = row_number
+                                importer = importers.get(column)
+                                if not importer:
+                                    importer = createImporter(column)
+                                    importers[column] = importer
+                                spine = Spine(column, importer)
+                                token = HeaderToken(column)
+                                spine.addRow()
+                                spine.addToken(column, token)
+                                self.spines.append(spine)
+                            else:
+                                try:
+                                    current_spine = self.getNextSpine()
+                                    logging.debug(
+                                        f'Row #{row_number}, current spine #{self.current_spine_index} of size {current_spine.importing_subspines}, and importer {current_spine.importer}')
+                                except Exception as e:
+                                    raise Exception(f'Cannot get next spine at row {row_number}: {e} while reading row {row} ')
+
+                                if column in self.SPINE_OPERATIONS:
+                                    current_spine.addToken(column, SpineOperationToken(column))
+
+                                    if column == '*-':
+                                        current_spine.terminate()
+                                    elif column == "*+" or column == "*^":
+                                        current_spine.increaseSubspines()
+                                    elif column == "*v":
+                                        current_spine.decreaseSubspines()
+                                else:
+                                    token = current_spine.importer.doImport(column)
+                                    if not token:
+                                        raise Exception(
+                                            f'No token generated for input {column} in row number #{row_number} using importer {current_spine.importer}')
+                                    current_spine.addToken(column, token)
+                                    if token.category == TokenCategory.BARLINES or token.category == TokenCategory.CORE and len(
+                                            self.measure_start_rows) == 0:
+                                        is_barline = True
+                                    elif isinstance(token, BoundingBoxToken):
+                                        self.handleBoundingBox(token)
+
+                        if is_barline:
+                            self.measure_start_rows.append(row_number)
+                            self.last_measure_number = len(self.measure_start_rows)
+                            if self.last_bounding_box:
+                                self.last_bounding_box.to_measure = self.last_measure_number
+                        row_number = row_number + 1
 
     def getSpine(self, index: int) -> Spine:
         if index < 0:
@@ -255,7 +262,7 @@ class HumdrumImporter:
             self.page_bounding_boxes[page_number] = self.last_bounding_box
         else:
             print(f'Extending page {page_number}')
-            last_page_bb.bounding_box.extend(self.last_bounding_box.bounding_box)
+            last_page_bb.bounding_box.extend(token.bounding_box)
             last_page_bb.to_measure = self.last_measure_number
 
     def getMaxRows(self):
@@ -271,12 +278,17 @@ class HumdrumImporter:
 
     def doExport(self, use_processed: bool, options: ExportOptions) -> string:
         max_rows = self.getMaxRows()
-        current_signature = Signatures(None, None, None, None, None)
         signatures_at_each_row = []
         row_contents = []
 
+        last_signature = None
         for i in range(max_rows):
             row_result = ''
+            if last_signature:
+                current_signature = last_signature.clone()
+            else:
+                current_signature = Signatures(None, None, None, None, None)
+            last_signature = current_signature
             empty = True
             for spine in self.spines:
                 if spine.spine_type in options.spine_types:
@@ -338,7 +350,10 @@ class HumdrumImporter:
                 options.to_measure = len(self.measure_start_rows)
 
             from_row = self.measure_start_rows[options.from_measure-1]-1
-            to_row = self.measure_start_rows[options.to_measure] # to the next one
+            if options.to_measure == len(self.measure_start_rows):
+                to_row = self.measure_start_rows[options.to_measure-1]
+            else:
+                to_row = self.measure_start_rows[options.to_measure] # to the next one
             signature = signatures_at_each_row[from_row]
 
             # first, attach the signatures if not in the exported range
