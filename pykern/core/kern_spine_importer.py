@@ -144,7 +144,7 @@ class KernSpineListener(kernSpineParserListener):
         self.token = SimpleToken(ctx.getText(), TokenCategory.OTHER)
 
     def exitVisualTandemInterpretation(self, ctx: kernSpineParser.VisualTandemInterpretationContext):
-        self.token = SimpleToken(ctx.getText(), TokenCategory.OTHER)
+        self.token = SimpleToken(ctx.getText(), TokenCategory.ENGRAVED_SYMBOLS)
 
     def exitFieldComment(self, ctx: kernSpineParser.FieldCommentContext):
         self.token = SimpleToken(ctx.getText(), TokenCategory.FIELD_COMMENTS)

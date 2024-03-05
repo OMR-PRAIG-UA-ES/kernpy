@@ -12,6 +12,7 @@ class TokenCategory(Enum):
     CORE = auto()  # notes, rests, chords
     EMPTY = auto()  # placeholders, null interpretation
     SIGNATURES = auto()
+    ENGRAVED_SYMBOLS = auto()
     OTHER_CONTEXTUAL = auto()
     BARLINES = auto()
     FIELD_COMMENTS = auto()
@@ -25,7 +26,7 @@ class TokenCategory(Enum):
 
 
 BEKERN_CATEGORIES = [TokenCategory.STRUCTURAL, TokenCategory.CORE, TokenCategory.EMPTY, TokenCategory.SIGNATURES,
-                     TokenCategory.BARLINES]
+                     TokenCategory.BARLINES, TokenCategory.ENGRAVED_SYMBOLS]
 
 
 # TODO - de momento no lo usamos para filtrar
