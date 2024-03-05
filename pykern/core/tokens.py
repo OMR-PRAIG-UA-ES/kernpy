@@ -57,6 +57,13 @@ class AbstractToken(ABC):
     def export(self) -> string:
         pass
 
+class MetacommentToken(AbstractToken):
+    def __init__(self, encoding):
+        super().__init__(encoding, TokenCategory.LINE_COMMENTS)
+
+    def export(self) -> string:
+        return self.encoding
+
 
 class HeaderToken(AbstractToken):
     def __init__(self, encoding):

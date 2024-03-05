@@ -91,9 +91,9 @@ def download_and_save_page_images(importer, _output_path, map_page_label_iiif_id
 
 def findIIIFIds(importer):
     iiifTag = "!!!IIIF:"
-    for metacomment in importer.metacomments:
-        if metacomment.startswith(iiifTag):
-            url = metacomment[len(iiifTag):].strip()
+    for metacomment_token in importer.getMetacomments():
+        if metacomment_token.encoding.startswith(iiifTag):
+            url = metacomment_token.encoding[len(iiifTag):].strip()
             print(f'Reading IIIF manifest from {url}')
             return get_image_urls(url)
     raise Exception('Cannot find any IIIF metacomment')

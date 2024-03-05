@@ -175,14 +175,15 @@ class ImporterTestCase(unittest.TestCase):
     def testLegacyTests(self):
         self.doEKernTest('resource_dir/legacy/base_tuplet.krn', [5])
         self.doEKernTest('resource_dir/legacy/guide02-example2-1.krn', [5, 8, 11, 15])
-        self.doEKernTest('resource_dir/legacy/guide02-example2-3.krn', [8, 9, 18, 22, 30, 37])
+        self.doEKernTest('resource_dir/legacy/guide02-example2-3.krn', [8, 9, 18, 22, 30, 38])
         self.doEKernTest('resource_dir/legacy/guide02-example2-4.krn', [6, 12, 16, 23, 27, 33, 37, 47, 51])
         self.doEKernTest('resource_dir/legacy/guide06-example6-1.krn', [5, 18, 27])
-        self.doEKernTest('resource_dir/legacy/guide06-example6-2.krn', [5, 14, 27, 40])
+        self.doEKernTest('resource_dir/legacy/guide06-example6-2.krn', [6, 15, 28, 41])
         self.doEKernTest('resource_dir/legacy/chor001.krn',
-                         # rows with comments[26, 27, 32, 37, 43, 46, 50, 55, 57, 60, 67, 74, 77, 82, 88, 93, 96, 102, 107, 114, 117, 122, 128, 130])
+                         # rows with comments
+                         [26, 27, 32, 37, 43, 46, 50, 55, 57, 60, 67, 74, 77, 82, 88, 93, 96, 102, 107, 114, 117, 122, 128, 130])
                          # rows without comments
-                         [11, 12, 17, 22, 28, 31, 35, 40, 42, 45, 52, 58, 61, 66, 72, 77, 80, 86, 91, 98, 101, 106, 112, 114])
+                         #[11, 12, 17, 22, 28, 31, 35, 40, 42, 45, 52, 58, 61, 66, 72, 77, 80, 86, 91, 98, 101, 106, 112, 114])
         self.doJustImportTest(
             'resource_dir/legacy/chor009.krn')  # , [23, 32, 39, 48, 53, 57, 65, 74, 83, 90, 99, 107, 116, 122])
         self.doJustImportTest('resource_dir/legacy/chor048.krn')  # , [22, 27, 32, 41, 46, 56, 65, 74, 83, 91, 98])
@@ -233,10 +234,11 @@ class ImporterTestCase(unittest.TestCase):
         self.doTestCountSpines('resource_dir/spines/5.krn',24, [[1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,1,1,1,1], [1,1,1,1,2,2,2,3,3,3,1,1,2,3,3,3,3,3,3,1,1,1,1,1]])
 
     def testExtractMeasures(self):
-        #self.doEKernMeasureToMeasureTest('resource_dir/polish/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 2)
+        self.doEKernMeasureToMeasureTest('resource_dir/legacy/chor001.krn', 1, 3)
+        self.doEKernMeasureToMeasureTest('resource_dir/polish/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 2)
         self.doEKernMeasureToMeasureTest('resource_dir/polish/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 3)
-        #self.doEKernMeasureToMeasureTest('resource_dir/polish/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 16)
-        #self.doEKernMeasureToMeasureTest('resource_dir/legacy/chor001.krn', 1, 3)
+        self.doEKernMeasureToMeasureTest('resource_dir/polish/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 16)
+        #
 
 #def test():
 #    unittest.main()

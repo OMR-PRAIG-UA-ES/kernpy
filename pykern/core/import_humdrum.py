@@ -4,7 +4,7 @@ import logging
 
 from .importer_factory import createImporter
 from .tokens import HeaderToken, SpineOperationToken, TokenCategory, BoundingBoxToken, KeySignatureToken, \
-    TimeSignatureToken, MeterSymbolToken, ClefToken, BarToken
+    TimeSignatureToken, MeterSymbolToken, ClefToken, BarToken, MetacommentToken
 
 
 class ExportOptions:
@@ -62,15 +62,12 @@ class Spine:
             self.importing_subspines = new_subspines
             self.next_row_subspine_variation = 0
 
-    def addToken(self, encoding, token):
-        if not encoding:
-            raise Exception('Trying to add an empty encoding')
-
+    def addToken(self, token):
         if not token:
             raise Exception('Trying to add a empty token')
 
         row = len(self.rows) - 1
-        if len(self.rows[row]) >= self.importing_subspines:
+        if not isinstance(token, MetacommentToken) and len(self.rows[row]) >= self.importing_subspines:
             raise Exception(
                 f'There are already {len(self.rows[row])} subspines, and this spine should have at most {self.importing_subspines}')
 
@@ -151,7 +148,6 @@ class HumdrumImporter:
 
     def __init__(self):
         self.spines = []
-        self.metacomments = []
         self.current_spine_index = 0
         # self.page_start_rows = []
         self.measure_start_rows = []  # starting from 1. Rows after removing empty lines and line comments
@@ -159,19 +155,32 @@ class HumdrumImporter:
         self.last_measure_number = None
         self.last_bounding_box = None
 
+    def getMetacomments(self): # each metacomment is contained in all spines as a reference to the same object
+        result = []
+        for token in self.spines[0]:
+            if isinstance(token, MetacommentToken):
+                result.append(token)
+        return result
+
     def doImportFile(self, file_path: string):
         importers = {}
         header_row_number = None
         row_number = 1
+        pending_metacomments = [] # those appearing before the headers
         with open(file_path, 'r', newline='', encoding='utf-8', errors='ignore') as file:
             reader = csv.reader(file, delimiter='\t')
             for row in reader:
                 for spine in self.spines:
                     self.current_spine_index = 0
                     spine.addRow()
-                if len(row) > 0:
+                if len(row) > 0: # the last one
                     if row[0].startswith("!!"):
-                        self.metacomments.append(row[0])
+                        mt = MetacommentToken(row[0])
+                        if len(self.spines) == 0:
+                            pending_metacomments.append(mt)
+                        else:
+                            for spine in self.spines:
+                                spine.addToken(mt) # the same reference for all spines
                     else:
                         is_barline = False
                         for column in row:
@@ -186,9 +195,13 @@ class HumdrumImporter:
                                     importer = createImporter(column)
                                     importers[column] = importer
                                 spine = Spine(column, importer)
+                                for pending_metacomment in pending_metacomments:
+                                    spine.addRow()
+                                    spine.addToken(pending_metacomment) # same reference for all spines
+
                                 token = HeaderToken(column)
                                 spine.addRow()
-                                spine.addToken(column, token)
+                                spine.addToken(token)
                                 self.spines.append(spine)
                             else:
                                 try:
@@ -199,7 +212,7 @@ class HumdrumImporter:
                                     raise Exception(f'Cannot get next spine at row {row_number}: {e} while reading row {row} ')
 
                                 if column in self.SPINE_OPERATIONS:
-                                    current_spine.addToken(column, SpineOperationToken(column))
+                                    current_spine.addToken(SpineOperationToken(column))
 
                                     if column == '*-':
                                         current_spine.terminate()
@@ -212,7 +225,7 @@ class HumdrumImporter:
                                     if not token:
                                         raise Exception(
                                             f'No token generated for input {column} in row number #{row_number} using importer {current_spine.importer}')
-                                    current_spine.addToken(column, token)
+                                    current_spine.addToken(token)
                                     if token.category == TokenCategory.BARLINES or token.category == TokenCategory.CORE and len(
                                             self.measure_start_rows) == 0:
                                         is_barline = True
@@ -224,7 +237,7 @@ class HumdrumImporter:
                             self.last_measure_number = len(self.measure_start_rows)
                             if self.last_bounding_box:
                                 self.last_bounding_box.to_measure = self.last_measure_number
-                        row_number = row_number + 1
+                    row_number = row_number + 1
 
     def getSpine(self, index: int) -> Spine:
         if index < 0:
@@ -349,7 +362,7 @@ class HumdrumImporter:
             else:
                 options.to_measure = len(self.measure_start_rows)
 
-            from_row = self.measure_start_rows[options.from_measure-1]-1
+            from_row = self.measure_start_rows[options.from_measure-1]-1 # measures and rows are counted from 1
             if options.to_measure == len(self.measure_start_rows):
                 to_row = self.measure_start_rows[options.to_measure-1]
             else:
