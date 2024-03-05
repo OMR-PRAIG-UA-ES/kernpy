@@ -157,9 +157,9 @@ class HumdrumImporter:
 
     def getMetacomments(self): # each metacomment is contained in all spines as a reference to the same object
         result = []
-        for token in self.spines[0]:
-            if isinstance(token, MetacommentToken):
-                result.append(token)
+        for token in self.spines[0].rows:
+            if isinstance(token[0], MetacommentToken):
+                result.append(token[0].encoding)
         return result
 
     def doImportFile(self, file_path: string):

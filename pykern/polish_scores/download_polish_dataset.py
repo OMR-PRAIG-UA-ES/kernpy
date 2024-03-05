@@ -83,8 +83,8 @@ def download_and_save_page_images(importer, _output_path, map_page_label_iiif_id
             print(url)
             image_path = os.path.join(images_folder, page_label + ".jpg")
             download_and_save_image(url, image_path)
-            krn_path = os.path.join(images_folder, page_label + ".krn")
-            extract_and_save_measures(importer, bounding_box_measure.from_measure, bounding_box_measure.to_measure, krn_path)
+            krn_path = os.path.join(images_folder, page_label + ".ekrn")
+            extract_and_save_measures(importer, bounding_box_measure.from_measure, bounding_box_measure.to_measure-1, krn_path)
         else:
             raise Exception(f'Cannot find IIIF id for page with label "{page_label}"')
 
@@ -92,8 +92,8 @@ def download_and_save_page_images(importer, _output_path, map_page_label_iiif_id
 def findIIIFIds(importer):
     iiifTag = "!!!IIIF:"
     for metacomment_token in importer.getMetacomments():
-        if metacomment_token.encoding.startswith(iiifTag):
-            url = metacomment_token.encoding[len(iiifTag):].strip()
+        if metacomment_token.startswith(iiifTag):
+            url = metacomment_token[len(iiifTag):].strip()
             print(f'Reading IIIF manifest from {url}')
             return get_image_urls(url)
     raise Exception('Cannot find any IIIF metacomment')
