@@ -4,6 +4,8 @@ from io import BytesIO
 import os
 
 from pykern import HumdrumImporter, ExportOptions, BEKERN_CATEGORIES
+import argparse
+
 
 # This script creates the Polish dataset from the kern files.
 # It downloads both the systems and full pages
@@ -131,16 +133,35 @@ def remove_extension(file_name):
 
 if __name__ == "__main__":
     # Replace for the path where the kern files are found
-    #input_path = "/Users/drizo/githubs/humdrum-polish-scores/pl-wn/"
-    input_path = "/Users/drizo/cmg/omr/datasets/humdrum-polish-scores/pruebas/input"
-    output_path = "/Users/drizo/cmg/omr/datasets/humdrum-polish-scores/pruebas/output"
+    input_path = "/Users/drizo/githubs/humdrum-polish-scores/pl-wn/"
+    output_path = '/Users/drizo/cmg/omr/datasets/humdrum-polish-scores/output/pl-wn'
+
+    #TODO parser = argparse.ArgumentParser(description="Download Polish scores.")
+
+    # Add arguments
+    #TODO parser.add_argument("input_folder", type=str, help="Path to the input folder")
+    #TODO parser.add_argument("output_folder", type=str, help="Path to the output folder")
+
+    # Parse arguments
+    #TODO args = parser.parse_args()
+    #TODO input_path = args.input_folder
+    #TODO output_path = args.output_folder
 
     kern_with_bboxes = search_files_with_string(input_path, 'xywh')
-    for kern in kern_with_bboxes:
-        filename = remove_extension(kern)
-        kern_path = os.path.join(input_path, kern)
-        output_kern_path = os.path.join(output_path, filename)
-        if not os.path.exists(output_kern_path):
-            os.makedirs(output_kern_path)
+    ok_files = []
+    ko_files = []
+    try:
+        for kern in kern_with_bboxes:
+            filename = remove_extension(kern)
+            kern_path = os.path.join(input_path, kern)
+            output_kern_path = os.path.join(output_path, filename)
+            if not os.path.exists(output_kern_path):
+                os.makedirs(output_kern_path)
+                convert_and_download_file(kern_path, output_kern_path)
+                ok_files.append(kern)
+    except:
+        ko_files.append(kern)
 
-        convert_and_download_file(kern_path, output_kern_path)
+    print(f'----> OK files #{len(ok_files)}')
+    print(f'----> KO files #{len(ko_files)}')
+    print(ko_files)
