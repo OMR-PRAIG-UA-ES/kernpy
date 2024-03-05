@@ -70,9 +70,6 @@ def extract_and_save_measures(importer, from_measure, to_measure, krn_path):
 
 def download_and_save_page_images(importer, _output_path, map_page_label_iiif_ids, page_bounding_boxes):
     print(f'Bounding boxes {page_bounding_boxes}')
-    images_folder = os.path.join(_output_path, 'images')
-    if not os.path.exists(images_folder):
-        os.makedirs(images_folder)
 
     for page_label, bounding_box_measure in page_bounding_boxes.items():
         page_iiif_id = map_page_label_iiif_ids.get(page_label)
@@ -81,9 +78,9 @@ def download_and_save_page_images(importer, _output_path, map_page_label_iiif_id
             print(f"Page: {page_label}, Bounding box: {bounding_box}, ID: {page_iiif_id}, from bar {bounding_box_measure.from_measure}, to bar {bounding_box_measure.to_measure}")
             url = f'{page_iiif_id}/{bounding_box.xywh()}/full/0/default.jpg'
             print(url)
-            image_path = os.path.join(images_folder, page_label + ".jpg")
+            image_path = os.path.join(_output_path, page_label + ".jpg")
             download_and_save_image(url, image_path)
-            krn_path = os.path.join(images_folder, page_label + ".ekrn")
+            krn_path = os.path.join(_output_path, page_label + ".ekrn")
             extract_and_save_measures(importer, bounding_box_measure.from_measure, bounding_box_measure.to_measure-1, krn_path)
         else:
             raise Exception(f'Cannot find IIIF id for page with label "{page_label}"')
@@ -134,7 +131,6 @@ def remove_extension(file_name):
 
 if __name__ == "__main__":
     # Replace for the path where the kern files are found
-    print("RECUERDA DEJAR TODO!!!!!!!!! - MENS?")
     #input_path = "/Users/drizo/githubs/humdrum-polish-scores/pl-wn/"
     input_path = "/Users/drizo/cmg/omr/datasets/humdrum-polish-scores/pruebas/input"
     output_path = "/Users/drizo/cmg/omr/datasets/humdrum-polish-scores/pruebas/output"

@@ -190,7 +190,7 @@ class ImporterTestCase(unittest.TestCase):
 
     def testBoundingBoxes(self):
         self.doJustImportTest(
-            'resource_dir/polish/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn')
+            'resource_dir/polish/test1/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn')
 
     def testHeader(self):
         importer = HumdrumImporter()
@@ -235,9 +235,9 @@ class ImporterTestCase(unittest.TestCase):
 
     def testExtractMeasures(self):
         self.doEKernMeasureToMeasureTest('resource_dir/legacy/chor001.krn', 1, 3)
-        self.doEKernMeasureToMeasureTest('resource_dir/polish/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 2)
-        self.doEKernMeasureToMeasureTest('resource_dir/polish/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 3)
-        self.doEKernMeasureToMeasureTest('resource_dir/polish/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 16)
+        self.doEKernMeasureToMeasureTest('resource_dir/polish/test1/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 2)
+        self.doEKernMeasureToMeasureTest('resource_dir/polish/test1/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 3)
+        self.doEKernMeasureToMeasureTest('resource_dir/polish/test1/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 16)
         #
 
 #def test():
