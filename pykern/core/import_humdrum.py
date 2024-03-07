@@ -360,7 +360,7 @@ class HumdrumImporter:
         #     raise Exception('No time signature or meter symbol row found')
 
         result = ''
-        if not options.from_measure and not options.to_measure:
+        if options.from_measure is not None and options.to_measure is not None:
             for row_content in row_contents:
                 if row_content:
                     result += row_content

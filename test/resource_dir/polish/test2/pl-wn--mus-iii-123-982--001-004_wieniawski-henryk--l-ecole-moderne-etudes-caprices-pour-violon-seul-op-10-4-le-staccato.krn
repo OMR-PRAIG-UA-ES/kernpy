@@ -1,0 +1,865 @@
+!!!!SEGMENT: pl-wn--mus-iii-123-982--001-004_wieniawski-henryk--l-ecole-moderne-etudes-caprices-pour-violon-seul-op-10-4-le-staccato.krn
+!!!cenid: 18xx:3817
+!!!COM: Wieniawski, Henryk
+!!!COM-rismID: pe137176
+!!!CDT: 1835/07/10-1880/03/31
+!!!CNT:
+!!!GTL: L'école moderne.Etudes-caprices pour violon seul op. 10
+!!!OTL: 4. Le Staccato
+!!!OMV: 004
+!!!PDT:
+!!!AGN: Secular; Etude
+!!!YEC: Copyright 2022 Narodowy Instytut Fryderyka Chopina (https://polishscores.org)
+!!!YEM: License CC-BY-4.0 (https://creativecommons.org/licenses/by/4.0)
+!!!SMS-siglum: PL-Wn
+!!!SMS-shelfmark: Mus.III.123.982
+!!!SMS-shelfwork: 001-004 G
+!!!SMS-variant:
+!!!SMS-altvar:
+!!!NIFC-rismSourceID:
+!!!NIFC-rismChildID:
+!!!NIFC-islandoraID: none
+!!!URL-pdf-islandora:
+!!!URL-scan: https://polona2.pl/item/l-ecole-moderne-etudes-caprices-pour-violon-seul-op-10,MTE2OTgzMTMy/4 @EN{Scan on Polona} @PL{Skany w portalu Polona}
+!!!IIIF: https://polona2.pl/iiif/item/MTE2OTgzMTMy/manifest.json
+!!!ONB-nifc:
+!!!OMD: Allegro giojoso.
+!!!OMD-mod: Allegro gioioso
+!!!AIN: 1 violn
+!!!key: A
+**kern	**fing
+*part1	*
+*staff1	*
+*I"[Violon seul]	*
+*I'	*
+*Ivioln	*
+*ICstr	*
+*IGsolo	*
+*mI"Violino	*
+*mI'vn	*
+*clefG2	*
+*k[f#c#g#]	*
+*A:	*
+*M4/4	*
+*met(c)	*
+*mmet(c)	*
+!!LO:TX:t=P:problem:w źródle oznaczenie smyczkowania (w dół): v zapisane odwrotnie
+*xywh-10:455,449,3582,1316	*
+(8eeu\	.
+=1	=1
+16.eeee\LL)	.
+(32cccc#'v\K	.
+16aaa'\	.
+16eee'\	.
+16ccc#'\	.
+16aa'\	.
+16ee'\	.
+16cc#'\	.
+16ee'\	.
+16dd'\	.
+16b'\	.
+16g#'\	.
+16a'\	.
+16e'\	.
+16c#'\	.
+16A'\JJ)	.
+=2	=2
+((16G#\LL	.
+16e\	.
+16dd\)	.
+16ee`\JJ)	.
+(16ee'\LL	.
+16cc#'\	.
+16e'\	.
+16A'\JJ)	.
+((16cc#\LL	.
+16aa\	.
+16eee\)	.
+16eeee`\JJ)	.
+8eeee\	.
+16r;	.
+16cc# 16av/	.
+=3	=3
+*^	*
+(1cc#Tt	(1aT	.
+8qb 8qe/))	.	.
+*v	*v	*
+=4	=4
+2.b 2.e/	.
+8r	.
+(8eeu\	.
+=5	=5
+*xywh-10:525,1632,3528,714	*
+16.eeee\LL)	.
+(32cccc#'v\K	.
+16aaa'\	.
+16eee'\	.
+16ccc#'\	.
+16aa'\	.
+16ee'\	.
+16cc#'\	.
+16ee'\	.
+16dd'\	.
+16b'\	.
+16g#'\	.
+16a'\	.
+16e'\	.
+16c#'\	.
+16A'\JJ)	.
+=6	=6
+((16G#\LL	.
+16e\	.
+16dd\)	.
+16ee`\JJ)	.
+(16ee'\LL	.
+16cc#'\	.
+16e'\	.
+16A'\JJ)	.
+((16cc#\LL	.
+16aa\	.
+16eee\)	.
+16eeee`\JJ)	.
+8eeee\	.
+16r;	.
+16cc# 16av/	.
+=7	=7
+*^	*
+(1cc#Tt	(1aT	.
+8qb 8qe/))	.	.
+*v	*v	*
+=8	=8
+2.b 2.e/	.
+8r	.
+(8cc#u\	.
+=9	=9
+*xywh-10:561,2149,3455,678	*
+16.cccc#\LL)	.
+(32cccc#'v\k	.
+16bbb'\	3
+16bbb'\J	.
+16ggg#'\L	3
+16ggg#'\	.
+16eee#X'\	.
+16eee#'\J	.
+16ggg#'\L	.
+16ggg#'\	.
+16fff#'\	.
+16fff#'\J	.
+16ccc#'\L	.
+16ccc#'\	.
+16aa'\	.
+16aa'\JJ	.
+=10	=10
+16ccc#'\L	.
+16ccc#'\	.
+16bb'\	.
+16bb'\	.
+16gg#'\	.
+16gg#'\	.
+16ee#X'\	.
+16ee#'\	.
+16gg#'\	.
+16gg#'\	.
+16ff#'\	.
+16ff#'\	.
+16cc#'\	.
+16cc#'\	.
+16a'\	.
+16a'\J)	.
+=11	=11
+*	*below
+((16B\LL	1
+16g#\	3
+16dd\)	2
+16ddd`\JJ)	4
+(16ddd'\LL	.
+16dd'\	.
+16g#'\	.
+16B'\JJ)	.
+((16c#\LL	.
+16a\	.
+16ff#\)	.
+16ccc#`\JJ)	.
+(16ccc#'\LL	.
+16ff#'\	.
+16a'\	.
+16c#'\JJ)	.
+=12	=12
+*^	*
+*xywh-10:525,2587,3558,707	*xywh-10:525,2587,3558,707	*
+((16cc#\LL	2ryy	.
+16gg#\	.	.
+16eee#X\)	.	.
+16cccc#`\JJ)	.	.
+(16cccc#'\LL	.	.
+16eee#'\	.	.
+16gg#'\	.	.
+16cc#'\JJ)	.	.
+*	*cue	*
+!LO:N:n=2:vis=2	!	!
+(<16ff#yy 16rf# 16rB'<<\\LL	(>>(>>16ff#/LL	.
+!LO:N:n=2:vis=2	!	!
+16ccc#yy 16rcc# 16rf#'<<\\	16ccc#/	.
+!LO:N:n=2:vis=2	!	!
+16aaayy 16rdd 16ra'<<\\	16aaa/)	.
+!LO:N:n=2:vis=2	!	!
+16ffff#yy 16rbb 16rff#'<<\\JJ)	16ffff#`>/JJ)	.
+!LO:TX:t=P:problem:fermata w dolnym głosie	!	!
+!LO:N:n=2:vis=2	!	!
+8ffff#yy\ 8rbb 8rff#;<<	8ffff#;>//	.
+*	*Xcue	*
+(8cc#u\	8ryy	.
+*v	*v	*
+=13	=13
+16.cccc#\LL)	.
+(32cccc#'v\K	.
+16bbb'\	.
+16bbb'\	.
+16ggg#'\	.
+16ggg#'\	.
+16eee#X'\	.
+16eee#'\	.
+16ggg#'\	.
+16ggg#'\	.
+16fff#'\	.
+16fff#'\	.
+16ccc#'\	.
+16ccc#'\	.
+16aa'\	.
+16aa'\	.
+=14	=14
+16ccc#'\	.
+16ccc#'\	.
+16bb'\	.
+16bb'\	.
+16gg#'\	.
+16gg#'\	.
+16ee#X'\	.
+16ee#'\	.
+16gg#'\	.
+16gg#'\	.
+16ff#'\	.
+16ff#'\	.
+16cc#'\	.
+16cc#'\	.
+16a'\	.
+16a'\JJ)	.
+=15	=15
+*xywh-10:561,3126,3441,721	*
+((16B\LL	.
+16g#\	.
+16dd\)	.
+16ddd`\JJ)	.
+(16ddd'\LL	.
+16dd'\	.
+16g#'\	.
+16B'\JJ)	.
+((16c#\LL	.
+16a\	.
+16ff#\)	.
+16ccc#`\JJ)	.
+(16ccc#'\LL	.
+16ff#'\	.
+16a'\	.
+16c#'\JJ)	.
+=16	=16
+*^	*
+((16cc#\LL	2ryy	.
+16gg#\	.	.
+16eee#X\)	.	.
+16cccc#`\JJ)	.	.
+(16cccc#'\LL	.	.
+16eee#'\	.	.
+16gg#'\	.	.
+16cc#'\JJ)	.	.
+*	*cue	*
+!LO:N:n=2:vis=2	!	!
+(<16ff#yy 16rf# 16rB'<<\\LL	(>>(>>16ff#/LL	.
+!LO:N:n=2:vis=2	!	!
+16ccc#yy 16rcc# 16rf#'<<\\	16ccc#/	.
+!LO:N:n=2:vis=2	!	!
+16aaayy 16rdd 16ra'<<\\	16aaa/)	.
+!LO:N:n=2:vis=2	!	!
+16ffff#yy 16rbb 16rff#'<<\\JJ)	16ffff#`>/JJ)	.
+!LO:TX:t=P:problem:fermata w dolnym głosie	!	!
+!LO:N:n=2:vis=2	!	!
+8ffff#yy\\ 8rbb 8rff#;<<	8ffff#;>//	.
+*	*Xcue	*
+*v	*v	*
+(8eenXu\	.
+=17	=17
+*xywh-10:562,3118,3492,738	*
+16.eeee\LL)	.
+(32cccc#'v\K	.
+16aaa'\	.
+16eee'\	.
+16ccc#'\	.
+16aa'\	.
+16ee'\	.
+16cc#'\	.
+16ee'\	.
+16dd'\	.
+16b'\	.
+16g#'\	.
+16a'\	.
+16e'\	.
+16c#'\	.
+16A'\JJ)	.
+=18	=18
+*xywh-10:459,3659,3609,670	*
+((16G#\LL	.
+16e\	.
+16dd\)	.
+16ee`\JJ)	.
+(16ee'\LL	.
+16cc#'\	.
+16e'\	.
+16A'\JJ)	.
+((16cc#\LL	.
+16aa\	.
+16eee\)	.
+16eeee`\JJ)	.
+8eeeeo\	.
+16r;	.
+16cc# 16a/	.
+=19	=19
+*^	*
+(1cc#Tt	(1aT	.
+8qb 8qe/))	.	.
+*v	*v	*
+=20	=20
+2.b 2.e/	.
+8r	.
+(8eeu\	.
+=21	=21
+*xywh-10:562,3118,3492,738	*
+16.eeee\LL)	.
+(32cccc#'v\K	.
+16aaa'\	.
+16eee'\	.
+16ccc#'\	.
+16aa'\	.
+16ee'\	.
+16cc#'\	.
+16ee'\	.
+16dd'\	.
+16b'\	.
+16g#'\	.
+16a'\	.
+16e'\	.
+16c#'\	.
+16A'\JJ)	.
+=22	=22
+*xywh-10:452,4169,3660,867	*
+((16c#\LL	.
+16a#X\	.
+16ggn\)	.
+16eee`\JJ)	.
+(16fff#'\LL	.
+16ff#'\	.
+16an'\	.
+16d'\JJ)	.
+((16d#X\LL	.
+16ccn\	.
+16aa\)	.
+16fff#`\JJ)	.
+(16ggg#X'\LL	.
+16gg#X'\	.
+16b'\	.
+16e'\JJ)	.
+=23	=23
+((16g#\LL	.
+16ee\	.
+16bb\)	.
+16bbb`\JJ)	.
+(16cccc#'\LL	.
+16ccc#'\	.
+!LO:TX:t=P:problem:text with extention lines	!
+!LO:TX:b:i:t=poco ritard.:dur=2qe:ext=ud:problem:text with extension lines	!
+16ee'\	.
+16a'\JJ)	.
+((16dd\LL	.
+16aa\	.
+16fff#\)	.
+16ffff#`\JJ)	.
+(8ffff#;\	.
+8d#X/)	.
+=24	=24
+!LO:TX:b:i:t=a tempo.:mod=a tempo	!
+(8e\L	.
+8ee\J	.
+16eee\LL)	.
+(16eee'v\	.
+16ccc#'\	.
+16ccc#'\	.
+16aa'\	.
+16aa'\	.
+16ee'\	.
+16ee'\	.
+16cc#'\	.
+16cc#'\	.
+16a'\	.
+16a'\JJ	.
+=25	=25
+*xywh-11:154,410,3449,759	*
+16e'/LL)	.
+16e'u/	.
+(16c#'/	.
+16c#'/	.
+16A'/	.
+16A'/	.
+16c#'/	.
+16c#'/	.
+16e'/	.
+16e'/	.
+16a'/	.
+16a'/	.
+16cc#'/	.
+16cc#'/	.
+*	*above
+16ee'/	1
+16ee'/JJ	.
+=26	=26
+16aa'\LL	.
+16aa'\	.
+16ccc#'\	.
+16ccc#'\	.
+16eee'\	1
+16eee'\	.
+16aaa'\	3
+16aaa'\	.
+16cccc#'\	4
+16cccc#'\	.
+16eee'\	.
+16eee'\JJ)	.
+!LO:TX:a:t=P:problem:mixed beam	!
+(8.eeeev\L	.
+16a/Jk)	.
+=27	=27
+*tremolo	*
+(32bLLL 32e/	.
+32cc# 32g#/	.
+32b 32e/	.
+32cc# 32g#/	.
+32b 32e/	.
+32cc# 32g#/	.
+32b 32e/	.
+32cc# 32g#/	.
+32b 32e/	.
+32cc# 32g#/	.
+32b 32e/	.
+32cc# 32g#/	.
+32b 32e/	.
+32cc# 32g#/	.
+32b 32e/	.
+32cc#JJJ 32g#/)	.
+*Xtremolo	*
+2ggg#\	.
+16qqfff#/LL	.
+16qqggg#/JJ	.
+=28||	=28||
+!!!OMD: Maestoso.
+!!!OMD-mod: Maestoso
+*xywh-11:89,1090,3551,556	*
+2aaa 2ccc#\	.
+2ee 2a 2e 2c#/	.
+=29	=29
+!LO:TX:b:i:t=De tonte ta longueur de l’archet.	!
+[<4ff# 4a 4f# 4d/	.
+8ff#/L]	.
+(16d'^/L	.
+16f#'^/JJ	.
+16a'^\LL	.
+16dd'^\	.
+16ff#'^\	.
+16aa'^\JJ	.
+16ddd'^\LL	.
+16fff#'^\	.
+16aaa'^\	.
+16dddd'^\JJ)	.
+=30	=30
+2gg# 2b 2e\	.
+2eee 2gg#\	.
+=31	=31
+(8aaL 8cc# 8e 8A/	.
+8ee/J	.
+16eeee\LL)	.
+(16cccc#'v^\	.
+16aaa'^\	.
+16eee'^\	.
+16ccc#'^\	.
+16aa'^\	.
+16ee'^\	.
+16cc#'^\	.
+16a'^\	.
+16e'^\	.
+16c#'^\	.
+16A'^\JJ)	.
+=32	=32
+*xywh-11:212,1538,3608,556	*
+2ccc# 2cc# 2f# 2A\	.
+2aa 2b 2d#X\	.
+=33	=33
+[4gg# 4b 4e\	.
+8gg#\L]	.
+(16e'^\L	.
+*	*below
+16g#'^\JJ	1
+16b'^\LL	.
+16ee'^\	.
+16gg#'^\	1
+16bb'^\	.
+16eee'^\	.
+16ggg#'^\	1
+16bbb'^\	.
+16eeee'^\JJ)	.
+=34	=34
+2ff# 2ee 2f# 2B/	.
+2bb 2dd#X 2f# 2B/	.
+=35	=35
+([4ee 4b 4g# 4e/	.
+16ee\LL]	.
+16bbb\)	.
+(16ggg#'v^\	.
+16eee'^\	.
+16bb'^\	.
+16eee'^\	.
+16bb'^\	.
+16gg#'^\	.
+16ee'^\	.
+16bb'^\	.
+16gg#'^\	.
+16ee'^\JJ)	.
+=36	=36
+*xywh-11:205,2045,3500,520	*
+8ee 8dd 8e`/	.
+(16ddLL 16e'v/	.
+16ddJJ 16e'/	.
+16ddLL 16fn'/	.
+16dd 16f'/	.
+16dd 16e'/	.
+16ddJJ 16e'/	.
+16ddLL 16f#X'/	.
+16dd 16f#'/	.
+16dd 16e'/	.
+16ddJJ 16e'/	.
+16ddLL 16g#'/	.
+16dd 16g#'/	.
+16dd 16e'/	.
+16ddJJ 16e'/	.
+=37	=37
+8cc# 8a'/)	.
+(16A'u/LL	.
+16B'/JJ	.
+16c#'/LL	.
+16d'/	.
+16e'/	.
+16f#'/JJ	.
+16e'/LL	.
+16d#X'/	.
+16f#'/	.
+16e'/JJ	.
+16dn'/LL	.
+16c#'/	.
+16d'/	.
+16B'/JJ	.
+=38	=38
+(16A/LL	.
+16c#/))	.
+(16e'v/	.
+16a'/J	.
+16cc#'/L	.
+16ee'/	.
+16aa'/	.
+16ccc#'/JJ	.
+16eee'\LL	.
+16ccc#'\	.
+16aa'\	.
+16ee'\J	.
+16cc#'\L	.
+16a'\	.
+16e'\	.
+16c#'\JJ)	.
+=39	=39
+*xywh-11:147,2486,3630,585	*
+!LO:TX:b:i:t=Sul D _ E:mod=sul D_E	!
+!LO:TUP:a	!
+12e^\L	1
+12gg#\	.
+12g#^\J	1
+!LO:TUP:a	!
+12bb\L	2
+12b^\	1
+12eee\J	3
+!LO:TUP:a	!
+12ee^\L	1
+12ggg#\	2
+12gg#^\J	1
+!LO:TUP:a	!
+12bbb\L	2
+12bb^\	1
+12eeee\J	3
+=40	=40
+8bb 8dd 8e`>/L	.
+*tremolo	*
+!LO:TX:t=P:problem:nie wyświetla się tremolo	!
+!LO:TX:t=P:problem:tremolo-dots 	!
+(16dd 16e'v/L	.
+16dd 16e'/J	.
+!LO:TX:t=P:problem:tremolo-dots 	!
+16dd 16fn'/L	.
+16dd 16f'/J	.
+!LO:TX:t=P:problem:tremolo-dots 	!
+16dd 16e'/L	.
+16dd 16e'/J	.
+!LO:TX:t=P:problem:tremolo-dots 	!
+16dd 16f#X'/L	.
+16dd 16f#'/J	.
+!LO:TX:t=P:problem:tremolo-dots 	!
+16dd 16e'/L	.
+16dd 16e'/J	.
+!LO:TX:t=P:problem:tremolo-dots 	!
+16dd 16g#'/L	.
+16dd 16g#'/J	.
+!LO:TX:t=P:problem:tremolo-dots 	!
+16dd 16e'/L	.
+16dd 16e'/JJ	.
+*Xtremolo	*
+=41	=41
+8cc# 8a'/)	.
+(16A'u/LL	.
+16B'/JJ	.
+16c#'/LL	.
+16d'/	.
+16e'/	.
+16f#'/JJ	.
+16e'/LL	.
+16d#X'/	.
+16f#'/	.
+16e'/JJ	.
+16dn'/LL	.
+16c#'/	.
+16d'/	.
+16B'/JJ	.
+=42	=42
+*xywh-11:139,2934,3659,571	*
+(16A/LL	.
+16c#/))	.
+(16e'v/	.
+16a'/J	.
+16cc#'\L	.
+16ee'\	.
+16aa'\	.
+16ccc#'\JJ	.
+16eee'\LL	.
+16ccc#'\	.
+16aa'\	.
+16ee'\J	.
+16cc#'\L	.
+16a'\	.
+16e'\	.
+16c#'\JJ)	.
+=43	=43
+!LO:TUP:a	!
+12e^\L	.
+12gg#\	.
+12g#^\J	.
+!LO:TUP:a	!
+12bb\L	.
+12b^\	.
+12eee\J	.
+!LO:TUP:a	!
+12ee^\L	.
+12ggg#\	.
+12gg#^\J	.
+!LO:TUP:a	!
+12bbb\L	.
+12bb^\	.
+12eeee\J	.
+=44||	=44||
+*8va	*
+!!!OMD: Tempo 1.°
+!!!OMD-mod: Tempo I
+16.eeee\LL	.
+(32cccc#'\K	.
+16aaa'\	.
+16eee'\	.
+*X8va	*
+16ccc#'\	.
+16aa'\	.
+16ee'\	.
+16cc#'\	.
+16ee'\	.
+16dd'\	.
+16b'\	.
+16g#'\	.
+16a'\	.
+16e'\	.
+16c#'\	.
+16A'\JJ)	.
+=45	=45
+*xywh-11:132,3354,3587,629	*
+((16G#\LL	.
+16e\	.
+16dd\)	.
+16ee`\JJ)	.
+(16ee'\LL	.
+16cc#'\	.
+16e'\	.
+16A'\JJ)	.
+((16cc#\LL	.
+16aa\	.
+16eee\)	.
+16eeee`\JJ)	.
+8eeee\	.
+16r;	.
+16cc# 16a/	.
+=46	=46
+*^	*
+(1cc#Tt	(1aT	.
+8qb 8qe/))	.	.
+*v	*v	*
+=47	=47
+2.b 2.e/	.
+8r	.
+(8ee\	.
+=48	=48
+16.eeee\LL)	.
+(32cccc#'v\K	.
+16aaa'\	.
+16eee'\	.
+16ccc#'\	.
+16aa'\	.
+16ee'\	.
+16cc#'\	.
+16ee'\	.
+16dd'\	.
+16b'\	.
+16g#'\	.
+16a'\	.
+16e'\	.
+16c#'\	.
+16A'\JJ)	.
+=49	=49
+*xywh-11:132,3809,3659,564	*
+((16c#\LL	.
+16a#X\	.
+16ggn\)	.
+16eee`\JJ)	.
+(16fff#'\LL	.
+16ff#'\	.
+16an'\	.
+16d'\JJ)	.
+((16d#X\LL	.
+16ccn\	.
+16aa\)	.
+16fff#`\JJ)	.
+(16ggg#X'\LL	.
+16gg#X'\	.
+16b'\	.
+16e'\JJ)	.
+=50	=50
+((16g#\LL	.
+16ee\	.
+16bb\)	.
+16bbb`\JJ)	.
+(16cccc#'\LL	.
+16ccc#'\	.
+16ee'\	.
+16a'\JJ)	.
+((16dd\LL	.
+16aa\	.
+16fff#\)	.
+16ffff#`\JJ)	.
+(8ffff#;\	.
+8d#X/)	.
+=51	=51
+(8e\L	.
+8ee\J	.
+16eee\LL)	.
+(16eee'\	.
+16ccc#'\	.
+16ccc#'\	.
+16aa'\	.
+16aa'\	.
+16ee'\	.
+16ee'\	.
+16cc#'\	.
+16cc#'\	.
+16a'\	.
+16a'\JJ	.
+=52	=52
+*xywh-11:118,4251,3601,795	*
+16e'/LL)	.
+16e'u/	.
+(16c#'/	.
+16c#'/	.
+16A'/	.
+16A'/	.
+16c#'/	.
+16c#'/	.
+16e'/	.
+16e'/	.
+16a'/	.
+16a'/	.
+16cc#'/	.
+16cc#'/	.
+16ee'/	.
+16ee'/JJ	.
+=53	=53
+16aa'\LL	.
+16aa'\	.
+16ccc#'\	.
+16ccc#'\	.
+16eee'\	.
+16eee'\	.
+16aaa'\	.
+16aaa'\	.
+16cccc#'\	.
+16cccc#'\	.
+16eee'\	.
+16eee'\JJ)	.
+!LO:TX:a:t=P:problem:mixed beam	!
+(8.eeeev\L	.
+16a/Jk)	.
+=54	=54
+*tremolo	*
+!LO:TX:t=P:problem:LO:N:vis=2	!
+(32bLLL 32e/	.
+32cc# 32g#/	.
+32b 32e/	.
+32cc# 32g#/	.
+32b 32e/	.
+32cc# 32g#/	.
+32b 32e/	.
+32cc# 32g#/	.
+!LO:TX:t=P:problem:LO:N:vis=2	!
+32b 32e/	.
+32cc# 32g#/	.
+32b 32e/	.
+32cc# 32g#/	.
+32b 32e/	.
+32cc# 32g#/	.
+32b 32e/	.
+32cc#JJJ 32g#/)	.
+(2ggg#Tt\	.
+16qqfff#/LL	.
+16qqggg#/JJ)	.
+=55	=55
+4aaa 4a\	.
+4r	.
+2r;	.
+==	==
+*-	*-
+!!!system-decoration: [(s1)]
+!!!RDF**kern: > = above
+!!!RDF**kern: < = below
+!!!filter-modern: sic -sq | shed -k -e "s/:TUP:/:tup:/L" | autostem -r  | modori -m
+!!!ENC: Katarzyna Serwa
+!!!END: 2022-05-18
+!!!EED: Berenika Jozajtis
+!!!EEV: 2022-05-06
+!!!ENC-modern: Andrzej Borzym
+!!!END-modern: 2022-07-20
+!!!ENC-iiif: Natalia Wrzos
+!!!END-iiif: 2022-08-30

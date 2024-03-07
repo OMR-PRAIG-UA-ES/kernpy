@@ -234,6 +234,7 @@ class ImporterTestCase(unittest.TestCase):
         self.doTestCountSpines('resource_dir/spines/5.krn',24, [[1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,1,1,1,1], [1,1,1,1,2,2,2,3,3,3,1,1,2,3,3,3,3,3,3,1,1,1,1,1]])
 
     def testExtractMeasures(self):
+        self.doEKernMeasureToMeasureTest('resource_dir/polish/test2/pl-wn--mus-iii-123-982--001-004_wieniawski-henryk--l-ecole-moderne-etudes-caprices-pour-violon-seul-op-10-4-le-staccato.krn', 1, 2)
         self.doEKernMeasureToMeasureTest('resource_dir/legacy/chor001.krn', 1, 3)
         self.doEKernMeasureToMeasureTest('resource_dir/polish/test1/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 2)
         self.doEKernMeasureToMeasureTest('resource_dir/polish/test1/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 3)
