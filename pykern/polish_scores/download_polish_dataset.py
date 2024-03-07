@@ -1,5 +1,3 @@
-import logging
-
 import requests
 from PIL import Image
 from io import BytesIO
@@ -7,6 +5,7 @@ import os
 
 from pykern import HumdrumImporter, ExportOptions, BEKERN_CATEGORIES
 import argparse
+
 
 # This script creates the Polish dataset from the kern files.
 # It downloads both the systems and full pages
@@ -78,15 +77,13 @@ def download_and_save_page_images(importer, _output_path, map_page_label_iiif_id
         page_iiif_id = map_page_label_iiif_ids.get(page_label)
         if page_iiif_id is not None:
             bounding_box = bounding_box_measure.bounding_box
-            print(
-                f"Page: {page_label}, Bounding box: {bounding_box}, ID: {page_iiif_id}, from bar {bounding_box_measure.from_measure}, to bar {bounding_box_measure.to_measure}")
+            print(f"Page: {page_label}, Bounding box: {bounding_box}, ID: {page_iiif_id}, from bar {bounding_box_measure.from_measure}, to bar {bounding_box_measure.to_measure}")
             url = f'{page_iiif_id}/{bounding_box.xywh()}/full/0/default.jpg'
             print(url)
             image_path = os.path.join(_output_path, page_label + ".jpg")
             download_and_save_image(url, image_path)
             krn_path = os.path.join(_output_path, page_label + ".ekrn")
-            extract_and_save_measures(importer, bounding_box_measure.from_measure, bounding_box_measure.to_measure - 1,
-                                      krn_path)
+            extract_and_save_measures(importer, bounding_box_measure.from_measure, bounding_box_measure.to_measure-1, krn_path)
         else:
             raise Exception(f'Cannot find IIIF id for page with label "{page_label}"')
 
@@ -106,7 +103,7 @@ def convert_and_download_file(input_kern, _output_path):
     importer = HumdrumImporter()
     importer.doImportFile(input_kern)
     if len(importer.errors):
-        raise Exception(f'{input_kern} has errors {importer.errors}')
+        raise Exception(f'{input_kern} has errors {importer.getErrorMessages()}')
     map_page_label_IIIF_ids = findIIIFIds(importer)
     download_and_save_page_images(importer, _output_path, map_page_label_IIIF_ids, importer.page_bounding_boxes)
 
@@ -136,34 +133,39 @@ def remove_extension(file_name):
     return base_name
 
 
-def main(input_path: str, output_path: str):
-    print(f'download_polish_dataset: input_path={input_path}, output_path={output_path}')
-
+if __name__ == "__main__":
     # Replace for the path where the kern files are found
-    # TODO: Remove this hardcoded path
     input_path = "/Users/drizo/githubs/humdrum-polish-scores/pl-wn/"
+    #input_path = "/tmp/xxx"
     output_path = '/Users/drizo/cmg/omr/datasets/humdrum-polish-scores/output/pl-wn'
+
+    #TODO parser = argparse.ArgumentParser(description="Download Polish scores.")
+
+    # Add arguments
+    #TODO parser.add_argument("input_folder", type=str, help="Path to the input folder")
+    #TODO parser.add_argument("output_folder", type=str, help="Path to the output folder")
+
+    # Parse arguments
+    #TODO args = parser.parse_args()
+    #TODO input_path = args.input_folder
+    #TODO output_path = args.output_folder
 
     kern_with_bboxes = search_files_with_string(input_path, 'xywh')
     ok_files = []
     ko_files = []
-    kern = None
-    try:
-        for kern in kern_with_bboxes:
+    for kern in kern_with_bboxes:
+        try:
             filename = remove_extension(kern)
             kern_path = os.path.join(input_path, kern)
             output_kern_path = os.path.join(output_path, filename)
             if not os.path.exists(output_kern_path):
                 os.makedirs(output_kern_path)
-                convert_and_download_file(kern_path, output_kern_path)
-                ok_files.append(kern)
-    except:
-        ko_files.append(kern)
+            convert_and_download_file(kern_path, output_kern_path)
+            ok_files.append(kern)
+        except Exception as error:
+            ko_files.append(kern)
+            print(f'Errors in {kern}: {error}')
 
     print(f'----> OK files #{len(ok_files)}')
     print(f'----> KO files #{len(ko_files)}')
     print(ko_files)
-
-
-if __name__ == "__main__":
-    logging.error("This script is not meant to be run directly: Usage: python -m pykern --help")

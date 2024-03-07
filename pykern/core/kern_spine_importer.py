@@ -220,8 +220,8 @@ class ErrorListener(ConsoleErrorListener):
         super().__init__()
         self.errors = []
 
-    def syntaxError(self, recognizer, offendingSymbol, charPositionInLine, msg, e):
-        super().syntaxError(recognizer, offendingSymbol, charPositionInLine, msg, e)
+    def syntaxError(self, recognizer, offendingSymbol, line, charPositionInLine, msg, e):
+        super().syntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
         self.errors.append(ParseError(offendingSymbol, charPositionInLine, msg, e))
 
     def getNumberErrorsFound(self):

@@ -344,13 +344,15 @@ chordSpace: SPACE?; // required for ekern translation
 // it may appear after or before the note
 // sometimes the duration is found before or after the note
 graceNote:
-    duration? CHAR_q CHAR_q? duration?;
+    //2024 duration? CHAR_q CHAR_q? duration?;
+    CHAR_q CHAR_q?;
 
 //TODO
 // it may appear after or before the note
 // sometimes the duration is found before or after the note
 appoggiatura:
-    duration? appoggiaturaMode duration?;
+    //2024 duration? appoggiaturaMode duration?;
+    appoggiaturaMode;
 
 // The appoggiatura note itself is designated by the upper-case letter P, whereas the subsequent note (whose notated duration has been shortened) is designated by the lower-case letter p
 appoggiaturaMode: CHAR_p | CHAR_P;

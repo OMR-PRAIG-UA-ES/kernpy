@@ -413,3 +413,11 @@ class HumdrumImporter:
             result += srow
             result += '\n'
         return result
+
+    def getErrorMessages(self):
+        result = ''
+        for err in self.errors:
+            result += str(err)
+            result + '\n'
+        return result
+

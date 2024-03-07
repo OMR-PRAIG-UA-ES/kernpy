@@ -68,6 +68,9 @@ class ErrorToken(AbstractToken):
     def export(self) -> string:
         return '' #TODO Qué exportamos?
 
+    def __str__(self):
+        return f'Error token at line {self.line} with encoding "{self.encoding}": {self.error}'
+
 
 class MetacommentToken(AbstractToken):
     def __init__(self, encoding):
