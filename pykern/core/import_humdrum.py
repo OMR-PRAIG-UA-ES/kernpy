@@ -4,7 +4,7 @@ import logging
 
 from .importer_factory import createImporter
 from .tokens import HeaderToken, SpineOperationToken, TokenCategory, BoundingBoxToken, KeySignatureToken, \
-    TimeSignatureToken, MeterSymbolToken, ClefToken, BarToken, MetacommentToken
+    TimeSignatureToken, MeterSymbolToken, ClefToken, BarToken, MetacommentToken, ErrorToken
 
 
 class ExportOptions:
@@ -154,6 +154,7 @@ class HumdrumImporter:
         self.page_bounding_boxes = {}
         self.last_measure_number = None
         self.last_bounding_box = None
+        self.errors = []
 
     def getMetacomments(self): # each metacomment is contained in all spines as a reference to the same object
         result = []
@@ -162,82 +163,95 @@ class HumdrumImporter:
                 result.append(token[0].encoding)
         return result
 
-    def doImportFile(self, file_path: string):
+    def doImport(self, reader):
         importers = {}
         header_row_number = None
         row_number = 1
         pending_metacomments = [] # those appearing before the headers
-        with open(file_path, 'r', newline='', encoding='utf-8', errors='ignore') as file:
-            reader = csv.reader(file, delimiter='\t')
-            for row in reader:
-                for spine in self.spines:
-                    self.current_spine_index = 0
-                    spine.addRow()
-                if len(row) > 0: # the last one
-                    if row[0].startswith("!!"):
-                        mt = MetacommentToken(row[0])
-                        if len(self.spines) == 0:
-                            pending_metacomments.append(mt)
-                        else:
-                            for spine in self.spines:
-                                spine.addToken(mt) # the same reference for all spines
+        for row in reader:
+            for spine in self.spines:
+                self.current_spine_index = 0
+                spine.addRow()
+            if len(row) > 0: # the last one
+                if row[0].startswith("!!"):
+                    mt = MetacommentToken(row[0])
+                    if len(self.spines) == 0:
+                        pending_metacomments.append(mt)
                     else:
-                        is_barline = False
-                        for column in row:
-                            if column in self.HEADERS:
-                                if header_row_number is not None and header_row_number != row_number:
-                                    raise Exception(
-                                        f"Several header rows not supported, there is a header row in #{header_row_number} and another in #{row_number} ")
+                        for spine in self.spines:
+                            spine.addToken(mt) # the same reference for all spines
+                else:
+                    is_barline = False
+                    for column in row:
+                        if column in self.HEADERS:
+                            if header_row_number is not None and header_row_number != row_number:
+                                raise Exception(
+                                    f"Several header rows not supported, there is a header row in #{header_row_number} and another in #{row_number} ")
 
-                                header_row_number = row_number
-                                importer = importers.get(column)
-                                if not importer:
-                                    importer = createImporter(column)
-                                    importers[column] = importer
-                                spine = Spine(column, importer)
-                                for pending_metacomment in pending_metacomments:
-                                    spine.addRow()
-                                    spine.addToken(pending_metacomment) # same reference for all spines
-
-                                token = HeaderToken(column)
+                            header_row_number = row_number
+                            importer = importers.get(column)
+                            if not importer:
+                                importer = createImporter(column)
+                                importers[column] = importer
+                            spine = Spine(column, importer)
+                            for pending_metacomment in pending_metacomments:
                                 spine.addRow()
-                                spine.addToken(token)
-                                self.spines.append(spine)
+                                spine.addToken(pending_metacomment) # same reference for all spines
+
+                            token = HeaderToken(column)
+                            spine.addRow()
+                            spine.addToken(token)
+                            self.spines.append(spine)
+                        else:
+                            try:
+                                current_spine = self.getNextSpine()
+                                logging.debug(
+                                    f'Row #{row_number}, current spine #{self.current_spine_index} of size {current_spine.importing_subspines}, and importer {current_spine.importer}')
+                            except Exception as e:
+                                raise Exception(f'Cannot get next spine at row {row_number}: {e} while reading row {row} ')
+
+                            if column in self.SPINE_OPERATIONS:
+                                current_spine.addToken(SpineOperationToken(column))
+
+                                if column == '*-':
+                                    current_spine.terminate()
+                                elif column == "*+" or column == "*^":
+                                    current_spine.increaseSubspines()
+                                elif column == "*v":
+                                    current_spine.decreaseSubspines()
                             else:
                                 try:
-                                    current_spine = self.getNextSpine()
-                                    logging.debug(
-                                        f'Row #{row_number}, current spine #{self.current_spine_index} of size {current_spine.importing_subspines}, and importer {current_spine.importer}')
-                                except Exception as e:
-                                    raise Exception(f'Cannot get next spine at row {row_number}: {e} while reading row {row} ')
-
-                                if column in self.SPINE_OPERATIONS:
-                                    current_spine.addToken(SpineOperationToken(column))
-
-                                    if column == '*-':
-                                        current_spine.terminate()
-                                    elif column == "*+" or column == "*^":
-                                        current_spine.increaseSubspines()
-                                    elif column == "*v":
-                                        current_spine.decreaseSubspines()
-                                else:
                                     token = current_spine.importer.doImport(column)
-                                    if not token:
-                                        raise Exception(
-                                            f'No token generated for input {column} in row number #{row_number} using importer {current_spine.importer}')
-                                    current_spine.addToken(token)
-                                    if token.category == TokenCategory.BARLINES or token.category == TokenCategory.CORE and len(
-                                            self.measure_start_rows) == 0:
-                                        is_barline = True
-                                    elif isinstance(token, BoundingBoxToken):
-                                        self.handleBoundingBox(token)
+                                except Exception as error:
+                                    token = ErrorToken(column, row_number, error)
+                                    self.errors.append(token)
+                                if not token:
+                                    raise Exception(
+                                        f'No token generated for input {column} in row number #{row_number} using importer {current_spine.importer}')
+                                current_spine.addToken(token)
+                                if token.category == TokenCategory.BARLINES or token.category == TokenCategory.CORE and len(
+                                        self.measure_start_rows) == 0:
+                                    is_barline = True
+                                elif isinstance(token, BoundingBoxToken):
+                                    self.handleBoundingBox(token)
 
-                        if is_barline:
-                            self.measure_start_rows.append(row_number)
-                            self.last_measure_number = len(self.measure_start_rows)
-                            if self.last_bounding_box:
-                                self.last_bounding_box.to_measure = self.last_measure_number
-                    row_number = row_number + 1
+                    if is_barline:
+                        self.measure_start_rows.append(row_number)
+                        self.last_measure_number = len(self.measure_start_rows)
+                        if self.last_bounding_box:
+                            self.last_bounding_box.to_measure = self.last_measure_number
+                row_number = row_number + 1
+
+    def doImportFile(self, file_path: string):
+        with open(file_path, 'r', newline='', encoding='utf-8', errors='ignore') as file:
+            reader = csv.reader(file, delimiter='\t')
+            self.doImport(reader)
+
+    def doImportString(self, text: string):
+        lines = text.splitlines()
+        reader = csv.reader(lines)
+        self.doImport(reader)
+
 
     def getSpine(self, index: int) -> Spine:
         if index < 0:
