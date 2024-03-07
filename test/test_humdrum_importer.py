@@ -240,6 +240,33 @@ class ImporterTestCase(unittest.TestCase):
         self.doEKernMeasureToMeasureTest('resource_dir/polish/test1/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 16)
         #
 
+    def testStringImporter(self):
+        input_kern = "**kern\n4c\n4d\n4e\n4f\n*-"
+        importer = HumdrumImporter()
+        importer.doImportString(input_kern)
+        export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
+        output_kern = importer.doExportProcessed(export_options)
+        expected_ekern = "**ekern\n4·c\n4·d\n4·e\n4·f\n*-\n"
+        self.assertEquals(expected_ekern, output_kern)
+
+    def testLexicalError(self):
+        input_kern = "**kern\ncleF4\n4c\n4d\n4e\n4f\n*-"
+        importer = HumdrumImporter()
+        importer.doImportString(input_kern)
+        self.assertEquals(1, len(importer.errors))
+
+    def testParserError(self):
+        input_kern = "**kern\n*clefF4\nc4\n4d\n4e\n4f\n*-"
+        importer = HumdrumImporter()
+        importer.doImportString(input_kern)
+        self.assertEquals(1, len(importer.errors))
+
+    def testLexicalParserError(self):
+        input_kern = "**kern\ncleF4\nc4\n4d\n4e\n4f\n*-"
+        importer = HumdrumImporter()
+        importer.doImportString(input_kern)
+        self.assertEquals(2, len(importer.errors))
+
 #def test():
 #    unittest.main()
 

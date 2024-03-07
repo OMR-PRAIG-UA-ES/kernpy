@@ -58,6 +58,16 @@ class AbstractToken(ABC):
     def export(self) -> string:
         pass
 
+class ErrorToken(AbstractToken):
+    """Used to wrap tokens that have not been parsed"""
+    def __init__(self, encoding, line, error):
+        super().__init__(encoding, TokenCategory.EMPTY)
+        self.error = error
+        self.line = line
+
+    def export(self) -> string:
+        return '' #TODO Qué exportamos?
+
 
 class MetacommentToken(AbstractToken):
     def __init__(self, encoding):

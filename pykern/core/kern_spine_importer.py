@@ -3,6 +3,7 @@ import string
 
 from antlr4 import ParserRuleContext, InputStream, CommonTokenStream, ParseTreeWalker, BailErrorStrategy, Parser, \
     RecognitionException, PredictionMode
+from antlr4.error.ErrorListener import ConsoleErrorListener
 
 from .base_antlr_importer import BaseANTLRListenerImporter
 from .generated.kernSpineLexer import kernSpineLexer
@@ -23,8 +24,8 @@ class KernSpineListener(kernSpineParserListener):
         self.duration_subtokens = []
         self.diatonic_pitch_and_octave_subtoken = None
         self.accidental_subtoken = None
-        #self.decorations = {}  # in order to standardize the order of decorators, we map the different properties to their class names
-        #We cannot order it using the class name because there are rules with subrules, such as ties, or articulations. We order it using the encoding itself
+        # self.decorations = {}  # in order to standardize the order of decorators, we map the different properties to their class names
+        # We cannot order it using the class name because there are rules with subrules, such as ties, or articulations. We order it using the encoding itself
         self.decorations = []
         self.in_chord = False
         # self.page_start_rows = [] # TODO
@@ -36,7 +37,7 @@ class KernSpineListener(kernSpineParserListener):
         self.duration_subtokens = []
         self.diatonic_pitch_and_octave_subtoken = None
         self.accidental_subtoken = None
-        #self.decorations = {}
+        # self.decorations = {}
         self.decorations = []
 
     # def process_decorations(self, ctx: ParserRuleContext):
@@ -74,20 +75,19 @@ class KernSpineListener(kernSpineParserListener):
         self.diatonic_pitch_and_octave_subtoken = Subtoken(ctx.getText(), SubTokenCategory.PITCH)
 
     def exitNoteDecoration(self, ctx: kernSpineParser.NoteDecorationContext):
-        #clazz = type(ctx.getChild(0))
-        #decoration_type = clazz.__name__
-        #if decoration_type in self.decorations:
+        # clazz = type(ctx.getChild(0))
+        # decoration_type = clazz.__name__
+        # if decoration_type in self.decorations:
         #    logging.warning(
         #        f'The decoration {decoration_type} is duplicated after reading {ctx.getText()}')  # TODO Dar información de línea, columna - ¿lanzamos excepción? - hay algunas que sí pueden estar duplicadas? Barrados?
 
-        #self.decorations[decoration_type] = ctx.getText()
+        # self.decorations[decoration_type] = ctx.getText()
         # We cannot order it using the class name because there are rules with subrules, such as ties, or articulations. We order it using the encoding itself
         self.decorations.append(ctx.getText())
 
-
     def addNoteRest(self, ctx, subtokens):
-        #for key in sorted(self.decorations.keys()):
-            #subtoken = Subtoken(self.decorations[key], SubTokenCategory.DECORATION)
+        # for key in sorted(self.decorations.keys()):
+        # subtoken = Subtoken(self.decorations[key], SubTokenCategory.DECORATION)
         for decoration in sorted(self.decorations):
             subtoken = Subtoken(decoration, SubTokenCategory.DECORATION)
             subtokens.append(subtoken)
@@ -161,7 +161,7 @@ class KernSpineListener(kernSpineParserListener):
     def exitTimeSignature(self, ctx: kernSpineParser.TimeSignatureContext):
         self.token = TimeSignatureToken(ctx.getText())
 
-    def exitMeterSymbol(self, ctx:kernSpineParser.MeterSymbolContext):
+    def exitMeterSymbol(self, ctx: kernSpineParser.MeterSymbolContext):
         self.token = MeterSymbolToken(ctx.getText())
 
     def exitStructural(self, ctx: kernSpineParser.StructuralContext):
@@ -195,23 +195,65 @@ class KernListenerImporter(BaseANTLRListenerImporter):
 
 # TODO - hacerlo común...
 
+class ParseError:
+    def __init__(self, offendingSymbol, charPositionInLine, msg, exception):
+        self.offendingSymbol = offendingSymbol
+        self.charPositionInLine = charPositionInLine
+        self.msg = msg
+        self.exception = exception
+
+    def __str__(self):
+        return f"({self.charPositionInLine}): {self.msg}"
+
+    def getOffendingSymbol(self):
+        return self.offendingSymbol
+
+    def getCharPositionInLine(self):
+        return self.charPositionInLine
+
+    def getMsg(self):
+        return self.msg
+
+
+class ErrorListener(ConsoleErrorListener):
+    def __init__(self):
+        super().__init__()
+        self.errors = []
+
+    def syntaxError(self, recognizer, offendingSymbol, charPositionInLine, msg, e):
+        super().syntaxError(recognizer, offendingSymbol, charPositionInLine, msg, e)
+        self.errors.append(ParseError(offendingSymbol, charPositionInLine, msg, e))
+
+    def getNumberErrorsFound(self):
+        return len(self.errors)
+
+    def __str__(self):
+        sb = ""
+        for error in self.errors:
+            sb += str(error) + "\n"
+        return sb
+
+
 class KernSpineImporter(SpineImporter):
     def doImport(self, token: string):
         if not token:
             raise Exception('Input token is empty')
         # self.listenerImporter = KernListenerImporter(token) # TODO ¿Por qué no va esto?
         # self.listenerImporter.start()
+        error_listener = ErrorListener()
         lexer = kernSpineLexer(InputStream(token))
+        lexer.removeErrorListeners()
+        lexer.addErrorListener(error_listener)
         stream = CommonTokenStream(lexer)
         parser = kernSpineParser(stream)
         parser._interp.predictionMode = PredictionMode.SLL  # it improves a lot the parsing
         parser.removeErrorListeners()
+        parser.addErrorListener(error_listener)
         parser.errHandler = BailErrorStrategy()
-        try:
-            tree = parser.start()
-            walker = ParseTreeWalker()
-            listener = KernSpineListener()
-            walker.walk(listener, tree)
-            return listener.token
-        except Exception as inst:
-            logging.warning(f'Cannot parse {token}, error: {inst}')
+        tree = parser.start()
+        walker = ParseTreeWalker()
+        listener = KernSpineListener()
+        walker.walk(listener, tree)
+        if error_listener.getNumberErrorsFound() > 0:
+            raise Exception(error_listener.errors)
+        return listener.token

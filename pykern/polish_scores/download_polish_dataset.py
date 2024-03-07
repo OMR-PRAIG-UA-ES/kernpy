@@ -102,6 +102,8 @@ def convert_and_download_file(input_kern, _output_path):
     print(f'Converting filename {input_kern}')
     importer = HumdrumImporter()
     importer.doImportFile(input_kern)
+    if len(importer.errors):
+        raise Exception(f'{input_kern} has errors {importer.errors}')
     map_page_label_IIIF_ids = findIIIFIds(importer)
     download_and_save_page_images(importer, _output_path, map_page_label_IIIF_ids, importer.page_bounding_boxes)
 
