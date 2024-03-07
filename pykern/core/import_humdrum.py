@@ -308,6 +308,10 @@ class HumdrumImporter:
         signatures_at_each_row = []
         row_contents = []
 
+        # patch to correct when user uses 0 instead of None to set the first measure as 1
+        if options.from_measure == 0:
+            options.from_measure = 1
+
         last_signature = None
         for i in range(max_rows):
             row_result = ''
