@@ -3,7 +3,13 @@
 ## Documentation
 Documentation is available at [https://OMR-PRAIG-UA-ES.github.io/pykern/](https://OMR-PRAIG-UA-ES.github.io/pykern/)
 
+## Run as module
+```shell
+python -m pykern --help
+```
 
+
+## Installation
 It requires the `antlr4` package to be installed using:
 ```shell
 pip install antlr4-python3-runtime
