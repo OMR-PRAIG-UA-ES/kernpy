@@ -1,11 +1,11 @@
-# pyKern
+# kernpy
 
-This site contains the documentation for the `pyKern` package.
+This site contains the documentation for the `kernpy` package.
 
-`pyKern` is a python package that provides utilities for working with **kern and **mens data. 
+`kernpy` is a python package that provides utilities for working with **kern and **mens data. 
 
 
-## pyKern documentation contents
+## kernpy documentation contents
 
 1. [Get started](get-started.md)
 2. [How-To Guides](how-to-guides.md)

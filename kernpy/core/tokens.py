@@ -21,6 +21,7 @@ class TokenCategory(Enum):
     HARMONY = auto()
     FINGERING = auto()
     LYRICS = auto()
+    INSTRUMENTS = auto()
     BOUNDING_BOXES = auto()
     OTHER = auto()
 
@@ -58,15 +59,17 @@ class AbstractToken(ABC):
     def export(self) -> string:
         pass
 
+
 class ErrorToken(AbstractToken):
     """Used to wrap tokens that have not been parsed"""
+
     def __init__(self, encoding, line, error):
         super().__init__(encoding, TokenCategory.EMPTY)
         self.error = error
         self.line = line
 
     def export(self) -> string:
-        return '' #TODO Qué exportamos?
+        return ''  # TODO Qué exportamos?
 
     def __str__(self):
         return f'Error token at line {self.line} with encoding "{self.encoding}": {self.error}'
@@ -75,6 +78,22 @@ class ErrorToken(AbstractToken):
 class MetacommentToken(AbstractToken):
     def __init__(self, encoding):
         super().__init__(encoding, TokenCategory.LINE_COMMENTS)
+
+    def export(self) -> string:
+        return self.encoding
+
+
+class InstrumentToken(AbstractToken):
+    def __init__(self, encoding):
+        super().__init__(encoding, TokenCategory.INSTRUMENTS)
+
+    def export(self) -> string:
+        return self.encoding
+
+
+class FieldCommentToken(AbstractToken):
+    def __init__(self, encoding):
+        super().__init__(encoding, TokenCategory.FIELD_COMMENTS)
 
     def export(self) -> string:
         return self.encoding

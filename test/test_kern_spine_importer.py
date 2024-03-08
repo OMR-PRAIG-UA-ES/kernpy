@@ -7,9 +7,8 @@ import sys
 import tempfile
 from PIL import Image
 
-
-from pykern import HumdrumImporter, KernSpineImporter
-from pykern.polish_scores.download_polish_dataset import convert_and_download_file
+from kernpy import HumdrumImporter, KernSpineImporter
+from kernpy.polish_scores.download_polish_dataset import convert_and_download_file
 
 logger = logging.getLogger()
 logger.level = logging.INFO  # change it DEBUG to trace errors
@@ -19,10 +18,17 @@ logger.addHandler(logging.StreamHandler(sys.stdout))
 class KernSpineImporterTest(unittest.TestCase):
     """Used to test individual tokens"""
 
-    def test1(self):
-        input = "32qqbb-\LLL"
+    def doTest(self, input, expected):
         importer = KernSpineImporter()
         token = importer.doImport(input)
+        self.assertIsNotNone(token)
+        self.assertEquals(expected, token.export())
+
+    def test1(self):
+        self.doTest("32qqbb-\LLL", "32·qq·bb·-·LLL·\\")
+
+    def test2(self):
+        self.doTest("=:|!-", "=:|!")
 
 
 if __name__ == '__main__':

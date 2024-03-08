@@ -1,11 +1,11 @@
 # Python Humdrum **kern and **mens utilities
 
 ## Documentation
-Documentation is available at [https://OMR-PRAIG-UA-ES.github.io/pykern/](https://OMR-PRAIG-UA-ES.github.io/pykern/)
+Documentation is available at [https://OMR-PRAIG-UA-ES.github.io/kernpy/](https://OMR-PRAIG-UA-ES.github.io/kernpy/)
 
 ## Run as module
 ```shell
-python -m pykern --help
+python -m kernpy --help
 ```
 
 
@@ -15,7 +15,7 @@ It requires the `antlr4` package to be installed using:
 pip install antlr4-python3-runtime
 ```
 
-For generating the Python code required for parsing the **kern files, the shell script `antlr4.sh` inside the `pykern` package must be run
+For generating the Python code required for parsing the **kern files, the shell script `antlr4.sh` inside the `kernpy` package must be run
 
 For visualizing the bounding boxes, the library, the `Pillow` library is required:
 ```shell

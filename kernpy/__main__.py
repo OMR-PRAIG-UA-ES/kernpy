@@ -2,7 +2,7 @@ import argparse
 import sys
 import os
 
-from pykern import polish_scores, ekern_to_krn
+from kernpy import polish_scores, ekern_to_krn
 
 
 # drizo: TODO ¿?
@@ -21,7 +21,7 @@ def create_parser() -> argparse.ArgumentParser:
     Returns:
         argparse.ArgumentParser: The parser object
     """
-    parser = argparse.ArgumentParser(description="pyKern")
+    parser = argparse.ArgumentParser(description="kernpy")
 
     # Boolean option
     parser.add_argument('--verbose', default=1, help='Enable verbose mode')

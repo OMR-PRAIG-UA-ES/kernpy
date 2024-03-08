@@ -1,4 +1,4 @@
-site_name: pyKern
+site_name: kernpy
 
 theme:
   name: "material"
@@ -8,7 +8,7 @@ plugins:
 
 
 nav:
-  - pyKern Docs: index.md
+  - kernpy Docs: index.md
   - Getting Started: get-started.md
   - How-To Guides: how-to-guides.md
   - API Reference: reference.md

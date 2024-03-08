@@ -5,7 +5,7 @@ import unittest
 import logging
 import sys
 
-from pykern import (
+from kernpy import (
     HumdrumImporter,
     ExportOptions,
     BEKERN_CATEGORIES,
@@ -30,6 +30,7 @@ class ImporterTestCase(unittest.TestCase):
         logging.info(f'Importing {kern_file}')
         importer = HumdrumImporter()
         importer.doImportFile(kern_file)
+        return importer
 
     def checkEquals(self, kern_file, expected_ekern, from_measure, to_measure):
         importer = HumdrumImporter()
@@ -242,6 +243,10 @@ class ImporterTestCase(unittest.TestCase):
         self.doEKernMeasureToMeasureTest('resource_dir/polish/test1/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 16)
         #
 
+    def testOther(self):
+        importer = self.doJustImportTest('resource_dir/polish/test3/pl-wn--sd-xvi-qu-273--001-020_gomolka-mikolaj--melodiae-na-psalterz-polski-xx-wsiadaj-z-dobrym-sercem-o-krolu-cnotliwy.krn')
+        print(importer)
+
     def testStringImporter(self):
         input_kern = "**kern\n4c\n4d\n4e\n4f\n*-"
         importer = HumdrumImporter()
@@ -268,6 +273,12 @@ class ImporterTestCase(unittest.TestCase):
         importer = HumdrumImporter()
         importer.doImportString(input_kern)
         self.assertEquals(2, len(importer.errors))
+
+    def testMetacomment(self):
+        input_kern = "!!!M1\n**kern\n*clefF4\n4c\n4d\n!!!M2\n4e\n4f\n*-"
+        importer = HumdrumImporter()
+        importer.doImportString(input_kern)
+        self.assertFalse(importer.hasErrors())
 
 #def test():
 #    unittest.main()

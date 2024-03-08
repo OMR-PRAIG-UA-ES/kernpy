@@ -14,11 +14,6 @@ class kernSpineParserVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by kernSpineParser#metacomment.
-    def visitMetacomment(self, ctx:kernSpineParser.MetacommentContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by kernSpineParser#field.
     def visitField(self, ctx:kernSpineParser.FieldContext):
         return self.visitChildren(ctx)
@@ -121,11 +116,6 @@ class kernSpineParserVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by kernSpineParser#visualTandemInterpretation.
     def visitVisualTandemInterpretation(self, ctx:kernSpineParser.VisualTandemInterpretationContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by kernSpineParser#fieldComment.
-    def visitFieldComment(self, ctx:kernSpineParser.FieldCommentContext):
         return self.visitChildren(ctx)
 
 
@@ -654,16 +644,6 @@ class kernSpineParserVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by kernSpineParser#staffPosition.
-    def visitStaffPosition(self, ctx:kernSpineParser.StaffPositionContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by kernSpineParser#lineSpace.
-    def visitLineSpace(self, ctx:kernSpineParser.LineSpaceContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by kernSpineParser#mordent.
     def visitMordent(self, ctx:kernSpineParser.MordentContext):
         return self.visitChildren(ctx)
@@ -676,106 +656,6 @@ class kernSpineParserVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by kernSpineParser#footnote.
     def visitFootnote(self, ctx:kernSpineParser.FootnoteContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by kernSpineParser#crescendoBegin.
-    def visitCrescendoBegin(self, ctx:kernSpineParser.CrescendoBeginContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by kernSpineParser#diminuendoBegin.
-    def visitDiminuendoBegin(self, ctx:kernSpineParser.DiminuendoBeginContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by kernSpineParser#crescendoEnd.
-    def visitCrescendoEnd(self, ctx:kernSpineParser.CrescendoEndContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by kernSpineParser#diminuendoEnd.
-    def visitDiminuendoEnd(self, ctx:kernSpineParser.DiminuendoEndContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by kernSpineParser#crescendoContinue.
-    def visitCrescendoContinue(self, ctx:kernSpineParser.CrescendoContinueContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by kernSpineParser#diminuendoContinue.
-    def visitDiminuendoContinue(self, ctx:kernSpineParser.DiminuendoContinueContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by kernSpineParser#piano.
-    def visitPiano(self, ctx:kernSpineParser.PianoContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by kernSpineParser#pianissimo.
-    def visitPianissimo(self, ctx:kernSpineParser.PianissimoContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by kernSpineParser#triplePiano.
-    def visitTriplePiano(self, ctx:kernSpineParser.TriplePianoContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by kernSpineParser#quadruplePiano.
-    def visitQuadruplePiano(self, ctx:kernSpineParser.QuadruplePianoContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by kernSpineParser#forte.
-    def visitForte(self, ctx:kernSpineParser.ForteContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by kernSpineParser#fortissimo.
-    def visitFortissimo(self, ctx:kernSpineParser.FortissimoContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by kernSpineParser#tripleForte.
-    def visitTripleForte(self, ctx:kernSpineParser.TripleForteContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by kernSpineParser#quadrupleForte.
-    def visitQuadrupleForte(self, ctx:kernSpineParser.QuadrupleForteContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by kernSpineParser#mezzoPiano.
-    def visitMezzoPiano(self, ctx:kernSpineParser.MezzoPianoContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by kernSpineParser#mezzoForte.
-    def visitMezzoForte(self, ctx:kernSpineParser.MezzoForteContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by kernSpineParser#sforzando.
-    def visitSforzando(self, ctx:kernSpineParser.SforzandoContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by kernSpineParser#fortePiano.
-    def visitFortePiano(self, ctx:kernSpineParser.FortePianoContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by kernSpineParser#rinforzando.
-    def visitRinforzando(self, ctx:kernSpineParser.RinforzandoContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by kernSpineParser#subito.
-    def visitSubito(self, ctx:kernSpineParser.SubitoContext):
         return self.visitChildren(ctx)
 
 

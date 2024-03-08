@@ -6,9 +6,7 @@ parser grammar kernSpineParser;
 
 options { tokenVocab=kernSpineLexer;} // use tokens from kernSpineLexer.g4
 
-start: metacomment | field;
-
-metacomment: METACOMMENT;
+start: field;
 
 field
     :
@@ -23,8 +21,6 @@ field
     empty
     |
     visualTandemInterpretation
-    |
-    fieldComment // it includes an empty comment
     |
     nonVisualTandemInterpretation
     |
@@ -140,15 +136,9 @@ visualTandemInterpretation:
 
 /* ----- LEAF RULES ----- */
 
-fieldComment:
-    LAYOUT
-    | FIELDCOMMENT
-    | EXCLAMATION; // empty comment
-
 associatedIDS: number (COMMA associatedIDS)*; // used for agnostic IDS in semantic mens
 
 placeHolder: DOT;
-
 
 octaveShift: OCTAVE_SHIFT;
 
@@ -162,7 +152,6 @@ tandemTremolo: TANDEM_TREMOLO_START | TANDEM_TREMOLO_END;
 
 ossia: TANDEM_SIC | TANDEM_OSSIA | TANDEM_FIN | TANDEM_SMINUS;
 
-
 rscale: TANDEM_RSCALE COLON number (SLASH number)?;
 
 pedal: TANDEM_PEDAL_START | TANDEM_PEDAL_END;
@@ -170,7 +159,6 @@ pedal: TANDEM_PEDAL_START | TANDEM_PEDAL_END;
 ela: TANDEM_ELA;
 
 dynamics_position: TANDEM_ABOVE | TANDEM_BELOW | TANDEM_CENTERED; //TODO It is not rendered in VHV
-
 
 sections: TANDEM_SECTION
     (
@@ -365,6 +353,7 @@ noteDecoration:
     | appoggiatura
     | articulation 
     | barLineCrossedNoteStart
+    | barLineCrossedNoteEnd
     | beam
     | editorialIntervention
     | fermata
@@ -375,7 +364,6 @@ noteDecoration:
     | mordent
     | augmentationDot // sometimes found TODO Verlo con la duración
     | phrase
-    | sforzando // sforzando should be in a dynanics spine, but it is sometimes found here
     | slurStart
     | slurEnd  
     | staffChange 
@@ -489,11 +477,6 @@ beam:
     ;
 
 
-// bottom line = L1, bottom space = S1, first bottom ledger line = L0, space between first ledger line and bottom line = S0, second bottom ledger line = L-1, first top ledger line = L6
-staffPosition: lineSpace number;
-
-lineSpace: CHAR_L | CHAR_S; // l = line, s = space
-
 mordent:
     //LETTER_W
        CHAR_M | // MORDENT form accid upper, //TODO
@@ -507,46 +490,5 @@ trill:
      |
      CHAR_t;
 
-
 footnote: QUESTION_MARK+; //TODO -- ???
-
-crescendoBegin: ANGLE_BRACKET_OPEN;
-
-diminuendoBegin: ANGLE_BRACKET_CLOSE;
-
-crescendoEnd: LEFT_BRACKET  LEFT_BRACKET?; // TODO difference between [ and [[
-
-diminuendoEnd: RIGHT_BRACKET RIGHT_BRACKET?;
-
-crescendoContinue: LEFT_PARENTHESIS;
-
-diminuendoContinue: RIGHT_PARENTHESIS;
-
-piano: CHAR_p;
-
-pianissimo: CHAR_p CHAR_p;
-
-triplePiano: CHAR_p CHAR_p CHAR_p;
-
-quadruplePiano: CHAR_p CHAR_p CHAR_p CHAR_p;
-
-forte: CHAR_f;
-
-fortissimo: CHAR_f CHAR_f;
-
-tripleForte: CHAR_f CHAR_f CHAR_f;
-
-quadrupleForte: CHAR_f CHAR_f CHAR_f CHAR_f;
-
-mezzoPiano: CHAR_m CHAR_p;
-
-mezzoForte: CHAR_m CHAR_f;
-
-sforzando: CHAR_s CHAR_f | CHAR_f CHAR_z | CHAR_s CHAR_f CHAR_z | CHAR_z | CHAR_Z;
-
-fortePiano: CHAR_f CHAR_p;
-
-rinforzando: CHAR_r CHAR_f? CHAR_z?;
-
-subito: CHAR_s;
 

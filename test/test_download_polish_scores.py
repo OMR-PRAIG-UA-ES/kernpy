@@ -8,8 +8,8 @@ import tempfile
 from PIL import Image
 
 
-from pykern import HumdrumImporter
-from pykern.polish_scores.download_polish_dataset import convert_and_download_file
+from kernpy import HumdrumImporter
+from kernpy.polish_scores.download_polish_dataset import convert_and_download_file
 
 logger = logging.getLogger()
 logger.level = logging.INFO  # change it DEBUG to trace errors
@@ -33,7 +33,7 @@ class DownloadPolishScoresTestCase(unittest.TestCase):
             raise Exception("Unable to load one or both images")
             return False
 
-    def testEqualFiles(self, file1, file2):
+    def checkEqualFiles(self, file1, file2):
         with open(file1, 'r') as file1, open(file2, 'r') as file2:
             content1 = file1.read()
             content2 = file2.read()
@@ -45,7 +45,7 @@ class DownloadPolishScoresTestCase(unittest.TestCase):
         logging.info(f'Writing DownloadPolishScoresTestCase test to folder {temp_dir}')
         convert_and_download_file(input_folder + '/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', temp_dir)
         for i in range(9, 11):
-            self.testEqualFiles(input_folder + f'/pages/{i}.ekrn', temp_dir + f'/{i}.ekrn')
+            self.checkEqualFiles(input_folder + f'/pages/{i}.ekrn', temp_dir + f'/{i}.ekrn')
             self.check_image_sizes_equal(input_folder + f'/pages/{i}.jpg', temp_dir + f'/{i}.jpg')
 
 

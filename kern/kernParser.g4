@@ -7,7 +7,7 @@ options { tokenVocab=kernLexer;} // use tokens from kernLexer.g4
 /**
 Version 1.2
 Last update: 3 jan 2024
-Maintain the version updated as this file is used both in mOOsicae and pykern
+Maintain the version updated as this file is used both in mOOsicae and kernpy
 */
 
 @parser::header {

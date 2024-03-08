@@ -1,8 +1,8 @@
 """
-pyKern
+kernpy
 ======
 
-pyKern documentation
+kernpy documentation
 """
 
 

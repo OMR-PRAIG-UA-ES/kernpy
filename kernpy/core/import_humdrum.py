@@ -4,7 +4,7 @@ import logging
 
 from .importer_factory import createImporter
 from .tokens import HeaderToken, SpineOperationToken, TokenCategory, BoundingBoxToken, KeySignatureToken, \
-    TimeSignatureToken, MeterSymbolToken, ClefToken, BarToken, MetacommentToken, ErrorToken
+    TimeSignatureToken, MeterSymbolToken, ClefToken, BarToken, MetacommentToken, ErrorToken, FieldCommentToken
 
 
 class ExportOptions:
@@ -220,11 +220,14 @@ class HumdrumImporter:
                                 elif column == "*v":
                                     current_spine.decreaseSubspines()
                             else:
-                                try:
-                                    token = current_spine.importer.doImport(column)
-                                except Exception as error:
-                                    token = ErrorToken(column, row_number, error)
-                                    self.errors.append(token)
+                                if column.startswith("!"):
+                                    token = FieldCommentToken(column)
+                                else:
+                                    try:
+                                        token = current_spine.importer.doImport(column)
+                                    except Exception as error:
+                                        token = ErrorToken(column, row_number, error)
+                                        self.errors.append(token)
                                 if not token:
                                     raise Exception(
                                         f'No token generated for input {column} in row number #{row_number} using importer {current_spine.importer}')
@@ -281,14 +284,14 @@ class HumdrumImporter:
         page_number = token.page_number
         last_page_bb = self.page_bounding_boxes.get(page_number)
         if last_page_bb is None:
-            print(f'Adding {page_number}')
+            #print(f'Adding {page_number}')
             if self.last_measure_number is None:
                 self.last_measure_number = 0
             self.last_bounding_box = BoundingBoxMeasures(token.bounding_box, self.last_measure_number,
                                                          self.last_measure_number)
             self.page_bounding_boxes[page_number] = self.last_bounding_box
         else:
-            print(f'Extending page {page_number}')
+            #print(f'Extending page {page_number}')
             last_page_bb.bounding_box.extend(token.bounding_box)
             last_page_bb.to_measure = self.last_measure_number
 
@@ -424,4 +427,7 @@ class HumdrumImporter:
             result += str(err)
             result + '\n'
         return result
+
+    def hasErrors(self):
+        return len(self.errors) > 0
 

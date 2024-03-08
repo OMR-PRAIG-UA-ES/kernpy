@@ -1,0 +1,118 @@
+!!!!SEGMENT: pl-wn--sd-xvi-qu-273--001-020_gomolka-mikolaj--melodiae-na-psalterz-polski-xx-wsiadaj-z-dobrym-sercem-o-krolu-cnotliwy.krn
+!!!cenid: 15xx:225
+!!!COM: Gomółka, Mikołaj
+!!!COM-rismID: pe30013343
+!!!CDT: ~1535->1591/04/30
+!!!CNT: Polish
+!!!GTL: Melodiae na psalterz polski
+!!!OTL: XX. Wsiadaj z dobrym sercem, o królu cnotliwy,
+!!!OMV: 020
+!!!PDT: 1580
+!!!AGN: Sacred
+!!!YEC: Copyright 2022 Narodowy Instytut Fryderyka Chopina (https://polishscores.org)
+!!!YEM: License CC-BY-4.0 (https://creativecommons.org/licenses/by/4.0)
+!!!SMS-siglum: PL-Wn
+!!!SMS-shelfmark: SD XVI.Qu.273
+!!!SMS-shelfwork: 001-020 G
+!!!NIFC-rismSourceID: 990022100
+!!!NIFC-rismChildID: 990022100
+!!!NIFC-islandoraID: none
+!!!URL-pdf-islandora:
+!!!URL-scan: https://polona2.pl/item/melodiae-na-psalterz-polski,Nzk3MTM4ODQ/60 @EN{Scan on Polona} @PL{Skany w portalu Polona}
+!!!IIIF: https://polona2.pl/iiif/item/Nzk3MTM4ODQ/manifest.json
+!!!ONB-nifc: Melodiae na psalterz polski
+!!!AIN: 1 alto 1 bass 1 soprn 1 tenor
+!!!key:
+**kern	**text	**text	**kern	**text	**text	**kern	**text	**text	**kern	**text	**text
+*part4	*	*	*part3	*	*	*part2	*	*	*part1	*	*
+*staff4	*	*	*staff3	*	*	*staff2	*	*	*staff1	*	*
+*Ibass	*	*	*Itenor	*	*	*Ialto	*	*	*Isoprn	*	*
+*I"BASSVS.	*	*	*I"TENOR.	*	*	*I"ALTVS.	*	*	*I"CANTVS.	*	*
+*clefF4	*	*	*clefC3	*	*	*clefC3	*	*	*clefC1	*	*
+*k[]	*	*	*k[]	*	*	*k[]	*	*	*k[]	*	*
+*G:	*	*	*G:	*	*	*G:	*	*	*G:	*	*
+*M2/1	*	*	*M2/1	*	*	*M2/1	*	*	*M2/1	*	*
+*met(C|)	*	*	*met(C|)	*	*	*met(C|)	*	*	*met(C|)	*	*
+*MM300	*	*	*MM300	*	*	*MM300	*	*	*MM300	*	*
+*>[A,A,B]	*>[A,A,B]	*>[A,A,B]	*>[A,A,B]	*>[A,A,B]	*>[A,A,B]	*>[A,A,B]	*>[A,A,B]	*>[A,A,B]	*>[A,A,B]	*>[A,A,B]	*>[A,A,B]
+*>A	*>A	*>A	*>A	*>A	*>A	*>A	*>A	*>A	*>A	*>A	*>A
+=1-	=1-	=1-	=1-	=1-	=1-	=1-	=1-	=1-	=1-	=1-	=1-
+*xywh-22r:586,5378,4994,1347	*	*	*xywh-22r:586,4059,4984,1299	*	*	*xywh-22r:586,2770,5003,1520	*	*	*xywh-22r:606,1153,4936,1732	*	*
+1G\	Wśiá-	I	1B/	Wśiá-	I	1d\	Wśiá-	I	1g\	Wśiá-	I
+1C/	-day	w do-	1c\	-day	w do-	1e\	-day	w do-	1g\	-day	w do-
+=2-	=2-	=2-	=2-	=2-	=2-	=2-	=2-	=2-	=2-	=2-	=2-
+!LO:SIC:v:t=w źródle brak dźwięki:v	!	!	!	!	!	!	!	!	!	!	!
+2F\yy	z dob-	-brą	1A/	z dob-	-brą	2.f\	z dob-	(-brą)	2a\	z dob-	-brą
+2F\	-rym	go-	.	.	.	.	.	.	2a\	(-rym)	go-
+.	.	.	.	.	.	4e\	-rym	go-	.	.	.
+2G\	ser-	-dźi-	2B/	(-rym)	-go-	2d\	ser-	-dźi-	2g/	ser-	-dźi-
+2G\	-cem,	-nę,	2B/	ser-	-dźi-	2d\	-cem,	-nę,	2g/	-cem,	-nę,
+=3-	=3-	=3-	=3-	=3-	=3-	=3-	=3-	=3-	=3-	=3-	=3-
+1C/	o	ná	1c\	-cem,	-nę	1e\	o	ná	1g\	o	ná
+1F\	kró-	swój	1A/	o	ná	2.c/	kró-	swój	1a\	kró-	sw(ój)
+.	.	.	.	.	sw(ój)	4d\	.	.	.	.	.
+=4-	=4-	=4-	=4-	=4-	=4-	=4-	=4-	=4-	=4-	=4-	=4-
+2E\	-lu	kóń	2B/	kró-	kóń	2e\	-lu	kóń	2g/	-lu	k(óń)
+2C/	cno-	chę-	4c\	-lu	kóń	2e\	cno-	chę-	1g\	cnot-	chę-
+.	.	.	4B/	.	.	.	.	.	.	.	.
+1D\	-tli-	-tli-	4A/	cno-	chę-	2.d\	-tli-	-tli-	.	.	.
+.	.	.	4G/	.	.	.	.	.	.	.	.
+.	.	.	2A/	-tli-	-tli-	.	.	.	2f/	-li-	-tli-
+.	.	.	.	.	.	4c\	.	.	.	.	.
+=5-	=5-	=5-	=5-	=5-	=5-	=5-	=5-	=5-	=5-	=5-	=5-
+1GG/	-wy,	-wy:	1G/	-wy,	-wy:	1B/	-wy,	-wy:	1g\	-wy,	-wy:
+=:|!-	=:|!-	=:|!-	=:|!-	=:|!-	=:|!-	=:|!-	=:|!-	=:|!-	=:|!-	=:|!-	=:|!-
+*>B	*	*	*>B	*	*	*>B	*	*	*>B	*	*
+1G\	Zá-	.	1d\	Zá-	.	1g\	Zá-	.	1b\	Zá-	.
+=6-	=6-	=6-	=6-	=6-	=6-	=6-	=6-	=6-	=6-	=6-	=6-
+2C/	-iedź	.	2e\	-iedź	.	2g\	-iedź	.	2cc\	-iedź	.
+2C/	dró-	.	2e\	dró-	.	2g\	dró-	.	2cc\	dró-	.
+1.GG/	-gę	.	1.d\	-gę	.	1.g\	(-gę)	.	1.b\	-gę	.
+=7-	=7-	=7-	=7-	=7-	=7-	=7-	=7-	=7-	=7-	=7-	=7-
+.	.	.	.	.	.	.	.	.	.	.	.
+2D\	śmie-	.	2d\	śmie-	.	2f\	śmie-	.	2a\	śmie-	.
+!!LO:PB:g=original
+=-	=-	=-	=-	=-	=-	=-	=-	=-	=-	=-	=-
+*xywh-22v:1269,5236,4993,1387	*	*	*xywh-22v:1289,3985,5052,1328	*	*	*xywh-22v:1269,2764,5012,1309	*	*	*xywh-22v:1299,1073,4973,1719	*	*
+2D\	-le	.	2d\	-le	.	2f\	-le	.	2a\	-le	.
+2D\	nie-	.	2f\	nie-	.	2d\	nie-	.	2a\	nie-	.
+=8-	=8-	=8-	=8-	=8-	=8-	=8-	=8-	=8-	=8-	=8-	=8-
+2G\	-przi-	.	4g\	-przi-	.	2d\	-przi-	.	4b\	-przi-	.
+.	.	.	4f\	.	.	.	.	.	4cc\	.	.
+2B\	-ja-	.	4e\	-ja-	.	2d\	-ja-	.	2dd\	-ja-	.
+.	.	.	4d\	.	.	.	.	.	.	.	.
+2A\	-ćie-	.	2e\	-ćie-	.	2.a\	-ćie-	.	2dd\	-ćie-	.
+2A\	-lo-	.	2e\	-lo-	.	.	.	.	2cc#\X	-lo-	.
+.	.	.	.	.	.	4g\	-lo-	.	.	.	.
+=9-	=9-	=9-	=9-	=9-	=9-	=9-	=9-	=9-	=9-	=9-	=9-
+1D\	-wi,	.	1d\	-wi,	.	1f#\X	-wi,	.	1dd\	-wi,	.
+1D\	A	.	1d\	A	.	1f#\X	á	.	2a\	A	.
+.	.	.	.	.	.	.	.	.	2a\	.	.
+=10-	=10-	=10-	=10-	=10-	=10-	=10-	=10-	=10-	=10-	=10-	=10-
+2G\	zás-	.	2d\	zás-	.	2g\	zás-	.	2b\	zás-	.
+2E\	-taẃ	.	2e\	-taẃ	.	2g\	-taẃ	.	2b\	-taẃ	.
+1A\	sye	.	1c#\X	sye	.	1e\	sye	.	1a\	sye	.
+=11-	=11-	=11-	=11-	=11-	=11-	=11-	=11-	=11-	=11-	=11-	=11-
+2D/	o	.	2d\	o	.	2f\	o	.	2a\	o	.
+2AA/	swóy	.	2c\	swóy	.	2e\	swóy	.	2cc\	swóy	.
+2BB/	lud	.	2.d\	lud	.	2d\	lud	.	2b\	lud	.
+2C/	po-	.	.	.	.	2e\	po-	.	2.a\	po-	.
+.	.	.	4c\	po-	.	.	.	.	.	.	.
+=12-	=12-	=12-	=12-	=12-	=12-	=12-	=12-	=12-	=12-	=12-	=12-
+2D/	-gá-	.	2B/	-gá-	.	2d\	-gá-	.	.	.	.
+.	.	.	.	.	.	.	.	.	4g\J	-gá-	.
+2E\	-ni-	.	4A/	-ni-	.	2c/	-ni-	.	1g\	-ni-	.
+.	.	.	4G/	.	.	.	.	.	.	.	.
+1D\	-no-	.	1A/	-no-	.	2.d\	-no-	.	.	.	.
+.	.	.	.	.	.	.	.	.	2f/	-no-	.
+.	.	.	.	.	.	4c/	.	.	.	.	.
+=13-	=13-	=13-	=13-	=13-	=13-	=13-	=13-	=13-	=13-	=13-	=13-
+0GG;/l	-wi.	.	0G/ll	-wi.	.	0B/ll	-wi.	.	0g\ll	-wi.	.
+==-	==-	==-	==-	==-	==-	==-	==-	==-	==-	==-	==-
+*-	*-	*-	*-	*-	*-	*-	*-	*-	*-	*-	*-
+!!!system-decoration: s1,s2,s3,s4
+!!!RDF**kern: l = terminal long
+!!!ENC: Leszek Kubiak
+!!!END: 2020-02-05
+!!!ENC-iiif: Craig Stuart Sapp
+!!!END: 2021-12-07

@@ -4,7 +4,6 @@
 lexer grammar kernSpineLexer;
 
 fragment ASTERISK_FRAGMENT : '*';
-EXCLAMATION : '!';
 
 TANDEM_COL_START: ASTERISK_FRAGMENT 'col';
 TANDEM_COL_END: ASTERISK_FRAGMENT 'Xcol';
@@ -44,10 +43,10 @@ TANDEM_FIN: ASTERISK_FRAGMENT 'S/fin'; // bach/wtc/wtc1f01.krn
 TANDEM_SMINUS: ASTERISK_FRAGMENT 'S-'; // bach/wtc/wtc1f01.krn TODO ???
 TANDEM_TIMEBASE: ASTERISK_FRAGMENT 'tb';
 TANDEM_BOUNDING_BOX: ASTERISK_FRAGMENT 'xywh';
-LAYOUT: EXCLAMATION 'LO:' RAW_TEXT;
 
 OCTAVE_SHIFT: ASTERISK_FRAGMENT 'X'?'8'[vb]+'a';
 
+EXCLAMATION: '!';
 PERCENT: '%';
 AMPERSAND: '&';
 AT: '@';
@@ -156,16 +155,7 @@ SPACE: ' ';
 // with pushMode, the lexer uses the rules below FREE_TEXT
 INSTRUMENT_TITLE: '*mI' '"'? RAW_TEXT;
 INSTRUMENT: '*I' '"'? RAW_TEXT;
-METACOMMENT: '!!' '!'* '!'? RAW_TEXT_NOT_BARLINE;
-FIELDCOMMENT: '!' RAW_TEXT_NOT_BARLINE;
 fragment RAW_TEXT: ~([\t\n\r])+;
 fragment RAW_TEXT_UNTIL_EOL: ~([\n\r])+; // !: or !| belong to bar lines
 fragment RAW_TEXT_NOT_BARLINE: (~[!|=:;\t\n\r])~([\t\n\r])*; // !:, !; or !| belong to bar lines
-
-ANY: . ;
-
-mode FREE_TEXT;
-FIELD_TEXT: ~[\t\n\r]+ -> mode(0); // must reset mode here to let lexer recognize the tab or newline
-FREE_TEXT_TAB: '\t';
-FREE_TEXT_EOL : '\r'?'\n';
 

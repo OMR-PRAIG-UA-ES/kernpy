@@ -17,15 +17,6 @@ class kernSpineParserListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by kernSpineParser#metacomment.
-    def enterMetacomment(self, ctx:kernSpineParser.MetacommentContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#metacomment.
-    def exitMetacomment(self, ctx:kernSpineParser.MetacommentContext):
-        pass
-
-
     # Enter a parse tree produced by kernSpineParser#field.
     def enterField(self, ctx:kernSpineParser.FieldContext):
         pass
@@ -212,15 +203,6 @@ class kernSpineParserListener(ParseTreeListener):
 
     # Exit a parse tree produced by kernSpineParser#visualTandemInterpretation.
     def exitVisualTandemInterpretation(self, ctx:kernSpineParser.VisualTandemInterpretationContext):
-        pass
-
-
-    # Enter a parse tree produced by kernSpineParser#fieldComment.
-    def enterFieldComment(self, ctx:kernSpineParser.FieldCommentContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#fieldComment.
-    def exitFieldComment(self, ctx:kernSpineParser.FieldCommentContext):
         pass
 
 
@@ -1169,24 +1151,6 @@ class kernSpineParserListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by kernSpineParser#staffPosition.
-    def enterStaffPosition(self, ctx:kernSpineParser.StaffPositionContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#staffPosition.
-    def exitStaffPosition(self, ctx:kernSpineParser.StaffPositionContext):
-        pass
-
-
-    # Enter a parse tree produced by kernSpineParser#lineSpace.
-    def enterLineSpace(self, ctx:kernSpineParser.LineSpaceContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#lineSpace.
-    def exitLineSpace(self, ctx:kernSpineParser.LineSpaceContext):
-        pass
-
-
     # Enter a parse tree produced by kernSpineParser#mordent.
     def enterMordent(self, ctx:kernSpineParser.MordentContext):
         pass
@@ -1211,186 +1175,6 @@ class kernSpineParserListener(ParseTreeListener):
 
     # Exit a parse tree produced by kernSpineParser#footnote.
     def exitFootnote(self, ctx:kernSpineParser.FootnoteContext):
-        pass
-
-
-    # Enter a parse tree produced by kernSpineParser#crescendoBegin.
-    def enterCrescendoBegin(self, ctx:kernSpineParser.CrescendoBeginContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#crescendoBegin.
-    def exitCrescendoBegin(self, ctx:kernSpineParser.CrescendoBeginContext):
-        pass
-
-
-    # Enter a parse tree produced by kernSpineParser#diminuendoBegin.
-    def enterDiminuendoBegin(self, ctx:kernSpineParser.DiminuendoBeginContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#diminuendoBegin.
-    def exitDiminuendoBegin(self, ctx:kernSpineParser.DiminuendoBeginContext):
-        pass
-
-
-    # Enter a parse tree produced by kernSpineParser#crescendoEnd.
-    def enterCrescendoEnd(self, ctx:kernSpineParser.CrescendoEndContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#crescendoEnd.
-    def exitCrescendoEnd(self, ctx:kernSpineParser.CrescendoEndContext):
-        pass
-
-
-    # Enter a parse tree produced by kernSpineParser#diminuendoEnd.
-    def enterDiminuendoEnd(self, ctx:kernSpineParser.DiminuendoEndContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#diminuendoEnd.
-    def exitDiminuendoEnd(self, ctx:kernSpineParser.DiminuendoEndContext):
-        pass
-
-
-    # Enter a parse tree produced by kernSpineParser#crescendoContinue.
-    def enterCrescendoContinue(self, ctx:kernSpineParser.CrescendoContinueContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#crescendoContinue.
-    def exitCrescendoContinue(self, ctx:kernSpineParser.CrescendoContinueContext):
-        pass
-
-
-    # Enter a parse tree produced by kernSpineParser#diminuendoContinue.
-    def enterDiminuendoContinue(self, ctx:kernSpineParser.DiminuendoContinueContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#diminuendoContinue.
-    def exitDiminuendoContinue(self, ctx:kernSpineParser.DiminuendoContinueContext):
-        pass
-
-
-    # Enter a parse tree produced by kernSpineParser#piano.
-    def enterPiano(self, ctx:kernSpineParser.PianoContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#piano.
-    def exitPiano(self, ctx:kernSpineParser.PianoContext):
-        pass
-
-
-    # Enter a parse tree produced by kernSpineParser#pianissimo.
-    def enterPianissimo(self, ctx:kernSpineParser.PianissimoContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#pianissimo.
-    def exitPianissimo(self, ctx:kernSpineParser.PianissimoContext):
-        pass
-
-
-    # Enter a parse tree produced by kernSpineParser#triplePiano.
-    def enterTriplePiano(self, ctx:kernSpineParser.TriplePianoContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#triplePiano.
-    def exitTriplePiano(self, ctx:kernSpineParser.TriplePianoContext):
-        pass
-
-
-    # Enter a parse tree produced by kernSpineParser#quadruplePiano.
-    def enterQuadruplePiano(self, ctx:kernSpineParser.QuadruplePianoContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#quadruplePiano.
-    def exitQuadruplePiano(self, ctx:kernSpineParser.QuadruplePianoContext):
-        pass
-
-
-    # Enter a parse tree produced by kernSpineParser#forte.
-    def enterForte(self, ctx:kernSpineParser.ForteContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#forte.
-    def exitForte(self, ctx:kernSpineParser.ForteContext):
-        pass
-
-
-    # Enter a parse tree produced by kernSpineParser#fortissimo.
-    def enterFortissimo(self, ctx:kernSpineParser.FortissimoContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#fortissimo.
-    def exitFortissimo(self, ctx:kernSpineParser.FortissimoContext):
-        pass
-
-
-    # Enter a parse tree produced by kernSpineParser#tripleForte.
-    def enterTripleForte(self, ctx:kernSpineParser.TripleForteContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#tripleForte.
-    def exitTripleForte(self, ctx:kernSpineParser.TripleForteContext):
-        pass
-
-
-    # Enter a parse tree produced by kernSpineParser#quadrupleForte.
-    def enterQuadrupleForte(self, ctx:kernSpineParser.QuadrupleForteContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#quadrupleForte.
-    def exitQuadrupleForte(self, ctx:kernSpineParser.QuadrupleForteContext):
-        pass
-
-
-    # Enter a parse tree produced by kernSpineParser#mezzoPiano.
-    def enterMezzoPiano(self, ctx:kernSpineParser.MezzoPianoContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#mezzoPiano.
-    def exitMezzoPiano(self, ctx:kernSpineParser.MezzoPianoContext):
-        pass
-
-
-    # Enter a parse tree produced by kernSpineParser#mezzoForte.
-    def enterMezzoForte(self, ctx:kernSpineParser.MezzoForteContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#mezzoForte.
-    def exitMezzoForte(self, ctx:kernSpineParser.MezzoForteContext):
-        pass
-
-
-    # Enter a parse tree produced by kernSpineParser#sforzando.
-    def enterSforzando(self, ctx:kernSpineParser.SforzandoContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#sforzando.
-    def exitSforzando(self, ctx:kernSpineParser.SforzandoContext):
-        pass
-
-
-    # Enter a parse tree produced by kernSpineParser#fortePiano.
-    def enterFortePiano(self, ctx:kernSpineParser.FortePianoContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#fortePiano.
-    def exitFortePiano(self, ctx:kernSpineParser.FortePianoContext):
-        pass
-
-
-    # Enter a parse tree produced by kernSpineParser#rinforzando.
-    def enterRinforzando(self, ctx:kernSpineParser.RinforzandoContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#rinforzando.
-    def exitRinforzando(self, ctx:kernSpineParser.RinforzandoContext):
-        pass
-
-
-    # Enter a parse tree produced by kernSpineParser#subito.
-    def enterSubito(self, ctx:kernSpineParser.SubitoContext):
-        pass
-
-    # Exit a parse tree produced by kernSpineParser#subito.
-    def exitSubito(self, ctx:kernSpineParser.SubitoContext):
         pass
 
 
