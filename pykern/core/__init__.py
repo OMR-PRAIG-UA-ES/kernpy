@@ -40,6 +40,9 @@ from .text_spine_importer import (
     TextSpineImporter,
 )
 
+from .generic import (
+    ekern_to_krn,
+)
 
 # TODO: Explore using __all__
 
