@@ -449,6 +449,15 @@ class kernSpineParserListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by kernSpineParser#group.
+    def enterGroup(self, ctx:kernSpineParser.GroupContext):
+        pass
+
+    # Exit a parse tree produced by kernSpineParser#group.
+    def exitGroup(self, ctx:kernSpineParser.GroupContext):
+        pass
+
+
     # Enter a parse tree produced by kernSpineParser#staff.
     def enterStaff(self, ctx:kernSpineParser.StaffContext):
         pass
@@ -527,6 +536,15 @@ class kernSpineParserListener(ParseTreeListener):
 
     # Exit a parse tree produced by kernSpineParser#keySignatureCancel.
     def exitKeySignatureCancel(self, ctx:kernSpineParser.KeySignatureCancelContext):
+        pass
+
+
+    # Enter a parse tree produced by kernSpineParser#keyCancel.
+    def enterKeyCancel(self, ctx:kernSpineParser.KeyCancelContext):
+        pass
+
+    # Exit a parse tree produced by kernSpineParser#keyCancel.
+    def exitKeyCancel(self, ctx:kernSpineParser.KeyCancelContext):
         pass
 
 

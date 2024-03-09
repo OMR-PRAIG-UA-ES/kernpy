@@ -37,7 +37,7 @@ contextual:
     otherContextual
     ;
 
-signatures: clef | timeSignature | meterSymbol | keySignature;
+signatures: clef | timeSignature | meterSymbol | keySignature | keyCancel;
 otherContextual: octaveShift
                      |
                      key
@@ -56,6 +56,7 @@ restDecoration: (slurStart | graceNote | staffChange | restPosition | fermata | 
     staccato | // staccato found in a rest in beethoven/quartets/quartet14-5.krn
     phrase |
     augmentationDot |
+    stem // even it does not make sense, it has appeared sometimes, we'l discard it in the code
     CHAR_j);
 
 // We allow the chordSpace to be null for allowing invalid outputs of the OMR
@@ -89,6 +90,8 @@ nonVisualTandemInterpretation:
     strophe
     |
     part
+    |
+    group
     |
     instrument
     |
@@ -197,6 +200,7 @@ strophe: TANDEM_STROPHE;
 
 timebase: TANDEM_TIMEBASE number;
 part: TANDEM_PART  number;
+group: TANDEM_GROUP  number; // new March 2024
 
 staff: TANDEM_STAFF
     PLUS? // sometimes found
@@ -214,6 +218,7 @@ clefOctave: CHAR_v CHAR_v? DIGIT_2 | CIRCUMFLEX CIRCUMFLEX? DIGIT_2;
 keySignature: TANDEM_KEY_SIGNATURE  LEFT_BRACKET keySignaturePitchClass* RIGHT_BRACKET keySignatureCancel?;
 keySignaturePitchClass: pitchClass;
 keySignatureCancel:  CHAR_X;
+keyCancel: TANDEM_KEY_CANCEL;
 
 keyMode: (minorKey | majorKey | QUESTION_MARK); // *?: found in corelli/op1/op01n01c.krn
 key: ASTERISK singleKey (SLASH singleKey)?; // found *C/a: in haydn/quartets/op54n2-03.krn
@@ -280,13 +285,14 @@ barLineType:
     PIPE EXCLAMATION COLON? // sometimes found
     |
     PIPE COLON // left-repeat sometimes found
-
     |
     EXCLAMATION PIPE COLON // left-repeat
     |
     EQUAL? COLON PIPE EXCLAMATION // right-repeat -- sometimes we've found the structure ==:|!
     |
-    COLON PIPE EXCLAMATION? PIPE COLON // left-right repeat
+    COLON PIPE EXCLAMATION? PIPE COLON // left-right repeat (the exclamation should appear - corrected in parser)
+    |
+    COLON EXCLAMATION COLON // left-right repeat - wrong encoding (the exclamation should appear - corrected in parser)
     |
     COLON EXCLAMATION EXCLAMATION COLON
     |

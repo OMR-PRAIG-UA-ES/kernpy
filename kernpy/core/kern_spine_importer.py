@@ -85,6 +85,19 @@ class KernSpineListener(kernSpineParserListener):
         # We cannot order it using the class name because there are rules with subrules, such as ties, or articulations. We order it using the encoding itself
         self.decorations.append(ctx.getText())
 
+    def exitRestDecoration(self, ctx: kernSpineParser.NoteDecorationContext):
+        # clazz = type(ctx.getChild(0))
+        # decoration_type = clazz.__name__
+        # if decoration_type in self.decorations:
+        #    logging.warning(
+        #        f'The decoration {decoration_type} is duplicated after reading {ctx.getText()}')  # TODO Dar información de línea, columna - ¿lanzamos excepción? - hay algunas que sí pueden estar duplicadas? Barrados?
+
+        # self.decorations[decoration_type] = ctx.getText()
+        # We cannot order it using the class name because there are rules with subrules, such as ties, or articulations. We order it using the encoding itself
+        decoration = ctx.getText();
+        if decoration != '/' and decoration != '\\':
+            self.decorations.append(ctx.getText())
+
     def addNoteRest(self, ctx, subtokens):
         # for key in sorted(self.decorations.keys()):
         # subtoken = Subtoken(self.decorations[key], SubTokenCategory.DECORATION)
@@ -133,6 +146,12 @@ class KernSpineListener(kernSpineParserListener):
             txt_without_number += ctx.barLineType().getText()
         if ctx.fermata():
             txt_without_number += ctx.fermata().getText()
+
+        # correct wrong encodings
+        if txt_without_number == ':!:':
+            txt_without_number = ':|!|:'
+        elif txt_without_number == ':|!|:':
+            txt_without_number = ':|!|:'
 
         self.token = BarToken(txt_without_number)
         self.token.hidden = "-" in ctx.getText()  # hidden

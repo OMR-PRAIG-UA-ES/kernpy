@@ -254,6 +254,11 @@ class kernSpineParserVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by kernSpineParser#group.
+    def visitGroup(self, ctx:kernSpineParser.GroupContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by kernSpineParser#staff.
     def visitStaff(self, ctx:kernSpineParser.StaffContext):
         return self.visitChildren(ctx)
@@ -296,6 +301,11 @@ class kernSpineParserVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by kernSpineParser#keySignatureCancel.
     def visitKeySignatureCancel(self, ctx:kernSpineParser.KeySignatureCancelContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernSpineParser#keyCancel.
+    def visitKeyCancel(self, ctx:kernSpineParser.KeyCancelContext):
         return self.visitChildren(ctx)
 
 
