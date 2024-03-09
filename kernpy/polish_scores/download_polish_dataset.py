@@ -135,8 +135,8 @@ def remove_extension(file_name):
 
 if __name__ == "__main__":
     # Replace for the path where the kern files are found
-    #input_path = "/Users/drizo/githubs/humdrum-polish-scores/pl-wn/"
-    input_path = "/tmp"
+    input_path = "/Users/drizo/cmg/omr/datasets/humdrum-polish-scores/data-github"
+    #input_path = "/tmp"
     #input_path = "/Users/drizo/githubs/OMR-PRAIG-UA-ES/kernpy/test/resource_dir/polish/test2"
     output_path = '/Users/drizo/cmg/omr/datasets/humdrum-polish-scores/output/pl-wn'
 
