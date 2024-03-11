@@ -33,7 +33,7 @@ def create_parser() -> argparse.ArgumentParser:
     kern_parser = parser.add_argument_group('Kern Parser options')
     kern_parser.add_argument('--ekern2kern', action='store_true', help='ekern to kern one file')
     if '--ekern2kern' in sys.argv:
-        kern_parser.add_argument('--input_path', required=True, type=str, help='Input file or directory path')
+        kern_parser.add_argument('--input_path', required=True, type=str, help='Input file or directory path. Employ -r to use recursive mode')
         kern_parser.add_argument('-r', '--recursive', required=False, action='store_true', help='Recursive mode')
 
     # Polish operations
@@ -80,7 +80,8 @@ def handle_ekern2kern(args) -> None:
     """
     if not args.recursive:
         ekern_to_krn(args.input_path, args.input_path.replace("ekrn", "krn"))
-        print(f"New kern generated in {args.input_path.replace('ekrn', 'krn')}")
+        if int(args.verbose) > 0:
+            print(f"New kern generated in {args.input_path.replace('ekrn', 'krn')}")
         return
 
     # Recursive mode

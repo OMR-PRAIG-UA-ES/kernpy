@@ -133,6 +133,45 @@ def remove_extension(file_name):
     return base_name
 
 
+def main(input_directory, output_directory) -> None:
+    """
+    Process the files in the input_directory and save the results in the output_directory.
+    http requests are made to download the images.
+
+    Args:
+        input_directory: directory where the input files are found
+        output_directory: directory where the output files are saved
+
+    Returns:
+        None
+
+    Examples:
+        >>> main('/kern_files', '/output_ekern')
+
+    """
+    print(f'Processing files in {input_directory} and saving to {output_directory}')
+    kern_with_bboxes = search_files_with_string(input_directory, 'xywh')
+    ok_files = []
+    ko_files = []
+    for kern in kern_with_bboxes:
+        try:
+            filename = remove_extension(kern)
+            kern_path = os.path.join(input_directory, kern)
+            output_kern_path = os.path.join(output_directory, filename)
+            if not os.path.exists(output_kern_path):
+                os.makedirs(output_kern_path)
+            convert_and_download_file(kern_path, output_kern_path)
+            ok_files.append(kern)
+        except Exception as error:
+            ko_files.append(kern)
+            print(f'Errors in {kern}: {error}')
+
+    print(f'----> OK files #{len(ok_files)}')
+    print(f'----> KO files #{len(ko_files)}')
+    print(ko_files)
+
+
+
 if __name__ == "__main__":
     # Replace for the path where the kern files are found
     input_path = "/Users/drizo/cmg/omr/datasets/humdrum-polish-scores/data-github"
@@ -171,6 +210,3 @@ if __name__ == "__main__":
     print(f'----> KO files #{len(ko_files)}')
     print(ko_files)
 
-
-def main(input_directory, output_directory):
-    return None
