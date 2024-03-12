@@ -102,9 +102,12 @@ def handle_ekern2kern(args) -> None:
                 if filename.endswith(".ekrn"):
                     if int(args.verbose) > 0:
                         print("New kern: ", os.path.join(root, directory, filename))
-                    ekern_to_krn(os.path.join(root, directory, filename),
-                                 os.path.join(root, directory, filename.replace("ekrn", "krn")))
-
+                    try:
+                        ekern_to_krn(os.path.join(root, directory, filename),
+                                     os.path.join(root, directory, filename.replace("ekrn", "krn")))
+                    except Exception as e:
+                        if int(args.verbose) > 0:
+                            print(f"An error occurred converting:{filename}:{e}", file=sys.stderr)
 
 def handle_kern2ekern(args) -> None:
     """
@@ -133,9 +136,12 @@ def handle_kern2ekern(args) -> None:
                 if filename.endswith(".krn"):
                     if int(args.verbose) > 0:
                         print("New ekern: ", os.path.join(root, directory, filename))
-                    kern_to_ekern(os.path.join(root, directory, filename),
-                                  os.path.join(root, directory, filename.replace("krn", "ekrn")))
-
+                    try:
+                        kern_to_ekern(os.path.join(root, directory, filename),
+                                      os.path.join(root, directory, filename.replace("krn", "ekrn")))
+                    except Exception as e:
+                        if int(args.verbose) > 0:
+                            print(f"An error occurred converting:{filename}:{e}", file=sys.stderr)
 
 def main():
     parser = create_parser()

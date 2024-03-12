@@ -1,6 +1,8 @@
 from .import_humdrum import (
     HumdrumImporter,
     ExportOptions,
+    ekern_to_krn,
+    kern_to_ekern,
 )
 
 from .tokens import (
@@ -38,11 +40,6 @@ from .root_importer import (
 
 from .text_spine_importer import (
     TextSpineImporter,
-)
-
-from .generic import (
-    ekern_to_krn,
-    kern_to_ekern
 )
 
 # TODO: Explore using __all__
