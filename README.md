@@ -69,6 +69,20 @@ python -m kernpy --kern2ekern --input_path <input_kern_file> --output_path <outp
 
 ****************************************************************************************
 ## Recursivo
+Se require usar, al menos, un nivel de subcarpetas adicional.
+
+```
+root
+├─ kern-folder
+│   ├── 1.krn
+│   ├── 2.krn
+│   └── 3.krn
+├── more-kerns
+│   ├── 1.krn
+│   ├── ...
+```
+
+
 ```bash
 python -m kernpy --kern2ekern --input_path <input_dir> -r
 ```
