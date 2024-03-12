@@ -2,10 +2,7 @@ import argparse
 import sys
 import os
 
-from kernpy import polish_scores, ekern_to_krn
-
-
-# drizo: TODO ¿?
+from kernpy import polish_scores, ekern_to_krn, kern_to_ekern
 
 
 def create_parser() -> argparse.ArgumentParser:
@@ -31,9 +28,19 @@ def create_parser() -> argparse.ArgumentParser:
 
     # ekern to kern
     kern_parser = parser.add_argument_group('Kern Parser options')
-    kern_parser.add_argument('--ekern2kern', action='store_true', help='ekern to kern one file')
+    kern_parser.add_argument('--ekern2kern', action='store_true', help='Convert file from ekern to kern. [-r]')
+    kern_parser.add_argument('--kern2ekern', action='store_true', help='Convert file from kern to ekern. [-r]')
+
     if '--ekern2kern' in sys.argv:
-        kern_parser.add_argument('--input_path', required=True, type=str, help='Input file or directory path. Employ -r to use recursive mode')
+        kern_parser.add_argument('--input_path', required=True, type=str,
+                                 help='Input file or directory path. Employ -r to use recursive mode')
+        kern_parser.add_argument('--output_path', required=False, type=str, help='Output file or directory path')
+        kern_parser.add_argument('-r', '--recursive', required=False, action='store_true', help='Recursive mode')
+
+    if '--kern2ekern' in sys.argv:
+        kern_parser.add_argument('--input_path', required=True, type=str,
+                                 help='Input file or directory path. Employ -r to use recursive mode')
+        kern_parser.add_argument('--output_path', required=False, type=str, help='Output file or directory path')
         kern_parser.add_argument('-r', '--recursive', required=False, action='store_true', help='Recursive mode')
 
     # Polish operations
@@ -78,10 +85,13 @@ def handle_ekern2kern(args) -> None:
     Returns:
         None
     """
+    if not args.output_path:
+        args.output_path = args.input_path.replace("ekrn", "krn")
+
     if not args.recursive:
-        ekern_to_krn(args.input_path, args.input_path.replace("ekrn", "krn"))
+        ekern_to_krn(args.input_path, args.output_path)
         if int(args.verbose) > 0:
-            print(f"New kern generated in {args.input_path.replace('ekrn', 'krn')}")
+            print(f"New kern generated in {args.output_path}")
         return
 
     # Recursive mode
@@ -96,20 +106,54 @@ def handle_ekern2kern(args) -> None:
                                  os.path.join(root, directory, filename.replace("ekrn", "krn")))
 
 
+def handle_kern2ekern(args) -> None:
+    """
+    Handle the kern2ekern options.
+
+    Args:
+        args: The parsed arguments
+
+    Returns:
+        None
+    """
+    if not args.output_path:
+        args.output_path = args.input_path.replace("krn", "ekrn")
+
+    if not args.recursive:
+        kern_to_ekern(args.input_path, args.output_path)
+        if int(args.verbose) > 0:
+            print(f"New ekern generated in {args.output_path}")
+        return
+
+    # Recursive mode
+    for root, dirs, files in os.walk(args.input_path):
+        for directory in dirs:
+            files = os.listdir(os.path.join(root, directory))
+            for filename in files:
+                if filename.endswith(".krn"):
+                    if int(args.verbose) > 0:
+                        print("New ekern: ", os.path.join(root, directory, filename))
+                    kern_to_ekern(os.path.join(root, directory, filename),
+                                  os.path.join(root, directory, filename.replace("krn", "ekrn")))
+
+
 def main():
     parser = create_parser()
     args = parser.parse_args()
 
     # Accessing the values of the options
-    print(f"All arguments: \n{50 * '*'}")
-    for key, value in vars(args).items():
-        print(key, value)
-    print(f"{50 * '*'}\n")
+    if int(args.verbose) > 2:
+        print(f"All arguments: \n{50 * '*'}")
+        for key, value in vars(args).items():
+            print(key, value)
+        print(f"{50 * '*'}\n")
 
     if args.polish:
         handle_polish_exporter(args)
     if args.ekern2kern:
         handle_ekern2kern(args)
+    if args.kern2ekern:
+        handle_kern2ekern(args)
 
 
 if __name__ == "__main__":
