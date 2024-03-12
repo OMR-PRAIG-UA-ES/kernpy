@@ -228,3 +228,8 @@ class BoundingBoxToken(AbstractToken):
 
     def export(self) -> string:
         return self.encoding
+
+
+class MHXMToken(AbstractToken):
+    def export(self) -> string:
+        return self.encoding
