@@ -75,6 +75,9 @@ def download_and_save_page_images(importer, _output_path, map_page_label_iiif_id
 
     for page_label, bounding_box_measure in page_bounding_boxes.items():
         page_iiif_id = map_page_label_iiif_ids.get(page_label)
+        if page_iiif_id is None and page_label.startswith('#'): # sometimes it's wrongly tagged without the #
+            page_iiif_id = map_page_label_iiif_ids.get(page_label[1:])
+
         if page_iiif_id is not None:
             bounding_box = bounding_box_measure.bounding_box
             print(f"Page: {page_label}, Bounding box: {bounding_box}, ID: {page_iiif_id}, from bar {bounding_box_measure.from_measure}, to bar {bounding_box_measure.to_measure}")
