@@ -161,7 +161,7 @@ def serializedATN():
         0,0,280,5,1,0,0,0,281,282,3,100,50,0,282,7,1,0,0,0,283,286,3,10,
         5,0,284,286,3,12,6,0,285,283,1,0,0,0,285,284,1,0,0,0,286,9,1,0,0,
         0,287,293,3,102,51,0,288,293,3,146,73,0,289,293,3,164,82,0,290,293,
-        3,112,56,0,291,293,3,118,59,0,292,287,1,0,0,0,292,288,1,0,0,0,292,
+        3,118,59,0,291,293,3,112,56,0,292,287,1,0,0,0,292,288,1,0,0,0,292,
         289,1,0,0,0,292,290,1,0,0,0,292,291,1,0,0,0,293,11,1,0,0,0,294,298,
         3,48,24,0,295,298,3,122,61,0,296,298,3,170,85,0,297,294,1,0,0,0,
         297,295,1,0,0,0,297,296,1,0,0,0,298,13,1,0,0,0,299,302,3,172,86,
@@ -479,7 +479,7 @@ class kernSpineParser ( Parser ):
                      "'`'", "'^'", "'~'", "'<'", "'>'", "'/'", "'\\'", "'_'", 
                      "'$'", "'('", "')'", "':'", "';'", "','", "'?'", "' '" ]
 
-    symbolicNames = [ "<INVALID>", "TANDEM_KEY_CANCEL", "TANDEM_PART", "TANDEM_GROUP", 
+    symbolicNames = [ "<INVALID>", "TANDEM_KEYCANCEL", "TANDEM_PART", "TANDEM_GROUP", 
                       "TANDEM_ACCOMP", "TANDEM_SOLO", "TANDEM_STROPHE", 
                       "TANDEM_STAFF", "TANDEM_TRANSPOSITION", "TANDEM_CLEF", 
                       "TANDEM_KEY_SIGNATURE", "TANDEM_MET", "METRONOME", 
@@ -682,7 +682,7 @@ class kernSpineParser ( Parser ):
                    "stem", "beam", "mordent", "trill", "footnote" ]
 
     EOF = Token.EOF
-    TANDEM_KEY_CANCEL=1
+    TANDEM_KEYCANCEL=1
     TANDEM_PART=2
     TANDEM_GROUP=3
     TANDEM_ACCOMP=4
@@ -1183,12 +1183,12 @@ class kernSpineParser ( Parser ):
             return self.getTypedRuleContext(kernSpineParser.MeterSymbolContext,0)
 
 
-        def keySignature(self):
-            return self.getTypedRuleContext(kernSpineParser.KeySignatureContext,0)
-
-
         def keyCancel(self):
             return self.getTypedRuleContext(kernSpineParser.KeyCancelContext,0)
+
+
+        def keySignature(self):
+            return self.getTypedRuleContext(kernSpineParser.KeySignatureContext,0)
 
 
         def getRuleIndex(self):
@@ -1234,13 +1234,13 @@ class kernSpineParser ( Parser ):
             elif la_ == 4:
                 self.enterOuterAlt(localctx, 4)
                 self.state = 290
-                self.keySignature()
+                self.keyCancel()
                 pass
 
             elif la_ == 5:
                 self.enterOuterAlt(localctx, 5)
                 self.state = 291
-                self.keyCancel()
+                self.keySignature()
                 pass
 
 
@@ -5156,8 +5156,8 @@ class kernSpineParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def TANDEM_KEY_CANCEL(self):
-            return self.getToken(kernSpineParser.TANDEM_KEY_CANCEL, 0)
+        def TANDEM_KEYCANCEL(self):
+            return self.getToken(kernSpineParser.TANDEM_KEYCANCEL, 0)
 
         def getRuleIndex(self):
             return kernSpineParser.RULE_keyCancel
@@ -5180,7 +5180,7 @@ class kernSpineParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 641
-            self.match(kernSpineParser.TANDEM_KEY_CANCEL)
+            self.match(kernSpineParser.TANDEM_KEYCANCEL)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)

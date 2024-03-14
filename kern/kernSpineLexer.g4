@@ -5,7 +5,7 @@ lexer grammar kernSpineLexer;
 
 fragment ASTERISK_FRAGMENT : '*';
 
-TANDEM_KEY_CANCEL: ASTERISK_FRAGMENT 'kcancel';
+TANDEM_KEYCANCEL: ASTERISK_FRAGMENT 'kcancel';
 //TODO 8 mar 2024 - what it is for? TANDEM_COL_START: ASTERISK_FRAGMENT 'col';
 //TODO 8 mar 2024 - what it is for?TANDEM_COL_END: ASTERISK_FRAGMENT 'Xcol';
 TANDEM_PART: ASTERISK_FRAGMENT 'part';

@@ -37,7 +37,8 @@ contextual:
     otherContextual
     ;
 
-signatures: clef | timeSignature | meterSymbol | keySignature | keyCancel;
+signatures: clef | timeSignature | meterSymbol | keyCancel | keySignature;
+
 otherContextual: octaveShift
                      |
                      key
@@ -218,7 +219,7 @@ clefOctave: CHAR_v CHAR_v? DIGIT_2 | CIRCUMFLEX CIRCUMFLEX? DIGIT_2;
 keySignature: TANDEM_KEY_SIGNATURE  LEFT_BRACKET keySignaturePitchClass* RIGHT_BRACKET keySignatureCancel?;
 keySignaturePitchClass: pitchClass;
 keySignatureCancel:  CHAR_X;
-keyCancel: TANDEM_KEY_CANCEL;
+keyCancel: TANDEM_KEYCANCEL;
 
 keyMode: (minorKey | majorKey | QUESTION_MARK); // *?: found in corelli/op1/op01n01c.krn
 key: ASTERISK singleKey (SLASH singleKey)?; // found *C/a: in haydn/quartets/op54n2-03.krn

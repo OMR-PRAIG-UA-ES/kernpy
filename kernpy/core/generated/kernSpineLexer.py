@@ -299,7 +299,7 @@ class kernSpineLexer(Lexer):
 
     decisionsToDFA = [ DFA(ds, i) for i, ds in enumerate(atn.decisionToState) ]
 
-    TANDEM_KEY_CANCEL = 1
+    TANDEM_KEYCANCEL = 1
     TANDEM_PART = 2
     TANDEM_GROUP = 3
     TANDEM_ACCOMP = 4
@@ -459,7 +459,7 @@ class kernSpineLexer(Lexer):
             "')'", "':'", "';'", "','", "'?'", "' '" ]
 
     symbolicNames = [ "<INVALID>",
-            "TANDEM_KEY_CANCEL", "TANDEM_PART", "TANDEM_GROUP", "TANDEM_ACCOMP", 
+            "TANDEM_KEYCANCEL", "TANDEM_PART", "TANDEM_GROUP", "TANDEM_ACCOMP", 
             "TANDEM_SOLO", "TANDEM_STROPHE", "TANDEM_STAFF", "TANDEM_TRANSPOSITION", 
             "TANDEM_CLEF", "TANDEM_KEY_SIGNATURE", "TANDEM_MET", "METRONOME", 
             "TANDEM_SECTION", "NO_REPEAT", "TANDEM_LEFT_HAND", "TANDEM_RIGHT_HAND", 
@@ -489,7 +489,7 @@ class kernSpineLexer(Lexer):
             "RIGHT_PARENTHESIS", "COLON", "SEMICOLON", "COMMA", "QUESTION_MARK", 
             "SPACE", "INSTRUMENT_TITLE", "INSTRUMENT" ]
 
-    ruleNames = [ "ASTERISK_FRAGMENT", "TANDEM_KEY_CANCEL", "TANDEM_PART", 
+    ruleNames = [ "ASTERISK_FRAGMENT", "TANDEM_KEYCANCEL", "TANDEM_PART", 
                   "TANDEM_GROUP", "TANDEM_ACCOMP", "TANDEM_SOLO", "TANDEM_STROPHE", 
                   "TANDEM_STAFF", "TANDEM_TRANSPOSITION", "TANDEM_CLEF", 
                   "TANDEM_KEY_SIGNATURE", "TANDEM_MET", "METRONOME", "TANDEM_SECTION", 

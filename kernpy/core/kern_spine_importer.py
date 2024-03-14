@@ -174,6 +174,9 @@ class KernSpineListener(kernSpineParserListener):
     def exitKeySignature(self, ctx: kernSpineParser.KeySignatureContext):
         self.token = KeySignatureToken(ctx.getText())
 
+    def exitKeyCancel(self, ctx: kernSpineParser.KeyCancelContext):
+        self.token = KeySignatureToken(ctx.getText())
+
     def exitTimeSignature(self, ctx: kernSpineParser.TimeSignatureContext):
         self.token = TimeSignatureToken(ctx.getText())
 
