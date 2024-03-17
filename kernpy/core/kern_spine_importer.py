@@ -11,13 +11,12 @@ from .generated.kernSpineParser import kernSpineParser
 from .generated.kernSpineParserListener import kernSpineParserListener
 from .spine_importer import SpineImporter
 from .tokens import SimpleToken, TokenCategory, Subtoken, SubTokenCategory, CompoundToken, ChordToken, BoundingBox, \
-    BoundingBoxToken, ClefToken, KeySignatureToken, TimeSignatureToken, MeterSymbolToken, BarToken
+    BoundingBoxToken, ClefToken, KeySignatureToken, TimeSignatureToken, MeterSymbolToken, BarToken, NoteRestToken
 
 
 class KernSpineListener(kernSpineParserListener):
 
     def __init__(self):
-        self.SEPARATOR = '·'
         self.first_chord_element = None
         self.token = None
         self.chord_tokens = None
@@ -98,35 +97,30 @@ class KernSpineListener(kernSpineParserListener):
         if decoration != '/' and decoration != '\\':
             self.decorations.append(ctx.getText())
 
-    def addNoteRest(self, ctx, subtokens):
-        # for key in sorted(self.decorations.keys()):
+    def addNoteRest(self, ctx, pitchduration_subtokens):
         # subtoken = Subtoken(self.decorations[key], SubTokenCategory.DECORATION)
-        for decoration in sorted(self.decorations):
-            subtoken = Subtoken(decoration, SubTokenCategory.DECORATION)
-            subtokens.append(subtoken)
-
-        token = CompoundToken(ctx.getText(), TokenCategory.CORE, subtokens)
+        token = NoteRestToken(ctx.getText(), pitchduration_subtokens, self.decorations)
         if self.in_chord:
             self.chord_tokens.append(token)
         else:
             self.token = token
 
     def exitNote(self, ctx: kernSpineParser.NoteContext):
-        subtokens = []
+        pitch_duration_tokens = []
         for duration_subtoken in self.duration_subtokens:
-            subtokens.append(duration_subtoken)
-        subtokens.append(self.diatonic_pitch_and_octave_subtoken)
+            pitch_duration_tokens.append(duration_subtoken)
+        pitch_duration_tokens.append(self.diatonic_pitch_and_octave_subtoken)
         if ctx.alteration():
-            subtokens.append(Subtoken(ctx.alteration().getText(), SubTokenCategory.PITCH))
+            pitch_duration_tokens.append(Subtoken(ctx.alteration().getText(), SubTokenCategory.PITCH))
 
-        self.addNoteRest(ctx, subtokens)
+        self.addNoteRest(ctx, pitch_duration_tokens)
 
     def exitRest(self, ctx: kernSpineParser.RestContext):
-        subtokens = []
+        pitch_duration_tokens = []
         for duration_subtoken in self.duration_subtokens:
-            subtokens.append(duration_subtoken)
-        subtokens.append(Subtoken('r', SubTokenCategory.PITCH))
-        self.addNoteRest(ctx, subtokens)
+            pitch_duration_tokens = [].append(duration_subtoken)
+        pitch_duration_tokens = [].append(Subtoken('r', SubTokenCategory.PITCH))
+        self.addNoteRest(ctx, pitch_duration_tokens)
 
     def enterChord(self, ctx: kernSpineParser.ChordContext):
         self.in_chord = True

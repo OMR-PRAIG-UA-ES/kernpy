@@ -2,7 +2,8 @@ import string
 from abc import ABC, abstractmethod
 from enum import Enum, auto
 
-TOKEN_SEPARATOR = '·'
+TOKEN_SEPARATOR = '@'
+DECORATION_SEPARATOR = '·'
 
 
 # We don't use inheritance here for all elements but enum, because we don't need any polymorphism mechanism, just a grouping one
@@ -171,6 +172,35 @@ class CompoundToken(Token):
                 result += TOKEN_SEPARATOR
 
             result += subtoken.encoding
+        return result
+
+
+class NoteRestToken(Token):
+    def __init__(self, encoding, pitch_duration_subtokens, decoration_subtokens):
+        """
+        :param encoding: The complete unprocessed encoding
+        :param category: The token category, one of TokenCategory
+        :param subtokens: The individual elements of the token, of type Subtoken
+        """
+        super().__init__(encoding, TokenCategory.CORE)
+        self.pitch_duration_subtokens = pitch_duration_subtokens
+        self.decoration_subtokens = decoration_subtokens
+
+    def export(self) -> string:
+        result = ''
+        for subtoken in self.pitch_duration_subtokens:
+            if len(result) > 0:
+                result += TOKEN_SEPARATOR
+
+            result += subtoken.encoding
+
+        decorations = set()
+        # we order them and avoid repetitions
+        for subtoken in self.decoration_subtokens:
+            decorations.add(subtoken)
+        for decoration in sorted(decorations):
+            result += DECORATION_SEPARATOR
+            result += decoration
         return result
 
 

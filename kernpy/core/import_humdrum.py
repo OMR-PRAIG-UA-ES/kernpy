@@ -5,7 +5,7 @@ import logging
 from .importer_factory import createImporter
 from .tokens import HeaderToken, SpineOperationToken, TokenCategory, BoundingBoxToken, KeySignatureToken, \
     TimeSignatureToken, MeterSymbolToken, ClefToken, BarToken, MetacommentToken, ErrorToken, FieldCommentToken, \
-    BEKERN_CATEGORIES
+    BEKERN_CATEGORIES, TOKEN_SEPARATOR, DECORATION_SEPARATOR
 
 
 class ExportOptions:
@@ -446,8 +446,9 @@ def ekern_to_krn(input_file, output_file) -> None:
     with open(input_file, 'r') as file:
         content = file.read()
 
-    content = content.replace("ekern", "kern")
-    content = content.replace("·", "")
+    content = content.replace("ekern", "kern") #TODO Constante según las cabeceras
+    content = content.replace(TOKEN_SEPARATOR, "")
+    content = content.replace(DECORATION_SEPARATOR, "")
 
     with open(output_file, 'w') as file:
         file.write(content)
