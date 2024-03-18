@@ -42,6 +42,12 @@ from .text_spine_importer import (
     TextSpineImporter,
 )
 
+
+from .generic import (
+    read_kern,
+    Score,
+)
+
 # TODO: Explore using __all__
 
 
