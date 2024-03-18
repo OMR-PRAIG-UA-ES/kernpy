@@ -8,4 +8,4 @@ Soon!
 
 ::: kernpy.core.import_humdrum
 
-End
+::: kernpy.core.generic
