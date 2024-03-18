@@ -437,9 +437,8 @@ def ekern_to_krn(input_file, output_file) -> None:
     Convert one .ekrn file to .krn file.
 
     Args:
-        input_file: The path to the input directory
-        output_file: A boolean value to indicate whether the conversion should be recursive
-
+        input_file: Filepath to the input **ekern
+        output_file: Filepath to the output **kern
     Returns:
         None
     """
@@ -459,8 +458,8 @@ def kern_to_ekern(input_file, output_file) -> None:
     Convert one .krn file to .ekrn file
 
     Args:
-        input_file: The path to the input directory
-        output_file: A boolean value to indicate whether the conversion should be recursive
+        input_file: Filepath to the input **kern
+        output_file: Filepath to the output **ekern
 
     Returns:
         None
