@@ -31,8 +31,10 @@ class KernSpineImporterTest(unittest.TestCase):
         self.doTest("=:|!-", "=:|!")
 
     def testRemoveRepeated(self):
-        self.doTest("32qqbb-///LLL", "32@qq@bb@-·/·LLL")
-        self.doTest("32qqbb-\\\\\\LLL", "32@qq@bb@-·LLL·\\")
+        self.doTest("8aLL", "8@a·L")
+        self.doTest("8aJJJ", "8@a·J")
+        self.doTest("32qqbb-///LLL", "32@qq@bb@-·/·L")
+        self.doTest("32qqbb-\\\\\\LLL", "32@qq@bb@-·L·\\")
 
 
 if __name__ == '__main__':

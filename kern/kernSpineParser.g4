@@ -480,7 +480,7 @@ beam:
         |
         CHAR_k // partial beam that extends to the left
         ) staffChange?
-    )+
+    ) // March 2024 we've removed the + for using lazy encoding and exporting later just one L or J
     ;
 
 
