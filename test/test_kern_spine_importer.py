@@ -25,7 +25,7 @@ class KernSpineImporterTest(unittest.TestCase):
         self.assertEquals(expected, token.export())
 
     def test1(self):
-        self.doTest("32qqbb-\LLL", "32·qq·bb·-·LLL·\\")
+        self.doTest("32qqbb-\LLL", "32@qq@bb@-·LLL·\\")
 
     def test2(self):
         self.doTest("=:|!-", "=:|!")

@@ -253,7 +253,7 @@ class ImporterTestCase(unittest.TestCase):
         importer.doImportString(input_kern)
         export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
         output_kern = importer.doExportProcessed(export_options)
-        expected_ekern = "**ekern\n4·c\n4·d\n4·e\n4·f\n*-\n"
+        expected_ekern = "**ekern\n4@c\n4@d\n4@e\n4@f\n*-\n"
         self.assertEquals(expected_ekern, output_kern)
 
     def testLexicalError(self):
