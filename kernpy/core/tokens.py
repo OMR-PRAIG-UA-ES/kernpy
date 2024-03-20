@@ -183,6 +183,9 @@ class NoteRestToken(Token):
         :param subtokens: The individual elements of the token, of type Subtoken
         """
         super().__init__(encoding, TokenCategory.CORE)
+        if not pitch_duration_subtokens or len(pitch_duration_subtokens) == 0:
+            raise Exception('Empty pitch-duration subtokens')
+
         self.pitch_duration_subtokens = pitch_duration_subtokens
         self.decoration_subtokens = decoration_subtokens
 
