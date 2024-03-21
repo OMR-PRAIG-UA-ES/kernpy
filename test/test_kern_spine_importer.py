@@ -41,6 +41,7 @@ class KernSpineImporterTest(unittest.TestCase):
         self.doTest("8aJJJ", "8@a·J")
         self.doTest("32qqbb-///LLL", "32@qq@bb@-·/·L")
         self.doTest("32qqbb-\\\\\\LLL", "32@qq@bb@-·L·\\")
+        self.doTest("4b::::", "4@b·:")
 
 
 if __name__ == '__main__':
