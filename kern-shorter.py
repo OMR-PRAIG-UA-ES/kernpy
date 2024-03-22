@@ -10,6 +10,7 @@ import kernpy
 
 
 ### GLOBAL VARIABLES ###
+PROCESSES_PARALLEL = 8
 output_folder = '/tmp/output'
 log_file = 'log.csv'
 
@@ -137,7 +138,7 @@ def generate_fragment_files(input_dir: str, _output_dir: str, _log_file: str) ->
     #    progress_queue.put(1)
 
     # Parallel processing
-    with multiprocessing.Pool(processes=2) as pool:
+    with multiprocessing.Pool(processes=PROCESSES_PARALLEL) as pool:
         for _ in tqdm(
                 pool.imap_unordered(create_fragments, [(task + (progress_queue,)) for task in tasks]),
                 total=total_tasks, desc='Creating fragments'):
