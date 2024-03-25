@@ -104,7 +104,7 @@ def handle_ekern2kern(args) -> None:
                         print("New kern: ", os.path.join(root, directory, filename))
                     try:
                         ekern_to_krn(os.path.join(root, directory, filename),
-                                     os.path.join(root, directory, filename.replace("ekrn", "krn")))
+                                     os.path.join(root, directory, filename.replace(".ekrn", ".krn")))
                     except Exception as e:
                         if int(args.verbose) > 0:
                             print(f"An error occurred converting:{filename}:{e}", file=sys.stderr)
@@ -138,7 +138,7 @@ def handle_kern2ekern(args) -> None:
                         print("New ekern: ", os.path.join(root, directory, filename))
                     try:
                         kern_to_ekern(os.path.join(root, directory, filename),
-                                      os.path.join(root, directory, filename.replace("krn", "ekrn")))
+                                      os.path.join(root, directory, filename.replace(".krn", ".ekrn")))
                     except Exception as e:
                         if int(args.verbose) > 0:
                             print(f"An error occurred converting:{filename}:{e}", file=sys.stderr)
