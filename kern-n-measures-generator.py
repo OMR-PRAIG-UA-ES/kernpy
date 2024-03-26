@@ -81,7 +81,6 @@ def create_fragments(args) -> None:
 
         add_log(input_file, True)
     except Exception as e:
-        print(f'Error: {e}')
         add_log(f'{input_file}->{output_folder}->{e}', False)
     finally:
         pass
