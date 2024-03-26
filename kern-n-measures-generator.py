@@ -13,6 +13,8 @@ import kernpy
 PROCESSES_PARALLEL = 8
 output_folder = '/tmp/output'
 log_file = 'log.csv'
+FIND_ONLY_1_SPINE_SCORES = False
+MEASURE_LENGTH = 1
 
 
 def add_log(msg: str, is_correct: bool) -> None:
@@ -43,6 +45,12 @@ def create_fragments(args) -> None:
 
         importer = kernpy.HumdrumImporter()
         importer.doImportFile(input_file)
+
+        # find only 1 spine scores
+        if FIND_ONLY_1_SPINE_SCORES:
+            if len(importer.spines) != 1:
+                add_log(f'{input_file}->More than 1 spine', False)
+                return
         options = kernpy.ExportOptions(spine_types=['**kern'], token_categories=kernpy.BEKERN_CATEGORIES)
 
         # Create folder for the current file
@@ -50,11 +58,11 @@ def create_fragments(args) -> None:
         #print(f'Creating folder: {current_folder}')
         os.makedirs(current_folder, exist_ok=True)
 
-        for i in range(0, importer.last_measure_number, 1):
-            current_ekern_file = os.path.join(current_folder, f'from-{i}-to-{i+measure_length}.ekrn')
+        for i in range(1, importer.last_measure_number, 1):
+            current_kern_file = os.path.join(current_folder, f'from-{i}-to-{i+measure_length}.krn')
             #print(f'Processing: {current_ekern_file}')
             options.from_measure = i
-            options.to_measure = i + measure_length
+            options.to_measure = i
 
             # Check if the measures are within the ranged of the file
             if options.to_measure is None or options.from_measure is None:
@@ -63,9 +71,9 @@ def create_fragments(args) -> None:
             if options.to_measure > importer.last_measure_number:
                 break
 
-            exported = importer.doExportEKern(options)
+            exported = importer.doExportNormalizedKern(options)
 
-            with open(current_ekern_file, 'w') as f:
+            with open(current_kern_file, 'w') as f:
                 f.write(exported)
 
             # Update progress
@@ -82,18 +90,19 @@ def create_fragments(args) -> None:
         sys.stderr = sys.__stderr__
 
 
-def get_measures_normal_distribution(files: []) -> [int]:
+def get_measures_normal_distribution(files: []) -> []:
     """
     Assign a measure length to each file in the list
 
     Use 4 as the mean and 1 as the standard deviation.
 
-    :param files: The list of files
-    :return: A list with the measure length for each file
+    :param files: The list of files. [str | path]
+    :return: A list with the measure length for each file. [int]
     """
-    mean = 4
-    std_dev = 1
+    mean = MEASURE_LENGTH
+    std_dev = 0
     measures = np.random.normal(mean, std_dev, len(files)).astype(int)
+
     return list(measures)
 
 
