@@ -1,6 +1,7 @@
 import csv
 import string
 import logging
+from enum import Enum
 
 from .importer_factory import createImporter
 from .tokens import HeaderToken, SpineOperationToken, TokenCategory, BoundingBoxToken, KeySignatureToken, \
@@ -18,6 +19,29 @@ class ExportOptions:
         self.from_measure = from_measure
         self.to_measure = to_measure
         self.token_categories = token_categories
+
+
+class KernTypeExporter(Enum):
+    """
+    Options for exporting a kern file.
+
+    Example:
+    ```
+    # Create the importer
+    hi = HumdrumImporter()
+
+    # Read the file
+    options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
+    hi.doImportFile('file.krn')
+
+    # Export the file
+    options = KernExporter.normalizedKern
+    exported = hi.doExport(exportOptions)
+    ```
+    """
+    unprocessed = 0
+    eKern = 1
+    normalizedKern = 2
 
 
 class BoundingBoxMeasures:
@@ -56,7 +80,7 @@ class Spine:
                 new_subspines = self.importing_subspines + self.next_row_subspine_variation
             elif self.next_row_subspine_variation < 0:
                 new_subspines = self.importing_subspines + (
-                            self.next_row_subspine_variation + 1)  # e.g. *v *v *v for three spines lead to 1 spine
+                        self.next_row_subspine_variation + 1)  # e.g. *v *v *v for three spines lead to 1 spine
             else:
                 new_subspines = self.importing_subspines
             logging.debug(f'Adding row to spine, previous subspines={self.importing_subspines}, new={new_subspines}')
@@ -103,8 +127,8 @@ class Spine:
         if row >= len(self.rows):
             raise Exception(f'Row {row} out of bounds {len(self.rows)}')
 
-    #TODO Joan Cambiar just_encoding por enum: unprocessed, eKern, normalizedKern
-    def getRowContent(self, row, just_encoding: bool, token_categories) -> string:
+    # TODO Joan Cambiar just_encoding por enum: unprocessed, eKern, normalizedKern
+    def getRowContent(self, row, kern_type: KernTypeExporter, token_categories) -> string:
         self.checkRowIndex(row)
 
         result = ''
@@ -112,25 +136,33 @@ class Spine:
             if subspine.category == TokenCategory.STRUCTURAL or subspine.category in token_categories:
                 if len(result) > 0:
                     result += '\t'
-                if just_encoding:
+                if kern_type == KernTypeExporter.unprocessed:
                     result += subspine.encoding
-                else:
+                elif kern_type in {KernTypeExporter.eKern, KernTypeExporter.normalizedKern}:
                     if subspine.hidden:
                         exp = '.'
                     else:
                         exp = subspine.export()
-                        #TODO Joan: si es kern normalizado llamar al método que convierte ekern en kern
+                        if kern_type == KernTypeExporter.normalizedKern:
+                            exp = get_kern_from_ekern(exp)
+
+                        # TODO Joan: si es kern normalizado llamar al método que convierte ekern en kern
                     if not exp:
                         raise Exception(f'Subspine {subspine.encoding} is exported as None')
                     result += exp
+                else:
+                    raise ValueError(f'Unknown kern type {kern_type}.\nView {help(KernTypeExporter)} ')
 
         return result
 
-    def getProcessedRow(self, row: int, token_categories) -> string:
-        return self.getRowContent(row, False, token_categories)
+    def getNormalizedRow(self, row: int, token_categories) -> string:
+        return self.getRowContent(row, KernTypeExporter.normalizedKern, token_categories)
+
+    def getEKernRow(self, row: int, token_categories) -> string:
+        return self.getRowContent(row, KernTypeExporter.eKern, token_categories)
 
     def getUnprocessedRow(self, row: int, token_categories) -> string:
-        return self.getRowContent(row, True, token_categories)
+        return self.getRowContent(row, KernTypeExporter.unprocessed, token_categories)
 
 
 class Signatures:
@@ -142,7 +174,8 @@ class Signatures:
         self.last_meter_symbol_row = meter_symbol_row
 
     def clone(self):
-        return Signatures(self.last_header_row, self.last_clef_row, self.last_key_signature_row, self.last_time_signature_row, self.last_meter_symbol_row)
+        return Signatures(self.last_header_row, self.last_clef_row, self.last_key_signature_row,
+                          self.last_time_signature_row, self.last_meter_symbol_row)
 
 
 class HumdrumImporter:
@@ -159,7 +192,7 @@ class HumdrumImporter:
         self.last_bounding_box = None
         self.errors = []
 
-    def getMetacomments(self): # each metacomment is contained in all spines as a reference to the same object
+    def getMetacomments(self):  # each metacomment is contained in all spines as a reference to the same object
         result = []
         for token in self.spines[0].rows:
             if isinstance(token[0], MetacommentToken):
@@ -170,19 +203,19 @@ class HumdrumImporter:
         importers = {}
         header_row_number = None
         row_number = 1
-        pending_metacomments = [] # those appearing before the headers
+        pending_metacomments = []  # those appearing before the headers
         for row in reader:
             for spine in self.spines:
                 self.current_spine_index = 0
                 spine.addRow()
-            if len(row) > 0: # the last one
+            if len(row) > 0:  # the last one
                 if row[0].startswith("!!"):
                     mt = MetacommentToken(row[0])
                     if len(self.spines) == 0:
                         pending_metacomments.append(mt)
                     else:
                         for spine in self.spines:
-                            spine.addToken(mt) # the same reference for all spines
+                            spine.addToken(mt)  # the same reference for all spines
                 else:
                     is_barline = False
                     for column in row:
@@ -199,7 +232,7 @@ class HumdrumImporter:
                             spine = Spine(column, importer)
                             for pending_metacomment in pending_metacomments:
                                 spine.addRow()
-                                spine.addToken(pending_metacomment) # same reference for all spines
+                                spine.addToken(pending_metacomment)  # same reference for all spines
 
                             token = HeaderToken(column)
                             spine.addRow()
@@ -211,7 +244,8 @@ class HumdrumImporter:
                                 logging.debug(
                                     f'Row #{row_number}, current spine #{self.current_spine_index} of size {current_spine.importing_subspines}, and importer {current_spine.importer}')
                             except Exception as e:
-                                raise Exception(f'Cannot get next spine at row {row_number}: {e} while reading row {row} ')
+                                raise Exception(
+                                    f'Cannot get next spine at row {row_number}: {e} while reading row {row} ')
 
                             if column in self.SPINE_OPERATIONS:
                                 current_spine.addToken(SpineOperationToken(column))
@@ -258,7 +292,6 @@ class HumdrumImporter:
         reader = csv.reader(lines)
         self.doImport(reader)
 
-
     def getSpine(self, index: int) -> Spine:
         if index < 0:
             raise Exception(f'Negative index {index}')
@@ -277,24 +310,27 @@ class HumdrumImporter:
 
         return spine
 
-    def doExportProcessed(self, options: ExportOptions) -> string:
-        return self.doExport(True, options)
+    def doExportNormalizedKern(self, options: ExportOptions) -> string:
+        return self.doExport(KernTypeExporter.normalizedKern, options)
+
+    def doExportEKern(self, options: ExportOptions) -> string:
+        return self.doExport(KernTypeExporter.eKern, options)
 
     def doExportUnprocessed(self, options: ExportOptions) -> string:
-        return self.doExport(False, options)
+        return self.doExport(KernTypeExporter.unprocessed, options)
 
     def handleBoundingBox(self, token: BoundingBoxToken):
         page_number = token.page_number
         last_page_bb = self.page_bounding_boxes.get(page_number)
         if last_page_bb is None:
-            #print(f'Adding {page_number}')
+            # print(f'Adding {page_number}')
             if self.last_measure_number is None:
                 self.last_measure_number = 0
             self.last_bounding_box = BoundingBoxMeasures(token.bounding_box, self.last_measure_number,
                                                          self.last_measure_number)
             self.page_bounding_boxes[page_number] = self.last_bounding_box
         else:
-            #print(f'Extending page {page_number}')
+            # print(f'Extending page {page_number}')
             last_page_bb.bounding_box.extend(token.bounding_box)
             last_page_bb.to_measure = self.last_measure_number
 
@@ -309,7 +345,7 @@ class HumdrumImporter:
         if measure_number > max_measures:
             raise Exception(f'The measure number must be <= {max_measures}, and it is {measure_number}')
 
-    def doExport(self, use_processed: bool, options: ExportOptions) -> string:
+    def doExport(self, kern_type: KernTypeExporter, options: ExportOptions) -> string:
         max_rows = self.getMaxRows()
         signatures_at_each_row = []
         row_contents = []
@@ -333,10 +369,14 @@ class HumdrumImporter:
                         if len(row_result) > 0:
                             row_result += '\t'
 
-                        if use_processed:
-                            content = spine.getProcessedRow(i, options.token_categories)
-                        else:
+                        if kern_type == KernTypeExporter.normalizedKern:
+                            content = spine.getNormalizedRow(i, options.token_categories)
+                        elif kern_type == KernTypeExporter.eKern:
+                            content = spine.getEKernRow(i, options.token_categories)
+                        elif kern_type == KernTypeExporter.unprocessed:
                             content = spine.getUnprocessedRow(i, options.token_categories)
+                        else:
+                            raise ValueError(f'Unknown kern type {kern_type}.\nView {help(KernTypeExporter)} ')
 
                         if content and content != '.' and content != '*':
                             empty = False
@@ -386,11 +426,11 @@ class HumdrumImporter:
             else:
                 options.to_measure = len(self.measure_start_rows)
 
-            from_row = self.measure_start_rows[options.from_measure-1]-1 # measures and rows are counted from 1
+            from_row = self.measure_start_rows[options.from_measure - 1] - 1  # measures and rows are counted from 1
             if options.to_measure == len(self.measure_start_rows):
-                to_row = self.measure_start_rows[options.to_measure-1]
+                to_row = self.measure_start_rows[options.to_measure - 1]
             else:
-                to_row = self.measure_start_rows[options.to_measure] # to the next one
+                to_row = self.measure_start_rows[options.to_measure]  # to the next one
             signature = signatures_at_each_row[from_row]
 
             # first, attach the signatures if not in the exported range
@@ -434,6 +474,37 @@ class HumdrumImporter:
     def hasErrors(self):
         return len(self.errors) > 0
 
+
+def get_kern_from_ekern(ekern_content: string) -> string:
+    """
+    Read the content of a **ekern file and return the **kern content.
+
+    Args:
+        ekern_content: The content of the **ekern file.
+    Returns:
+        The content of the **kern file.
+
+    Example:
+        ```python
+        # Read **ekern file
+        ekern_file = 'path/to/file.ekrn'
+        with open(ekern_file, 'r') as file:
+            ekern_content = file.read()
+
+        # Get **kern content
+        kern_content = get_kern_from_ekern(ekern_content)
+        with open('path/to/file.krn', 'w') as file:
+            file.write(kern_content)
+
+        ```
+    """
+    content = ekern_content.replace("**ekern", "**kern")  # TODO Constante según las cabeceras
+    content = content.replace(TOKEN_SEPARATOR, "")
+    content = content.replace(DECORATION_SEPARATOR, "")
+
+    return content
+
+
 def ekern_to_krn(input_file, output_file) -> None:
     """
     Convert one .ekrn file to .krn file.
@@ -447,12 +518,10 @@ def ekern_to_krn(input_file, output_file) -> None:
     with open(input_file, 'r') as file:
         content = file.read()
 
-    content = content.replace("ekern", "kern") #TODO Constante según las cabeceras
-    content = content.replace(TOKEN_SEPARATOR, "")
-    content = content.replace(DECORATION_SEPARATOR, "")
+    kern_content = get_kern_from_ekern(content)
 
     with open(output_file, 'w') as file:
-        file.write(content)
+        file.write(kern_content)
 
 
 def kern_to_ekern(input_file, output_file) -> None:
@@ -473,8 +542,7 @@ def kern_to_ekern(input_file, output_file) -> None:
         raise Exception(f'ERROR: {input_file} has errors {importer.getErrorMessages()}')
 
     export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
-    exported_ekern = importer.doExportProcessed(export_options)
+    exported_ekern = importer.doExportEKern(export_options)
 
     with open(output_file, 'w') as file:
         file.write(exported_ekern)
-

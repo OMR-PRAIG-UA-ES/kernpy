@@ -64,10 +64,9 @@ def extract_and_save_measures(importer, from_measure, to_measure, krn_path):
     export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
     export_options.from_measure = from_measure
     export_options.to_measure = to_measure
-    exported_ekern = importer.doExportProcessed(export_options)
-    f = open(krn_path, "w")
-    f.write(exported_ekern)
-    f.close()
+    exported_ekern = importer.doExportEKern(export_options)
+    with open(krn_path, "w") as f:
+        f.write(exported_ekern)
 
 
 def download_and_save_page_images(importer, _output_path, map_page_label_iiif_ids, page_bounding_boxes):

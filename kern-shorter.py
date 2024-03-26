@@ -63,7 +63,7 @@ def create_fragments(args) -> None:
             if options.to_measure > importer.last_measure_number:
                 break
 
-            exported = importer.doExportProcessed(options)
+            exported = importer.doExportEKern(options)
 
             with open(current_ekern_file, 'w') as f:
                 f.write(exported)

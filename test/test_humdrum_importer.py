@@ -42,7 +42,7 @@ class ImporterTestCase(unittest.TestCase):
         export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
         export_options.from_measure = from_measure
         export_options.to_measure = to_measure
-        exported_ekern = importer.doExportProcessed(export_options)
+        exported_ekern = importer.doExportEKern(export_options)
 
         if exported_ekern != expected_content:
             logging.info('---- Expected content ----')
@@ -252,7 +252,7 @@ class ImporterTestCase(unittest.TestCase):
         importer = HumdrumImporter()
         importer.doImportString(input_kern)
         export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
-        output_kern = importer.doExportProcessed(export_options)
+        output_kern = importer.doExportEKern(export_options)
         expected_ekern = "**ekern\n4@c\n4@d\n4@e\n4@f\n*-\n"
         self.assertEquals(expected_ekern, output_kern)
 
