@@ -103,6 +103,7 @@ class Spine:
         if row >= len(self.rows):
             raise Exception(f'Row {row} out of bounds {len(self.rows)}')
 
+    #TODO Joan Cambiar just_encoding por enum: unprocessed, eKern, normalizedKern
     def getRowContent(self, row, just_encoding: bool, token_categories) -> string:
         self.checkRowIndex(row)
 
@@ -118,6 +119,7 @@ class Spine:
                         exp = '.'
                     else:
                         exp = subspine.export()
+                        #TODO Joan: si es kern normalizado llamar al método que convierte ekern en kern
                     if not exp:
                         raise Exception(f'Subspine {subspine.encoding} is exported as None')
                     result += exp
