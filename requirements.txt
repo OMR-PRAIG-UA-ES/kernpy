@@ -1,0 +1,4 @@
+antlr4-python3-runtime
+Pillow
+requests
+urllib3==1.26.6
