@@ -17,7 +17,8 @@ BAD_PATH_ERROR_MESSAGE = f'\tUsing absolute paths is not recommended.\n' \
 
 
 def create_fragments_from_kern(input_kern_file: str, output_directory: str, measure_length: int,
-                               offset: int, log_file: str, verbose: int = 1, num_processes: int = None) -> None:
+                               offset: int, log_file: str, verbose: int = 1, num_processes: int = None,
+                               force_path: bool = False) -> None:
     """
     Create a bunch of little kern files from a single kern file.
 
@@ -28,6 +29,7 @@ def create_fragments_from_kern(input_kern_file: str, output_directory: str, meas
         measure_length:
         offset:
         verbose:
+        force_path:
         num_processes:
 
     Returns:
@@ -37,7 +39,7 @@ def create_fragments_from_kern(input_kern_file: str, output_directory: str, meas
         ...
 
     """
-    if any(keyword in input_kern_file for keyword in ABSOLUTE_PATHS_KEYWORDS):
+    if not force_path and any(keyword in input_kern_file for keyword in ABSOLUTE_PATHS_KEYWORDS):
         raise ValueError(BAD_PATH_ERROR_MESSAGE)
 
     fg = FragmentGenerator(offset=offset, verbose=verbose, num_processes=num_processes, log_file=log_file)
@@ -193,6 +195,9 @@ class FragmentGenerator:
 
     @staticmethod
     def get_output_filename_directory(input_kern_file: str, output_directory: str) -> str:
+        # Remove file extension
+        input_kern_file = os.path.splitext(input_kern_file)[0]
+
         # Separate the file in parts
         tokens_input_kern_file = os.path.normpath(input_kern_file).split(os.sep)
         tokens_output_directory = os.path.normpath(output_directory).split(os.sep)
