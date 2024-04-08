@@ -29,4 +29,4 @@ jobs:
         ./antlr4.sh
     - name: Test with pytest
       run: |
-        cd tests && python -m pytest
+        cd test && python -m pytest
