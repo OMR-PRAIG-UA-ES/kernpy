@@ -2,7 +2,7 @@ import argparse
 import sys
 import os
 
-from kernpy import polish_scores, ekern_to_krn, kern_to_ekern
+from kernpy import polish_scores, ekern_to_krn, kern_to_ekern, create_fragments_from_directory
 
 
 def create_parser() -> argparse.ArgumentParser:
@@ -20,11 +20,8 @@ def create_parser() -> argparse.ArgumentParser:
     """
     parser = argparse.ArgumentParser(description="kernpy")
 
-    # Boolean option
     parser.add_argument('--verbose', default=1, help='Enable verbose mode')
 
-    # Integer option
-    parser.add_argument('--num_iterations', type=int, default=10, help='Number of iterations')
 
     # ekern to kern
     kern_parser = parser.add_argument_group('Kern Parser options')
@@ -52,6 +49,20 @@ def create_parser() -> argparse.ArgumentParser:
         polish_args.add_argument('--input_directory', required=True, type=str, help='Input directory path')
         polish_args.add_argument('--output_directory', required=True, type=str, help='Output directory path')
         polish_args.add_argument('--instrument', required=False, type=str, help='Instrument name')
+
+    # Generate fragments
+    # Create a group for optional arguments
+    generate_fragments = parser.add_argument_group('Generate Fragments options')
+    generate_fragments.add_argument('--generate_fragments', action='store_true', help='Enable Generate Fragments')
+    if '--generate_fragments' in sys.argv:
+        generate_fragments.add_argument('--input_directory', required=True, type=str, help='Input directory path')
+        generate_fragments.add_argument('--output_directory', required=True, type=str, help='Output directory path')
+        generate_fragments.add_argument('--log_file', required=True, type=str, help='Log file path')
+        generate_fragments.add_argument('--check_file_extension', required=False, action='store_true', help='Check file extension', default=True)
+        generate_fragments.add_argument('--offset', required=False, type=int, help='Offset', default=1)
+        generate_fragments.add_argument('--num_processes', required=False, type=int, help='Number of processes')
+        generate_fragments.add_argument('--mean', required=False, type=float, help='Mean')
+        generate_fragments.add_argument('--std_dev', required=False, type=float, help='Standard deviation')
 
     return parser
 
@@ -109,6 +120,7 @@ def handle_ekern2kern(args) -> None:
                         if int(args.verbose) > 0:
                             print(f"An error occurred converting:{filename}:{e}", file=sys.stderr)
 
+
 def handle_kern2ekern(args) -> None:
     """
     Handle the kern2ekern options.
@@ -143,6 +155,23 @@ def handle_kern2ekern(args) -> None:
                         if int(args.verbose) > 0:
                             print(f"An error occurred converting:{filename}:{e}", file=sys.stderr)
 
+
+def handle_generate_fragments(args) -> None:
+    """
+    Handle the generate_fragments options.
+
+    Args:
+        args: The parsed arguments
+
+    Returns:
+        None
+    """
+    create_fragments_from_directory(args.input_directory, args.output_directory, args.log_file,
+                                    check_file_extension=args.check_file_extension, offset=args.offset,
+                                    verbose=args.verbose, num_processes=args.num_processes, mean=args.mean,
+                                    std_dev=args.std_dev)
+
+
 def main():
     parser = create_parser()
     args = parser.parse_args()
@@ -160,6 +189,8 @@ def main():
         handle_ekern2kern(args)
     if args.kern2ekern:
         handle_kern2ekern(args)
+    if args.generate_fragments:
+        handle_generate_fragments(args)
 
 
 if __name__ == "__main__":

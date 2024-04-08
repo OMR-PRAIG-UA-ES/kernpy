@@ -353,6 +353,9 @@ class HumdrumImporter:
         # patch to correct when user uses 0 instead of None to set the first measure as 1
         if options.from_measure == 0:
             options.from_measure = 1
+        # TODO: David: Hay que valorar si lanzar una excepción si from_measure o to_measure no es válido. A veces se genera la partitura entera cuando no debería. Alternativa abajo
+        #if options.from_measure is None or options.from_measure < 1:
+        #    raise Exception(f'option from_measure must be >=1 but {options.from_measure} was found. ')
 
         last_signature = None
         for i in range(max_rows):

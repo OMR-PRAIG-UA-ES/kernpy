@@ -3,6 +3,7 @@ from .import_humdrum import (
     ExportOptions,
     ekern_to_krn,
     kern_to_ekern,
+    KernTypeExporter,
 )
 
 from .tokens import (
