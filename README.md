@@ -11,29 +11,38 @@
     
 ## Installation
 
-Generate antrl4 grammar:
+- Generate antrl4 grammar:
+- For generating the Python code required for parsing the **kern files, the shell script `antlr4.sh` inside the `kernpy` package must be run.
+
 ```shell
 ./antlr4.sh
 ```
 
+Install all the dependencies using the `requirements.txt` file:
+```shell
+pip install -r requirements.txt
+```
 
-It requires the `antlr4` package to be installed using:
+Otherwise, install the required packages manually:
+
+
+- It requires the `antlr4` package to be installed using:
 ```shell
 pip install antlr4-python3-runtime
 ```
 
-For generating the Python code required for parsing the **kern files, the shell script `antlr4.sh` inside the `kernpy` package must be run
 
-For visualizing the bounding boxes, the library, the `Pillow` library is required:
+- For visualizing the bounding boxes, the library, the `Pillow` library is required:
 ```shell
 pip install Pillow
 ```
 
-To parse a IIIF (International Image Interoperability Framework) manifest in Python, we use the `requests` library to fetch the manifest file:
+- To pars- e a IIIF (International Image Interoperability Framework) manifest in Python, we use the `requests` library to fetch the manifest file:
 ```shell
 pip install requests
 ```
-If the retrieving from `https` fails, the following version of `urllib` must be installed:
+
+- If the retrieving from `https` fails, the following version of `urllib` must be installed:
 ```shell
 pip install urllib3==1.26.6
 ```
@@ -50,8 +59,15 @@ Execute the following command to run **kernpy** as a module:
 python -m kernpy --help
 python -m kernpy <command> <options>
 ```
-Mientras este paquete no esté publicado en `pip` hay que tener la carpeta `kernpy` en el directorio raíz.
 
+Run `kernpy` from your script:
+```python
+import kernpy
+
+help(kernpy)
+```
+
+While the package is not published in `pip`, the `kernpy` module must be in the root directory.
 
 ## 🎯 **kern2ekern**: Convertir un solo archivo .krn a .ekern:
 
@@ -63,7 +79,7 @@ The command has the following arguments:
 * **input_path**: Ruta del archivo .krn a convertir.
 * **output_path**: Ruta del archivo .ekern a generar (opcional). Si no se especifica, se generará en la misma ubicación.
 * **-r**: Recursivo (opcional).
-* **-v | --verbose [0-2]**: Nivel de verbosidad (opcional).
+* **--verbose[0-2]**: Nivel de verbosidad (opcional).
 
 
 📌 Basic usage running **kernpy** as a module:
@@ -113,14 +129,14 @@ files = ['file1.krn', 'file2.krn', 'file3.krn']
 ## 🎯 **ekern2kern**: Convertir un solo archivo .ekern a .krn:
 
 ```bash
-python -m kernpy --ekern2kern --input_path <input_file>	 <v | --verbose [0-2]> 
+python -m kernpy --ekern2kern --input_path <input_file>	 <--verbose [0-2]> 
 ```
 
 The command has the following arguments:
 * **input_path**: Ruta del archivo .ekern a convertir.
 * **output_path**: Ruta del archivo .krn a generar (opcional). Si no se especifica, se generará en la misma ubicación.
 * **-r**: Recursivo (opcional).
-* **-v | --verbose [0-2]**: Nivel de verbosidad (opcional).
+* **--verbose[0-2]**: Nivel de verbosidad (opcional).
 
 * Basic usage running **kernpy** as a module:
 ```shell
