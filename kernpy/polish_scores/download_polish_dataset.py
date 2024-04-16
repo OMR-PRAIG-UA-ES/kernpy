@@ -137,7 +137,7 @@ def remove_extension(file_name):
     return base_name
 
 
-def add_log(importer: HumdrumImporter, path, log_filename='/home/joanius/datasets/polish_index.json') -> None:
+def add_log(importer: HumdrumImporter, path, log_filename='/tmp/polish_index.json') -> None:
     def get_instruments(line):
         return [word for word in line.split(' ') if not word.isnumeric()]
 
