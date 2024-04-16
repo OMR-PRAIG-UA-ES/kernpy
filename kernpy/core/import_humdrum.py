@@ -192,11 +192,55 @@ class HumdrumImporter:
         self.last_bounding_box = None
         self.errors = []
 
-    def getMetacomments(self):  # each metacomment is contained in all spines as a reference to the same object
+    def getMetacomments(self, KeyComment: str = None, clean: bool = True):  # each metacomment is contained in all spines as a reference to the same object
+        """
+        Get the metacomments of the file.
+
+        Args:
+            KeyComment: The key of the metacomment. (optional).\
+                If not specified, all the metacomments will be returned.
+                If specified, all the content of the metacomment with the specified key will be returned.
+            clean: If True, the metacomments will be returned applying a .strip(). Only valid if KeyComment is not None.
+
+        Returns:
+            A list with the metacomments.\
+                if KeyComment is not None, a list be returned anyway. \
+                If there are no metacomments with the specified key, an empty list will be returned.
+
+        Example:
+            ```python
+            from kernpy import HumdrumImporter
+            importer = HumdrumImporter()
+
+            # Read the file
+            importer.doImportFile('file.krn')
+
+            # Get all the metacomments
+            all_metacomments = importer.getMetacomments()
+            # ... modify the metacomments using your own logic
+
+            # Get the metacomments with the key: get the composer:
+            composer = importer.getMetacomments(KeyComment='!!!COM')
+
+            # check if your kern file format is compatible with the expected format. If it is not, do not clen it:
+            raw_compose = importer.getMetacomments(KeyComment='!!!COM', clean=False)
+            ```
+
+        """
         result = []
         for token in self.spines[0].rows:
             if isinstance(token[0], MetacommentToken):
-                result.append(token[0].encoding)
+                if clean:
+                    result.append(token[0].encoding.strip())
+                else:
+                    result.append(token[0].encoding)
+
+        if KeyComment is not None:
+            clean_rows = [row.replace('!!!', '').replace('!!', '') for row in result]
+            filtered_rows = [row for row in clean_rows if row.startswith(KeyComment)]
+            valid_rows = [row.replace(KeyComment, '').strip()[2:] for row in filtered_rows] if clean else filtered_rows
+            return valid_rows
+
         return result
 
     def doImport(self, reader):

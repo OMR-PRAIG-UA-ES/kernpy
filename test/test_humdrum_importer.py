@@ -280,7 +280,32 @@ class ImporterTestCase(unittest.TestCase):
         importer.doImportString(input_kern)
         self.assertFalse(importer.hasErrors())
 
-#def test():
+    def test_metadatacomments_generic(self):
+        input_kern_file = 'resource_dir/legacy/chor001.krn'
+        output_metadata_array_expected = []
+        with open('resource_dir/legacy/chor001-metadata-generic.txt', 'r') as f:
+            for line in f:
+                output_metadata_array_expected.append(line.strip())
+
+        importer = HumdrumImporter()
+        importer.doImportFile(input_kern_file)
+
+        self.assertListEqual(output_metadata_array_expected, importer.getMetacomments())
+
+    def test_metadatacomments_specific_option(self):
+        input_kern_file = 'resource_dir/legacy/chor001.krn'
+        output_metadata_array_expected = []
+        with open('resource_dir/legacy/chor001-metadata-COM.txt', 'r') as f:
+            for line in f:
+                output_metadata_array_expected.append(line.strip())
+
+        importer = HumdrumImporter()
+        importer.doImportFile(input_kern_file)
+
+        self.assertListEqual(output_metadata_array_expected, importer.getMetacomments(KeyComment='COM'))
+
+
+#def test():input_kern_file
 #    unittest.main()
 
 
