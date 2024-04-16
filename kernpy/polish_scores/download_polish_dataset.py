@@ -2,10 +2,10 @@ import requests
 from PIL import Image
 from io import BytesIO
 import os
+import json
 
 from kernpy import HumdrumImporter, ExportOptions, BEKERN_CATEGORIES
 import argparse
-
 
 # This script creates the Polish dataset from the kern files.
 # It downloads both the systems and full pages
@@ -74,7 +74,7 @@ def download_and_save_page_images(importer, _output_path, map_page_label_iiif_id
 
     for page_label, bounding_box_measure in page_bounding_boxes.items():
         page_iiif_id = map_page_label_iiif_ids.get(page_label)
-        if page_iiif_id is None and page_label.startswith('#'): # sometimes it's wrongly tagged without the #
+        if page_iiif_id is None and page_label.startswith('#'):  # sometimes it's wrongly tagged without the #
             page_iiif_id = map_page_label_iiif_ids.get(page_label[1:])
 
         if page_iiif_id is not None:
@@ -85,7 +85,9 @@ def download_and_save_page_images(importer, _output_path, map_page_label_iiif_id
             image_path = os.path.join(_output_path, page_label + ".jpg")
             download_and_save_image(url, image_path)
             krn_path = os.path.join(_output_path, page_label + ".ekrn")
-            extract_and_save_measures(importer, bounding_box_measure.from_measure, bounding_box_measure.to_measure-1, krn_path)
+            extract_and_save_measures(importer, bounding_box_measure.from_measure, bounding_box_measure.to_measure - 1,
+                                      krn_path)
+            add_log(importer, krn_path)
         else:
             raise Exception(f'Cannot find IIIF id for page with label "{page_label}"')
 
@@ -135,6 +137,29 @@ def remove_extension(file_name):
     return base_name
 
 
+def add_log(importer: HumdrumImporter, path, log_filename='/home/joanius/datasets/polish_index.json') -> None:
+    def get_instruments(line):
+        return [word for word in line.split(' ') if not word.isnumeric()]
+
+    info = {
+        'path': path,
+        'publication_date': importer.getMetacomments('PDT')[0],
+        'iiif': importer.getMetacomments('IIIF')[0],
+        'n_measures': importer.last_bounding_box,
+        'composer': importer.getMetacomments('COM')[0],
+        'compose_dates': importer.getMetacomments('CDT')[0],
+        'tempo': importer.getMetacomments('OTL')[0],
+        'piece_title': importer.getMetacomments('OPR')[0],
+        'segment': importer.getMetacomments('SEGMENT')[0],
+        'n_voices': len(get_instruments(importer.getMetacomments('AIN')[0])),
+        'instruments': get_instruments(importer.getMetacomments('AIN')[0]),
+        'unique_instruments': set(get_instruments(importer.getMetacomments('AIN')[0])),
+    }
+
+    with open(log_filename, 'a') as f:
+        json.dump(info, f)
+
+
 def main(input_directory, output_directory) -> None:
     """
     Process the files in the input_directory and save the results in the output_directory.
@@ -171,7 +196,6 @@ def main(input_directory, output_directory) -> None:
     print(f'----> OK files #{len(ok_files)}')
     print(f'----> KO files #{len(ko_files)}')
     print(ko_files)
-
 
 
 if __name__ == "__main__":
@@ -211,4 +235,3 @@ if __name__ == "__main__":
     print(f'----> OK files #{len(ok_files)}')
     print(f'----> KO files #{len(ko_files)}')
     print(ko_files)
-
