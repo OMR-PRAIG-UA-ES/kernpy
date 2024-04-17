@@ -109,6 +109,8 @@ def render_image(args) -> None:
 
         add_log(input_file, True)
     except Exception as e:
+        # remove kern
+        os.remove(input_file)
         add_log(f'{input_file}->{e}', False)
     finally:
         # Restore stdout and stderr
