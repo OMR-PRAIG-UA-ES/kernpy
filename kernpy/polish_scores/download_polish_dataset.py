@@ -140,7 +140,12 @@ def remove_extension(file_name):
 def add_log(importer: HumdrumImporter, path, log_filename='/tmp/polish_index.json') -> None:
     try:
         def get_instruments(line):
-            return [word for word in line.split(' ') if not word.isnumeric()]
+            words = line.split(' ')
+            instruments = []
+            for i in range(len(words)):
+                if words[i].isnumeric():
+                    instruments.extend([words[i + 1]] * int(words[i]))
+            return instruments
 
         def get_publish_date(line):
             if line is None:
@@ -149,9 +154,22 @@ def add_log(importer: HumdrumImporter, path, log_filename='/tmp/polish_index.jso
             clean_line = [char for char in line if char.isnumeric()]
             return int(''.join(clean_line))
 
+        def round_publication_year(original_composer_date):
+            if original_composer_date is None:
+                return 0
+            start_date, end_date = original_composer_date.split('-')
+
+            start_year = int(start_date.split('/')[0])
+            end_year = int(end_date.split('/')[0])
+
+            RATIO = 0.7 # date where the composer was most active
+            return int(start_year + (end_year - start_year) * RATIO)
+
+
         info = {
             'path': path,
-            'publication_date': get_publish_date(importer.getMetacomments('PUB')[0]) if importer.getMetacomments('PUB') else None,
+            'publication_date': get_publish_date(importer.getMetacomments('PDT')[0]) if importer.getMetacomments('PDT') else None,
+            'original_publication_date_tag': True,
             'iiif': importer.getMetacomments('IIIF')[0] if importer.getMetacomments('IIIF') else None,
             'n_measures': importer.last_measure_number,
             'composer': importer.getMetacomments('COM')[0] if importer.getMetacomments('COM') else None,
@@ -163,6 +181,10 @@ def add_log(importer: HumdrumImporter, path, log_filename='/tmp/polish_index.jso
             'instruments': get_instruments(importer.getMetacomments('AIN')[0]) if importer.getMetacomments('AIN') else [],
             'unique_instruments': [*set(get_instruments(importer.getMetacomments('AIN')[0]))] if importer.getMetacomments('AIN') else [],
         }
+
+        if info['publication_date'] == 0:
+            info['publication_date'] = round_publication_year(info['composer_dates'])
+            info['original_publication_date_tag'] = False
 
         with open(log_filename, 'a') as f:
             json.dump(info, f)
