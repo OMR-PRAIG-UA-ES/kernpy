@@ -87,7 +87,7 @@ def download_and_save_page_images(importer, _output_path, map_page_label_iiif_id
             krn_path = os.path.join(_output_path, page_label + ".ekrn")
             extract_and_save_measures(importer, bounding_box_measure.from_measure, bounding_box_measure.to_measure - 1,
                                       krn_path)
-            add_log(importer, krn_path)
+            #add_log(importer, krn_path)
         else:
             raise Exception(f'Cannot find IIIF id for page with label "{page_label}"')
 
@@ -143,17 +143,17 @@ def add_log(importer: HumdrumImporter, path, log_filename='/tmp/polish_index.jso
 
     info = {
         'path': path,
-        'publication_date': importer.getMetacomments('PDT')[0],
-        'iiif': importer.getMetacomments('IIIF')[0],
+        'publication_date': importer.getMetacomments('PDT')[0] if importer.getMetacomments('PDT') else None,
+        'iiif': importer.getMetacomments('IIIF')[0] if importer.getMetacomments('IIIF') else None,
         'n_measures': importer.last_bounding_box,
-        'composer': importer.getMetacomments('COM')[0],
-        'compose_dates': importer.getMetacomments('CDT')[0],
-        'tempo': importer.getMetacomments('OTL')[0],
-        'piece_title': importer.getMetacomments('OPR')[0],
-        'segment': importer.getMetacomments('SEGMENT')[0],
-        'n_voices': len(get_instruments(importer.getMetacomments('AIN')[0])),
-        'instruments': get_instruments(importer.getMetacomments('AIN')[0]),
-        'unique_instruments': set(get_instruments(importer.getMetacomments('AIN')[0])),
+        'composer': importer.getMetacomments('COM')[0] if importer.getMetacomments('COM') else None,
+        'compose_dates': importer.getMetacomments('CDT')[0] if importer.getMetacomments('CDT') else None,
+        'tempo': importer.getMetacomments('OTL')[0] if importer.getMetacomments('OTL') else None,
+        'piece_title': importer.getMetacomments('OPR')[0] if importer.getMetacomments('OPR') else None,
+        'segment': importer.getMetacomments('SEGMENT')[0] if importer.getMetacomments('SEGMENT') else None,
+        'n_voices': len(get_instruments(importer.getMetacomments('AIN')[0])) if importer.getMetacomments('AIN') else 0,
+        'instruments': get_instruments(importer.getMetacomments('AIN')[0]) if importer.getMetacomments('AIN') else [],
+        'unique_instruments': set(get_instruments(importer.getMetacomments('AIN')[0])) if importer.getMetacomments('AIN') else set(),
     }
 
     with open(log_filename, 'a') as f:
