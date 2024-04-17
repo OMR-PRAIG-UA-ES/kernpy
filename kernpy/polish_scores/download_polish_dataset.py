@@ -141,11 +141,18 @@ def add_log(importer: HumdrumImporter, path, log_filename='/tmp/polish_index.jso
     def get_instruments(line):
         return [word for word in line.split(' ') if not word.isnumeric()]
 
+    def get_publish_date(line):
+        if line is None:
+            return 0
+
+        clean_line = [char for char in line if char.isnumeric()]
+        return int(''.join(clean_line))
+
     info = {
         'path': path,
-        'publication_date': importer.getMetacomments('PDT')[0] if importer.getMetacomments('PDT') else None,
+        'publication_date': get_publish_date(importer.getMetacomments('PUB')[0]) if importer.getMetacomments('PUB') else None,
         'iiif': importer.getMetacomments('IIIF')[0] if importer.getMetacomments('IIIF') else None,
-        'n_measures': importer.last_bounding_box,
+        'n_measures': importer.last_measure_number,
         'composer': importer.getMetacomments('COM')[0] if importer.getMetacomments('COM') else None,
         'compose_dates': importer.getMetacomments('CDT')[0] if importer.getMetacomments('CDT') else None,
         'tempo': importer.getMetacomments('OTL')[0] if importer.getMetacomments('OTL') else None,
@@ -153,7 +160,7 @@ def add_log(importer: HumdrumImporter, path, log_filename='/tmp/polish_index.jso
         'segment': importer.getMetacomments('SEGMENT')[0] if importer.getMetacomments('SEGMENT') else None,
         'n_voices': len(get_instruments(importer.getMetacomments('AIN')[0])) if importer.getMetacomments('AIN') else 0,
         'instruments': get_instruments(importer.getMetacomments('AIN')[0]) if importer.getMetacomments('AIN') else [],
-        'unique_instruments': set(get_instruments(importer.getMetacomments('AIN')[0])) if importer.getMetacomments('AIN') else set(),
+        'unique_instruments': [*set(get_instruments(importer.getMetacomments('AIN')[0]))] if importer.getMetacomments('AIN') else [],
     }
 
     with open(log_filename, 'a') as f:
