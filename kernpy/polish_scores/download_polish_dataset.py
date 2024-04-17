@@ -87,7 +87,7 @@ def download_and_save_page_images(importer, _output_path, map_page_label_iiif_id
             krn_path = os.path.join(_output_path, page_label + ".ekrn")
             extract_and_save_measures(importer, bounding_box_measure.from_measure, bounding_box_measure.to_measure - 1,
                                       krn_path)
-            #add_log(importer, krn_path)
+            add_log(importer, krn_path)
         else:
             raise Exception(f'Cannot find IIIF id for page with label "{page_label}"')
 
