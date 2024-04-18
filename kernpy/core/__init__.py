@@ -1,3 +1,11 @@
+"""
+kernpy.core
+
+=====
+
+This module contains the core functionality of the `kernpy` package.
+"""
+
 from .import_humdrum import (
     HumdrumImporter,
     ExportOptions,
@@ -51,6 +59,25 @@ from .generic import (
 )
 
 # TODO: Explore using __all__
+__all__ = [
+    'HumdrumImporter',
+    'ExportOptions',
+    'ekern_to_krn',
+    'kern_to_ekern',
+    'KernTypeExporter',
+    'TokenCategory',
+    'BEKERN_CATEGORIES',
+    'DynSpineImporter',
+    'DynamSpineImporter',
+    'FingSpineImporter',
+    'HarmSpineImporter',
+    'KernSpineImporter',
+    'MensSpineImporter',
+    'RootSpineImporter',
+    'TextSpineImporter',
+    'read_kern',
+    'Score',
+]
 
 
 

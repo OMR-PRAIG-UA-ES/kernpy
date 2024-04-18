@@ -1,3 +1,13 @@
+"""
+This module contains the main function for the kernpy package.
+
+Use the following command to run `kernpy` as a module:
+```bash
+python -m kernpy
+```
+
+"""
+
 import argparse
 import sys
 import os
@@ -195,3 +205,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

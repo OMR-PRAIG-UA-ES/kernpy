@@ -1,6 +1,5 @@
 # Who are we?
 
-University of Alicante research group. 
+We are a research group affiliated with the University of Alicante. 
 
-Find out more about us on our [website](https://praig.ua.es/).
-
+To learn more about our work, please visit our [website](https://praig.ua.es/).

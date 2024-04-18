@@ -1,11 +1,14 @@
-This part of the project documentation focuses on
-an **information-oriented** approach. Use it as a
-reference for the technical implementation of the
-`kernpy` project code.
+# API Reference
 
-...
-Soon!
+## Modules
 
-::: kernpy.core.import_humdrum
+::: kernpy
 
-::: kernpy.core.generic
+::: kernpy.core
+
+::: kernpy.util
+
+::: kernpy.polish_scores
+
+
+
