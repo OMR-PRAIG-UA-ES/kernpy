@@ -17,6 +17,7 @@ from kernpy import (
     MensSpineImporter,
     RootSpineImporter,
     TextSpineImporter,
+    TokenCategory,
 )
 
 
@@ -302,7 +303,34 @@ class ImporterTestCase(unittest.TestCase):
         importer = HumdrumImporter()
         importer.doImportFile(input_kern_file)
 
-        self.assertListEqual(output_metadata_array_expected, importer.getMetacomments(KeyComment='COM'))
+        self.assertListEqual(output_metadata_array_expected, importer.getMetacomments(KeyComment='COM'))  # composer
+
+    def test_has_token(self):
+        input_kern_file = 'resource_dir/legacy/chor001.krn'
+        importer = HumdrumImporter()
+        importer.doImportFile(input_kern_file)
+
+        self.assertTrue(importer.hasToken('**kern'))
+        self.assertTrue(importer.hasToken('*clefF4'))
+        self.assertTrue(importer.hasToken('4e'))
+        self.assertTrue(importer.hasToken('8BB'))
+        self.assertTrue(importer.hasToken('*-'))
+        self.assertTrue(importer.hasToken('=3'))
+        self.assertTrue(importer.hasToken('='))
+        self.assertTrue(importer.hasToken('=='))
+        self.assertTrue(importer.hasToken('.'))
+        self.assertTrue(importer.hasToken('!tenor'))
+        self.assertTrue(importer.hasToken('*M3/4'))
+        self.assertTrue(importer.hasToken('*MM60'))
+        self.assertTrue(importer.hasToken('*Iorgan'))
+
+    def test_has_token_category(self):
+        input_kern_file = 'resource_dir/legacy/chor001.krn'
+        importer = HumdrumImporter()
+        importer.doImportFile(input_kern_file)
+
+        #self.assertTrue(importer.hasCategory(TokenCategory.LINE_COMMENTS))
+        #self.assertTrue(importer.hasCategory(TokenCategory.INSTRUMENTS))
 
 
 #def test():input_kern_file

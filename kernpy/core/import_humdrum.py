@@ -522,6 +522,64 @@ class HumdrumImporter:
         return len(self.errors) > 0
 
 
+    def hasToken(self, token_goal: str):
+        """
+        Check if the importer has a specific token.
+
+        Args:
+            token_goal: The token to check.
+
+        Returns:
+            True if the importer has the token, False otherwise.
+
+        Example:
+        ```python
+        # Create the importer
+        hi = HumdrumImporter()
+
+        # Read the file
+        hi.doImportFile('file.krn')
+
+        # Check if the importer has a specific token
+        has_f_4_clef = hi.has('*clefF4')
+        ```
+        """
+        for spine in self.spines:
+            for row in spine.rows:
+                if any(token.encoding == token_goal for token in row):
+                    return True
+
+        return False
+
+    def hasCategory(self, token_category_goal: TokenCategory):
+        """
+        Check if the importer has a specific token.
+
+        Args:
+            token_category_goal: The token category to check.
+        Returns:
+            True if the importer has the token category, False otherwise.
+
+        Example:
+        ```python
+        # Create the importer
+        hi = HumdrumImporter()
+
+        # Read the file
+        hi.doImportFile('file.krn')
+
+        # Check if the importer has a specific token
+        has_barlines = hi.has(TokenCategory.BARLINES)
+        ```
+        """
+        #for spine in self.spines:
+        #    for row in spine.rows:
+        #        if any(isinstance(token_category_goal, token) for token in row):
+        #            return True
+        #
+        #return False
+        pass
+
 def get_kern_from_ekern(ekern_content: string) -> string:
     """
     Read the content of a **ekern file and return the **kern content.

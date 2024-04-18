@@ -4,6 +4,7 @@ from .import_humdrum import (
     ekern_to_krn,
     kern_to_ekern,
     KernTypeExporter,
+    TokenCategory
 )
 
 from .tokens import (
