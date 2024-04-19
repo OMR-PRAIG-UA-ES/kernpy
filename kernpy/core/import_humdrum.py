@@ -1,6 +1,7 @@
 import csv
 import string
 import logging
+from collections.abc import Iterable
 from enum import Enum
 
 from .importer_factory import createImporter
@@ -579,13 +580,16 @@ class HumdrumImporter:
                         return True
         return False
 
-    def get_all_tokens(self, apply_strip: bool = True, remove_measure_numbers: bool = False) -> list:
+    def get_all_tokens(self, apply_strip: bool = True, remove_measure_numbers: bool = False, filter_by_categories: Iterable = None) -> list:
         """
         Get all the tokens in the importer.
 
         Args:
             apply_strip: If True, the tokens will be stripped. False otherwise. Default is True.
             remove_measure_numbers: If True, the measure numbers will be removed. False otherwise. Default is False.
+            filter_by_categories: An Iterable (like a list) with the categories to filter the tokens. Default is None.\
+                Only the tokens with the categories in the list will be returned.
+
 
         Returns:
             A list with all the tokens in the importer.
@@ -600,6 +604,13 @@ class HumdrumImporter:
 
         # Get all the tokens
         all_tokens = hi.get_all_tokens()
+
+        # Get all the tokens without measure numbers
+        all_tokens = hi.get_all_tokens(remove_measure_numbers=True)
+
+        # Get all the tokens without measure numbers and filtered by categories
+        all_tokens = hi.get_all_tokens(remove_measure_numbers=True, filter_by_categories=[TokenCategory.BARLINES, TokenCategory.KEYSIGNATURE, TokenCategory.CORE])
+
         ```
         """
         MEASURE_START = '='
@@ -608,6 +619,9 @@ class HumdrumImporter:
         for spine in self.spines:
             for row in spine.rows:
                 for token in row:
+                    if filter_by_categories is not None and token.category not in filter_by_categories:
+                        continue
+
                     if remove_measure_numbers and token.encoding.startswith(MEASURE_START):
                         token.encoding = token.encoding.lstrip(DIGITS_TO_REMOVE)
 
@@ -618,13 +632,15 @@ class HumdrumImporter:
 
         return result
 
-    def get_unique_tokens(self, apply_strip: bool = True, remove_measure_numbers: bool = False) -> list:
+    def get_unique_tokens(self, apply_strip: bool = True, remove_measure_numbers: bool = False, filter_by_categories: Iterable = None) -> list:
         """
         Get the unique tokens in the importer.
 
         Args:
             apply_strip: If True, the tokens will be stripped. False otherwise. Default is True.
             remove_measure_numbers: If True, the measure numbers will be removed. False otherwise. Default is False.
+            filter_by_categories: An Iterable (like a list) with the categories to filter the tokens. Default is None.\
+                Only the tokens with the categories in the list will be returned.
 
         Returns:
             A list with the unique tokens in the importer.
@@ -639,9 +655,15 @@ class HumdrumImporter:
 
         # Get the unique tokens
         unique_tokens = hi.get_unique_tokens()
+
+        # Get the unique tokens without measure numbers
+        unique_tokens = hi.get_unique_tokens(remove_measure_numbers=True)
+
+        # Get the unique tokens without measure numbers and filtered by categories
+        unique_tokens = hi.get_unique_tokens(remove_measure_numbers=True, filter_by_categories=[TokenCategory.BARLINES, TokenCategory.KEYSIGNATURE, TokenCategory.CORE])
         ```
         """
-        all_tokens = self.get_all_tokens(apply_strip=apply_strip, remove_measure_numbers=remove_measure_numbers)
+        all_tokens = self.get_all_tokens(apply_strip=apply_strip, remove_measure_numbers=remove_measure_numbers, filter_by_categories=filter_by_categories)
         return list(set(all_tokens))
 
 

@@ -372,7 +372,7 @@ class ImporterTestCase(unittest.TestCase):
         self.assertEqual(len(expected_tokens), len(tokens))
         self.assertListEqual(expected_tokens, tokens)
 
-    def test_get_unique_tokens_removing_measure_numbers(self):
+    def test_get_unique_tokens_when_removing_measure_numbers(self):
         # Arrange
         input_kern_file = 'resource_dir/legacy/chor001.krn'
         importer = HumdrumImporter()
@@ -389,6 +389,22 @@ class ImporterTestCase(unittest.TestCase):
         self.assertEqual(len(expected_tokens), len(tokens))
         self.assertListEqual(expected_tokens, tokens)
 
+    def test_get_unique_tokens_when_filter_by_categories(self):
+        # Arrange
+        input_kern_file = 'resource_dir/legacy/chor001.krn'
+        importer = HumdrumImporter()
+        importer.doImportFile(input_kern_file)
+        with open('resource_dir/legacy/chor001-unique_tokens_with_category.txt', 'r') as f:
+            expected_tokens = f.read().splitlines()
+
+        # Act
+        tokens = importer.get_unique_tokens(filter_by_categories=[TokenCategory.CORE, TokenCategory.SIGNATURES])
+        tokens.sort()
+        expected_tokens.sort()
+
+        # Assert
+        self.assertEqual(len(expected_tokens), len(tokens))
+        self.assertListEqual(expected_tokens, tokens)
 
 if __name__ == '__main__':
     unittest.main()
