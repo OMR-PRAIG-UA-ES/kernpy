@@ -338,8 +338,11 @@ class ImporterTestCase(unittest.TestCase):
         input_kern_file = 'resource_dir/legacy/chor001.krn'
         importer = HumdrumImporter()
         importer.doImportFile(input_kern_file)
+        expected_tokens = []
         with open('resource_dir/legacy/chor001-all_tokens.txt', 'r') as f:
-            expected_tokens = f.read().splitlines()
+            for line in f:
+                expected_tokens.append(line.strip())
+
 
 
         # Act

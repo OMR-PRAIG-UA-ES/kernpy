@@ -612,7 +612,10 @@ class HumdrumImporter:
                     if remove_measure_numbers and token.encoding.startswith(MEASURE_START):
                         token.encoding = token.encoding.lstrip(DIGITS_TO_REMOVE)
 
-                    result.append(token.encoding.strip() if apply_strip else token.encoding)
+                    if apply_strip:
+                        token.encoding = token.encoding.strip()
+
+                    result.append(token.encoding)
 
         return result
 
