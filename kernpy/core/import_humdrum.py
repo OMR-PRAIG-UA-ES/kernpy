@@ -580,12 +580,13 @@ class HumdrumImporter:
         #return False
         raise NotImplementedError
 
-    def get_all_tokens(self, apply_strip: bool = True) -> list:
+    def get_all_tokens(self, apply_strip: bool = True, remove_measure_numbers: bool = False) -> list:
         """
         Get all the tokens in the importer.
 
         Args:
             apply_strip: If True, the tokens will be stripped. False otherwise. Default is True.
+            remove_measure_numbers: If True, the measure numbers will be removed. False otherwise. Default is False.
 
         Returns:
             A list with all the tokens in the importer.
@@ -602,20 +603,26 @@ class HumdrumImporter:
         all_tokens = hi.get_all_tokens()
         ```
         """
+        MEASURE_START = '='
+        DIGITS_TO_REMOVE = string.digits
         result = []
         for spine in self.spines:
             for row in spine.rows:
                 for token in row:
-                    if apply_strip:
-                        result.append(token.encoding.strip())
-                    else:
-                        result.append(token.encoding)
+                    if remove_measure_numbers and token.encoding.startswith(MEASURE_START):
+                        token.encoding = token.encoding.lstrip(DIGITS_TO_REMOVE)
+
+                    result.append(token.encoding.strip() if apply_strip else token.encoding)
 
         return result
 
-    def get_unique_tokens(self) -> list:
+    def get_unique_tokens(self, apply_strip: bool = True, remove_measure_numbers: bool = False) -> list:
         """
         Get the unique tokens in the importer.
+
+        Args:
+            apply_strip: If True, the tokens will be stripped. False otherwise. Default is True.
+            remove_measure_numbers: If True, the measure numbers will be removed. False otherwise. Default is False.
 
         Returns:
             A list with the unique tokens in the importer.
@@ -632,7 +639,7 @@ class HumdrumImporter:
         unique_tokens = hi.get_unique_tokens()
         ```
         """
-        all_tokens = self.get_all_tokens()
+        all_tokens = self.get_all_tokens(apply_strip=apply_strip, remove_measure_numbers=remove_measure_numbers)
         return list(set(all_tokens))
 
 

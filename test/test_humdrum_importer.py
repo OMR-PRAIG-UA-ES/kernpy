@@ -368,6 +368,23 @@ class ImporterTestCase(unittest.TestCase):
         self.assertEqual(len(expected_tokens), len(tokens))
         self.assertListEqual(expected_tokens, tokens)
 
+    def test_get_unique_tokens_removing_measure_numbers(self):
+        # Arrange
+        input_kern_file = 'resource_dir/legacy/chor001.krn'
+        importer = HumdrumImporter()
+        importer.doImportFile(input_kern_file)
+        with open('resource_dir/legacy/chor001-unique_tokens_without_measure_numbers.txt', 'r') as f:
+            expected_tokens = f.read().splitlines()
+
+        # Act
+        tokens = importer.get_unique_tokens(remove_measure_numbers=True)
+        tokens.sort()
+        expected_tokens.sort()
+
+        # Assert
+        self.assertEqual(len(expected_tokens), len(tokens))
+        self.assertListEqual(expected_tokens, tokens)
+
 
 #def test():input_kern_file
 #    unittest.main()

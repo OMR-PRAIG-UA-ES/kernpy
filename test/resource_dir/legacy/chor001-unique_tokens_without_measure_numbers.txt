@@ -1,0 +1,163 @@
+4.g
+=21
+2e
+2DD;
+2g
+4GG
+!!!COM: Bach, Johann Sebastian
+=11
+4F#
+=:|!
+I;
+!!!license: GNU General Public License (http://www.gnu.org/copyleft/gpl.html)
+**kern
+4a
+2B;
+2.b
+!!!ONB: Harmony and Root analysis done manually by Craig Sapp
+*Iorgan
+8GG
+8E
+4G
+8e
+2b
+2g;
+Ib
+!!!SCT: BH 001
+*>B
+=10
+V;
+=19
+2dd
+=3
+2DD
+4B
+vi
+[4f#
+4.b
+8DD
+4c
+4E]
+=4
+2CC;
+2.d
+viiob
+4E
+8g
+2C;
+4EE
+=7
+4d
+4cc
+[4g
+4CC
+=18
+8D
+==
+=14
+=16
+8BB
+4dd
+IV;
+*-
+!!!SCT: BWV 269
+8A
+**harm
+V7c
+=9
+!tenor
+!!!OTL@@DE: Aus meines Herzens Grunde
+2c;
+8g]
+2d;
+I
+ii
+=8
+4FF#
+IVb
+*
+*M3/4
+8f#
+8d
+2f#;
+!sprno
+!!linebreak: 2
+!!!PDT: 1850, 1865
+=2
+=13
+!!!OTL@EN:  From the depths of my heart
+*>[A,A,B]
+4.a
+V7/IV
+iiib[Ic]
+=5
+*clefG2
+=20
+4.BB
+=1
+=12
+!!!CDT: 1685/3//-1750/7/28/
+4.dd
+2GG
+2a
+4e
+*>A
+!!!SMA: 371 Bach Chorales, edited by Ludwig Erk, C.F. Peters
+8c
+4D
+4AA
+=
+*clefF4
+!!chor2scor: -l 2 -s 0.6 -o %b.pmx
+4A
+**root
+*MM60
+!! Beat 2 of measure 1 chord could also be IVb (with root on C)
+V
+8f#]
+4BB
+!!!AGN: 4-Part Chorale
+IVb[vi]
+4f#
+=6
+!!!YEC: Copyright 2001 by Craig Stuart Sapp
+vi7b
+*G:
+iib
+IV
+!!!ONB2: in sacred use in Neu Catechismus-Gesangbchlein, Hamburg, 1598.
+2d
+8a
+8CC
+!alto
+[4E
+4b
+Vb
+2a;
+ii7b
+8AA
+8C
+viio7d
+8B
+4C
+4fn
+4G]
+*k[f#]
+!!!ONB1: Text by Georg Niege; 16th Century secular melody, first appears
+!bass
+!
+IV7d
+V7
+2D;
+8FF#
+4g
+4.GG
+8E]
+2e;
+=15
+[4G
+.
+8cc
+4DD
+2GG;
+=17
