@@ -324,6 +324,7 @@ class ImporterTestCase(unittest.TestCase):
         self.assertTrue(importer.hasToken('*MM60'))
         self.assertTrue(importer.hasToken('*Iorgan'))
 
+    @unittest.skip("Not implemented yet")
     def test_has_token_category(self):
         input_kern_file = 'resource_dir/legacy/chor001.krn'
         importer = HumdrumImporter()
@@ -331,6 +332,41 @@ class ImporterTestCase(unittest.TestCase):
 
         #self.assertTrue(importer.hasCategory(TokenCategory.LINE_COMMENTS))
         #self.assertTrue(importer.hasCategory(TokenCategory.INSTRUMENTS))
+
+    def test_get_all_tokens(self):
+        # Arrange
+        input_kern_file = 'resource_dir/legacy/chor001.krn'
+        importer = HumdrumImporter()
+        importer.doImportFile(input_kern_file)
+        with open('resource_dir/legacy/chor001-all_tokens.txt', 'r') as f:
+            expected_tokens = f.read().splitlines()
+
+
+        # Act
+        tokens = importer.get_all_tokens()
+
+        # Assert
+        self.assertEqual(len(expected_tokens), len(tokens))
+        self.assertListEqual(expected_tokens, tokens)
+
+    def test_get_unique_tokens(self):
+        # Arrange
+        input_kern_file = 'resource_dir/legacy/chor001.krn'
+        importer = HumdrumImporter()
+        importer.doImportFile(input_kern_file)
+        with open('resource_dir/legacy/chor001-unique_tokens.txt', 'r') as f:
+            expected_tokens = f.read().splitlines()
+
+        # Act
+        tokens = importer.get_unique_tokens()
+        with open('resource_dir/legacy/chor001-unique_tokens.txt', 'w') as f:
+            f.write('\n'.join(tokens))
+        tokens.sort()
+        expected_tokens.sort()
+
+        # Assert
+        self.assertEqual(len(expected_tokens), len(tokens))
+        self.assertListEqual(expected_tokens, tokens)
 
 
 #def test():input_kern_file

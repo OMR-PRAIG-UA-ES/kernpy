@@ -578,7 +578,63 @@ class HumdrumImporter:
         #            return True
         #
         #return False
-        pass
+        raise NotImplementedError
+
+    def get_all_tokens(self, apply_strip: bool = True) -> list:
+        """
+        Get all the tokens in the importer.
+
+        Args:
+            apply_strip: If True, the tokens will be stripped. False otherwise. Default is True.
+
+        Returns:
+            A list with all the tokens in the importer.
+
+        Example:
+        ```python
+        # Create the importer
+        hi = HumdrumImporter()
+
+        # Read the file
+        hi.doImportFile('file.krn')
+
+        # Get all the tokens
+        all_tokens = hi.get_all_tokens()
+        ```
+        """
+        result = []
+        for spine in self.spines:
+            for row in spine.rows:
+                for token in row:
+                    if apply_strip:
+                        result.append(token.encoding.strip())
+                    else:
+                        result.append(token.encoding)
+
+        return result
+
+    def get_unique_tokens(self) -> list:
+        """
+        Get the unique tokens in the importer.
+
+        Returns:
+            A list with the unique tokens in the importer.
+
+        Example:
+        ```python
+        # Create the importer
+        hi = HumdrumImporter()
+
+        # Read the file
+        hi.doImportFile('file.krn')
+
+        # Get the unique tokens
+        unique_tokens = hi.get_unique_tokens()
+        ```
+        """
+        all_tokens = self.get_all_tokens()
+        return list(set(all_tokens))
+
 
 def get_kern_from_ekern(ekern_content: string) -> string:
     """
