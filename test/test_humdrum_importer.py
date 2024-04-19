@@ -324,14 +324,19 @@ class ImporterTestCase(unittest.TestCase):
         self.assertTrue(importer.hasToken('*MM60'))
         self.assertTrue(importer.hasToken('*Iorgan'))
 
-    @unittest.skip("Not implemented yet")
     def test_has_token_category(self):
         input_kern_file = 'resource_dir/legacy/chor001.krn'
         importer = HumdrumImporter()
         importer.doImportFile(input_kern_file)
 
-        #self.assertTrue(importer.hasCategory(TokenCategory.LINE_COMMENTS))
-        #self.assertTrue(importer.hasCategory(TokenCategory.INSTRUMENTS))
+        self.assertTrue(importer.hasCategory(TokenCategory.LINE_COMMENTS))
+        self.assertTrue(importer.hasCategory(TokenCategory.CORE))
+        self.assertTrue(importer.hasCategory(TokenCategory.EMPTY))
+        self.assertTrue(importer.hasCategory(TokenCategory.OTHER))
+        self.assertTrue(importer.hasCategory(TokenCategory.OTHER_CONTEXTUAL))
+        self.assertTrue(importer.hasCategory(TokenCategory.BARLINES))
+        self.assertTrue(importer.hasCategory(TokenCategory.SIGNATURES))
+        self.assertTrue(importer.hasCategory(TokenCategory.STRUCTURAL))
 
     def test_get_all_tokens(self):
         # Arrange
@@ -342,8 +347,6 @@ class ImporterTestCase(unittest.TestCase):
         with open('resource_dir/legacy/chor001-all_tokens.txt', 'r') as f:
             for line in f:
                 expected_tokens.append(line.strip())
-
-
 
         # Act
         tokens = importer.get_all_tokens()
@@ -362,8 +365,6 @@ class ImporterTestCase(unittest.TestCase):
 
         # Act
         tokens = importer.get_unique_tokens()
-        with open('resource_dir/legacy/chor001-unique_tokens.txt', 'w') as f:
-            f.write('\n'.join(tokens))
         tokens.sort()
         expected_tokens.sort()
 
@@ -387,10 +388,6 @@ class ImporterTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(len(expected_tokens), len(tokens))
         self.assertListEqual(expected_tokens, tokens)
-
-
-#def test():input_kern_file
-#    unittest.main()
 
 
 if __name__ == '__main__':

@@ -572,13 +572,12 @@ class HumdrumImporter:
         has_barlines = hi.has(TokenCategory.BARLINES)
         ```
         """
-        #for spine in self.spines:
-        #    for row in spine.rows:
-        #        if any(isinstance(token_category_goal, token) for token in row):
-        #            return True
-        #
-        #return False
-        raise NotImplementedError
+        for spine in self.spines:
+            for row in spine.rows:
+                for token in row:
+                    if token.category == token_category_goal:
+                        return True
+        return False
 
     def get_all_tokens(self, apply_strip: bool = True, remove_measure_numbers: bool = False) -> list:
         """
