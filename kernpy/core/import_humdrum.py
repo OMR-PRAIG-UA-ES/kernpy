@@ -522,8 +522,7 @@ class HumdrumImporter:
     def hasErrors(self):
         return len(self.errors) > 0
 
-
-    def hasToken(self, token_goal: str):
+    def has_token(self, token_goal: str):
         """
         Check if the importer has a specific token.
 
@@ -552,7 +551,7 @@ class HumdrumImporter:
 
         return False
 
-    def hasCategory(self, token_category_goal: TokenCategory):
+    def has_category(self, token_category_goal: TokenCategory):
         """
         Check if the importer has a specific token.
 
@@ -666,6 +665,42 @@ class HumdrumImporter:
         all_tokens = self.get_all_tokens(apply_strip=apply_strip, remove_measure_numbers=remove_measure_numbers, filter_by_categories=filter_by_categories)
         return list(set(all_tokens))
 
+    def is_voice_in_tessitura(self, voice: int, tessitura: tuple) -> bool:
+        """
+        Check if a voice is in a tessitura.
+
+        Args:
+            voice: The voice to check.
+            tessitura: A tuple with the tessitura. The first element is the lower limit, and the second element is the upper limit.
+
+        Returns:
+            True if the voice is in the tessitura, False otherwise.
+
+        Example:
+        ```python
+        # Create the importer
+        hi = HumdrumImporter()
+
+        # Read the file
+        hi.doImportFile('file.krn')
+
+        # Check if the voice 1 is in the tessitura (C4, G4)
+        is_in_tessitura = hi.is_voice_in_tessitura(1, ('c4', 'g4'))
+        ```
+        """
+        raise NotImplementedError('This method is not implemented yet.')   # TODO: Implementar el método
+        min_tessitura = tessitura[0].lower()
+        max_tessitura = tessitura[1].lower()
+
+        all_tokens = None
+        for row in self.spines[voice].rows:
+            all_tokens = [token.encoding.lower() for token in row if isinstance(token.category, SpineOperationToken)]   # TODO: Buscar la categoria que solo deje pasar notas
+
+        for token in all_tokens:
+            if min_tessitura <= token <= max_tessitura:
+                return True
+
+        return False
 
 def get_kern_from_ekern(ekern_content: string) -> string:
     """

@@ -310,33 +310,33 @@ class ImporterTestCase(unittest.TestCase):
         importer = HumdrumImporter()
         importer.doImportFile(input_kern_file)
 
-        self.assertTrue(importer.hasToken('**kern'))
-        self.assertTrue(importer.hasToken('*clefF4'))
-        self.assertTrue(importer.hasToken('4e'))
-        self.assertTrue(importer.hasToken('8BB'))
-        self.assertTrue(importer.hasToken('*-'))
-        self.assertTrue(importer.hasToken('=3'))
-        self.assertTrue(importer.hasToken('='))
-        self.assertTrue(importer.hasToken('=='))
-        self.assertTrue(importer.hasToken('.'))
-        self.assertTrue(importer.hasToken('!tenor'))
-        self.assertTrue(importer.hasToken('*M3/4'))
-        self.assertTrue(importer.hasToken('*MM60'))
-        self.assertTrue(importer.hasToken('*Iorgan'))
+        self.assertTrue(importer.has_token('**kern'))
+        self.assertTrue(importer.has_token('*clefF4'))
+        self.assertTrue(importer.has_token('4e'))
+        self.assertTrue(importer.has_token('8BB'))
+        self.assertTrue(importer.has_token('*-'))
+        self.assertTrue(importer.has_token('=3'))
+        self.assertTrue(importer.has_token('='))
+        self.assertTrue(importer.has_token('=='))
+        self.assertTrue(importer.has_token('.'))
+        self.assertTrue(importer.has_token('!tenor'))
+        self.assertTrue(importer.has_token('*M3/4'))
+        self.assertTrue(importer.has_token('*MM60'))
+        self.assertTrue(importer.has_token('*Iorgan'))
 
     def test_has_token_category(self):
         input_kern_file = 'resource_dir/legacy/chor001.krn'
         importer = HumdrumImporter()
         importer.doImportFile(input_kern_file)
 
-        self.assertTrue(importer.hasCategory(TokenCategory.LINE_COMMENTS))
-        self.assertTrue(importer.hasCategory(TokenCategory.CORE))
-        self.assertTrue(importer.hasCategory(TokenCategory.EMPTY))
-        self.assertTrue(importer.hasCategory(TokenCategory.OTHER))
-        self.assertTrue(importer.hasCategory(TokenCategory.OTHER_CONTEXTUAL))
-        self.assertTrue(importer.hasCategory(TokenCategory.BARLINES))
-        self.assertTrue(importer.hasCategory(TokenCategory.SIGNATURES))
-        self.assertTrue(importer.hasCategory(TokenCategory.STRUCTURAL))
+        self.assertTrue(importer.has_category(TokenCategory.LINE_COMMENTS))
+        self.assertTrue(importer.has_category(TokenCategory.CORE))
+        self.assertTrue(importer.has_category(TokenCategory.EMPTY))
+        self.assertTrue(importer.has_category(TokenCategory.OTHER))
+        self.assertTrue(importer.has_category(TokenCategory.OTHER_CONTEXTUAL))
+        self.assertTrue(importer.has_category(TokenCategory.BARLINES))
+        self.assertTrue(importer.has_category(TokenCategory.SIGNATURES))
+        self.assertTrue(importer.has_category(TokenCategory.STRUCTURAL))
 
     def test_get_all_tokens(self):
         # Arrange
@@ -405,6 +405,11 @@ class ImporterTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(len(expected_tokens), len(tokens))
         self.assertListEqual(expected_tokens, tokens)
+
+    @unittest.skip
+    def test_voices_range(self):
+        pass
+
 
 if __name__ == '__main__':
     unittest.main()
