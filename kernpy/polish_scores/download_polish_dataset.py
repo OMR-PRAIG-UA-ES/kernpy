@@ -71,7 +71,7 @@ def extract_and_save_measures(importer, from_measure, to_measure, krn_path):
         f.write(exported_ekern)
 
 
-def download_and_save_page_images(importer, _output_path, map_page_label_iiif_ids, page_bounding_boxes):
+def download_and_save_page_images(importer, _output_path, map_page_label_iiif_ids, page_bounding_boxes, log_filename):
     print(f'Bounding boxes {page_bounding_boxes}')
 
     for page_label, bounding_box_measure in page_bounding_boxes.items():
@@ -89,7 +89,7 @@ def download_and_save_page_images(importer, _output_path, map_page_label_iiif_id
             krn_path = os.path.join(_output_path, page_label + ".ekrn")
             extract_and_save_measures(importer, bounding_box_measure.from_measure, bounding_box_measure.to_measure - 1,
                                       krn_path)
-            add_log(importer, krn_path)
+            add_log(importer, krn_path, log_filename=log_filename)
         else:
             raise Exception(f'Cannot find IIIF id for page with label "{page_label}"')
 
@@ -104,14 +104,14 @@ def findIIIFIds(importer):
     raise Exception('Cannot find any IIIF metacomment')
 
 
-def convert_and_download_file(input_kern, _output_path):
+def convert_and_download_file(input_kern, _output_path, log_filename='/tmp/polish_index.json'):
     print(f'Converting filename {input_kern}')
     importer = HumdrumImporter()
     importer.doImportFile(input_kern)
     if len(importer.errors):
         raise Exception(f'{input_kern} has errors {importer.getErrorMessages()}')
     map_page_label_IIIF_ids = findIIIFIds(importer)
-    download_and_save_page_images(importer, _output_path, map_page_label_IIIF_ids, importer.page_bounding_boxes)
+    download_and_save_page_images(importer, _output_path, map_page_label_IIIF_ids, importer.page_bounding_boxes, log_filename=log_filename)
 
 
 def search_files_with_string(root_folder, target_string):
@@ -139,7 +139,7 @@ def remove_extension(file_name):
     return base_name
 
 
-def add_log(importer: HumdrumImporter, path, log_filename='/tmp/polish_index.json') -> None:
+def add_log(importer: HumdrumImporter, path, log_filename) -> None:
     try:
         def get_instruments(line):
             words = line.split(' ')
@@ -218,7 +218,7 @@ def add_log(importer: HumdrumImporter, path, log_filename='/tmp/polish_index.jso
     except Exception as e:
         print(f"Error adding log:{path}:{e}")
 
-def main(input_directory, output_directory) -> None:
+def main(input_directory, output_directory, log_filename="/tmp/polish_index.json") -> None:
     """
     Process the files in the input_directory and save the results in the output_directory.
     http requests are made to download the images.
@@ -226,12 +226,15 @@ def main(input_directory, output_directory) -> None:
     Args:
         input_directory: directory where the input files are found
         output_directory: directory where the output files are saved
+        log_filename: filename where the log is saved
 
     Returns:
         None
 
     Examples:
         >>> main('/kern_files', '/output_ekern')
+
+        >>> main('/kern_files', '/output_ekern', '/output_ekern/polish_index.json')
 
     """
     print(f'Processing files in {input_directory} and saving to {output_directory}')
@@ -265,7 +268,7 @@ if __name__ == "__main__":
 
     #TODO parser = argparse.ArgumentParser(description="Download Polish scores.")
 
-    # Add arguments
+    # Add arguments_log
     #TODO parser.add_argument("input_folder", type=str, help="Path to the input folder")
     #TODO parser.add_argument("output_folder", type=str, help="Path to the output folder")
 
