@@ -11,8 +11,6 @@ from cairosvg import svg2png
 import cv2
 
 ### GLOBAL VARIABLES ###
-PROCESSES_PARALLEL = 8
-input_dir = ''
 log_file = ''
 
 
@@ -118,7 +116,7 @@ def render_image(args) -> None:
         sys.stderr = sys.__stderr__
 
 
-def generate_rendered_images(input_dir: str, _log_file: str) -> None:
+def generate_rendered_images(input_dir: str, _log_file: str, PROCESSES_PARALLEL: int) -> None:
     """
     Generate the rendered images for the given images in the input directory.
 
@@ -153,8 +151,8 @@ def generate_rendered_images(input_dir: str, _log_file: str) -> None:
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        print(f'Usage: python {sys.argv[0]} <input_dir> <log_file>')
+    if len(sys.argv) != 4:
+        print(f'Usage: python {sys.argv[0]} <input_dir> <log_file> <PROCESSES_PARALLEL>')
         sys.exit(1)
 
-    generate_rendered_images(sys.argv[1], sys.argv[2])
+    generate_rendered_images(sys.argv[1], sys.argv[2], int(sys.argv[3]))
