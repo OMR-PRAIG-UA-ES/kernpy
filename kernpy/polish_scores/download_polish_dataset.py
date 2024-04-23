@@ -13,6 +13,8 @@ import argparse
 # It downloads both the systems and full pages
 DEFAULT_IIIF_ID = '/full/full/0/default.jpg'
 
+LOG_FILENAME = 'polish_index.json'
+
 
 def get_image_urls(_manifest_url):
     # It returns the URL of pages tagged with a page number
@@ -104,7 +106,7 @@ def findIIIFIds(importer):
     raise Exception('Cannot find any IIIF metacomment')
 
 
-def convert_and_download_file(input_kern, _output_path, log_filename='/tmp/polish_index.json'):
+def convert_and_download_file(input_kern, _output_path, log_filename):
     print(f'Converting filename {input_kern}')
     importer = HumdrumImporter()
     importer.doImportFile(input_kern)
@@ -168,7 +170,6 @@ def add_log(importer: HumdrumImporter, path, log_filename) -> None:
                 RATIO = 0.7  # date where the composer was most active
                 return int(start_year + (end_year - start_year) * RATIO)
             except Exception as e:
-                print(f"Error rounding publication year:{original_composer_date}:{e}", file=sys.stderr)
                 return -1
 
         def round_publication_year_v2(original_composer_date):
@@ -185,7 +186,6 @@ def add_log(importer: HumdrumImporter, path, log_filename) -> None:
                 year_items = [int(item) for item in useful_items if len(item) == 4]
                 return int(year_items[0]) if len(year_items) > 0 else -3
             except Exception as e:
-                print(f"Error rounding publication year:{original_composer_date}:{e}", file=sys.stderr)
                 return -2
 
         info = {
@@ -241,6 +241,7 @@ def main(input_directory, output_directory, log_filename="/tmp/polish_index.json
     kern_with_bboxes = search_files_with_string(input_directory, 'xywh')
     ok_files = []
     ko_files = []
+    log_file = os.path.join(output_directory, LOG_FILENAME)
     for kern in kern_with_bboxes:
         try:
             filename = remove_extension(kern)
@@ -248,7 +249,7 @@ def main(input_directory, output_directory, log_filename="/tmp/polish_index.json
             output_kern_path = os.path.join(output_directory, filename)
             if not os.path.exists(output_kern_path):
                 os.makedirs(output_kern_path)
-            convert_and_download_file(kern_path, output_kern_path)
+            convert_and_download_file(kern_path, output_kern_path, log_filename=log_file)
             ok_files.append(kern)
         except Exception as error:
             ko_files.append(kern)
@@ -280,6 +281,7 @@ if __name__ == "__main__":
     kern_with_bboxes = search_files_with_string(input_path, 'xywh')
     ok_files = []
     ko_files = []
+    log_file = os.path.join(output_path, LOG_FILENAME)
     for kern in kern_with_bboxes:
         try:
             filename = remove_extension(kern)
@@ -287,7 +289,7 @@ if __name__ == "__main__":
             output_kern_path = os.path.join(output_path, filename)
             if not os.path.exists(output_kern_path):
                 os.makedirs(output_kern_path)
-            convert_and_download_file(kern_path, output_kern_path)
+            convert_and_download_file(kern_path, output_kern_path, log_filename=log_file)
             ok_files.append(kern)
         except Exception as error:
             ko_files.append(kern)

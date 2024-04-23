@@ -8,7 +8,6 @@ import tempfile
 from PIL import Image
 
 from kernpy import HumdrumImporter, KernSpineImporter
-from kernpy.polish_scores.download_polish_dataset import convert_and_download_file
 
 logger = logging.getLogger()
 logger.level = logging.INFO  # change it DEBUG to trace errors

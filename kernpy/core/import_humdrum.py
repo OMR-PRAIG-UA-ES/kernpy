@@ -16,8 +16,10 @@ class ExportOptions:
         Create a new ExportOptions object.
 
         Args:
-            spine_types: **kern, **mens, etc...
-            token_categories: TokenCategory
+            spine_types (Iterable): **kern, **mens, etc...
+            token_categories (Iterable): TokenCategory
+            from_measure (int): The measure to start exporting. When None, the exporter will start from the beginning of the file.
+            to_measure (int): The measure to end exporting. When None, the exporter will end at the end of the file.
 
 
         Example:
@@ -86,6 +88,9 @@ class Spine:
     def size(self):
         return len(self.rows)
 
+    def __len__(self):
+        return self.size()
+
     def isTerminated(self):
         return self.importing_subspines > 0
 
@@ -151,8 +156,7 @@ class Spine:
         if row >= len(self.rows):
             raise Exception(f'Row {row} out of bounds {len(self.rows)}')
 
-    # TODO Joan Cambiar just_encoding por enum: unprocessed, eKern, normalizedKern
-    def getRowContent(self, row, kern_type: KernTypeExporter, token_categories) -> string:
+    def getRowContent(self, row, kern_type: KernTypeExporter, token_categories: Iterable) -> string:
         self.checkRowIndex(row)
 
         result = ''

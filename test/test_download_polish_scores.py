@@ -41,9 +41,10 @@ class DownloadPolishScoresTestCase(unittest.TestCase):
 
     def test(self):
         temp_dir = tempfile.mkdtemp()
-        input_folder = 'resource_dir/polish/test1';
+        input_folder = 'resource_dir/polish/test1'
+        log_file = os.path.join(temp_dir, 'polish_index.json')
         logging.info(f'Writing DownloadPolishScoresTestCase test to folder {temp_dir}')
-        convert_and_download_file(input_folder + '/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', temp_dir)
+        convert_and_download_file(input_folder + '/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', temp_dir, log_file)
         for i in range(9, 11):
             self.checkEqualFiles(input_folder + f'/pages/{i}.ekrn', temp_dir + f'/{i}.ekrn')
             self.check_image_sizes_equal(input_folder + f'/pages/{i}.jpg', temp_dir + f'/{i}.jpg')
