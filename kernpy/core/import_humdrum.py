@@ -13,8 +13,32 @@ from .tokens import HeaderToken, SpineOperationToken, TokenCategory, BoundingBox
 class ExportOptions:
     def __init__(self, spine_types=[], token_categories=[], from_measure=None, to_measure=None):
         """
-        :spine_types: **kern, **mens, etc...
-        :token_types: TokenCategory
+        Create a new ExportOptions object.
+
+        Args:
+            spine_types: **kern, **mens, etc...
+            token_categories: TokenCategory
+
+
+        Example:
+            >>> from kernpy import HumdrumImporter, ExportOptions
+
+            Create the importer and read the file
+            >>> hi = HumdrumImporter()
+            >>> hi.doImportFile('file.krn')
+
+            Export the file with the specified options
+            >>> options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
+            >>> exported_data = hi.doExport(options)
+
+            Export only the lyirics
+            >>> options = ExportOptions(spine_types=['**kern'], token_categories=[TokenCategory.LYRICS])
+            >>> exported_data = hi.doExport(options)
+
+            Export the comments
+            >>> options = ExportOptions(spine_types=['**kern'], token_categories=[TokenCategory.LINE_COMMENTS, TokenCategory.FIELD_COMMENTS])
+            >>> exported_data = hi.doExport(options)
+
         """
         self.spine_types = spine_types
         self.from_measure = from_measure
@@ -27,18 +51,17 @@ class KernTypeExporter(Enum):
     Options for exporting a kern file.
 
     Example:
-    ```
-    # Create the importer
-    hi = HumdrumImporter()
+        # Create the importer
+        >>> hi = HumdrumImporter()
 
-    # Read the file
-    options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
-    hi.doImportFile('file.krn')
+        # Read the file
+        >>> exportOptions = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
+        >>> hi.doImportFile('file.krn')
 
-    # Export the file
-    options = KernExporter.normalizedKern
-    exported = hi.doExport(exportOptions)
-    ```
+        # Export the file
+        >>> kernOptions = KernExporter.normalizedKern
+        >>> exported = hi.doExport(kernOptions, exportOptions)
+
     """
     unprocessed = 0
     eKern = 1
@@ -209,23 +232,21 @@ class HumdrumImporter:
                 If there are no metacomments with the specified key, an empty list will be returned.
 
         Example:
-            ```python
-            from kernpy import HumdrumImporter
-            importer = HumdrumImporter()
+            >>> from kernpy import HumdrumImporter
+            >>> importer = HumdrumImporter()
 
             # Read the file
-            importer.doImportFile('file.krn')
+            >>> importer.doImportFile('file.krn')
 
             # Get all the metacomments
-            all_metacomments = importer.getMetacomments()
+            >>> all_metacomments = importer.getMetacomments()
             # ... modify the metacomments using your own logic
 
             # Get the metacomments with the key: get the composer:
-            composer = importer.getMetacomments(KeyComment='!!!COM')
+            >>> composer = importer.getMetacomments(KeyComment='!!!COM')
 
             # check if your kern file format is compatible with the expected format. If it is not, do not clen it:
-            raw_compose = importer.getMetacomments(KeyComment='!!!COM', clean=False)
-            ```
+            >>> raw_compose = importer.getMetacomments(KeyComment='!!!COM', clean=False)
 
         """
         result = []
@@ -328,6 +349,19 @@ class HumdrumImporter:
                 row_number = row_number + 1
 
     def doImportFile(self, file_path: string):
+        """
+        Import the content from the importer to the file.
+        Args:
+            file_path: The path to the file.
+
+        Returns:
+            None
+
+        Example:
+            # Create the importer and read the file
+            >>> hi = HumdrumImporter()
+            >>> hi.doImportFile('file.krn')
+        """
         with open(file_path, 'r', newline='', encoding='utf-8', errors='ignore') as file:
             reader = csv.reader(file, delimiter='\t')
             self.doImport(reader)
@@ -533,16 +567,14 @@ class HumdrumImporter:
             True if the importer has the token, False otherwise.
 
         Example:
-        ```python
-        # Create the importer
-        hi = HumdrumImporter()
+            # Create the importer
+            >>> hi = HumdrumImporter()
 
-        # Read the file
-        hi.doImportFile('file.krn')
+            # Read the file
+            >>> hi.doImportFile('file.krn')
 
-        # Check if the importer has a specific token
-        has_f_4_clef = hi.has('*clefF4')
-        ```
+            # Check if the importer has a specific token
+            >>> has_f_4_clef = hi.has('*clefF4')
         """
         for spine in self.spines:
             for row in spine.rows:
@@ -561,16 +593,15 @@ class HumdrumImporter:
             True if the importer has the token category, False otherwise.
 
         Example:
-        ```python
-        # Create the importer
-        hi = HumdrumImporter()
+            # Create the importer
+            >>> hi = HumdrumImporter()
 
-        # Read the file
-        hi.doImportFile('file.krn')
+            # Read the file
+            >>> hi.doImportFile('file.krn')
 
-        # Check if the importer has a specific token
-        has_barlines = hi.has(TokenCategory.BARLINES)
-        ```
+            # Check if the importer has a specific token
+            >>> has_barlines = hi.has_category(TokenCategory.BARLINES)
+
         """
         for spine in self.spines:
             for row in spine.rows:
@@ -594,23 +625,24 @@ class HumdrumImporter:
             A list with all the tokens in the importer.
 
         Example:
-        ```python
-        # Create the importer
-        hi = HumdrumImporter()
+            # Create the importer
+            >>> hi = HumdrumImporter()
 
-        # Read the file
-        hi.doImportFile('file.krn')
+            # Read the file
+            >>> hi.doImportFile('file.krn')
 
-        # Get all the tokens
-        all_tokens = hi.get_all_tokens()
+            # Get all the tokens
+            >>> all_tokens = hi.get_all_tokens()
 
-        # Get all the tokens without measure numbers
-        all_tokens = hi.get_all_tokens(remove_measure_numbers=True)
+            # Get all the tokens without measure numbers
+            >>> all_tokens = hi.get_all_tokens(remove_measure_numbers=True)
 
-        # Get all the tokens without measure numbers and filtered by categories
-        all_tokens = hi.get_all_tokens(remove_measure_numbers=True, filter_by_categories=[TokenCategory.BARLINES, TokenCategory.KEYSIGNATURE, TokenCategory.CORE])
+            # Get all the tokens without measure numbers and filtered by categories
+            >>> all_tokens = hi.get_all_tokens(remove_measure_numbers=True, filter_by_categories=[TokenCategory.BARLINES, TokenCategory.KEYSIGNATURE, TokenCategory.CORE])
 
-        ```
+            # Get all tokens used in the bekern codification
+            >>> all_tokens = hi.get_all_tokens(remove_measure_numbers=True, filter_by_categories=BEKERN_CATEGORIES)
+
         """
         MEASURE_START = '='
         DIGITS_TO_REMOVE = string.digits
@@ -645,22 +677,24 @@ class HumdrumImporter:
             A list with the unique tokens in the importer.
 
         Example:
-        ```python
-        # Create the importer
-        hi = HumdrumImporter()
+            # Create the importer
+            >>> hi = HumdrumImporter()
 
-        # Read the file
-        hi.doImportFile('file.krn')
+            # Read the file
+            >>> hi.doImportFile('file.krn')
 
-        # Get the unique tokens
-        unique_tokens = hi.get_unique_tokens()
+            # Get the unique tokens
+            >>> unique_tokens = hi.get_unique_tokens()
 
-        # Get the unique tokens without measure numbers
-        unique_tokens = hi.get_unique_tokens(remove_measure_numbers=True)
+            # Get the unique tokens without measure numbers
+            >>> unique_tokens = hi.get_unique_tokens(remove_measure_numbers=True)
 
-        # Get the unique tokens without measure numbers and filtered by categories
-        unique_tokens = hi.get_unique_tokens(remove_measure_numbers=True, filter_by_categories=[TokenCategory.BARLINES, TokenCategory.KEYSIGNATURE, TokenCategory.CORE])
-        ```
+            # Get the unique tokens without measure numbers and filtered by categories
+            >>> unique_tokens = hi.get_unique_tokens(remove_measure_numbers=True, filter_by_categories=[TokenCategory.BARLINES, TokenCategory.KEYSIGNATURE, TokenCategory.CORE])
+
+            # Get the unique tokens used in the bekern codification
+            >>> unique_tokens = hi.get_all_tokens(remove_measure_numbers=True, filter_by_categories=BEKERN_CATEGORIES)
+
         """
         all_tokens = self.get_all_tokens(apply_strip=apply_strip, remove_measure_numbers=remove_measure_numbers, filter_by_categories=filter_by_categories)
         return list(set(all_tokens))
@@ -677,16 +711,14 @@ class HumdrumImporter:
             True if the voice is in the tessitura, False otherwise.
 
         Example:
-        ```python
-        # Create the importer
-        hi = HumdrumImporter()
+            # Create the importer
+            >>> hi = HumdrumImporter()
 
-        # Read the file
-        hi.doImportFile('file.krn')
+            # Read the file
+            >>> hi.doImportFile('file.krn')
 
-        # Check if the voice 1 is in the tessitura (C4, G4)
-        is_in_tessitura = hi.is_voice_in_tessitura(1, ('c4', 'g4'))
-        ```
+            # Check if the voice 1 is in the tessitura (C4, G4)
+            >>> is_in_tessitura = hi.is_voice_in_tessitura(1, ('c4', 'g4'))
         """
         raise NotImplementedError('This method is not implemented yet.')   # TODO: Implementar el método
         min_tessitura = tessitura[0].lower()
@@ -697,10 +729,10 @@ class HumdrumImporter:
             all_tokens = [token.encoding.lower() for token in row if isinstance(token.category, SpineOperationToken)]   # TODO: Buscar la categoria que solo deje pasar notas
 
         for token in all_tokens:
-            if min_tessitura <= token <= max_tessitura:
-                return True
+            if token < min_tessitura or token > max_tessitura:
+                return False
 
-        return False
+        return True
 
 def get_kern_from_ekern(ekern_content: string) -> string:
     """
@@ -741,6 +773,27 @@ def ekern_to_krn(input_file, output_file) -> None:
         output_file: Filepath to the output **kern
     Returns:
         None
+
+    Example:
+        # Convert .ekrn to .krn
+        >>> ekern_to_krn('path/to/file.ekrn', 'path/to/file.krn')
+
+        # Convert a list of .ekrn files to .krn files
+        ```python
+        ekrn_files = your_modue.get_files()
+
+        # Use the wrapper to avoid stopping the process if an error occurs
+        def ekern_to_krn_wrapper(ekern_file, kern_file):
+            try:
+                ekern_to_krn(ekrn_files, output_folder)
+            except Exception as e:
+                print(f'Error:{e}')
+
+        # Convert all the files
+        for ekern_file in ekrn_files:
+            output_file = ekern_file.replace('.ekrn', '.krn')
+            ekern_to_krn_wrapper(ekern_file, output_file)
+        ```
     """
     with open(input_file, 'r') as file:
         content = file.read()
@@ -761,6 +814,28 @@ def kern_to_ekern(input_file, output_file) -> None:
 
     Returns:
         None
+
+    Example:
+        # Convert .krn to .ekrn
+        >>> kern_to_ekern('path/to/file.krn', 'path/to/file.ekrn')
+
+        # Convert a list of .krn files to .ekrn files
+        ```python
+        krn_files = your_module.get_files()
+
+        # Use the wrapper to avoid stopping the process if an error occurs
+        def kern_to_ekern_wrapper(krn_file, ekern_file):
+            try:
+                kern_to_ekern(krn_file, ekern_file)
+            except Exception as e:
+                print(f'Error:{e}')
+
+        # Convert all the files
+        for krn_file in krn_files:
+            output_file = krn_file.replace('.krn', '.ekrn')
+            kern_to_ekern_wrapper(krn_file, output_file)
+        ```
+
     """
     importer = HumdrumImporter()
     importer.doImportFile(input_file)

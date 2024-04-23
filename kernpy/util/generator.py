@@ -8,40 +8,44 @@ from kernpy import HumdrumImporter, ExportOptions, BEKERN_CATEGORIES, KernTypeEx
 
 DEFAULT_MEAN = 4.0
 DEFAULT_STD_DEV = 0.0
-ABSOLUTE_PATHS_KEYWORDS = ['user', 'home']
-BAD_PATH_ERROR_MESSAGE = f'\tUsing absolute paths is not recommended.\n' \
-                         f'\tThe input file will be used as a template for the output files. \n' \
-                         f'\tUse relative paths to avoid overwriting the input file.\n' \
-                         f'\tUse relative paths to avoid exposing private information.\n' \
-                         f'\tAvoid using: {ABSOLUTE_PATHS_KEYWORDS}\n'
 
 
 def create_fragments_from_kern(input_kern_file: str, output_directory: str, measure_length: int,
                                offset: int, log_file: str, verbose: int = 1, num_processes: int = None,
-                               force_path: bool = False) -> None:
+                               ) -> None:
     """
     Create a bunch of little kern files from a single kern file.
 
     Args:
-        log_file:
-        input_kern_file:
-        output_directory:
-        measure_length:
-        offset:
-        verbose:
-        force_path:
-        num_processes:
+        log_file: The log file to store the results
+        input_kern_file (object): The input kern file
+        output_directory: The output directory where the fragments will be stored
+        measure_length: The number of measures of the fragments
+        offset: The number of measures between fragments.\
+            If offset is 1, and measure_length is 4, the fragments will be: 1-4, 2-5, 3-6, 4-7, ...
+            If the offset is 2, and measure_length is 4, the fragments will be: 1-4, 3-6, 5-8, 7-10, ...
+            If the offset is 4, and measure_length is 4, the fragments will be: 1-4, 5-8, 9-12, 13-16, ...
+        verbose: The verbosity level
+        num_processes: The number of processes to use for parallel processing.\
+            If None, or num_processes <= 1, the processing will be done in a single process.
 
     Returns:
         None
 
     Examples:
-        ...
+        # Basic execution
+        >>> create_fragments_from_kern('input.krn', 'output_directory', measure_length=4)
+
+        # Parallel processing
+        >>> create_fragments_from_kern('input.krn', 'output_directory', measure_length=4, offset=4, log_file='log.txt', verbose=1, num_processes=8)
+        >>> create_fragments_from_kern('input.krn', 'output_directory', measure_length=4, offset=4, log_file='log.txt', verbose=1, num_processes=8)
+
+        # Single process
+        >>> create_fragments_from_kern('input.krn', 'output_directory', measure_length=4, offset=4, log_file='log.txt', verbose=1)
+        >>> create_fragments_from_kern('input.krn', 'output_directory', measure_length=4, offset=4, log_file='log.txt', verbose=1, num_processes=None)
+
 
     """
-    if not force_path and any(keyword in input_kern_file for keyword in ABSOLUTE_PATHS_KEYWORDS):
-        raise ValueError(BAD_PATH_ERROR_MESSAGE)
-
     fg = FragmentGenerator(offset=offset, verbose=verbose, num_processes=num_processes, log_file=log_file)
     fg.create_fragments_from_file(input_kern_file=input_kern_file,
                                   output_directory=output_directory,
@@ -56,25 +60,40 @@ def create_fragments_from_directory(input_directory: str, output_directory: str,
     Create a bunch of little kern files from a directory of kern files.
 
     Args:
-        log_file:
-        input_directory:
-        output_directory:
-        check_file_extension:
-        offset:
-        verbose:
-        num_processes:
-        mean:
-        std_dev:
+        log_file: The log file to store the results
+        input_directory: The input directory with the kern files
+        output_directory: The output directory where the fragments will be stored
+        check_file_extension: If True, only files with the extension '.krn' will be processed.\
+         If False, all files will be processed, it could be more time-consuming.
+        offset: The number of measures between fragments.\
+            If offset is 1, and measure_length is 4, the fragments will be: 1-4, 2-5, 3-6, 4-7, ...
+            If the offset is 2, and measure_length is 4, the fragments will be: 1-4, 3-6, 5-8, 7-10, ...
+            If the offset is 4, and measure_length is 4, the fragments will be: 1-4, 5-8, 9-12, 13-16, ...
+        verbose: The verbosity level
+        num_processes: The number of processes to use for parallel processing.\
+            If None, or num_processes <= 1, the processing will be done in a single process.
+        mean: The mean of the normal distribution to generate the measure length of the new fragments
+        std_dev: The standard deviation of the normal distribution to generate the measure length of the new fragments
 
     Returns:
         None
 
     Examples:
-        ...
+
+        # Basic execution
+        >>> create_fragments_from_directory('input_directory', 'output_directory', log_file='log.txt')
+
+        # Custom mean and std_dev
+        >>> create_fragments_from_directory('input_directory', 'output_directory', log_file='log.txt', mean=5.2, std_dev=0.8)
+
+        # Parallel processing
+        >>> create_fragments_from_directory('input_directory', 'output_directory', log_file='log.txt', offset=4, verbose=1, num_processes=8)
+
+        # Single process
+        >>> create_fragments_from_directory('input_directory', 'output_directory', log_file='log.txt', offset=4, verbose=1)
+
 
     """
-    if any(keyword in input_directory for keyword in ABSOLUTE_PATHS_KEYWORDS):
-        raise ValueError(BAD_PATH_ERROR_MESSAGE)
     if mean is None:
         mean = DEFAULT_MEAN
     if std_dev is None:
@@ -170,7 +189,8 @@ class FragmentGenerator:
             print(f'Creating folder: {current_folder}')
         os.makedirs(current_folder, exist_ok=True)
 
-        print("WARNING: Check options.from_measure=1. Raise exception if 1 or 0", file=sys.stderr) # TODO: Change importer interface. 0-1 boundaries
+        print("WARNING: Check options.from_measure=1. Raise exception if 1 or 0",
+              file=sys.stderr)  # TODO: Change importer interface. 0-1 boundaries
         for i in range(1, importer.last_measure_number, self.offset):
             current_kern_file = os.path.join(current_folder, f'from-{i}-to-{i + measure_length}.krn')
             options.from_measure = i

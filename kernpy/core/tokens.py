@@ -9,6 +9,11 @@ DECORATION_SEPARATOR = '·'
 # We don't use inheritance here for all elements but enum, because we don't need any polymorphism mechanism, just a grouping one
 # TODO Poner todos los tipos - p.ej. también comandos de layout - slurs, etc...
 class TokenCategory(Enum):
+    """
+    Options for the category of a token.
+
+    This is used to determine what kind of token should be exported.
+    """
     STRUCTURAL = auto()  # header, spine operations
     CORE = auto()  # notes, rests, chords
     EMPTY = auto()  # placeholders, null interpretation

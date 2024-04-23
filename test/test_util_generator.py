@@ -29,7 +29,6 @@ class GenericTestCase(unittest.TestCase):
             log_file=log_file,
             verbose=verbose,
             num_processes=num_processes,
-            force_path=True
         )
 
         # Assert
@@ -71,7 +70,6 @@ class GenericTestCase(unittest.TestCase):
             log_file=log_file,
             verbose=verbose,
             num_processes=num_processes,
-            force_path=True
         )
 
         # Assert
