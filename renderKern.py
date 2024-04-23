@@ -136,28 +136,20 @@ def generate_rendered_images(input_dir: str, _log_file: str) -> None:
             if f.endswith('.krn'):
                 clean_input_files.append(os.path.join(root, f))
 
-    print(clean_input_files)
-    # Tasks
-    tasks = list(zip(clean_input_files, ))
-
     # Shared progress queue
     manager = multiprocessing.Manager()
     progress_queue = manager.Queue()
+
+    # Tasks
+    tasks = [(clean_input_files[i], progress_queue) for i in range(len(clean_input_files))]
     total_tasks = len(tasks)
-
     print(f'Total tasks: {total_tasks}')
-    # Run the tasks
-    # Sequential processing
-    #for task in tqdm(tasks, desc='Creating fragments'):
-    #    create_fragments(task + (progress_queue,))
-    #    progress_queue.put(1)
 
+    # Run the tasks
     # Parallel processing
     with multiprocessing.Pool(processes=PROCESSES_PARALLEL) as pool:
-        for _ in tqdm(
-                pool.imap_unordered(render_image, [(task + (progress_queue,)) for task in tasks]),
-                total=total_tasks, desc='Rendering images'):
-            pass
+        list(tqdm(pool.imap_unordered(render_image, tasks),
+                  total=total_tasks, desc='Rendering images'))
 
 
 if __name__ == '__main__':
