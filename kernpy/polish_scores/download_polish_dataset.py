@@ -1,3 +1,5 @@
+import sys
+
 import requests
 from PIL import Image
 from io import BytesIO
@@ -148,23 +150,43 @@ def add_log(importer: HumdrumImporter, path, log_filename='/tmp/polish_index.jso
             return instruments
 
         def get_publish_date(line):
-            if line is None:
+            if line is None or line == '':
                 return 0
 
             clean_line = [char for char in line if char.isnumeric()]
             return int(''.join(clean_line))
 
         def round_publication_year(original_composer_date):
-            if original_composer_date is None:
-                return 0
-            start_date, end_date = original_composer_date.split('-')
+            try:
+                if original_composer_date is None:
+                    return 0
+                start_date, end_date = original_composer_date.split('-')
 
-            start_year = int(start_date.split('/')[0])
-            end_year = int(end_date.split('/')[0])
+                start_year = int(start_date.split('/')[0])
+                end_year = int(end_date.split('/')[0])
 
-            RATIO = 0.7 # date where the composer was most active
-            return int(start_year + (end_year - start_year) * RATIO)
+                RATIO = 0.7  # date where the composer was most active
+                return int(start_year + (end_year - start_year) * RATIO)
+            except Exception as e:
+                print(f"Error rounding publication year:{original_composer_date}:{e}", file=sys.stderr)
+                return -1
 
+        def round_publication_year_v2(original_composer_date):
+            def flatten(xss):
+                return [x for xs in xss for x in xs]
+
+            try:
+                items_date = original_composer_date.split('/')
+                clean_items = [item.replace(' ', '') for item in items_date]
+                clean_items = [item.replace('~','') for item in clean_items]
+                split_again = [item.split('-') for item in clean_items]
+                flatten_items = flatten(split_again)
+                useful_items = [item for item in flatten_items if item.isnumeric()]
+                year_items = [int(item) for item in useful_items if len(item) == 4]
+                return int(year_items[0]) if len(year_items) > 0 else -3
+            except Exception as e:
+                print(f"Error rounding publication year:{original_composer_date}:{e}", file=sys.stderr)
+                return -2
 
         info = {
             'path': path,
@@ -182,8 +204,12 @@ def add_log(importer: HumdrumImporter, path, log_filename='/tmp/polish_index.jso
             'unique_instruments': [*set(get_instruments(importer.getMetacomments('AIN')[0]))] if importer.getMetacomments('AIN') else [],
         }
 
-        if info['publication_date'] == 0:
+        if info['publication_date'] in (0, 1, -1, -2) or info['publication_date'] is None:
             info['publication_date'] = round_publication_year(info['composer_dates'])
+            info['original_publication_date_tag'] = False
+
+        if info['publication_date'] in (0, 1, -1, -2) or info['publication_date'] is None:
+            info['publication_date'] = round_publication_year_v2(info['composer_dates'])
             info['original_publication_date_tag'] = False
 
         with open(log_filename, 'a') as f:
