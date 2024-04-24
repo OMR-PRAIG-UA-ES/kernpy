@@ -181,7 +181,7 @@ class FragmentGenerator:
             self.add_log(f'{input_kern_file}->More than 1 spine', False)
             return
 
-        options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
+        options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kernType=KernTypeExporter.normalizedKern)
 
         # Create folder for the current file
         current_folder = FragmentGenerator.get_output_filename_directory(input_kern_file, output_directory)
@@ -202,7 +202,7 @@ class FragmentGenerator:
             if options.to_measure > importer.last_measure_number:
                 break
 
-            exported = importer.doExport(KernTypeExporter.normalizedKern, options)
+            exported = importer.doExport(options)
             FragmentGenerator.store_kern_file(current_kern_file, exported)
         self.add_log(f'{input_kern_file}#{current_folder}', True)
 
