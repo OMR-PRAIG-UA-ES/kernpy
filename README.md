@@ -8,9 +8,6 @@ https://kernpy.pages.dev/
 ## Index:
 - [Installation](#installation)
 - [Documentation](#documentation)
-  - [kern2ekern](#kern2ekern)
-  - [ekern2kern](#ekern2kern)
-  - [create fragments](#create-fragments)
 - [Run tests](#run-tests)
 
     
