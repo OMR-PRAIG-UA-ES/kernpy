@@ -69,10 +69,10 @@ def create_parser() -> argparse.ArgumentParser:
         generate_fragments.add_argument('--output_directory', required=True, type=str, help='Output directory path')
         generate_fragments.add_argument('--log_file', required=True, type=str, help='Log file path')
         generate_fragments.add_argument('--check_file_extension', required=False, action='store_true', help='Check file extension', default=True)
-        generate_fragments.add_argument('--offset', required=False, type=int, help='Offset', default=1)
-        generate_fragments.add_argument('--num_processes', required=False, type=int, help='Number of processes')
-        generate_fragments.add_argument('--mean', required=False, type=float, help='Mean')
-        generate_fragments.add_argument('--std_dev', required=False, type=float, help='Standard deviation')
+        generate_fragments.add_argument('--offset', required=True, type=int, help='Offset', default=1)
+        generate_fragments.add_argument('--num_processes', required=True, type=int, help='Number of processes')
+        generate_fragments.add_argument('--mean', required=True, type=float, help='Mean')
+        generate_fragments.add_argument('--std_dev', required=True, type=float, help='Standard deviation')
 
     return parser
 

@@ -418,7 +418,7 @@ class HumdrumImporter:
         return max(spine.size() for spine in self.spines)
 
     def checkMeasure(self, measure_number):
-        if measure_number < 1:
+        if measure_number < 0:
             raise Exception(f'The measure number must be >=1, and it is {measure_number}')
 
         max_measures = len(self.measure_start_rows)
@@ -430,12 +430,10 @@ class HumdrumImporter:
         signatures_at_each_row = []
         row_contents = []
 
-        # patch to correct when user uses 0 instead of None to set the first measure as 1
-        if options.from_measure == 0:
-            options.from_measure = 1
-        # TODO: David: Hay que valorar si lanzar una excepción si from_measure o to_measure no es válido. A veces se genera la partitura entera cuando no debería. Alternativa abajo
-        #if options.from_measure is None or options.from_measure < 1:
-        #    raise Exception(f'option from_measure must be >=1 but {options.from_measure} was found. ')
+        if options.from_measure is None or options.from_measure < 0:
+            raise ValueError(f'option from_measure must be >=0 but {options.from_measure} was found. ')
+        if options.to_measure is not None and options.to_measure < options.from_measure:
+            raise ValueError(f'option to_measure must be >= from_measure but {options.to_measure} < {options.from_measure} was found. ')
 
         last_signature = None
         for i in range(max_rows):
@@ -728,6 +726,12 @@ class HumdrumImporter:
                 return False
 
         return True
+
+    def __len__(self):
+        """
+        Get the number of spines in the importer.
+        """
+        return len(self.spines)
 
 def get_kern_from_ekern(ekern_content: string) -> string:
     """
