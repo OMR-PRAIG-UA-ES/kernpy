@@ -13,6 +13,12 @@ https://kernpy.pages.dev/
     
 ## Installation
 
+Install the last version of **kernpy using pip:
+```shell
+pip install git+https://github.com/OMR-PRAIG-UA-ES/kernpy.git 
+```
+
+
 - Generate antrl4 grammar:
 - For generating the Python code required for parsing the **kern files, the shell script `antlr4.sh` inside the `kernpy` package must be run.
 
@@ -39,7 +45,7 @@ pip install antlr4-python3-runtime
 pip install Pillow
 ```
 
-- To pars- e a IIIF (International Image Interoperability Framework) manifest in Python, we use the `requests` library to fetch the manifest file:
+- To parse a IIIF (International Image Interoperability Framework) manifest in Python, we use the `requests` library to fetch the manifest file:
 ```shell
 pip install requests
 ```
@@ -51,6 +57,11 @@ pip install urllib3==1.26.6
 
 It has been tested with version 4.13.1 of the package.
 
+
+- For visualizing the progress bar executing multiple tasks, the `tqdm` library is required:
+```shell
+pip install tqdm
+```
 
 ## Documentation
 Documentation available at [https://kernpy.pages.dev/](https://kernpy.pages.dev/)
