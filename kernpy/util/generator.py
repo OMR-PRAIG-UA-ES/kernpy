@@ -113,8 +113,8 @@ class FragmentGenerator:
                  std_dev=DEFAULT_STD_DEV):
         if offset is None or offset < 1:
             raise ValueError('offset must be greater than 0')
-        if mean is None or mean < 1:
-            raise ValueError('mean must be greater than 0')
+        #if mean is None or mean < 1:
+        #    raise ValueError('mean must be greater than 0')
 
         self.log_file = str(log_file)
         self.offset = int(offset)

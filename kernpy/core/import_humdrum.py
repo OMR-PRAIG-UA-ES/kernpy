@@ -494,7 +494,7 @@ class HumdrumImporter:
             if options.from_measure:
                 self.checkMeasure(options.from_measure)
             else:
-                options.from_measure = 1
+                options.from_measure = 0
 
             if options.to_measure:
                 self.checkMeasure(options.to_measure)
