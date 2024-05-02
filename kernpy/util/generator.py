@@ -181,7 +181,7 @@ class FragmentGenerator:
             self.add_log(f'{input_kern_file}->More than 1 spine', False)
             return
 
-        options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kernType=KernTypeExporter.normalizedKern)
+        options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kern_type=KernTypeExporter.normalizedKern)
 
         # Create folder for the current file
         current_folder = FragmentGenerator.get_output_filename_directory(input_kern_file, output_directory)

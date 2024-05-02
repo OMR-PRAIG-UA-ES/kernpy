@@ -32,7 +32,7 @@ class KernTypeExporter(Enum):  # TODO: Eventually, polymorphism will be used to 
 
 
 class ExportOptions:
-    def __init__(self, spine_types=[], token_categories=[], from_measure: int = None, to_measure: int =None, kernType: KernTypeExporter = KernTypeExporter.normalizedKern):
+    def __init__(self, spine_types=None, token_categories=None, from_measure: int = None, to_measure: int = None, kern_type: KernTypeExporter = KernTypeExporter.normalizedKern, instruments=None):
         """
         Create a new ExportOptions object.
 
@@ -41,7 +41,8 @@ class ExportOptions:
             token_categories (Iterable): TokenCategory
             from_measure (int): The measure to start exporting. When None, the exporter will start from the beginning of the file.
             to_measure (int): The measure to end exporting. When None, the exporter will end at the end of the file.
-            kernType (KernTypeExporter): The type of the kern file to export.
+            kern_type (KernTypeExporter): The type of the kern file to export.
+            instruments (Iterable): The instruments to export. When None, all the instruments will be exported.
 
 
         Example:
@@ -64,15 +65,16 @@ class ExportOptions:
             >>> exported_data = hi.doExport(options)
 
             Export using the eKern version
-            >>> options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kernType=KernTypeExporter.eKern)
+            >>> options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kern_type=KernTypeExporter.eKern)
             >>> exported_data = hi.doExport(options)
 
         """
-        self.spine_types = spine_types
+        self.spine_types = spine_types or []
         self.from_measure = from_measure
         self.to_measure = to_measure
-        self.token_categories = token_categories
-        self.kern_type = kernType
+        self.token_categories = token_categories or []
+        self.kern_type = kern_type
+        self.instruments = instruments or []
 
 
 class BoundingBoxMeasures:
@@ -543,7 +545,7 @@ class HumdrumImporter:
         result = ''
         for err in self.errors:
             result += str(err)
-            result + '\n'
+            result += '\n'
         return result
 
     def hasErrors(self):
@@ -842,7 +844,7 @@ def kern_to_ekern(input_file, output_file) -> None:
     if len(importer.errors):
         raise Exception(f'ERROR: {input_file} has errors {importer.getErrorMessages()}')
 
-    export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kernType=KernTypeExporter.eKern)
+    export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kern_type=KernTypeExporter.eKern)
     exported_ekern = importer.doExport(export_options)
 
     with open(output_file, 'w') as file:

@@ -40,7 +40,7 @@ class ImporterTestCase(unittest.TestCase):
         with open(expected_ekern, 'r') as file1:
             expected_content = file1.read()
 
-        export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kernType=KernTypeExporter.eKern)
+        export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kern_type=KernTypeExporter.eKern)
         export_options.from_measure = from_measure
         export_options.to_measure = to_measure
         exported_ekern = importer.doExportEKern(export_options)
