@@ -468,6 +468,167 @@ class Duration:
         self.encoding = str(raw_duration)
         self.duration = int(raw_duration)
 
+    def __str__(self):
+        return f'{self.encoding}'
+
+    def __repr__(self):
+        return f'[Duration: {self.encoding}, duration={self.duration}]'
+
+    def __eq__(self, other):
+        """
+        Compare two durations.
+
+        Args:
+            other: The other duration to compare
+
+        Returns:
+            True if the durations are equal, False otherwise
+
+        Examples:
+            >>> duration = Duration('2')
+            >>> duration2 = Duration('2')
+            >>> duration == duration2
+            True
+            >>> duration = Duration('2')
+            >>> duration2 = Duration('4')
+            >>> duration == duration2
+            False
+        """
+        if not isinstance(other, Duration):
+            return False
+        return self.duration == other.duration
+
+    def __ne__(self, other):
+        """
+        Compare two durations.
+
+        Args:
+            other: The other duration to compare
+
+        Returns:
+            True if the durations are different, False otherwise
+
+        Examples:
+            >>> duration = Duration('2')
+            >>> duration2 = Duration('2')
+            >>> duration != duration2
+            False
+            >>> duration = Duration('2')
+            >>> duration2 = Duration('4')
+            >>> duration != duration2
+            True
+        """
+        return not self.__eq__(other)
+
+    def __gt__(self, other):
+        """
+        Compare two durations.
+
+        Args:
+            other: The other duration to compare
+
+        Returns:
+            True if this duration is higher than the other, False otherwise
+
+        Examples:
+            >>> duration = Duration('2')
+            >>> duration2 = Duration('4')
+            >>> duration > duration2
+            False
+            >>> duration = Duration('4')
+            >>> duration2 = Duration('2')
+            >>> duration > duration2
+            True
+            >>> duration = Duration('4')
+            >>> duration2 = Duration('4')
+            >>> duration > duration2
+            False
+        """
+        if not isinstance(other, Duration):
+            raise ValueError(f'Invalid comparison: > operator can not be used to compare duration with {type(other)}')
+        return self.duration > other.duration
+
+    def __lt__(self, other):
+        """
+        Compare two durations.
+
+        Args:
+            other: The other duration to compare
+
+        Returns:
+            True if this duration is lower than the other, False otherwise
+
+        Examples:
+            >>> duration = Duration('2')
+            >>> duration2 = Duration('4')
+            >>> duration < duration2
+            True
+            >>> duration = Duration('4')
+            >>> duration2 = Duration('2')
+            >>> duration < duration2
+            False
+            >>> duration = Duration('4')
+            >>> duration2 = Duration('4')
+            >>> duration < duration2
+            False
+        """
+        if not isinstance(other, Duration):
+            raise ValueError(f'Invalid comparison: < operator can not be used to compare duration with {type(other)}')
+        return self.duration < other.duration
+
+    def __ge__(self, other):
+        """
+        Compare two durations.
+
+        Args:
+            other: The other duration to compare
+
+        Returns:
+            True if this duration is higher or equal than the other, False otherwise
+
+        Examples:
+            >>> duration = Duration('2')
+            >>> duration2 = Duration('4')
+            >>> duration >= duration2
+            False
+            >>> duration = Duration('4')
+            >>> duration2 = Duration('2')
+            >>> duration >= duration2
+            True
+            >>> duration = Duration('4')
+            >>> duration2 = Duration('4')
+            >>> duration >= duration2
+            True
+        """
+        return self.__gt__(other) or self.__eq__(other)
+
+    def __le__(self, other):
+        """
+        Compare two durations.
+
+        Args:
+            other: The other duration to compare
+
+        Returns:
+            True if this duration is lower or equal than the other, False otherwise
+
+        Examples:
+            >>> duration = Duration('2')
+            >>> duration2 = Duration('4')
+            >>> duration <= duration2
+            True
+            >>> duration = Duration('4')
+            >>> duration2 = Duration('2')
+            >>> duration <= duration2
+            False
+            >>> duration = Duration('4')
+            >>> duration2 = Duration('4')
+            >>> duration <= duration2
+            True
+        """
+        return self.__lt__(other) or self.__eq__(other)
+
+
     @staticmethod
     def __is_valid_duration(raw_duration: str) -> bool:
         try:

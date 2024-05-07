@@ -195,4 +195,76 @@ class TokenTestCase(unittest.TestCase):
         with self.assertRaises(ValueError):
             duration = kernpy.Duration('abcde')
 
+    def test_Duration_eq(self):
+        duration_a = kernpy.Duration('2')
+        duration_b = kernpy.Duration('2')
+        self.assertTrue(duration_a == duration_b)
+
+        duration_a = kernpy.Duration('2')
+        duration_b = kernpy.Duration('16')
+        self.assertFalse(duration_a == duration_b)
+
+    def test_Duration_ne(self):
+        duration_a = kernpy.Duration('2')
+        duration_b = kernpy.Duration('2')
+        self.assertFalse(duration_a != duration_b)
+
+        duration_a = kernpy.Duration('2')
+        duration_b = kernpy.Duration('16')
+        self.assertTrue(duration_a != duration_b)
+
+    def test_Duration_gt(self):
+        duration_a = kernpy.Duration('2')
+        duration_b = kernpy.Duration('2')
+        self.assertFalse(duration_a > duration_b)
+
+        duration_a = kernpy.Duration('2')
+        duration_b = kernpy.Duration('16')
+        self.assertFalse(duration_a > duration_b)
+
+        duration_a = kernpy.Duration('16')
+        duration_b = kernpy.Duration('2')
+        self.assertTrue(duration_a > duration_b)
+
+    def test_Duration_lt(self):
+        duration_a = kernpy.Duration('2')
+        duration_b = kernpy.Duration('2')
+        self.assertFalse(duration_a < duration_b)
+
+        duration_a = kernpy.Duration('2')
+        duration_b = kernpy.Duration('16')
+        self.assertTrue(duration_a < duration_b)
+
+        duration_a = kernpy.Duration('16')
+        duration_b = kernpy.Duration('2')
+        self.assertFalse(duration_a < duration_b)
+
+    def test_Duration_ge(self):
+        duration_a = kernpy.Duration('2')
+        duration_b = kernpy.Duration('2')
+        self.assertTrue(duration_a >= duration_b)
+
+        duration_a = kernpy.Duration('2')
+        duration_b = kernpy.Duration('16')
+        self.assertFalse(duration_a >= duration_b)
+
+        duration_a = kernpy.Duration('16')
+        duration_b = kernpy.Duration('2')
+        self.assertTrue(duration_a >= duration_b)
+
+    def test_Duration_le(self):
+        duration_a = kernpy.Duration('2')
+        duration_b = kernpy.Duration('2')
+        self.assertTrue(duration_a <= duration_b)
+
+        duration_a = kernpy.Duration('2')
+        duration_b = kernpy.Duration('16')
+        self.assertTrue(duration_a <= duration_b)
+
+        duration_a = kernpy.Duration('16')
+        duration_b = kernpy.Duration('2')
+        self.assertFalse(duration_a <= duration_b)
+
+
+
 
