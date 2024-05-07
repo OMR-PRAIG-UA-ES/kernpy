@@ -193,6 +193,9 @@ class NoteRestToken(Token):
 
         self.pitch_duration_subtokens = pitch_duration_subtokens
         self.decoration_subtokens = decoration_subtokens
+        # TODO: Split the pitch-duration in pitch and duration subtokens
+        # self.pitch
+        # self.duration
 
     def export(self) -> string:
         result = ''

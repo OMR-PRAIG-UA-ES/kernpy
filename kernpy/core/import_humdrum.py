@@ -295,7 +295,7 @@ class HumdrumImporter:
                             if not importer:
                                 importer = createImporter(column)
                                 importers[column] = importer
-                            spine = Spine(column, importer)
+                            spine = Spine(column, importer) # TODO: Add instrument
                             for pending_metacomment in pending_metacomments:
                                 spine.addRow()
                                 spine.addToken(pending_metacomment)  # same reference for all spines
