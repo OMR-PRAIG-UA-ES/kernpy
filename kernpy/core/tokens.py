@@ -788,8 +788,8 @@ class NoteRestToken(Token):
 
         self.pitch_duration_subtokens = pitch_duration_subtokens
         self.decoration_subtokens = decoration_subtokens
-        self.duration = Duration(''.join([n for n in self.encoding if n.isnumeric()]))
-        self.pitch = PitchRest(''.join([n for n in self.encoding if n.isalpha()]))
+        #self.duration = Duration(''.join([n for n in self.encoding if n.isnumeric()]))
+        #self.pitch = PitchRest(''.join([n for n in self.encoding if n.isalpha()]))
 
 
     def export(self) -> string:
