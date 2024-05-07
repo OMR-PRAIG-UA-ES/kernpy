@@ -1,6 +1,7 @@
 import string
 from abc import ABC, abstractmethod
 from enum import Enum, auto
+import copy
 
 TOKEN_SEPARATOR = '@'
 DECORATION_SEPARATOR = '·'
@@ -467,6 +468,48 @@ class Duration:
 
         self.encoding = str(raw_duration)
         self.duration = int(raw_duration)
+
+    def modify_duration(self, ratio: int):
+        """
+        Modify the duration of a note or a rest of the current object.
+
+        Args:
+            ratio (int): The factor to modify the duration. The factor must be greater than 0.
+
+        Returns:
+            Duration: The new duration object with the modified duration.
+
+        Examples:
+            >>> duration = Duration('2')
+            >>> new_duration = duration.modify_duration(2)
+            >>> new_duration.duration
+            4
+            >>> duration = Duration('2')
+            >>> new_duration = duration.modify_duration(0)
+            Traceback (most recent call last):
+            ...
+            ValueError: Invalid factor provided: 0. The factor must be greater than 0.
+            >>> duration = Duration('2')
+            >>> new_duration = duration.modify_duration(-2)
+            Traceback (most recent call last):
+            ...
+            ValueError: Invalid factor provided: -2. The factor must be greater than 0.
+        """
+        if not isinstance(ratio, int):
+            raise ValueError(f'Invalid factor provided: {ratio}. The factor must be an integer.')
+        if ratio <= 0:
+            raise ValueError(f'Invalid factor provided: {ratio}. The factor must be greater than 0.')
+
+        return copy.deepcopy(Duration(str(self.duration * ratio)))
+
+    def __deepcopy__(self, memo=None):
+        if memo is None:
+            memo = {}
+
+        new_instance = Duration(self.encoding)
+        new_instance.duration = self.duration
+        new_instance.encoding = self.encoding
+        return new_instance
 
     def __str__(self):
         return f'{self.encoding}'

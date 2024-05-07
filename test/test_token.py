@@ -265,6 +265,32 @@ class TokenTestCase(unittest.TestCase):
         duration_b = kernpy.Duration('2')
         self.assertFalse(duration_a <= duration_b)
 
+    def test_Duration_modify_duration(self):
+        duration = kernpy.Duration('2')
+        new_duration = duration.modify_duration(4)
+        self.assertEqual(new_duration.duration, 8)
+
+        duration = kernpy.Duration('16')
+        new_duration = duration.modify_duration(2)
+        self.assertEqual(new_duration.duration, 32)
+
+        duration = kernpy.Duration('2')
+        new_duration = duration.modify_duration(1)
+        self.assertEqual(new_duration.duration, 2)
+
+        duration = kernpy.Duration('2')
+        with self.assertRaises(ValueError):
+            new_duration = duration.modify_duration(0)
+
+        duration = kernpy.Duration('2')
+        with self.assertRaises(ValueError):
+            new_duration = duration.modify_duration(-1)
+
+        duration = kernpy.Duration('2')
+        with self.assertRaises(ValueError):
+            new_duration = duration.modify_duration(1.5)
+
+
 
 
 
