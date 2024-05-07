@@ -125,13 +125,21 @@ class PitchRest:
 
         Returns:
             bool: True if the pitch is a rest, False otherwise.
+
+        Examples:
+            >>> pitch_rest = PitchRest('c')
+            >>> pitch_rest.is_rest()
+            False
+            >>> pitch_rest = PitchRest('r')
+            >>> pitch_rest.is_rest()
+            True
         """
         return self.octave is None
 
     @staticmethod
     def pitch_comparator(pitch_a: string, pitch_b: string) -> int:
         """
-        Compare two pitches.
+        Compare two pitches of the same octave.
 
         The lower pitch is 'a'. So 'a' < 'b' < 'c' < 'd' < 'e' < 'f' < 'g'
 
@@ -144,6 +152,13 @@ class PitchRest:
             0 if pitch1 is equal to pitch2
             1 if pitch1 is higher than pitch2
 
+        Examples:
+            >>> PitchRest.pitch_comparator('c', 'c')
+            0
+            >>> PitchRest.pitch_comparator('c', 'd')
+            -1
+            >>> PitchRest.pitch_comparator('d', 'c')
+            1
         """
         if pitch_a < pitch_b:
             return -1
@@ -158,18 +173,112 @@ class PitchRest:
         return f'[PitchRest: {self.encoding}, pitch={self.pitch}, octave={self.octave}]'
 
     def __eq__(self, other):
+        """
+        Compare two pitches and rests.
+
+        Args:
+            other: The other pitch to compare
+
+        Returns:
+            True if the pitches are equal, False otherwise
+
+        Examples:
+            >>> pitch_rest = PitchRest('c')
+            >>> pitch_rest2 = PitchRest('c')
+            >>> pitch_rest == pitch_rest2
+            True
+            >>> pitch_rest = PitchRest('c')
+            >>> pitch_rest2 = PitchRest('ccc')
+            >>> pitch_rest == pitch_rest2
+            False
+            >>> pitch_rest = PitchRest('c')
+            >>> pitch_rest2 = PitchRest('r')
+            >>> pitch_rest == pitch_rest2
+            False
+            >>> pitch_rest = PitchRest('r')
+            >>> pitch_rest2 = PitchRest('r')
+            >>> pitch_rest == pitch_rest2
+            True
+
+        """
+        if not isinstance(other, PitchRest):
+            return False
+        if self.is_rest() and other.is_rest():
+            return True
+        if self.is_rest() or other.is_rest():
+            return False
         return self.pitch == other.pitch and self.octave == other.octave
 
     def __ne__(self, other):
+        """
+        Compare two pitches and rests.
+        Args:
+            other: The other pitch to compare
+
+        Returns:
+            True if the pitches are different, False otherwise
+
+        Examples:
+            >>> pitch_rest = PitchRest('c')
+            >>> pitch_rest2 = PitchRest('c')
+            >>> pitch_rest != pitch_rest2
+            False
+            >>> pitch_rest = PitchRest('c')
+            >>> pitch_rest2 = PitchRest('ccc')
+            >>> pitch_rest != pitch_rest2
+            True
+            >>> pitch_rest = PitchRest('c')
+            >>> pitch_rest2 = PitchRest('r')
+            >>> pitch_rest != pitch_rest2
+            True
+            >>> pitch_rest = PitchRest('r')
+            >>> pitch_rest2 = PitchRest('r')
+            >>> pitch_rest != pitch_rest2
+            False
+        """
         return not self.__eq__(other)
 
     def __gt__(self, other):
-        if self.octave is None and other.octave is not None:
-            return False
-        if self.octave is not None and other.octave is None:
-            return False
-        if self.octave is None and other.octave is None:
-            raise ValueError('Invalid comparison: < operator can not be used to compare pitch of a rest.')
+        """
+        Compare two pitches.
+
+        If any of the pitches is a rest, the comparison raise an exception.
+
+        Args:
+            other: The other pitch to compare
+
+        Returns: True if this pitch is higher than the other, False otherwise
+
+        Examples:
+            >>> pitch_rest = PitchRest('c')
+            >>> pitch_rest2 = PitchRest('d')
+            >>> pitch_rest > pitch_rest2
+            False
+            >>> pitch_rest = PitchRest('c')
+            >>> pitch_rest2 = PitchRest('c')
+            >>> pitch_rest > pitch_rest2
+            False
+            >>> pitch_rest = PitchRest('c')
+            >>> pitch_rest2 = PitchRest('b')
+            >>> pitch_rest > pitch_rest2
+            True
+            >>> pitch_rest = PitchRest('r')
+            >>> pitch_rest2 = PitchRest('c')
+            >>> pitch_rest > pitch_rest2
+            Traceback (most recent call last):
+            ...
+            ValueError: ...
+            >>> pitch_rest = PitchRest('r')
+            >>> pitch_rest2 = PitchRest('r')
+            >>> pitch_rest > pitch_rest2
+            Traceback (most recent call last):
+            ValueError: ...
+
+
+        """
+        if self.is_rest() or other.is_rest():
+            raise ValueError(f'Invalid comparison: > operator can not be used to compare pitch of a rest.\n\
+            self={repr(self)} > other={repr(other)}')
 
         if self.octave > other.octave:
             return True
@@ -178,12 +287,47 @@ class PitchRest:
         return False
 
     def __lt__(self, other):
-        if self.octave is None and other.octave is not None:
-            return False
-        if self.octave is not None and other.octave is None:
-            return False
-        if self.octave is None and other.octave is None:
-            raise ValueError('Invalid comparison: < operator can not be used to compare pitch of a rest.')
+        """
+        Compare two pitches.
+
+        If any of the pitches is a rest, the comparison raise an exception.
+
+        Args:
+            other: The other pitch to compare
+
+        Returns:
+            True if this pitch is lower than the other, False otherwise
+
+        Examples:
+            >>> pitch_rest = PitchRest('c')
+            >>> pitch_rest2 = PitchRest('d')
+            >>> pitch_rest < pitch_rest2
+            True
+            >>> pitch_rest = PitchRest('c')
+            >>> pitch_rest2 = PitchRest('c')
+            >>> pitch_rest < pitch_rest2
+            False
+            >>> pitch_rest = PitchRest('c')
+            >>> pitch_rest2 = PitchRest('b')
+            >>> pitch_rest < pitch_rest2
+            False
+            >>> pitch_rest = PitchRest('r')
+            >>> pitch_rest2 = PitchRest('c')
+            >>> pitch_rest < pitch_rest2
+            Traceback (most recent call last):
+            ...
+            ValueError: ...
+            >>> pitch_rest = PitchRest('r')
+            >>> pitch_rest2 = PitchRest('r')
+            >>> pitch_rest < pitch_rest2
+            Traceback (most recent call last):
+            ...
+            ValueError: ...
+
+        """
+        if self.is_rest() or other.is_rest():
+            raise ValueError(f'Invalid comparison: < operator can not be used to compare pitch of a rest.\n\
+            self={repr(self)} < other={repr(other)}')
 
         if self.octave < other.octave:
             return True
@@ -192,9 +336,79 @@ class PitchRest:
         return False
 
     def __ge__(self, other):
+        """
+        Compare two pitches. If any of the PitchRest is a rest, the comparison raise an exception.
+        Args:
+            other: The other pitch to compare
+
+        Returns:
+            True if this pitch is higher or equal than the other, False otherwise
+
+        Examples:
+            >>> pitch_rest = PitchRest('c')
+            >>> pitch_rest2 = PitchRest('d')
+            >>> pitch_rest >= pitch_rest2
+            False
+            >>> pitch_rest = PitchRest('c')
+            >>> pitch_rest2 = PitchRest('c')
+            >>> pitch_rest >= pitch_rest2
+            True
+            >>> pitch_rest = PitchRest('c')
+            >>> pitch_rest2 = PitchRest('b')
+            >>> pitch_rest >= pitch_rest2
+            True
+            >>> pitch_rest = PitchRest('r')
+            >>> pitch_rest2 = PitchRest('c')
+            >>> pitch_rest >= pitch_rest2
+            Traceback (most recent call last):
+            ...
+            ValueError: ...
+            >>> pitch_rest = PitchRest('r')
+            >>> pitch_rest2 = PitchRest('r')
+            >>> pitch_rest >= pitch_rest2
+            Traceback (most recent call last):
+            ...
+            ValueError: ...
+
+
+        """
         return self.__gt__(other) or self.__eq__(other)
 
     def __le__(self, other):
+        """
+Compare two pitches. If any of the PitchRest is a rest, the comparison raise an exception.
+        Args:
+            other: The other pitch to compare
+
+        Returns: True if this pitch is lower or equal than the other, False otherwise
+
+        Examples:
+            >>> pitch_rest = PitchRest('c')
+            >>> pitch_rest2 = PitchRest('d')
+            >>> pitch_rest <= pitch_rest2
+            True
+            >>> pitch_rest = PitchRest('c')
+            >>> pitch_rest2 = PitchRest('c')
+            >>> pitch_rest <= pitch_rest2
+            True
+            >>> pitch_rest = PitchRest('c')
+            >>> pitch_rest2 = PitchRest('b')
+            >>> pitch_rest <= pitch_rest2
+            False
+            >>> pitch_rest = PitchRest('r')
+            >>> pitch_rest2 = PitchRest('c')
+            >>> pitch_rest <= pitch_rest2
+            Traceback (most recent call last):
+            ...
+            ValueError: ...
+            >>> pitch_rest = PitchRest('r')
+            >>> pitch_rest2 = PitchRest('r')
+            >>> pitch_rest <= pitch_rest2
+            Traceback (most recent call last):
+            ...
+            ValueError: ...
+
+        """
         return self.__lt__(other) or self.__eq__(other)
 
 

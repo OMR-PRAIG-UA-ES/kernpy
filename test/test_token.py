@@ -145,7 +145,8 @@ class TokenTestCase(unittest.TestCase):
 
         pitch_rest_a = kernpy.PitchRest('c')
         pitch_rest_b = kernpy.PitchRest('r')
-        self.assertFalse(pitch_rest_a >= pitch_rest_b)
+        with self.assertRaises(ValueError):
+            pitch_rest_a >= pitch_rest_b
 
     def test_PitchRest_le(self):
         pitch_rest_a = kernpy.PitchRest('c')
@@ -175,6 +176,7 @@ class TokenTestCase(unittest.TestCase):
 
         pitch_rest_a = kernpy.PitchRest('c')
         pitch_rest_b = kernpy.PitchRest('r')
-        self.assertFalse(pitch_rest_a <= pitch_rest_b)
+        with self.assertRaises(ValueError):
+            pitch_rest_a <= pitch_rest_b
 
 
