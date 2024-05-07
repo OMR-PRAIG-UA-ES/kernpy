@@ -37,6 +37,7 @@ __all__ = [
     'TextSpineImporter',
     'read_kern',
     'Score',
+    'PitchRest',
 ]
 
 
