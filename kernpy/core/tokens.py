@@ -376,7 +376,7 @@ class PitchRest:
 
     def __le__(self, other):
         """
-Compare two pitches. If any of the PitchRest is a rest, the comparison raise an exception.
+        Compare two pitches. If any of the PitchRest is a rest, the comparison raise an exception.
         Args:
             other: The other pitch to compare
 
@@ -410,6 +410,71 @@ Compare two pitches. If any of the PitchRest is a rest, the comparison raise an 
 
         """
         return self.__lt__(other) or self.__eq__(other)
+
+class Duration:
+    """
+    Represents the duration of a note or a rest.
+
+    The duration is represented using the Humdrum Kern format.
+    The duration is a number that represents the number of units of the duration.
+
+    The duration of a whole note is 1, half note is 2, quarter note is 4, eighth note is 8, etc.
+
+    The duration of a note is represented by a number. The duration of a rest is also represented by a number.
+
+    This class do not limit the duration ranges.
+
+    In the following example, the duration is represented by the number '2'.
+    ```
+    **kern
+    *clefG2
+    2c          // whole note
+    4c          // half note
+    8c          // quarter note
+    16c         // eighth note
+    *-
+    ```
+    """
+    def __init__(self, raw_duration: str):
+        """
+        Create a new Duration object.
+
+        Args:
+            raw_duration (str): duration representation in Humdrum Kern format
+
+        Examples:
+            >>> duration = Duration('2')
+            True
+            >>> duration = Duration('2')
+            True
+            >>> duration = Duration('4')
+            True
+            >>> duration = Duration('8')
+            True
+            >>> duration = Duration('1')
+            True
+            >>> duration = Duration('0')
+            False
+            >>> duration = Duration('-2')
+            False
+            >>> duration = Duration('c4')
+            False
+            >>> duration = Duration('4c')
+            False
+        """
+        if not Duration.__is_valid_duration(raw_duration):
+            raise ValueError(f'Bad duration provided: {raw_duration} was provided.')
+
+        self.encoding = str(raw_duration)
+        self.duration = int(raw_duration)
+
+    @staticmethod
+    def __is_valid_duration(raw_duration: str) -> bool:
+        try:
+            duration = int(raw_duration)
+            return duration > 0 and (duration % 2 == 0 or duration == 1)
+        except ValueError:
+            return False
 
 
 class Subtoken:
@@ -562,18 +627,8 @@ class NoteRestToken(Token):
 
         self.pitch_duration_subtokens = pitch_duration_subtokens
         self.decoration_subtokens = decoration_subtokens
-        # TODO: Split the pitch-duration in pitch and duration subtokens
-        # self.pitch
-        # self.duration
-        self.duration, self.pitch = self.__split_duration_pitch()
-
-    def __split_duration_pitch(self) -> (int, string):
-        duration = int(''.join([n for n in self.encoding if n.isnumeric()]))
-        pitch = ''.join([char for char in self.encoding if not char.isnumeric()])
-
-        return duration, pitch
-
-
+        self.duration = Duration(''.join([n for n in self.encoding if n.isnumeric()]))
+        self.pitch = PitchRest(''.join([n for n in self.encoding if n.isalpha()]))
 
 
     def export(self) -> string:

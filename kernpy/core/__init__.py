@@ -38,6 +38,7 @@ __all__ = [
     'read_kern',
     'Score',
     'PitchRest',
+    'Duration',
 ]
 
 

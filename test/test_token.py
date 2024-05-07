@@ -179,4 +179,20 @@ class TokenTestCase(unittest.TestCase):
         with self.assertRaises(ValueError):
             pitch_rest_a <= pitch_rest_b
 
+    def test_Duration_creation_generic(self):
+        duration = kernpy.Duration('2')
+        self.assertEqual(duration.duration, 2)
+
+        duration = kernpy.Duration('16')
+        self.assertEqual(duration.duration, 16)
+
+        duration = kernpy.Duration('1')
+        self.assertEqual(duration.duration, 1)
+
+        with self.assertRaises(ValueError):
+            duration = kernpy.Duration('0')
+
+        with self.assertRaises(ValueError):
+            duration = kernpy.Duration('abcde')
+
 
