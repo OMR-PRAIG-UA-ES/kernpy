@@ -432,9 +432,12 @@ class HumdrumImporter:
         signatures_at_each_row = []
         row_contents = []
 
-        if options.from_measure is None or options.from_measure < 0:
+        if options.from_measure is not None and options.from_measure < 0:
             raise ValueError(f'option from_measure must be >=0 but {options.from_measure} was found. ')
-        if options.to_measure is not None and options.to_measure < options.from_measure:
+        if options.to_measure is not None and options.to_measure > len(self.measure_start_rows):
+            #"TODO: DAVID, check options.to_measure bounds. len(self.measure_start_rows) or len(self.measure_start_rows) - 1"
+            raise ValueError(f'option to_measure must be <= {len(self.measure_start_rows)} but {options.to_measure} was found. ')
+        if options.to_measure is not None and options.from_measure is not None and options.to_measure < options.from_measure:
             raise ValueError(f'option to_measure must be >= from_measure but {options.to_measure} < {options.from_measure} was found. ')
 
         last_signature = None
