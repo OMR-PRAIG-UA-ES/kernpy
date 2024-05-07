@@ -164,10 +164,12 @@ class PitchRest:
         return not self.__eq__(other)
 
     def __gt__(self, other):
-        if self.pitch is None and other.pitch is not None:
+        if self.octave is None and other.octave is not None:
             return False
-        if self.pitch is not None and other.pitch is None:
+        if self.octave is not None and other.octave is None:
             return False
+        if self.octave is None and other.octave is None:
+            raise ValueError('Invalid comparison: < operator can not be used to compare pitch of a rest.')
 
         if self.octave > other.octave:
             return True
@@ -176,10 +178,12 @@ class PitchRest:
         return False
 
     def __lt__(self, other):
-        if self.pitch is None and other.pitch is not None:
+        if self.octave is None and other.octave is not None:
             return False
-        if self.pitch is not None and other.pitch is None:
+        if self.octave is not None and other.octave is None:
             return False
+        if self.octave is None and other.octave is None:
+            raise ValueError('Invalid comparison: < operator can not be used to compare pitch of a rest.')
 
         if self.octave < other.octave:
             return True
