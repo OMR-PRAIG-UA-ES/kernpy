@@ -85,6 +85,8 @@ class PitchRest:
     C3_OCATAVE = 3
     REST_CHARACTER = 'r'
 
+    VALID_PITCHES = 'abcdefg' + 'ABCDEFG' + REST_CHARACTER
+
     def __init__(self, raw_pitch: str):
         """
         Create a new PitchRest object.
@@ -842,7 +844,12 @@ class NoteRestToken(Token):
         else:
             self.duration = Duration(duration_token)
 
-        #self.pitch = PitchRest(''.join([n for n in self.encoding if n.isalpha()])) TODO: Ahora entran muchos tokens diferentes, filtrar solo los de pitch
+        pitch_rest_token = ''.join([n for n in self.encoding if n in PitchRest.VALID_PITCHES])
+        if pitch_rest_token is None or len(pitch_rest_token) == 0:
+            self.pitch = None
+        else:
+            self.pitch = PitchRest(pitch_rest_token)
+        # TODO: Ahora entran muchos tokens diferentes, filtrar solo los de pitch
 
 
     def export(self) -> string:
