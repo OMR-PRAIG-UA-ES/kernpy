@@ -21,7 +21,7 @@ class KernSpineImporterTest(unittest.TestCase):
         importer = KernSpineImporter()
         token = importer.doImport(input)
         self.assertIsNotNone(token)
-        self.assertEquals(expected, token.export())
+        self.assertEqual(expected, token.export())
 
     def test1(self):
         self.doTest("32qqbb-\LLL", "32@qq@bb@-·L·\\")

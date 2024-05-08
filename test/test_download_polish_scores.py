@@ -28,16 +28,15 @@ class DownloadPolishScoresTestCase(unittest.TestCase):
             size2 = image2.size
 
             # Check if the sizes are equal
-            self.assertEquals(size1, size2)
+            self.assertEqual(size1, size2)
         except IOError:
             raise Exception("Unable to load one or both images")
-            return False
 
     def checkEqualFiles(self, file1, file2):
         with open(file1, 'r') as file1, open(file2, 'r') as file2:
             content1 = file1.read()
             content2 = file2.read()
-            self.assertEquals(content1, content2)
+            self.assertEqual(content1, content2)
 
     def test(self):
         temp_dir = tempfile.mkdtemp()

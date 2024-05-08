@@ -54,7 +54,7 @@ class ImporterTestCase(unittest.TestCase):
             logging.info('--------------------------')
             logging.info(exported_ekern)
 
-        self.assertEquals(expected_content, exported_ekern)
+        self.assertEqual(expected_content, exported_ekern)
         return importer
 
     def doEKernTest(self, kern_file, expected_measure_start_rows):
@@ -68,7 +68,7 @@ class ImporterTestCase(unittest.TestCase):
         importer = self.checkEquals(kern_file, ekern, None, None)
 
         exported_measure_start_rows = importer.measure_start_rows
-        self.assertEquals(expected_measure_start_rows, exported_measure_start_rows)
+        self.assertEqual(expected_measure_start_rows, exported_measure_start_rows)
 
     def doEKernMeasureToMeasureTest(self, kern_file, from_measure, to_measure):
         logging.info(f'Importing {kern_file} and checking the ekern')
@@ -80,17 +80,17 @@ class ImporterTestCase(unittest.TestCase):
         logging.info(f'Importing {kern_file}')
         importer = HumdrumImporter()
         importer.doImportFile(kern_file)
-        self.assertEquals(row_count, importer.getMaxRows())
+        self.assertEqual(row_count, importer.getMaxRows())
         num_rows = importer.getMaxRows()
         num_spines = len(importer.spines)
-        self.assertEquals(num_spines, len(spine_counts), "Num. spines")
+        self.assertEqual(num_spines, len(spine_counts), "Num. spines")
         for i in range(num_rows):
             for j in range(num_spines):
                 subspines = importer.spines[j].getNumSubspines(i)
-                self.assertEquals(spine_counts[j][i], subspines, f"Spine in row #{i+1} and spine #{j+1}")
+                self.assertEqual(spine_counts[j][i], subspines, f"Spine in row #{i+1} and spine #{j+1}")
 
 
-        #self.assertEquals(len(importer.spines), len(spine_counts))
+        #self.assertEqual(len(importer.spines), len(spine_counts))
         #for i in range(len(spine_counts))
 
     # it loads a simple file
@@ -197,7 +197,7 @@ class ImporterTestCase(unittest.TestCase):
     def testHeader(self):
         importer = HumdrumImporter()
         importer.doImportFile('resource_dir/unit/headers.krn')
-        self.assertEquals(8, len(importer.spines))
+        self.assertEqual(8, len(importer.spines))
         self.assertTrue(isinstance(importer.spines[0].importer, KernSpineImporter))
         self.assertTrue(isinstance(importer.spines[1].importer, MensSpineImporter))
         self.assertTrue(isinstance(importer.spines[2].importer, DynamSpineImporter))
@@ -255,25 +255,25 @@ class ImporterTestCase(unittest.TestCase):
         export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
         output_kern = importer.doExportEKern(export_options)
         expected_ekern = "**ekern\n4@c\n4@d\n4@e\n4@f\n*-\n"
-        self.assertEquals(expected_ekern, output_kern)
+        self.assertEqual(expected_ekern, output_kern)
 
     def testLexicalError(self):
         input_kern = "**kern\ncleF4\n4c\n4d\n4e\n4f\n*-"
         importer = HumdrumImporter()
         importer.doImportString(input_kern)
-        self.assertEquals(1, len(importer.errors))
+        self.assertEqual(1, len(importer.errors))
 
     def testParserError(self):
         input_kern = "**kern\n*clefF4\nc4\n4d\n4e\n4f\n*-"
         importer = HumdrumImporter()
         importer.doImportString(input_kern)
-        self.assertEquals(1, len(importer.errors))
+        self.assertEqual(1, len(importer.errors))
 
     def testLexicalParserError(self):
         input_kern = "**kern\ncleF4\nc4\n4d\n4e\n4f\n*-"
         importer = HumdrumImporter()
         importer.doImportString(input_kern)
-        self.assertEquals(2, len(importer.errors))
+        self.assertEqual(2, len(importer.errors))
 
     def testMetacomment(self):
         input_kern = "!!!M1\n**kern\n*clefF4\n4c\n4d\n!!!M2\n4e\n4f\n*-"
