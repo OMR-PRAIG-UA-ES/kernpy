@@ -84,6 +84,7 @@ class PitchRest:
     C3_PITCH_UPPERCASE = 'C'
     C3_OCATAVE = 3
     REST_CHARACTER = 'r'
+
     def __init__(self, raw_pitch: str):
         """
         Create a new PitchRest object.
@@ -136,6 +137,8 @@ class PitchRest:
             True
         """
         return self.octave is None
+
+
 
     @staticmethod
     def pitch_comparator(pitch_a: string, pitch_b: string) -> int:
@@ -464,7 +467,7 @@ class Duration:
             False
         """
         if not Duration.__is_valid_duration(raw_duration):
-            raise ValueError(f'Bad duration provided: {raw_duration} was provided.')
+            raise ValueError(f'Bad duration: {raw_duration} was provided.')
 
         self.encoding = str(raw_duration)
         self.duration = int(raw_duration)
@@ -671,10 +674,11 @@ class Duration:
         """
         return self.__lt__(other) or self.__eq__(other)
 
-
     @staticmethod
     def __is_valid_duration(raw_duration: str) -> bool:
         try:
+            if raw_duration is None or len(raw_duration) == 0:
+                return False
             duration = int(raw_duration)
             return duration > 0 and (duration % 2 == 0 or duration == 1)
         except ValueError:
@@ -831,8 +835,14 @@ class NoteRestToken(Token):
 
         self.pitch_duration_subtokens = pitch_duration_subtokens
         self.decoration_subtokens = decoration_subtokens
-        #self.duration = Duration(''.join([n for n in self.encoding if n.isnumeric()]))
-        #self.pitch = PitchRest(''.join([n for n in self.encoding if n.isalpha()]))
+        #self.duration = Duration(''.join([subtoken for subtoken in decoration_subtokens if subtoken.isnumeric()]))
+        duration_token = ''.join([n for n in self.encoding if n.isnumeric()])
+        if duration_token is None or len(duration_token) == 0:
+            self.duration = None
+        else:
+            self.duration = Duration(duration_token)
+
+        #self.pitch = PitchRest(''.join([n for n in self.encoding if n.isalpha()])) TODO: Ahora entran muchos tokens diferentes, filtrar solo los de pitch
 
 
     def export(self) -> string:
