@@ -39,6 +39,8 @@ __all__ = [
     'Score',
     'PitchRest',
     'Duration',
+    'DurationClassical',
+    'DurationMensural',
 ]
 
 

@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from enum import Enum, auto
 import copy
 
+
 TOKEN_SEPARATOR = '@'
 DECORATION_SEPARATOR = '·'
 
@@ -417,7 +418,8 @@ class PitchRest:
         """
         return self.__lt__(other) or self.__eq__(other)
 
-class Duration:
+
+class Duration(ABC):
     """
     Represents the duration of a note or a rest.
 
@@ -441,7 +443,94 @@ class Duration:
     *-
     ```
     """
-    def __init__(self, raw_duration: str):
+    def __init__(self, raw_duration):
+        self.encoding = str(raw_duration)
+
+    @abstractmethod
+    def modify(self, ratio: int):
+        pass
+
+    @abstractmethod
+    def __deepcopy__(self, memo=None):
+        pass
+
+    @abstractmethod
+    def __eq__(self, other):
+        pass
+
+    @abstractmethod
+    def __ne__(self, other):
+        pass
+
+    @abstractmethod
+    def __gt__(self, other):
+        pass
+
+    @abstractmethod
+    def __lt__(self, other):
+        pass
+
+    @abstractmethod
+    def __ge__(self, other):
+        pass
+
+    @abstractmethod
+    def __le__(self, other):
+        pass
+
+    @abstractmethod
+    def __str__(self):
+        pass
+
+
+class DurationFactory:
+    @staticmethod
+    def create_duration(duration: str) -> Duration:
+        return DurationClassical(int(duration))
+
+
+class DurationMensural(Duration):
+    """
+    Represents the duration in mensural notation of a note or a rest.
+    """
+    def __init__(self, duration):
+
+        super().__init__(duration)
+        self.duration = duration
+
+    def __eq__(self, other):
+        raise NotImplementedError()
+
+    def modify(self, ratio: int):
+        raise NotImplementedError()
+
+    def __deepcopy__(self, memo=None):
+        raise NotImplementedError()
+
+    def __gt__(self, other):
+        raise NotImplementedError()
+
+    def __lt__(self, other):
+        raise NotImplementedError()
+
+    def __le__(self, other):
+        raise NotImplementedError()
+
+    def __str__(self):
+        raise NotImplementedError()
+
+    def __ge__(self, other):
+        raise NotImplementedError()
+
+    def __ne__(self, other):
+        raise NotImplementedError()
+
+
+class DurationClassical(Duration):
+    """
+    Represents the duration in classical notation of a note or a rest.
+    """
+    def __init__(self, duration: int):
         """
         Create a new Duration object.
 
@@ -449,32 +538,30 @@ class Duration:
             raw_duration (str): duration representation in Humdrum Kern format
 
         Examples:
-            >>> duration = Duration('2')
+            >>> duration = DurationClassical(2)
             True
-            >>> duration = Duration('2')
+            >>> duration = DurationClassical(4)
             True
-            >>> duration = Duration('4')
+            >>> duration = DurationClassical(32)
             True
-            >>> duration = Duration('8')
+            >>> duration = DurationClassical(1)
             True
-            >>> duration = Duration('1')
-            True
-            >>> duration = Duration('0')
+            >>> duration = DurationClassical(0)
             False
-            >>> duration = Duration('-2')
+            >>> duration = DurationClassical(-2)
             False
-            >>> duration = Duration('c4')
+            >>> duration = DurationClassical(3)
             False
-            >>> duration = Duration('4c')
+            >>> duration = DurationClassical(7)
             False
         """
-        if not Duration.__is_valid_duration(raw_duration):
-            raise ValueError(f'Bad duration: {raw_duration} was provided.')
+        super().__init__(duration)
+        if not DurationClassical.__is_valid_duration(duration):
+            raise ValueError(f'Bad duration: {duration} was provided.')
 
-        self.encoding = str(raw_duration)
-        self.duration = int(raw_duration)
+        self.duration = int(duration)
 
-    def modify_duration(self, ratio: int):
+    def modify(self, ratio: int):
         """
         Modify the duration of a note or a rest of the current object.
 
@@ -482,20 +569,20 @@ class Duration:
             ratio (int): The factor to modify the duration. The factor must be greater than 0.
 
         Returns:
-            Duration: The new duration object with the modified duration.
+            DurationClassical: The new duration object with the modified duration.
 
         Examples:
-            >>> duration = Duration('2')
-            >>> new_duration = duration.modify_duration(2)
+            >>> duration = DurationClassical(2)
+            >>> new_duration = duration.modify(2)
             >>> new_duration.duration
             4
-            >>> duration = Duration('2')
-            >>> new_duration = duration.modify_duration(0)
+            >>> duration = DurationClassical(2)
+            >>> new_duration = duration.modify(0)
             Traceback (most recent call last):
             ...
             ValueError: Invalid factor provided: 0. The factor must be greater than 0.
-            >>> duration = Duration('2')
-            >>> new_duration = duration.modify_duration(-2)
+            >>> duration = DurationClassical(2)
+            >>> new_duration = duration.modify(-2)
             Traceback (most recent call last):
             ...
             ValueError: Invalid factor provided: -2. The factor must be greater than 0.
@@ -505,22 +592,18 @@ class Duration:
         if ratio <= 0:
             raise ValueError(f'Invalid factor provided: {ratio}. The factor must be greater than 0.')
 
-        return copy.deepcopy(Duration(str(self.duration * ratio)))
+        return copy.deepcopy(DurationClassical(self.duration * ratio))
 
     def __deepcopy__(self, memo=None):
         if memo is None:
             memo = {}
 
-        new_instance = Duration(self.encoding)
+        new_instance = DurationClassical(self.duration)
         new_instance.duration = self.duration
-        new_instance.encoding = self.encoding
         return new_instance
 
     def __str__(self):
-        return f'{self.encoding}'
-
-    def __repr__(self):
-        return f'[Duration: {self.encoding}, duration={self.duration}]'
+        return f'{self.duration}'
 
     def __eq__(self, other):
         """
@@ -533,16 +616,16 @@ class Duration:
             True if the durations are equal, False otherwise
 
         Examples:
-            >>> duration = Duration('2')
-            >>> duration2 = Duration('2')
+            >>> duration = DurationClassical(2)
+            >>> duration2 = DurationClassical(2)
             >>> duration == duration2
             True
-            >>> duration = Duration('2')
-            >>> duration2 = Duration('4')
+            >>> duration = DurationClassical(2)
+            >>> duration2 = DurationClassical(4)
             >>> duration == duration2
             False
         """
-        if not isinstance(other, Duration):
+        if not isinstance(other, DurationClassical):
             return False
         return self.duration == other.duration
 
@@ -557,12 +640,12 @@ class Duration:
             True if the durations are different, False otherwise
 
         Examples:
-            >>> duration = Duration('2')
-            >>> duration2 = Duration('2')
+            >>> duration = DurationClassical(2)
+            >>> duration2 = DurationClassical(2)
             >>> duration != duration2
             False
-            >>> duration = Duration('2')
-            >>> duration2 = Duration('4')
+            >>> duration = DurationClassical(2)
+            >>> duration2 = DurationClassical(4)
             >>> duration != duration2
             True
         """
@@ -579,20 +662,20 @@ class Duration:
             True if this duration is higher than the other, False otherwise
 
         Examples:
-            >>> duration = Duration('2')
-            >>> duration2 = Duration('4')
+            >>> duration = DurationClassical(2)
+            >>> duration2 = DurationClassical(4)
             >>> duration > duration2
             False
-            >>> duration = Duration('4')
-            >>> duration2 = Duration('2')
+            >>> duration = DurationClassical(4)
+            >>> duration2 = DurationClassical(2)
             >>> duration > duration2
             True
-            >>> duration = Duration('4')
-            >>> duration2 = Duration('4')
+            >>> duration = DurationClassical(4)
+            >>> duration2 = DurationClassical(4)
             >>> duration > duration2
             False
         """
-        if not isinstance(other, Duration):
+        if not isinstance(other, DurationClassical):
             raise ValueError(f'Invalid comparison: > operator can not be used to compare duration with {type(other)}')
         return self.duration > other.duration
 
@@ -607,20 +690,20 @@ class Duration:
             True if this duration is lower than the other, False otherwise
 
         Examples:
-            >>> duration = Duration('2')
-            >>> duration2 = Duration('4')
+            >>> duration = DurationClassical(2)
+            >>> duration2 = DurationClassical(4)
             >>> duration < duration2
             True
-            >>> duration = Duration('4')
-            >>> duration2 = Duration('2')
+            >>> duration = DurationClassical(4)
+            >>> duration2 = DurationClassical(2)
             >>> duration < duration2
             False
-            >>> duration = Duration('4')
-            >>> duration2 = Duration('4')
+            >>> duration = DurationClassical(4)
+            >>> duration2 = DurationClassical(4)
             >>> duration < duration2
             False
         """
-        if not isinstance(other, Duration):
+        if not isinstance(other, DurationClassical):
             raise ValueError(f'Invalid comparison: < operator can not be used to compare duration with {type(other)}')
         return self.duration < other.duration
 
@@ -635,16 +718,16 @@ class Duration:
             True if this duration is higher or equal than the other, False otherwise
 
         Examples:
-            >>> duration = Duration('2')
-            >>> duration2 = Duration('4')
+            >>> duration = DurationClassical(2)
+            >>> duration2 = DurationClassical(4)
             >>> duration >= duration2
             False
-            >>> duration = Duration('4')
-            >>> duration2 = Duration('2')
+            >>> duration = DurationClassical(4)
+            >>> duration2 = DurationClassical(2)
             >>> duration >= duration2
             True
-            >>> duration = Duration('4')
-            >>> duration2 = Duration('4')
+            >>> duration = DurationClassical(4)
+            >>> duration2 = DurationClassical(4)
             >>> duration >= duration2
             True
         """
@@ -661,27 +744,28 @@ class Duration:
             True if this duration is lower or equal than the other, False otherwise
 
         Examples:
-            >>> duration = Duration('2')
-            >>> duration2 = Duration('4')
+            >>> duration = DurationClassical(2)
+            >>> duration2 = DurationClassical(4)
             >>> duration <= duration2
             True
-            >>> duration = Duration('4')
-            >>> duration2 = Duration('2')
+            >>> duration = DurationClassical(4)
+            >>> duration2 = DurationClassical(2)
             >>> duration <= duration2
             False
-            >>> duration = Duration('4')
-            >>> duration2 = Duration('4')
+            >>> duration = DurationClassical(4)
+            >>> duration2 = DurationClassical(4)
             >>> duration <= duration2
             True
         """
         return self.__lt__(other) or self.__eq__(other)
 
     @staticmethod
-    def __is_valid_duration(raw_duration: str) -> bool:
+    def __is_valid_duration(duration: int) -> bool:
         try:
-            if raw_duration is None or len(raw_duration) == 0:
+            duration = int(duration)
+            if duration is None or duration <= 0:
                 return False
-            duration = int(raw_duration)
+
             return duration > 0 and (duration % 2 == 0 or duration == 1)
         except ValueError:
             return False
@@ -837,12 +921,12 @@ class NoteRestToken(Token):
 
         self.pitch_duration_subtokens = pitch_duration_subtokens
         self.decoration_subtokens = decoration_subtokens
-        #self.duration = Duration(''.join([subtoken for subtoken in decoration_subtokens if subtoken.isnumeric()]))
+        #self.duration = DurationClassical(''.join([subtoken for subtoken in decoration_subtokens if subtoken.isnumeric()]))
         duration_token = ''.join([n for n in self.encoding if n.isnumeric()])
         if duration_token is None or len(duration_token) == 0:
             self.duration = None
         else:
-            self.duration = Duration(duration_token)
+            self.duration = DurationFactory.create_duration(duration_token)
 
         pitch_rest_token = ''.join([n for n in self.encoding if n in PitchRest.VALID_PITCHES])
         if pitch_rest_token is None or len(pitch_rest_token) == 0:

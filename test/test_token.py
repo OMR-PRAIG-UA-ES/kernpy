@@ -5,7 +5,7 @@ import sys
 import kernpy
 
 
-class TokenTestCase(unittest.TestCase):
+class PitchRestTestCase(unittest.TestCase):
     def test_PitchRest_creation_generic(self):
         pitch_rest = kernpy.PitchRest('c')
         self.assertEqual(pitch_rest.pitch, 'c')
@@ -179,118 +179,121 @@ class TokenTestCase(unittest.TestCase):
         with self.assertRaises(ValueError):
             pitch_rest_a <= pitch_rest_b
 
+class DurationTestCase(unittest.TestCase):
     def test_Duration_creation_generic(self):
-        duration = kernpy.Duration('2')
+        duration = kernpy.DurationClassical(2)
         self.assertEqual(duration.duration, 2)
 
-        duration = kernpy.Duration('16')
+        duration = kernpy.DurationClassical(16)
         self.assertEqual(duration.duration, 16)
 
-        duration = kernpy.Duration('1')
+        duration = kernpy.DurationClassical(1)
         self.assertEqual(duration.duration, 1)
 
         with self.assertRaises(ValueError):
-            duration = kernpy.Duration('0')
+            duration = kernpy.DurationClassical(0)
 
         with self.assertRaises(ValueError):
-            duration = kernpy.Duration('abcde')
+            duration = kernpy.DurationClassical('abcde')
 
     def test_Duration_eq(self):
-        duration_a = kernpy.Duration('2')
-        duration_b = kernpy.Duration('2')
+        duration_a = kernpy.DurationClassical(2)
+        duration_b = kernpy.DurationClassical(2)
         self.assertTrue(duration_a == duration_b)
 
-        duration_a = kernpy.Duration('2')
-        duration_b = kernpy.Duration('16')
+        duration_a = kernpy.DurationClassical(2)
+        duration_b = kernpy.DurationClassical(16)
         self.assertFalse(duration_a == duration_b)
 
     def test_Duration_ne(self):
-        duration_a = kernpy.Duration('2')
-        duration_b = kernpy.Duration('2')
+        duration_a = kernpy.DurationClassical(2)
+        duration_b = kernpy.DurationClassical(2)
         self.assertFalse(duration_a != duration_b)
 
-        duration_a = kernpy.Duration('2')
-        duration_b = kernpy.Duration('16')
+        duration_a = kernpy.DurationClassical(2)
+        duration_b = kernpy.DurationClassical(16)
         self.assertTrue(duration_a != duration_b)
 
     def test_Duration_gt(self):
-        duration_a = kernpy.Duration('2')
-        duration_b = kernpy.Duration('2')
+        duration_a = kernpy.DurationClassical(2)
+        duration_b = kernpy.DurationClassical(2)
         self.assertFalse(duration_a > duration_b)
 
-        duration_a = kernpy.Duration('2')
-        duration_b = kernpy.Duration('16')
+        duration_a = kernpy.DurationClassical(2)
+        duration_b = kernpy.DurationClassical(16)
         self.assertFalse(duration_a > duration_b)
 
-        duration_a = kernpy.Duration('16')
-        duration_b = kernpy.Duration('2')
+        duration_a = kernpy.DurationClassical(16)
+        duration_b = kernpy.DurationClassical(2)
         self.assertTrue(duration_a > duration_b)
 
     def test_Duration_lt(self):
-        duration_a = kernpy.Duration('2')
-        duration_b = kernpy.Duration('2')
+        duration_a = kernpy.DurationClassical(2)
+        duration_b = kernpy.DurationClassical(2)
         self.assertFalse(duration_a < duration_b)
 
-        duration_a = kernpy.Duration('2')
-        duration_b = kernpy.Duration('16')
+        duration_a = kernpy.DurationClassical(2)
+        duration_b = kernpy.DurationClassical(16)
         self.assertTrue(duration_a < duration_b)
 
-        duration_a = kernpy.Duration('16')
-        duration_b = kernpy.Duration('2')
+        duration_a = kernpy.DurationClassical(16)
+        duration_b = kernpy.DurationClassical(2)
         self.assertFalse(duration_a < duration_b)
 
     def test_Duration_ge(self):
-        duration_a = kernpy.Duration('2')
-        duration_b = kernpy.Duration('2')
+        duration_a = kernpy.DurationClassical(2)
+        duration_b = kernpy.DurationClassical(2)
         self.assertTrue(duration_a >= duration_b)
 
-        duration_a = kernpy.Duration('2')
-        duration_b = kernpy.Duration('16')
+        duration_a = kernpy.DurationClassical(2)
+        duration_b = kernpy.DurationClassical(16)
         self.assertFalse(duration_a >= duration_b)
 
-        duration_a = kernpy.Duration('16')
-        duration_b = kernpy.Duration('2')
+        duration_a = kernpy.DurationClassical(16)
+        duration_b = kernpy.DurationClassical(2)
         self.assertTrue(duration_a >= duration_b)
 
     def test_Duration_le(self):
-        duration_a = kernpy.Duration('2')
-        duration_b = kernpy.Duration('2')
+        duration_a = kernpy.DurationClassical(2)
+        duration_b = kernpy.DurationClassical(2)
         self.assertTrue(duration_a <= duration_b)
 
-        duration_a = kernpy.Duration('2')
-        duration_b = kernpy.Duration('16')
+        duration_a = kernpy.DurationClassical(2)
+        duration_b = kernpy.DurationClassical(16)
         self.assertTrue(duration_a <= duration_b)
 
-        duration_a = kernpy.Duration('16')
-        duration_b = kernpy.Duration('2')
+        duration_a = kernpy.DurationClassical(16)
+        duration_b = kernpy.DurationClassical(2)
         self.assertFalse(duration_a <= duration_b)
 
     def test_Duration_modify_duration(self):
-        duration = kernpy.Duration('2')
-        new_duration = duration.modify_duration(4)
+        duration = kernpy.DurationClassical(2)
+        new_duration = duration.modify(4)
         self.assertEqual(new_duration.duration, 8)
 
-        duration = kernpy.Duration('16')
-        new_duration = duration.modify_duration(2)
+        duration = kernpy.DurationClassical(16)
+        new_duration = duration.modify(2)
         self.assertEqual(new_duration.duration, 32)
 
-        duration = kernpy.Duration('2')
-        new_duration = duration.modify_duration(1)
+        duration = kernpy.DurationClassical(2)
+        new_duration = duration.modify(1)
         self.assertEqual(new_duration.duration, 2)
 
-        duration = kernpy.Duration('2')
+        duration = kernpy.DurationClassical(2)
         with self.assertRaises(ValueError):
-            new_duration = duration.modify_duration(0)
+            new_duration = duration.modify(0)
 
-        duration = kernpy.Duration('2')
+        duration = kernpy.DurationClassical(2)
         with self.assertRaises(ValueError):
-            new_duration = duration.modify_duration(-1)
+            new_duration = duration.modify(-1)
 
-        duration = kernpy.Duration('2')
+        duration = kernpy.DurationClassical(2)
         with self.assertRaises(ValueError):
-            new_duration = duration.modify_duration(1.5)
+            new_duration = duration.modify(1.5)
 
-
+class DurationMensuralTestCase(unittest.TestCase):
+    def test_DurationMensural_creation_generic(self):
+        pass
 
 
 
