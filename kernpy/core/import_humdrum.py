@@ -14,7 +14,7 @@ class KernTypeExporter(Enum):  # TODO: Eventually, polymorphism will be used to 
     """
     Options for exporting a kern file.
 
-    Example:
+    Examples:
         # Create the importer
         >>> hi = HumdrumImporter()
 
@@ -45,7 +45,7 @@ class ExportOptions:
             instruments (Iterable): The instruments to export. When None, all the instruments will be exported.
 
 
-        Example:
+        Examples:
             >>> from kernpy import HumdrumImporter, ExportOptions
 
             Create the importer and read the file
@@ -231,7 +231,7 @@ class HumdrumImporter:
                 if KeyComment is not None, a list be returned anyway. \
                 If there are no metacomments with the specified key, an empty list will be returned.
 
-        Example:
+        Examples:
             >>> from kernpy import HumdrumImporter
             >>> importer = HumdrumImporter()
 
@@ -357,7 +357,7 @@ class HumdrumImporter:
         Returns:
             None
 
-        Example:
+        Examples:
             # Create the importer and read the file
             >>> hi = HumdrumImporter()
             >>> hi.doImportFile('file.krn')
@@ -564,7 +564,7 @@ class HumdrumImporter:
         Returns:
             True if the importer has the token, False otherwise.
 
-        Example:
+        Examples:
             # Create the importer
             >>> hi = HumdrumImporter()
 
@@ -590,7 +590,7 @@ class HumdrumImporter:
         Returns:
             True if the importer has the token category, False otherwise.
 
-        Example:
+        Examples:
             # Create the importer
             >>> hi = HumdrumImporter()
 
@@ -622,7 +622,7 @@ class HumdrumImporter:
         Returns:
             A list with all the tokens in the importer.
 
-        Example:
+        Examples:
             # Create the importer
             >>> hi = HumdrumImporter()
 
@@ -674,7 +674,7 @@ class HumdrumImporter:
         Returns:
             A list with the unique tokens in the importer.
 
-        Example:
+        Examples:
             # Create the importer
             >>> hi = HumdrumImporter()
 
@@ -708,7 +708,7 @@ class HumdrumImporter:
         Returns:
             True if the voice is in the tessitura, False otherwise.
 
-        Example:
+        Examples:
             # Create the importer
             >>> hi = HumdrumImporter()
 
@@ -747,7 +747,7 @@ def get_kern_from_ekern(ekern_content: string) -> string:
     Returns:
         The content of the **kern file.
 
-    Example:
+    Examples:
         ```python
         # Read **ekern file
         ekern_file = 'path/to/file.ekrn'
@@ -778,7 +778,7 @@ def ekern_to_krn(input_file, output_file) -> None:
     Returns:
         None
 
-    Example:
+    Examples:
         # Convert .ekrn to .krn
         >>> ekern_to_krn('path/to/file.ekrn', 'path/to/file.krn')
 
@@ -819,7 +819,7 @@ def kern_to_ekern(input_file, output_file) -> None:
     Returns:
         None
 
-    Example:
+    Examples:
         # Convert .krn to .ekrn
         >>> kern_to_ekern('path/to/file.krn', 'path/to/file.ekrn')
 
