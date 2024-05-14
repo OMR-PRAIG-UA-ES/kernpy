@@ -418,6 +418,11 @@ class PitchRest:
         """
         return self.__lt__(other) or self.__eq__(other)
 
+class PitchRestFactory:
+    @staticmethod
+    def create_pitch_rest(pitch: str) -> PitchRest:
+        return PitchRest(pitch)
+
 
 class Duration(ABC):
     """
@@ -932,7 +937,7 @@ class NoteRestToken(Token):
         if pitch_rest_token is None or len(pitch_rest_token) == 0:
             self.pitch = None
         else:
-            self.pitch = PitchRest(pitch_rest_token)
+            self.pitch = PitchRestFactory.create_pitch_rest(pitch_rest_token)
         # TODO: Ahora entran muchos tokens diferentes, filtrar solo los de pitch
 
 
