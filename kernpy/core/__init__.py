@@ -35,7 +35,7 @@ __all__ = [
     'MensSpineImporter',
     'RootSpineImporter',
     'TextSpineImporter',
-    'read_kern',
+    'read_krn',
     'Score',
     'PitchRest',
     'Duration',
