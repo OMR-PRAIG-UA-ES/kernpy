@@ -264,6 +264,31 @@ class ImporterTestCase(unittest.TestCase):
             expected_output = f.read()
         self.assertEqual(real_ouputput, expected_output)
 
+    def test_extract_measures_bad_measures_input(self):
+        importer = HumdrumImporter()
+        importer.doImportFile('resource_dir/legacy/base_tuplet_longer.krn')
+
+        options = ExportOptions(spine_types=['**kern'], from_measure=-1, to_measure=2)
+        with self.assertRaises(ValueError):
+            importer.doExport(options)
+
+        options = ExportOptions(spine_types=['**kern'], from_measure=2, to_measure=-1)
+        with self.assertRaises(ValueError):
+            importer.doExport(options)
+
+        options = ExportOptions(spine_types=['**kern'], from_measure=3, to_measure=2)
+        with self.assertRaises(ValueError):
+            importer.doExport(options)
+
+        options = ExportOptions(spine_types=['**kern'], from_measure=None, to_measure=99999)
+        with self.assertRaises(ValueError):
+            importer.doExport(options)
+
+        options = ExportOptions(spine_types=['**kern'], from_measure=None, to_measure=7)
+        with self.assertRaises(ValueError):
+            importer.doExport(options)
+
+
     def testOther(self):
         importer = self.doJustImportTest('resource_dir/polish/test3/pl-wn--sd-xvi-qu-273--001-020_gomolka-mikolaj--melodiae-na-psalterz-polski-xx-wsiadaj-z-dobrym-sercem-o-krolu-cnotliwy.krn')
         print(importer)
