@@ -244,6 +244,26 @@ class ImporterTestCase(unittest.TestCase):
         self.doEKernMeasureToMeasureTest('resource_dir/polish/test1/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 16)
         #
 
+    def test_extract_measures_middle_measures_to_krn(self):
+        options = ExportOptions(spine_types=['**kern'], kern_type=KernTypeExporter.normalizedKern, from_measure=1, to_measure=3)
+        importer = HumdrumImporter()
+        importer.doImportFile('resource_dir/legacy/base_tuplet_longer.krn')
+
+        real_ouputput = importer.doExport(options)
+        with open('resource_dir/legacy/base_tuplet_longer_m1-m3.krn', 'r') as f:
+            expected_output = f.read()
+        self.assertEqual(real_ouputput, expected_output)
+
+    def test_extract_measures_middle_measures_to_ekrn(self):
+        options = ExportOptions(spine_types=['**kern'], kern_type=KernTypeExporter.eKern, from_measure=1, to_measure=3)
+        importer = HumdrumImporter()
+        importer.doImportFile('resource_dir/legacy/base_tuplet_longer.krn')
+
+        real_ouputput = importer.doExport(options)
+        with open('resource_dir/legacy/base_tuplet_longer_m1-m3.ekrn', 'r') as f:
+            expected_output = f.read()
+        self.assertEqual(real_ouputput, expected_output)
+
     def testOther(self):
         importer = self.doJustImportTest('resource_dir/polish/test3/pl-wn--sd-xvi-qu-273--001-020_gomolka-mikolaj--melodiae-na-psalterz-polski-xx-wsiadaj-z-dobrym-sercem-o-krolu-cnotliwy.krn')
         print(importer)
