@@ -72,7 +72,7 @@ class ExportOptions:
         self.spine_types = spine_types or []
         self.from_measure = from_measure
         self.to_measure = to_measure
-        self.token_categories = token_categories or []
+        self.token_categories = token_categories or BEKERN_CATEGORIES
         self.kern_type = kern_type
         self.instruments = instruments or []
 
@@ -435,10 +435,9 @@ class HumdrumImporter:
         if options.from_measure is not None and options.from_measure < 0:
             raise ValueError(f'option from_measure must be >=0 but {options.from_measure} was found. ')
         if options.to_measure is not None and options.to_measure > len(self.measure_start_rows):
-            #"TODO: DAVID, check options.to_measure bounds. len(self.measure_start_rows) or len(self.measure_start_rows) - 1"
             raise ValueError(f'option to_measure must be <= {len(self.measure_start_rows)} but {options.to_measure} was found. ')
         if options.to_measure is not None and options.from_measure is not None and options.to_measure < options.from_measure:
-            raise ValueError(f'option to_measure must be >= from_measure but {options.to_measure} < {options.from_measure} was found. ')
+            raise ValueError(f'option to_measure must be >= from_measure but options.to_measure={options.to_measure} < options.from_measure={options.from_measure} was found. ')
 
         last_signature = None
         for i in range(max_rows):
