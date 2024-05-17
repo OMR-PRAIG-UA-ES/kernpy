@@ -451,6 +451,51 @@ class ImporterTestCase(unittest.TestCase):
         self.assertEqual(len(expected_tokens), len(tokens))
         self.assertListEqual(expected_tokens, tokens)
 
+    def test_clear(self):
+        # Arrange
+        input_kern_file = 'resource_dir/legacy/chor001.krn'
+        importer = HumdrumImporter()
+        importer.doImportFile(input_kern_file)
+        init_spines = len(importer.spines)
+
+        # Act
+        importer.clear()
+        final_spines = len(importer.spines)
+
+        # Assert
+        self.assertNotEquals(init_spines, final_spines)
+        self.assertEqual(0, final_spines)
+
+    def test_clear_doImportFile(self):
+        # Arrange
+        input_kern_file = 'resource_dir/legacy/chor001.krn'
+        importer = HumdrumImporter()
+        importer.doImportFile(input_kern_file)
+        init_spines = len(importer.spines)
+
+        # Act
+        importer.clear()
+        importer.doImportFile(input_kern_file)
+        final_spines = len(importer.spines)
+
+        # Assert
+        self.assertEqual(init_spines, final_spines)
+
+    def test_clear_doImportString(self):
+        # Arrange
+        input_kern = "**kern\n4c\n4d\n4e\n4f\n*-"
+        importer = HumdrumImporter()
+        importer.doImportString(input_kern)
+        init_spines = len(importer.spines)
+
+        # Act
+        importer.clear()
+        importer.doImportString(input_kern)
+        final_spines = len(importer.spines)
+
+        # Assert
+        self.assertEqual(init_spines, final_spines)
+
     @unittest.skip
     def test_voices_range(self):
         pass

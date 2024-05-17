@@ -266,6 +266,8 @@ class HumdrumImporter:
         return result
 
     def doImport(self, reader):
+        self.clear()
+
         importers = {}
         header_row_number = None
         row_number = 1
@@ -736,6 +738,40 @@ class HumdrumImporter:
         Get the number of spines in the importer.
         """
         return len(self.spines)
+
+    def clear(self) -> None:
+        """
+        Clear all the data in the current object.
+
+        This function is used internally to clear the data after reading a file. It is not necessary to use it explicitly.
+
+        Returns:
+            None
+
+        Examples:
+            # Create the importer
+            >>> hi = HumdrumImporter()
+
+            # Read the file
+            >>> hi.doImportFile('file.krn')
+
+            # Clear the data explicitly
+            >>> hi.clear()
+
+            # Read more files
+            >>> hi.doImportFile('file_1.krn')  # clear() is called internally
+            >>> hi.doImportFile('file_2.krn')  # clear() is called internally
+            >>> hi.doImportFile('file_3.krn') # clear() is called internally
+        """
+        self.spines = []
+        self.current_spine_index = 0
+        self.measure_start_rows = []
+        self.page_bounding_boxes = {}
+        self.last_measure_number = None
+        self.last_bounding_box = None
+        self.errors = []
+
+
 
 def get_kern_from_ekern(ekern_content: string) -> string:
     """
