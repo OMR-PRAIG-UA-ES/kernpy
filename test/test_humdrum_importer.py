@@ -463,7 +463,7 @@ class ImporterTestCase(unittest.TestCase):
         final_spines = len(importer.spines)
 
         # Assert
-        self.assertNotEquals(init_spines, final_spines)
+        self.assertNotEqual(init_spines, final_spines)
         self.assertEqual(0, final_spines)
 
     def test_clear_doImportFile(self):
