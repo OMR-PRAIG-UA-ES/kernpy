@@ -11,11 +11,14 @@ plugins:
             show_source: false
  - search
 
+markdown_extensions:
+  - attr_list
+  - md_in_html
 
 nav:
   - kernpy Docs: index.md
   - Getting Started: get-started.md
   - How-To Guides: how-to-guides.md
   - API Reference: reference.md
-  - Explanation: explanation.md
   - About: about.md
+  - Tutorial: get-started/tutorial.md

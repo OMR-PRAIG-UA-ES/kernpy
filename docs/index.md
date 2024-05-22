@@ -10,11 +10,23 @@
 
 ## Contents
 
-1. [Get started](get-started.md)
-2. [How-To Guides](how-to-guides.md)
-3. [Reference](reference.md)
-4. [Explanation](explanation.md)
-5. [About](about.md)
+1. [Getting started](get-started.md)
+
+    New to `kernpy`? Check out the getting started guides. They contain an introduction `kernpy` main concepts and links to additional tutorials.
+
+2. [How-To guide](how-to-guides.md)
+
+    The How-To guides provide in-depth information on how to perform specific tasks with `kernpy` step-by-step.
+
+3. [API reference](reference.md)
+
+    The API reference contains a detailed description of the `kernpy` API. The reference describes how the methods work and which parameters can be used. It assumes that you are already familiar with the basic concepts of `kernpy`.
+
+4. [About](about.md)
+
+    Find out more about the `kernpy` project, including the team, how to contribute, and the license.
+
+<br>
 
 Quickly find what you are looking for depending on
 your use case by looking at the different pages.
