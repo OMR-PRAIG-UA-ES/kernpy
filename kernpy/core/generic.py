@@ -1,4 +1,5 @@
-from .import_humdrum import HumdrumImporter, BEKERN_CATEGORIES, ExportOptions
+from kernpy.core import Importer, ExportOptions
+
 
 def read_krn(input_file: str):
     """
@@ -15,8 +16,8 @@ def read_krn(input_file: str):
         >>> score = kernpy.read_krn('path/to/file.krn')
         >>> print(score)
     """
-    importer = HumdrumImporter()
-    importer.doImportFile(input_file)
+    importer = Importer()
+    importer.import_file(input_file)
 
     if len(importer.errors):
         raise Exception(f'ERROR: {input_file} has errors {importer.getErrorMessages()}')

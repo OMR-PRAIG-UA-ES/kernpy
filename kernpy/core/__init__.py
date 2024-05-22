@@ -6,8 +6,12 @@ kernpy.core
 This module contains the core functionality of the `kernpy` package.
 """
 
-from .import_humdrum import *
 from .tokens import *
+from .document import *
+from .importer import *
+from .exporter import *
+from .graphviz_exporter import  *
+from .importer_factory import *
 from .dyn_importer import *
 from .dynam_spine_importer import *
 from .fing_spine_importer import *
@@ -20,12 +24,16 @@ from .generic import *
 
 
 __all__ = [
-    'HumdrumImporter',
+    'Document',
+    'TokenCategory',
+    'Importer',
     'ExportOptions',
+    'Exporter',
+    'KernTypeExporter',
+    'GraphvizExporter',
     'ekern_to_krn',
     'kern_to_ekern',
     'KernTypeExporter',
-    'TokenCategory',
     'BEKERN_CATEGORIES',
     'DynSpineImporter',
     'DynamSpineImporter',
@@ -35,7 +43,8 @@ __all__ = [
     'MensSpineImporter',
     'RootSpineImporter',
     'TextSpineImporter',
-    'read_krn',
+    'SpineOperationToken',
+    'read_kern',
     'Score',
     'PitchRest',
     'Duration',

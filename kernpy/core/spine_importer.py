@@ -6,5 +6,5 @@ from .tokens import Token
 
 class SpineImporter(ABC):
     @abstractmethod
-    def doImport(self, encoding: string)->Token:
+    def import_token(self, encoding: string)->Token:
         pass

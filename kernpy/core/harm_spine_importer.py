@@ -5,5 +5,5 @@ from .tokens import SimpleToken, TokenCategory, Token
 
 
 class HarmSpineImporter(SpineImporter):
-    def doImport(self, encoding: string)->Token:
+    def import_token(self, encoding: string)->Token:
         return SimpleToken(encoding, TokenCategory.HARMONY)

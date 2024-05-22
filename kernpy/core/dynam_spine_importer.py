@@ -5,5 +5,5 @@ from .tokens import Token, TokenCategory, SimpleToken
 
 
 class DynamSpineImporter(SpineImporter):
-    def doImport(self, encoding: string)->Token:
+    def import_token(self, encoding: string)->Token:
         return SimpleToken(encoding, TokenCategory.DYNAMICS)

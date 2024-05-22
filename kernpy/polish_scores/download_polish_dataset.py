@@ -6,7 +6,7 @@ from io import BytesIO
 import os
 import json
 
-from kernpy import HumdrumImporter, ExportOptions, BEKERN_CATEGORIES
+from kernpy import ExportOptions, BEKERN_CATEGORIES, Importer
 import argparse
 
 # This script creates the Polish dataset from the kern files.
@@ -68,7 +68,7 @@ def extract_and_save_measures(importer, from_measure, to_measure, krn_path):
     export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
     export_options.from_measure = from_measure
     export_options.to_measure = to_measure
-    exported_ekern = importer.doExportEKern(export_options)
+    exported_ekern = importer.do_export_ekern(export_options)
     with open(krn_path, "w") as f:
         f.write(exported_ekern)
 
@@ -83,7 +83,8 @@ def download_and_save_page_images(importer, _output_path, map_page_label_iiif_id
 
         if page_iiif_id is not None:
             bounding_box = bounding_box_measure.bounding_box
-            print(f"Page: {page_label}, Bounding box: {bounding_box}, ID: {page_iiif_id}, from bar {bounding_box_measure.from_measure}, to bar {bounding_box_measure.to_measure}")
+            print(
+                f"Page: {page_label}, Bounding box: {bounding_box}, ID: {page_iiif_id}, from bar {bounding_box_measure.from_measure}, to bar {bounding_box_measure.to_measure}")
             url = f'{page_iiif_id}/{bounding_box.xywh()}/full/0/default.jpg'
             print(url)
             image_path = os.path.join(_output_path, page_label + ".jpg")
@@ -96,11 +97,12 @@ def download_and_save_page_images(importer, _output_path, map_page_label_iiif_id
             raise Exception(f'Cannot find IIIF id for page with label "{page_label}"')
 
 
-def findIIIFIds(importer):
+def findIIIFIds(document):
     iiifTag = "!!!IIIF:"
-    for metacomment_token in importer.getMetacomments():
-        if metacomment_token.startswith(iiifTag):
-            url = metacomment_token[len(iiifTag):].strip()
+    for metacomment_token in document.get_metacomments():
+        encoding = metacomment_token.encoding
+        if encoding.startswith(iiifTag):
+            url = encoding[len(iiifTag):].strip()
             print(f'Reading IIIF manifest from {url}')
             return get_image_urls(url)
     raise Exception('Cannot find any IIIF metacomment')
@@ -108,12 +110,13 @@ def findIIIFIds(importer):
 
 def convert_and_download_file(input_kern, _output_path, log_filename):
     print(f'Converting filename {input_kern}')
-    importer = HumdrumImporter()
-    importer.doImportFile(input_kern)
+    importer = Importer()
+    document = importer.import_file(input_kern)
     if len(importer.errors):
         raise Exception(f'{input_kern} has errors {importer.getErrorMessages()}')
-    map_page_label_IIIF_ids = findIIIFIds(importer)
-    download_and_save_page_images(importer, _output_path, map_page_label_IIIF_ids, importer.page_bounding_boxes, log_filename=log_filename)
+    map_page_label_IIIF_ids = findIIIFIds(document)
+    download_and_save_page_images(document, _output_path, map_page_label_IIIF_ids, document.page_bounding_boxes,
+                                  log_filename=log_filename)
 
 
 def search_files_with_string(root_folder, target_string):
@@ -141,7 +144,7 @@ def remove_extension(file_name):
     return base_name
 
 
-def add_log(importer: HumdrumImporter, path, log_filename) -> None:
+def add_log(importer: Importer, path, log_filename) -> None:
     try:
         def get_instruments(line):
             words = line.split(' ')
@@ -179,7 +182,7 @@ def add_log(importer: HumdrumImporter, path, log_filename) -> None:
             try:
                 items_date = original_composer_date.split('/')
                 clean_items = [item.replace(' ', '') for item in items_date]
-                clean_items = [item.replace('~','') for item in clean_items]
+                clean_items = [item.replace('~', '') for item in clean_items]
                 split_again = [item.split('-') for item in clean_items]
                 flatten_items = flatten(split_again)
                 useful_items = [item for item in flatten_items if item.isnumeric()]
@@ -190,7 +193,8 @@ def add_log(importer: HumdrumImporter, path, log_filename) -> None:
 
         info = {
             'path': path,
-            'publication_date': get_publish_date(importer.getMetacomments('PDT')[0]) if importer.getMetacomments('PDT') else None,
+            'publication_date': get_publish_date(importer.getMetacomments('PDT')[0]) if importer.getMetacomments(
+                'PDT') else None,
             'original_publication_date_tag': True,
             'iiif': importer.getMetacomments('IIIF')[0] if importer.getMetacomments('IIIF') else None,
             'n_measures': importer.last_measure_number,
@@ -199,9 +203,12 @@ def add_log(importer: HumdrumImporter, path, log_filename) -> None:
             'tempo': importer.getMetacomments('OTL')[0] if importer.getMetacomments('OTL') else None,
             'piece_title': importer.getMetacomments('OPR')[0] if importer.getMetacomments('OPR') else None,
             'segment': importer.getMetacomments('SEGMENT')[0] if importer.getMetacomments('SEGMENT') else None,
-            'n_voices': len(get_instruments(importer.getMetacomments('AIN')[0])) if importer.getMetacomments('AIN') else 0,
-            'instruments': get_instruments(importer.getMetacomments('AIN')[0]) if importer.getMetacomments('AIN') else [],
-            'unique_instruments': [*set(get_instruments(importer.getMetacomments('AIN')[0]))] if importer.getMetacomments('AIN') else [],
+            'n_voices': len(get_instruments(importer.getMetacomments('AIN')[0])) if importer.getMetacomments(
+                'AIN') else 0,
+            'instruments': get_instruments(importer.getMetacomments('AIN')[0]) if importer.getMetacomments(
+                'AIN') else [],
+            'unique_instruments': [
+                *set(get_instruments(importer.getMetacomments('AIN')[0]))] if importer.getMetacomments('AIN') else [],
         }
 
         if info['publication_date'] in (0, 1, -1, -2) or info['publication_date'] is None:
@@ -217,6 +224,7 @@ def add_log(importer: HumdrumImporter, path, log_filename) -> None:
             f.write('\n')
     except Exception as e:
         print(f"Error adding log:{path}:{e}")
+
 
 def main(input_directory, output_directory, log_filename="/tmp/polish_index.json") -> None:
     """

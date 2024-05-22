@@ -19,7 +19,7 @@ class KernTypeExporter(Enum):  # TODO: Eventually, polymorphism will be used to 
         >>> hi = HumdrumImporter()
 
         # Read the file
-        >>> hi.doImportFile('file.krn')
+        >>> hi.import_file('file.krn')
 
         # Export the file
         >>> options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kernType=KernTypeExporter.normalizedKern)
@@ -50,7 +50,7 @@ class ExportOptions:
 
             Create the importer and read the file
             >>> hi = HumdrumImporter()
-            >>> hi.doImportFile('file.krn')
+            >>> hi.import_file('file.krn')
 
             Export the file with the specified options
             >>> options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
@@ -236,7 +236,7 @@ class HumdrumImporter:
             >>> importer = HumdrumImporter()
 
             # Read the file
-            >>> importer.doImportFile('file.krn')
+            >>> importer.import_file('file.krn')
 
             # Get all the metacomments
             >>> all_metacomments = importer.getMetacomments()
@@ -329,7 +329,7 @@ class HumdrumImporter:
                                     token = FieldCommentToken(column)
                                 else:
                                     try:
-                                        token = current_spine.importer.doImport(column)
+                                        token = current_spine.importer.run(column)
                                     except Exception as error:
                                         token = ErrorToken(column, row_number, error)
                                         self.errors.append(token)
@@ -362,7 +362,7 @@ class HumdrumImporter:
         Examples:
             # Create the importer and read the file
             >>> hi = HumdrumImporter()
-            >>> hi.doImportFile('file.krn')
+            >>> hi.import_file('file.krn')
         """
         with open(file_path, 'r', newline='', encoding='utf-8', errors='ignore') as file:
             reader = csv.reader(file, delimiter='\t')
@@ -457,7 +457,6 @@ class HumdrumImporter:
                             row_result += '\t'
 
                         content = spine.getRowContent(i, options.kern_type, options.token_categories)
-
 
                         if content and content != '.' and content != '*':
                             empty = False
@@ -570,7 +569,7 @@ class HumdrumImporter:
             >>> hi = HumdrumImporter()
 
             # Read the file
-            >>> hi.doImportFile('file.krn')
+            >>> hi.import_file('file.krn')
 
             # Check if the importer has a specific token
             >>> has_f_4_clef = hi.has_token('*clefF4')
@@ -596,7 +595,7 @@ class HumdrumImporter:
             >>> hi = HumdrumImporter()
 
             # Read the file
-            >>> hi.doImportFile('file.krn')
+            >>> hi.import_file('file.krn')
 
             # Check if the importer has a specific token
             >>> has_barlines = hi.has_category(TokenCategory.BARLINES)
@@ -628,7 +627,7 @@ class HumdrumImporter:
             >>> hi = HumdrumImporter()
 
             # Read the file
-            >>> hi.doImportFile('file.krn')
+            >>> hi.import_file('file.krn')
 
             # Get all the tokens
             >>> all_tokens = hi.get_all_tokens()
@@ -680,7 +679,7 @@ class HumdrumImporter:
             >>> hi = HumdrumImporter()
 
             # Read the file
-            >>> hi.doImportFile('file.krn')
+            >>> hi.import_file('file.krn')
 
             # Get the unique tokens
             >>> unique_tokens = hi.get_unique_tokens()
@@ -714,7 +713,7 @@ class HumdrumImporter:
             >>> hi = HumdrumImporter()
 
             # Read the file
-            >>> hi.doImportFile('file.krn')
+            >>> hi.import_file('file.krn')
 
             # Check if the voice 1 is in the tessitura (C4, G4)
             >>> is_in_tessitura = hi.is_voice_in_tessitura(1, ('c4', 'g4'))

@@ -5,5 +5,5 @@ from .tokens import Token
 
 
 class MensSpineImporter(SpineImporter):
-    def doImport(self, encoding: string) -> Token:
+    def import_token(self, encoding: string) -> Token:
         pass
