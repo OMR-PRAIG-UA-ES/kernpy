@@ -47,7 +47,7 @@ class Importer():
                 next_stage_parents = []
 
                 if row[0].startswith("!!"):
-                    token = MetacommentToken(row[0])
+                    token = MetacommentToken(row[0].strip())
                     if header_row_number is None:
                         node = tree.add_node(tree_stage, last_node_previous_to_header, token, None, None, None)
                         last_node_previous_to_header = node

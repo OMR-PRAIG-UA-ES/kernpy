@@ -267,47 +267,49 @@ class ImporterTestCase(unittest.TestCase):
 
     def test_extract_measures_middle_measures_to_krn(self):
         options = ExportOptions(spine_types=['**kern'], kern_type=KernTypeExporter.normalizedKern, from_measure=1, to_measure=3)
-        importer = HumdrumImporter()
-        importer.doImportFile('resource_dir/legacy/base_tuplet_longer.krn')
+        importer = Importer()
+        document = importer.import_file('resource_dir/legacy/base_tuplet_longer.krn')
 
-        real_ouputput = importer.doExport(options)
+        exporter = Exporter()
+        real_ouputput = exporter.export_string(document, options)
         with open('resource_dir/legacy/base_tuplet_longer_m1-m3.krn', 'r') as f:
             expected_output = f.read()
         self.assertEqual(real_ouputput, expected_output)
 
     def test_extract_measures_middle_measures_to_ekrn(self):
         options = ExportOptions(spine_types=['**kern'], kern_type=KernTypeExporter.eKern, from_measure=1, to_measure=3)
-        importer = HumdrumImporter()
-        importer.doImportFile('resource_dir/legacy/base_tuplet_longer.krn')
-
-        real_ouputput = importer.doExport(options)
+        importer = Importer()
+        document = importer.import_file('resource_dir/legacy/base_tuplet_longer.krn')
+        exporter = Exporter()
+        real_ouputput = exporter.export_string(document, options)
         with open('resource_dir/legacy/base_tuplet_longer_m1-m3.ekrn', 'r') as f:
             expected_output = f.read()
         self.assertEqual(real_ouputput, expected_output)
 
     def test_extract_measures_bad_measures_input(self):
-        importer = HumdrumImporter()
-        importer.doImportFile('resource_dir/legacy/base_tuplet_longer.krn')
+        importer = Importer()
+        document = importer.import_file('resource_dir/legacy/base_tuplet_longer.krn')
 
         options = ExportOptions(spine_types=['**kern'], from_measure=-1, to_measure=2)
+        exporter = Exporter()
         with self.assertRaises(ValueError):
-            importer.doExport(options)
+            exporter.export_string(document, options)
 
         options = ExportOptions(spine_types=['**kern'], from_measure=2, to_measure=-1)
         with self.assertRaises(ValueError):
-            importer.doExport(options)
+            exporter.export_string(document, options)
 
         options = ExportOptions(spine_types=['**kern'], from_measure=3, to_measure=2)
         with self.assertRaises(ValueError):
-            importer.doExport(options)
+            exporter.export_string(document, options)
 
         options = ExportOptions(spine_types=['**kern'], from_measure=None, to_measure=99999)
         with self.assertRaises(ValueError):
-            importer.doExport(options)
+            exporter.export_string(document, options)
 
         options = ExportOptions(spine_types=['**kern'], from_measure=None, to_measure=7)
         with self.assertRaises(ValueError):
-            importer.doExport(options)
+            exporter.export_string(document, options)
 
 
     def testOther(self):
@@ -357,9 +359,9 @@ class ImporterTestCase(unittest.TestCase):
                 output_metadata_array_expected.append(line.strip())
 
         importer = Importer()
-        importer.import_file(input_kern_file)
+        document = importer.import_file(input_kern_file)
 
-        self.assertListEqual(output_metadata_array_expected, importer.getMetacomments())
+        self.assertListEqual(output_metadata_array_expected, document.get_metacomments())
 
     def test_metadatacomments_specific_option(self):
         input_kern_file = 'resource_dir/legacy/chor001.krn'
@@ -369,9 +371,9 @@ class ImporterTestCase(unittest.TestCase):
                 output_metadata_array_expected.append(line.strip())
 
         importer = Importer()
-        importer.import_file(input_kern_file)
+        document = importer.import_file(input_kern_file)
 
-        self.assertListEqual(output_metadata_array_expected, importer.getMetacomments(KeyComment='COM'))  # composer
+        self.assertListEqual(output_metadata_array_expected, document.get_metacomments(KeyComment='COM'))  # composer
 
     def has_token(self, tokens, encoding):
         for token in tokens:
@@ -445,30 +447,30 @@ class ImporterTestCase(unittest.TestCase):
             expected_tokens = f.read().splitlines()
 
         # Act
-        tokens = document.get_unique_tokens()
-        tokens.sort()
+        encodings = document.get_unique_token_encodings()
+        encodings.sort()
         expected_tokens.sort()
 
         # Assert
-        self.assertEqual(len(expected_tokens), len(tokens))
-        self.assertListEqual(expected_tokens, tokens)
+        self.assertEqual(len(expected_tokens), len(encodings))
+        self.assertListEqual(expected_tokens, encodings)
 
     def test_get_unique_tokens_when_removing_measure_numbers(self):
         # Arrange
         input_kern_file = 'resource_dir/legacy/chor001.krn'
         importer = Importer()
-        importer.import_file(input_kern_file)
+        document = importer.import_file(input_kern_file)
         with open('resource_dir/legacy/chor001-unique_tokens_without_measure_numbers.txt', 'r') as f:
             expected_tokens = f.read().splitlines()
 
         # Act
-        tokens = importer.get_unique_tokens(remove_measure_numbers=True)
-        tokens.sort()
+        encodings = document.get_unique_token_encodings(remove_measure_numbers=True)
+        encodings.sort()
         expected_tokens.sort()
 
         # Assert
-        self.assertEqual(len(expected_tokens), len(tokens))
-        self.assertListEqual(expected_tokens, tokens)
+        self.assertEqual(len(expected_tokens), len(encodings))
+        self.assertListEqual(expected_tokens, encodings)
 
     def test_get_unique_tokens_when_filter_by_categories(self):
         # Arrange
@@ -479,58 +481,59 @@ class ImporterTestCase(unittest.TestCase):
             expected_tokens = f.read().splitlines()
 
         # Act
-        tokens = document.get_unique_tokens(filter_by_categories=[TokenCategory.CORE, TokenCategory.SIGNATURES])
-        tokens.sort()
+        encodings = document.get_unique_token_encodings(filter_by_categories=[TokenCategory.CORE, TokenCategory.SIGNATURES])
+        encodings.sort()
         expected_tokens.sort()
 
         # Assert
-        self.assertEqual(len(expected_tokens), len(tokens))
-        self.assertListEqual(expected_tokens, tokens)
+        self.assertEqual(len(expected_tokens), len(encodings))
+        self.assertListEqual(expected_tokens, encodings)
 
-    def test_clear(self):
-        # Arrange
-        input_kern_file = 'resource_dir/legacy/chor001.krn'
-        importer = HumdrumImporter()
-        importer.doImportFile(input_kern_file)
-        init_spines = len(importer.spines)
-
-        # Act
-        importer.clear()
-        final_spines = len(importer.spines)
-
-        # Assert
-        self.assertNotEqual(init_spines, final_spines)
-        self.assertEqual(0, final_spines)
-
-    def test_clear_doImportFile(self):
-        # Arrange
-        input_kern_file = 'resource_dir/legacy/chor001.krn'
-        importer = HumdrumImporter()
-        importer.doImportFile(input_kern_file)
-        init_spines = len(importer.spines)
-
-        # Act
-        importer.clear()
-        importer.doImportFile(input_kern_file)
-        final_spines = len(importer.spines)
-
-        # Assert
-        self.assertEqual(init_spines, final_spines)
-
-    def test_clear_doImportString(self):
-        # Arrange
-        input_kern = "**kern\n4c\n4d\n4e\n4f\n*-"
-        importer = HumdrumImporter()
-        importer.doImportString(input_kern)
-        init_spines = len(importer.spines)
-
-        # Act
-        importer.clear()
-        importer.doImportString(input_kern)
-        final_spines = len(importer.spines)
-
-        # Assert
-        self.assertEqual(init_spines, final_spines)
+    # TODO David -> JCerveto: ¿para qué es clear? Lo comento
+    # def test_clear(self):
+    #     # Arrange
+    #     input_kern_file = 'resource_dir/legacy/chor001.krn'
+    #     importer = Importer()
+    #     document = importer.import_file(input_kern_file)
+    #     init_spines = len(document.get_spine_count())
+    #
+    #     # Act
+    #     importer.clear()
+    #     final_spines = len(importer.spines)
+    #
+    #     # Assert
+    #     self.assertNotEqual(init_spines, final_spines)
+    #     self.assertEqual(0, final_spines)
+    #
+    # def test_clear_doImportFile(self):
+    #     # Arrange
+    #     input_kern_file = 'resource_dir/legacy/chor001.krn'
+    #     importer = HumdrumImporter()
+    #     importer.doImportFile(input_kern_file)
+    #     init_spines = len(importer.spines)
+    #
+    #     # Act
+    #     importer.clear()
+    #     importer.doImportFile(input_kern_file)
+    #     final_spines = len(importer.spines)
+    #
+    #     # Assert
+    #     self.assertEqual(init_spines, final_spines)
+    #
+    # def test_clear_doImportString(self):
+    #     # Arrange
+    #     input_kern = "**kern\n4c\n4d\n4e\n4f\n*-"
+    #     importer = HumdrumImporter()
+    #     importer.doImportString(input_kern)
+    #     init_spines = len(importer.spines)
+    #
+    #     # Act
+    #     importer.clear()
+    #     importer.doImportString(input_kern)
+    #     final_spines = len(importer.spines)
+    #
+    #     # Assert
+    #     self.assertEqual(init_spines, final_spines)
 
     @unittest.skip
     def test_voices_range(self):

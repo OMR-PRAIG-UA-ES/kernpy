@@ -177,7 +177,8 @@ class Exporter:
 
         result = ""
         for row in rows:
-            result += '\t'.join(row) + '\n'
+            if len(row) > 0:
+                result += '\t'.join(row) + '\n'
         return result
 
 

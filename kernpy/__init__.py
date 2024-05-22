@@ -21,16 +21,19 @@ import kernpy
 help(kernpy)
 ```
 
-Run `kernpy` as a module. The points where 🎯 is shown are the available commands.
+While the package is not published in `pip`, the `kernpy` module must be in the root directory.
 
-
-## 🎯 kern2ekern
-Convert .krn to .ekern:
+## 🎯 **kern2ekern**: Convertir un solo archivo .krn a .ekern:
 
 ```bash
-python -m kernpy --kern2ekern --input_path <input_file> <-r> <v | --verbose [0-2]>
+python -m kernpy --kern2ekern --input_path <input_file>	 <v | --verbose [0-2]>
 ```
 
+The command has the following arguments:
+* **input_path**: Ruta del archivo .krn a convertir.
+* **output_path**: Ruta del archivo .ekern a generar (opcional). Si no se especifica, se generará en la misma ubicación.
+* **-r**: Recursivo (opcional).
+* **--verbose[0-2]**: Nivel de verbosidad (opcional).
 
 
 📌 Basic usage running **kernpy** as a module:

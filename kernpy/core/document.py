@@ -58,7 +58,8 @@ class Node:
         return counts_by_level
 
     def dfs(self, tree_traversal: TreeTraversalInterface):
-        tree_traversal.visit(self)
+        node = self
+        tree_traversal.visit(node)
         for child in self.children:
             child.dfs(tree_traversal)
 
@@ -114,20 +115,36 @@ class Document:
         else:
             raise Exception('No header stage found')
 
-    def get_metacomments(self):
-        traversal = MetacommentsTraversal
+    def get_metacomments(self, KeyComment=None):
+        traversal = MetacommentsTraversal()
         self.tree.dfs(traversal)
-        return traversal.metacomments
+        result = []
+        for metacomment in traversal.metacomments:
+            if KeyComment is None or metacomment.encoding.startswith(f"!!!{KeyComment}"):
+                result.append(metacomment.encoding)
+        return result
 
-    def get_all_tokens(self, filter_by_categories):
+    def tokens_to_encodings(self, tokens):
+        encodings = [token.encoding for token in tokens if token.encoding is not None]
+        return encodings
+
+    def get_all_tokens(self, filter_by_categories = None):
         traversal = TokensTraversal(False, filter_by_categories)
         self.tree.dfs(traversal)
         return traversal.tokens
 
-    def get_unique_tokens(self, filter_by_categories):
+    def get_all_tokens_encodings(self, filter_by_categories = None):
+        tokens = self.get_all_tokens(filter_by_categories)
+        return self.tokens_to_encodings(tokens)
+
+    def get_unique_tokens(self, filter_by_categories = None):
         traversal = TokensTraversal(True, filter_by_categories)
         self.tree.dfs(traversal)
         return traversal.tokens
+
+    def get_unique_token_encodings(self, filter_by_categories = None):
+        tokens = self.get_unique_tokens(filter_by_categories)
+        return self.tokens_to_encodings(tokens)
 
 
 # tree traversal utils
@@ -148,7 +165,7 @@ class TokensTraversal(TreeTraversalInterface):
         self.filter_by_categories = filter_by_categories
 
     def visit(self, node):
-        if node.token and (not self.non_repeated or node.encoding not in self.seen_encodings) and (not self.filter_by_categories or node.token.category in self.filter_by_categories):
+        if node.token and (not self.non_repeated or node.token.encoding not in self.seen_encodings):
             self.tokens.append(node.token)
             if self.non_repeated:
-                self.seen_encodings.append(node.encoding)
+                self.seen_encodings.append(node.token.encoding)

@@ -1,7 +1,7 @@
 from kernpy.core import Importer, ExportOptions
 
 
-def read_krn(input_file: str):
+def read_kern(input_file: str):
     """
     Read a kern file and return a Score object.
 
@@ -13,7 +13,7 @@ def read_krn(input_file: str):
 
     Examples:
         >>> import kernpy
-        >>> score = kernpy.read_krn('path/to/file.krn')
+        >>> score = kernpy.read_kern('path/to/file.krn')
         >>> print(score)
     """
     importer = Importer()
@@ -44,7 +44,7 @@ class Score:
 
         Examples:
             >>> import kernpy
-            >>> score = kernpy.read_krn('path/to/file.krn')
+            >>> score = kernpy.read_kern('path/to/file.krn')
             >>> # Transpose 2 semitones up
             >>> s1 = score.transpose(2)
             >>> # Transpose 2 semitones down
@@ -67,7 +67,7 @@ class Score:
 
         Examples:
             >>> import kernpy
-            >>> score = kernpy.read_krn('path/to/file.krn')
+            >>> score = kernpy.read_kern('path/to/file.krn')
             >>> # Get the measure at 10 seconds
             >>> measure = score.measure_from_time(10)
             >>> # Greater number of the measure where the time is not greater than 10 seconds
@@ -101,7 +101,7 @@ class Score:
 
         Examples:
             >>> import kernpy
-            >>> score = kernpy.read_krn('path/to/file.krn')
+            >>> score = kernpy.read_kern('path/to/file.krn')
             >>> tokens = score.tokens()
             >>> print(tokens)
             {"2r", "4G", "8c", "|" }
