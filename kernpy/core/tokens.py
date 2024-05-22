@@ -880,7 +880,7 @@ class ClefToken(SignatureToken):
         super().__init__(encoding)
 
 
-class TimeSignatureToken():
+class TimeSignatureToken(SignatureToken):
     def __init__(self, encoding):
         super().__init__(encoding)
 

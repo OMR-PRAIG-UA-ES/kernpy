@@ -1,7 +1,7 @@
 import string
 from enum import Enum
 
-from kernpy.core import Document, SpineOperationToken, HeaderToken, Importer, TokenCategory
+from kernpy.core import Document, SpineOperationToken, HeaderToken, Importer, TokenCategory, InstrumentToken
 
 BEKERN_CATEGORIES = [TokenCategory.STRUCTURAL, TokenCategory.CORE, TokenCategory.EMPTY, TokenCategory.SIGNATURES,
                      TokenCategory.BARLINES, TokenCategory.ENGRAVED_SYMBOLS]
@@ -77,6 +77,13 @@ class ExportOptions:
         self.instruments = instruments or []
 
 
+def empty_row(row):
+    for col in row:
+        if col != '.' and col != '' and col != '*':
+            return False
+    return True
+
+
 class Exporter:
     def do_export_normalized_kern(self, document: Document, options: ExportOptions) -> string:
         options.kern_type = KernTypeExporter.normalizedKern
@@ -126,7 +133,7 @@ class Exporter:
                     new_next_nodes.append(node.parent)
                 next_nodes = new_next_nodes
                 if non_place_holder_in_row:  # if the row contains just place holders due to an ommitted place holder, don't add it
-                    rows.append(row)
+                    rows.insert(0, row)
 
             # now, export the signatures
             node_signatures = None
@@ -169,7 +176,7 @@ class Exporter:
                 else:
                     header_type = None
 
-                if header_type and header_type in options.spine_types:
+                if header_type and header_type in options.spine_types and not node.token.hidden:
                     row.append(node.token.export())
 
             if len(row) > 0:
@@ -177,7 +184,7 @@ class Exporter:
 
         result = ""
         for row in rows:
-            if len(row) > 0:
+            if not empty_row(row):
                 result += '\t'.join(row) + '\n'
         return result
 

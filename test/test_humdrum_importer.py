@@ -61,8 +61,8 @@ class ImporterTestCase(unittest.TestCase):
         ekern = os.path.splitext(kern_file)[0] + '.ekrn'
         document = self.checkEquals(kern_file, ekern, None, None)
 
-        exported_measure_start_rows = document.measure_start_rows
-        self.assertEqual(expected_measure_start_rows, exported_measure_start_rows)
+        measure_start_tree_stages = document.measure_start_tree_stages
+        self.assertEqual(expected_measure_start_rows, measure_start_tree_stages)
 
     def doEKernMeasureToMeasureTest(self, kern_file, from_measure, to_measure):
         logging.info(f'Importing {kern_file} and checking the ekern')
