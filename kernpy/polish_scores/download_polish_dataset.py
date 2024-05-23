@@ -6,7 +6,7 @@ from io import BytesIO
 import os
 import json
 
-from kernpy import ExportOptions, BEKERN_CATEGORIES, Importer
+from kernpy import ExportOptions, BEKERN_CATEGORIES, Importer, Exporter
 import argparse
 
 # This script creates the Polish dataset from the kern files.
@@ -64,16 +64,17 @@ def download_and_save_image(url, save_path):
         print(f"An error occurred: {e}")
 
 
-def extract_and_save_measures(importer, from_measure, to_measure, krn_path):
+def extract_and_save_measures(document, from_measure, to_measure, krn_path):
     export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
     export_options.from_measure = from_measure
     export_options.to_measure = to_measure
-    exported_ekern = importer.do_export_ekern(export_options)
+    exporter = Exporter()
+    exported_ekern = exporter.do_export_ekern(document, export_options)
     with open(krn_path, "w") as f:
         f.write(exported_ekern)
 
 
-def download_and_save_page_images(importer, _output_path, map_page_label_iiif_ids, page_bounding_boxes, log_filename):
+def download_and_save_page_images(document, _output_path, map_page_label_iiif_ids, page_bounding_boxes, log_filename):
     print(f'Bounding boxes {page_bounding_boxes}')
 
     for page_label, bounding_box_measure in page_bounding_boxes.items():
@@ -90,9 +91,9 @@ def download_and_save_page_images(importer, _output_path, map_page_label_iiif_id
             image_path = os.path.join(_output_path, page_label + ".jpg")
             download_and_save_image(url, image_path)
             krn_path = os.path.join(_output_path, page_label + ".ekrn")
-            extract_and_save_measures(importer, bounding_box_measure.from_measure, bounding_box_measure.to_measure - 1,
+            extract_and_save_measures(document, bounding_box_measure.from_measure, bounding_box_measure.to_measure - 1,
                                       krn_path)
-            add_log(importer, krn_path, log_filename=log_filename)
+            add_log(document, krn_path, log_filename=log_filename)
         else:
             raise Exception(f'Cannot find IIIF id for page with label "{page_label}"')
 
@@ -100,7 +101,7 @@ def download_and_save_page_images(importer, _output_path, map_page_label_iiif_id
 def findIIIFIds(document):
     iiifTag = "!!!IIIF:"
     for metacomment_token in document.get_metacomments():
-        encoding = metacomment_token.encoding
+        encoding = metacomment_token
         if encoding.startswith(iiifTag):
             url = encoding[len(iiifTag):].strip()
             print(f'Reading IIIF manifest from {url}')
