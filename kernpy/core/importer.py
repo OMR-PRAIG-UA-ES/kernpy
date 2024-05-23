@@ -1,0 +1,187 @@
+import csv
+import string
+from copy import copy
+
+from kernpy.core.tokens import TokenCategory, SignatureToken, MetacommentToken, HeaderToken, SpineOperationToken, FieldCommentToken, ErrorToken, \
+    BoundingBoxToken
+from kernpy.core.document import Document, MultistageTree, BoundingBoxMeasures
+
+
+class Importer():
+    HEADERS = {"**mens", "**kern", "**text", "**harm", "**mxhm", "**root", "**dyn", "**dynam", "**fing"}
+    SPINE_OPERATIONS = {"*-", "*+", "*^", "*v", "*x"}
+
+    def __init__(self):
+        self.last_measure_number = None
+        self.last_bounding_box = None
+        self.errors = []
+
+    @staticmethod
+    def get_last_spine_operator_stage(parent, stage):
+        if parent is None or parent.last_spine_operator_node is None:
+            return None
+        elif isinstance(parent.last_spine_operator_node.token, SpineOperationToken):
+            return stage
+        else:
+            return parent.last_spine_operator_node
+
+    #TODO Documentar cómo propagamos los header_node y last_spine_operator_node...
+    def run(self, reader) -> Document:
+        tree = MultistageTree()
+        document = Document(tree)
+        importers = {}
+        header_row_number = None
+        row_number = 1
+        tree_stage = 0
+        next_stage_parents = None
+        prev_stage_parents = None
+        last_node_previous_to_header = tree.root
+        for row in reader:
+            if len(row) > 0:  # usually the last one
+                tree_stage = tree_stage + 1
+                is_barline = False
+                icolumn = -1
+                collapsing_rows = False
+                if next_stage_parents:
+                    prev_stage_parents = copy(next_stage_parents)
+                next_stage_parents = []
+
+                if row[0].startswith("!!"):
+                    token = MetacommentToken(row[0].strip())
+                    if header_row_number is None:
+                        node = tree.add_node(tree_stage, last_node_previous_to_header, token, None, None, None)
+                        last_node_previous_to_header = node
+                    else:
+                        for parent in prev_stage_parents:
+                            node = tree.add_node(tree_stage, parent, token, self.get_last_spine_operator_stage(parent, tree_stage), parent.last_signature_nodes, parent.header_node) # the same reference for all spines - TODO Recordar documentarlo
+                            next_stage_parents.append(node)
+                else:
+                    for column in row:
+                        icolumn = icolumn + 1
+                        if column in self.HEADERS:
+                            if header_row_number is not None and header_row_number != row_number:
+                                raise Exception(
+                                    f"Several header rows not supported, there is a header row in #{header_row_number} and another in #{row_number} ")
+
+                            document.header_stage = tree_stage
+                            importer = importers.get(column)
+                            if not importer:
+                                from kernpy.core.importer_factory import createImporter
+                                importer = createImporter(column)
+                                importers[column] = importer
+
+                            token = HeaderToken(column)
+                            node = tree.add_node(tree_stage, last_node_previous_to_header, token, None, None)
+                            node.header_node = node # this value will be propagated
+                            next_stage_parents.append(node)
+                        else:
+                            if column in self.SPINE_OPERATIONS:
+                                token = SpineOperationToken(column)
+
+                                if icolumn >= len(prev_stage_parents):
+                                    raise Exception(f'Expected at least {icolumn+1} parents in row {row_number}, but found {len(prev_stage_parents)}: {row}')
+
+                                parent = prev_stage_parents[icolumn]
+                                node = tree.add_node(tree_stage, parent, token, self.get_last_spine_operator_stage(parent, tree_stage), parent.last_signature_nodes, parent.header_node)
+
+                                if column == '*-':
+                                    pass # it's terminated, no continuation
+                                elif column == "*+" or column == "*^":
+                                    next_stage_parents.append(node)
+                                    next_stage_parents.append(node) # twice, the next stage two children will have this one as parent
+                                elif column == "*v":
+                                    #if not collapsing_rows or icolumn == 0 or prev_stage_parents[icolumn].header_node != prev_stage_parents[icolumn].header_node: # don't collapse two different spines
+                                    if icolumn == 0 or row[icolumn-1] != '*v' or prev_stage_parents[icolumn-1].header_node != prev_stage_parents[icolumn].header_node: # don't collapse two different spines
+                                        next_stage_parents.append(node) # just one spine each two
+                                        collapsing_rows = True
+                                        #TODO *v *v *v --> uno sólo? - ver doc. encoding mOOsicae - si quito la línea de arriba hace mal el 3.krn
+                                    else:
+                                        collapsing_rows = False
+                                else:
+                                    raise Exception(f'Unknown spine operator {column}')
+                            else:
+                                if column.startswith("!"):
+                                    token = FieldCommentToken(column)
+                                else:
+                                    parent = prev_stage_parents[icolumn]
+                                    if not parent:
+                                        raise Exception(f'Cannot find a parent node for column #{icolumn} in row {row_number}')
+                                    if not parent.header_node:
+                                        raise Exception(f'Cannot find a header node for column #{icolumn} in row {row_number}')
+                                    importer = importers.get(parent.header_node.token.encoding)
+                                    if not importer:
+                                        raise Exception(f'Cannot find an importer for header {parent.header_node.token.encoding}')
+                                    try:
+                                        token = importer.import_token(column)
+                                    except Exception as error:
+                                        token = ErrorToken(column, row_number, error)
+                                        self.errors.append(token)
+                                if not token:
+                                    raise Exception(
+                                        f'No token generated for input {column} in row number #{row_number} using importer {importer}')
+
+                                parent = prev_stage_parents[icolumn]
+                                node = tree.add_node(tree_stage, parent, token, self.get_last_spine_operator_stage(parent, tree_stage), parent.last_signature_nodes, parent.header_node)
+                                next_stage_parents.append(node)
+
+                                if token.category == TokenCategory.BARLINES or token.category == TokenCategory.CORE and len(
+                                        document.measure_start_tree_stages) == 0:
+                                    is_barline = True
+                                elif isinstance(token, BoundingBoxToken):
+                                    self.handle_bounding_box(document, token)
+                                elif isinstance(token, SignatureToken):
+                                    node.last_signature_nodes.update(node)
+
+                    if is_barline:
+                        document.measure_start_tree_stages.append(tree_stage)
+                        self.last_measure_number = len(document.measure_start_tree_stages)
+                        if self.last_bounding_box:
+                            self.last_bounding_box.to_measure = self.last_measure_number
+                row_number = row_number + 1
+        return document
+
+    def handle_bounding_box(self, document: Document, token: BoundingBoxToken):
+        page_number = token.page_number
+        last_page_bb = document.page_bounding_boxes.get(page_number)
+        if last_page_bb is None:
+            if self.last_measure_number is None:
+                self.last_measure_number = 0
+            self.last_bounding_box = BoundingBoxMeasures(token.bounding_box, self.last_measure_number,
+                                                         self.last_measure_number)
+            document.page_bounding_boxes[page_number] = self.last_bounding_box
+        else:
+            last_page_bb.bounding_box.extend(token.bounding_box)
+            last_page_bb.to_measure = self.last_measure_number
+
+    def import_file(self, file_path: string) -> Document:
+        """
+        Import the content from the importer to the file.
+        Args:
+            file_path: The path to the file.
+
+        Returns:
+            None
+
+        Example:
+            # Create the importer and read the file
+            >>> hi = HumdrumImporter()
+            >>> hi.import_file('file.krn')
+        """
+        with open(file_path, 'r', newline='', encoding='utf-8', errors='ignore') as file:
+            reader = csv.reader(file, delimiter='\t')
+            return self.run(reader)
+
+    def import_string(self, text: string) -> Document:
+        lines = text.splitlines()
+        reader = csv.reader(lines)
+        return self.run(reader)
+
+    def getErrorMessages(self):
+        result = ''
+        for err in self.errors:
+            result += str(err)
+            result += '\n'
+        return result
+
+    def hasErrors(self):
+        return len(self.errors) > 0

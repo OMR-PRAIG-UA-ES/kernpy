@@ -4,7 +4,8 @@ import multiprocessing
 import sys
 from tqdm import tqdm
 
-from kernpy import HumdrumImporter, ExportOptions, BEKERN_CATEGORIES, KernTypeExporter
+from kernpy.core.exporter import ExportOptions, BEKERN_CATEGORIES, Exporter, KernTypeExporter
+from kernpy.core.importer import Importer
 
 DEFAULT_MEAN = 4.0
 DEFAULT_STD_DEV = 0.0
@@ -173,8 +174,8 @@ class FragmentGenerator:
         if self.verbose >= 2:
             print(f"Processing {input_kern_file} into {output_directory} using measure_length={measure_length}")
 
-        importer = HumdrumImporter()
-        importer.doImportFile(input_kern_file)
+        importer = Importer()
+        document = importer.import_file(input_kern_file)
 
         # check if there is only 1 spine if required
         if find_only_1_spine_scores and len(importer.spines) != 1:
@@ -202,7 +203,8 @@ class FragmentGenerator:
             if options.to_measure > importer.last_measure_number:
                 break
 
-            exported = importer.doExport(options)
+            exporter = Exporter()
+            exported = exporter.export_string(document, options)
             FragmentGenerator.store_kern_file(current_kern_file, exported)
         self.add_log(f'{input_kern_file}#{current_folder}', True)
 

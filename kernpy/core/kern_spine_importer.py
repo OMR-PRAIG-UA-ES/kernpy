@@ -1,8 +1,7 @@
-import logging
 import string
 
-from antlr4 import ParserRuleContext, InputStream, CommonTokenStream, ParseTreeWalker, BailErrorStrategy, Parser, \
-    RecognitionException, PredictionMode
+from antlr4 import InputStream, CommonTokenStream, ParseTreeWalker, BailErrorStrategy, \
+    PredictionMode
 from antlr4.error.ErrorListener import ConsoleErrorListener
 
 from .base_antlr_importer import BaseANTLRListenerImporter
@@ -10,8 +9,9 @@ from .generated.kernSpineLexer import kernSpineLexer
 from .generated.kernSpineParser import kernSpineParser
 from .generated.kernSpineParserListener import kernSpineParserListener
 from .spine_importer import SpineImporter
-from .tokens import SimpleToken, TokenCategory, Subtoken, SubTokenCategory, CompoundToken, ChordToken, BoundingBox, \
-    BoundingBoxToken, ClefToken, KeySignatureToken, TimeSignatureToken, MeterSymbolToken, BarToken, NoteRestToken
+from .tokens import SimpleToken, TokenCategory, Subtoken, SubTokenCategory, ChordToken, BoundingBox, \
+    BoundingBoxToken, ClefToken, KeySignatureToken, TimeSignatureToken, MeterSymbolToken, BarToken, NoteRestToken, \
+    KeyToken
 
 
 class KernSpineListener(kernSpineParserListener):
@@ -171,6 +171,9 @@ class KernSpineListener(kernSpineParserListener):
     def exitKeyCancel(self, ctx: kernSpineParser.KeyCancelContext):
         self.token = KeySignatureToken(ctx.getText())
 
+    def exitKey(self, ctx: kernSpineParser.KeyContext):
+        self.token = KeyToken(ctx.getText())
+
     def exitTimeSignature(self, ctx: kernSpineParser.TimeSignatureContext):
         self.token = TimeSignatureToken(ctx.getText())
 
@@ -248,7 +251,7 @@ class ErrorListener(ConsoleErrorListener):
 
 
 class KernSpineImporter(SpineImporter):
-    def doImport(self, token: string):
+    def import_token(self, token: string):
         if not token:
             raise Exception('Input token is empty')
         # self.listenerImporter = KernListenerImporter(token) # TODO ¿Por qué no va esto?

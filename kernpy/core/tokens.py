@@ -3,7 +3,6 @@ from abc import ABC, abstractmethod
 from enum import Enum, auto
 import copy
 
-
 TOKEN_SEPARATOR = '@'
 DECORATION_SEPARATOR = '·'
 
@@ -32,10 +31,6 @@ class TokenCategory(Enum):
     INSTRUMENTS = auto()
     BOUNDING_BOXES = auto()
     OTHER = auto()
-
-
-BEKERN_CATEGORIES = [TokenCategory.STRUCTURAL, TokenCategory.CORE, TokenCategory.EMPTY, TokenCategory.SIGNATURES,
-                     TokenCategory.BARLINES, TokenCategory.ENGRAVED_SYMBOLS]
 
 
 # TODO - de momento no lo usamos para filtrar
@@ -140,8 +135,6 @@ class PitchRest:
             True
         """
         return self.octave is None
-
-
 
     @staticmethod
     def pitch_comparator(pitch_a: string, pitch_b: string) -> int:
@@ -418,11 +411,6 @@ class PitchRest:
         """
         return self.__lt__(other) or self.__eq__(other)
 
-class PitchRestFactory:
-    @staticmethod
-    def create_pitch_rest(pitch: str) -> PitchRest:
-        return PitchRest(pitch)
-
 
 class Duration(ABC):
     """
@@ -448,6 +436,7 @@ class Duration(ABC):
     *-
     ```
     """
+
     def __init__(self, raw_duration):
         self.encoding = str(raw_duration)
 
@@ -498,8 +487,8 @@ class DurationMensural(Duration):
     """
     Represents the duration in mensural notation of a note or a rest.
     """
-    def __init__(self, duration):
 
+    def __init__(self, duration):
         super().__init__(duration)
         self.duration = duration
 
@@ -535,6 +524,7 @@ class DurationClassical(Duration):
     """
     Represents the duration in classical notation of a note or a rest.
     """
+
     def __init__(self, duration: int):
         """
         Create a new Duration object.
@@ -850,9 +840,16 @@ class HeaderToken(AbstractToken):
 class SpineOperationToken(AbstractToken):
     def __init__(self, encoding):
         super().__init__(encoding, TokenCategory.STRUCTURAL)
+        self.cancelled_at_stage = None
 
     def export(self) -> string:
         return self.encoding
+
+    def is_cancelled_at(self, stage):
+        if self.cancelled_at_stage is None:
+            return False
+        else:
+            return self.cancelled_at_stage < stage
 
 
 class Token(AbstractToken, ABC):
@@ -873,24 +870,34 @@ class BarToken(SimpleToken):
         super().__init__(encoding, TokenCategory.BARLINES)
 
 
-class ClefToken(SimpleToken):
+class SignatureToken(SimpleToken):
     def __init__(self, encoding):
         super().__init__(encoding, TokenCategory.SIGNATURES)
 
 
-class TimeSignatureToken(SimpleToken):
+class ClefToken(SignatureToken):
     def __init__(self, encoding):
-        super().__init__(encoding, TokenCategory.SIGNATURES)
+        super().__init__(encoding)
 
 
-class MeterSymbolToken(SimpleToken):
+class TimeSignatureToken(SignatureToken):
     def __init__(self, encoding):
-        super().__init__(encoding, TokenCategory.SIGNATURES)
+        super().__init__(encoding)
 
 
-class KeySignatureToken(SimpleToken):
+class MeterSymbolToken(SignatureToken):
     def __init__(self, encoding):
-        super().__init__(encoding, TokenCategory.SIGNATURES)
+        super().__init__(encoding)
+
+
+class KeySignatureToken(SignatureToken):
+    def __init__(self, encoding):
+        super().__init__(encoding)
+
+
+class KeyToken(SignatureToken):
+    def __init__(self, encoding):
+        super().__init__(encoding)
 
 
 class CompoundToken(Token):
@@ -937,9 +944,8 @@ class NoteRestToken(Token):
         if pitch_rest_token is None or len(pitch_rest_token) == 0:
             self.pitch = None
         else:
-            self.pitch = PitchRestFactory.create_pitch_rest(pitch_rest_token)
+            self.pitch = PitchRest(pitch_rest_token)
         # TODO: Ahora entran muchos tokens diferentes, filtrar solo los de pitch
-
 
     def export(self) -> string:
         result = ''

@@ -1,13 +1,10 @@
 # Run from the root project (the 'test' parent folder): python3 -m unittest test/test_importer.py
 # or from the IDE
-import os
 import unittest
 import logging
 import sys
-import tempfile
-from PIL import Image
 
-from kernpy import HumdrumImporter, KernSpineImporter
+from kernpy import KernSpineImporter
 
 logger = logging.getLogger()
 logger.level = logging.INFO  # change it DEBUG to trace errors
@@ -19,7 +16,7 @@ class KernSpineImporterTest(unittest.TestCase):
 
     def doTest(self, input, expected):
         importer = KernSpineImporter()
-        token = importer.doImport(input)
+        token = importer.import_token(input)
         self.assertIsNotNone(token)
         self.assertEqual(expected, token.export())
 

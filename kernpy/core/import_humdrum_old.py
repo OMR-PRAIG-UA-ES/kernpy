@@ -14,12 +14,12 @@ class KernTypeExporter(Enum):  # TODO: Eventually, polymorphism will be used to 
     """
     Options for exporting a kern file.
 
-    Examples:
+    Example:
         # Create the importer
         >>> hi = HumdrumImporter()
 
         # Read the file
-        >>> hi.doImportFile('file.krn')
+        >>> hi.import_file('file.krn')
 
         # Export the file
         >>> options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kernType=KernTypeExporter.normalizedKern)
@@ -45,12 +45,12 @@ class ExportOptions:
             instruments (Iterable): The instruments to export. When None, all the instruments will be exported.
 
 
-        Examples:
+        Example:
             >>> from kernpy import HumdrumImporter, ExportOptions
 
             Create the importer and read the file
             >>> hi = HumdrumImporter()
-            >>> hi.doImportFile('file.krn')
+            >>> hi.import_file('file.krn')
 
             Export the file with the specified options
             >>> options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
@@ -72,7 +72,7 @@ class ExportOptions:
         self.spine_types = spine_types or []
         self.from_measure = from_measure
         self.to_measure = to_measure
-        self.token_categories = token_categories or BEKERN_CATEGORIES
+        self.token_categories = token_categories or []
         self.kern_type = kern_type
         self.instruments = instruments or []
 
@@ -231,12 +231,12 @@ class HumdrumImporter:
                 if KeyComment is not None, a list be returned anyway. \
                 If there are no metacomments with the specified key, an empty list will be returned.
 
-        Examples:
+        Example:
             >>> from kernpy import HumdrumImporter
             >>> importer = HumdrumImporter()
 
             # Read the file
-            >>> importer.doImportFile('file.krn')
+            >>> importer.import_file('file.krn')
 
             # Get all the metacomments
             >>> all_metacomments = importer.getMetacomments()
@@ -266,8 +266,6 @@ class HumdrumImporter:
         return result
 
     def doImport(self, reader):
-        self.clear()
-
         importers = {}
         header_row_number = None
         row_number = 1
@@ -329,7 +327,7 @@ class HumdrumImporter:
                                     token = FieldCommentToken(column)
                                 else:
                                     try:
-                                        token = current_spine.importer.doImport(column)
+                                        token = current_spine.importer.run(column)
                                     except Exception as error:
                                         token = ErrorToken(column, row_number, error)
                                         self.errors.append(token)
@@ -359,10 +357,10 @@ class HumdrumImporter:
         Returns:
             None
 
-        Examples:
+        Example:
             # Create the importer and read the file
             >>> hi = HumdrumImporter()
-            >>> hi.doImportFile('file.krn')
+            >>> hi.import_file('file.krn')
         """
         with open(file_path, 'r', newline='', encoding='utf-8', errors='ignore') as file:
             reader = csv.reader(file, delimiter='\t')
@@ -437,9 +435,10 @@ class HumdrumImporter:
         if options.from_measure is not None and options.from_measure < 0:
             raise ValueError(f'option from_measure must be >=0 but {options.from_measure} was found. ')
         if options.to_measure is not None and options.to_measure > len(self.measure_start_rows):
+            #"TODO: DAVID, check options.to_measure bounds. len(self.measure_start_rows) or len(self.measure_start_rows) - 1"
             raise ValueError(f'option to_measure must be <= {len(self.measure_start_rows)} but {options.to_measure} was found. ')
         if options.to_measure is not None and options.from_measure is not None and options.to_measure < options.from_measure:
-            raise ValueError(f'option to_measure must be >= from_measure but options.to_measure={options.to_measure} < options.from_measure={options.from_measure} was found. ')
+            raise ValueError(f'option to_measure must be >= from_measure but {options.to_measure} < {options.from_measure} was found. ')
 
         last_signature = None
         for i in range(max_rows):
@@ -457,7 +456,6 @@ class HumdrumImporter:
                             row_result += '\t'
 
                         content = spine.getRowContent(i, options.kern_type, options.token_categories)
-
 
                         if content and content != '.' and content != '*':
                             empty = False
@@ -565,12 +563,12 @@ class HumdrumImporter:
         Returns:
             True if the importer has the token, False otherwise.
 
-        Examples:
+        Example:
             # Create the importer
             >>> hi = HumdrumImporter()
 
             # Read the file
-            >>> hi.doImportFile('file.krn')
+            >>> hi.import_file('file.krn')
 
             # Check if the importer has a specific token
             >>> has_f_4_clef = hi.has_token('*clefF4')
@@ -591,12 +589,12 @@ class HumdrumImporter:
         Returns:
             True if the importer has the token category, False otherwise.
 
-        Examples:
+        Example:
             # Create the importer
             >>> hi = HumdrumImporter()
 
             # Read the file
-            >>> hi.doImportFile('file.krn')
+            >>> hi.import_file('file.krn')
 
             # Check if the importer has a specific token
             >>> has_barlines = hi.has_category(TokenCategory.BARLINES)
@@ -623,12 +621,12 @@ class HumdrumImporter:
         Returns:
             A list with all the tokens in the importer.
 
-        Examples:
+        Example:
             # Create the importer
             >>> hi = HumdrumImporter()
 
             # Read the file
-            >>> hi.doImportFile('file.krn')
+            >>> hi.import_file('file.krn')
 
             # Get all the tokens
             >>> all_tokens = hi.get_all_tokens()
@@ -675,12 +673,12 @@ class HumdrumImporter:
         Returns:
             A list with the unique tokens in the importer.
 
-        Examples:
+        Example:
             # Create the importer
             >>> hi = HumdrumImporter()
 
             # Read the file
-            >>> hi.doImportFile('file.krn')
+            >>> hi.import_file('file.krn')
 
             # Get the unique tokens
             >>> unique_tokens = hi.get_unique_tokens()
@@ -709,12 +707,12 @@ class HumdrumImporter:
         Returns:
             True if the voice is in the tessitura, False otherwise.
 
-        Examples:
+        Example:
             # Create the importer
             >>> hi = HumdrumImporter()
 
             # Read the file
-            >>> hi.doImportFile('file.krn')
+            >>> hi.import_file('file.krn')
 
             # Check if the voice 1 is in the tessitura (C4, G4)
             >>> is_in_tessitura = hi.is_voice_in_tessitura(1, ('c4', 'g4'))
@@ -739,40 +737,6 @@ class HumdrumImporter:
         """
         return len(self.spines)
 
-    def clear(self) -> None:
-        """
-        Clear all the data in the current object.
-
-        This function is used internally to clear the data after reading a file. It is not necessary to use it explicitly.
-
-        Returns:
-            None
-
-        Examples:
-            # Create the importer
-            >>> hi = HumdrumImporter()
-
-            # Read the file
-            >>> hi.doImportFile('file.krn')
-
-            # Clear the data explicitly
-            >>> hi.clear()
-
-            # Read more files
-            >>> hi.doImportFile('file_1.krn')  # clear() is called internally
-            >>> hi.doImportFile('file_2.krn')  # clear() is called internally
-            >>> hi.doImportFile('file_3.krn') # clear() is called internally
-        """
-        self.spines = []
-        self.current_spine_index = 0
-        self.measure_start_rows = []
-        self.page_bounding_boxes = {}
-        self.last_measure_number = None
-        self.last_bounding_box = None
-        self.errors = []
-
-
-
 def get_kern_from_ekern(ekern_content: string) -> string:
     """
     Read the content of a **ekern file and return the **kern content.
@@ -782,7 +746,7 @@ def get_kern_from_ekern(ekern_content: string) -> string:
     Returns:
         The content of the **kern file.
 
-    Examples:
+    Example:
         ```python
         # Read **ekern file
         ekern_file = 'path/to/file.ekrn'
@@ -813,7 +777,7 @@ def ekern_to_krn(input_file, output_file) -> None:
     Returns:
         None
 
-    Examples:
+    Example:
         # Convert .ekrn to .krn
         >>> ekern_to_krn('path/to/file.ekrn', 'path/to/file.krn')
 
@@ -854,7 +818,7 @@ def kern_to_ekern(input_file, output_file) -> None:
     Returns:
         None
 
-    Examples:
+    Example:
         # Convert .krn to .ekrn
         >>> kern_to_ekern('path/to/file.krn', 'path/to/file.ekrn')
 

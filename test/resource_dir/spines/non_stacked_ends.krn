@@ -1,0 +1,12 @@
+**kern
+*^
+1A	1a
+*^	*
+1B	1BB	1b
+*^	*	*
+1C	1CC	1CCC	1c
+*v	*v	*v	*
+1D	1d
+*v	*v
+1e
+*-
