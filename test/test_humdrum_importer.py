@@ -501,7 +501,13 @@ class ImporterTestCase(unittest.TestCase):
         self.assertEqual(len(expected_tokens), len(encodings))
         self.assertListEqual(expected_tokens, encodings)
 
-    # TODO David -> JCerveto: ¿para qué es clear? Lo comento
+    # TODO David -> JCerveto: ¿para qué es clear? Lo comento.
+    # TODO: Implementar clear en el Importer
+    # Había un bug en el que cada vez que se importaba una partitura en el mismo objeto HumdrumImporter se \
+    # acumulaban los datos de las partituras anteriores.
+    # HumdrumImporter.clear() se llamaba antes de cada importación para limpiar los datos anteriores.
+    # Hay que ver si hay que implementar algo similar en el Importer nuevo.
+    #
     # def test_clear(self):
     #     # Arrange
     #     input_kern_file = 'resource_dir/legacy/chor001.krn'
