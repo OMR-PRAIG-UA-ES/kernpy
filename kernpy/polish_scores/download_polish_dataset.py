@@ -114,7 +114,7 @@ def convert_and_download_file(input_kern, _output_path, log_filename):
     importer = Importer()
     document = importer.import_file(input_kern)
     if len(importer.errors):
-        raise Exception(f'{input_kern} has errors {importer.getErrorMessages()}')
+        raise Exception(f'{input_kern} has errors {importer.get_error_messages()}')
     map_page_label_IIIF_ids = findIIIFIds(document)
     download_and_save_page_images(document, _output_path, map_page_label_IIIF_ids, document.page_bounding_boxes,
                                   log_filename=log_filename)

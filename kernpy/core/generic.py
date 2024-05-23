@@ -20,7 +20,7 @@ def read_kern(input_file: str):
     importer.import_file(input_file)
 
     if len(importer.errors):
-        raise Exception(f'ERROR: {input_file} has errors {importer.getErrorMessages()}')
+        raise Exception(f'ERROR: {input_file} has errors {importer.get_error_messages()}')
 
     # TODO: Store the HumdrumImporter object in the Score object
     score = Score("a")

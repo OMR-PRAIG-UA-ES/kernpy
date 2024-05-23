@@ -297,7 +297,7 @@ def kern_to_ekern(input_file, output_file) -> None:
     document = importer.import_file(input_file)
 
     if len(importer.errors):
-        raise Exception(f'ERROR: {input_file} has errors {importer.getErrorMessages()}')
+        raise Exception(f'ERROR: {input_file} has errors {importer.get_error_messages()}')
 
     export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES,
                                    kern_type=KernTypeExporter.eKern)

@@ -25,8 +25,15 @@ class Importer():
         else:
             return parent.last_spine_operator_node
 
+    def clear(self):
+        self.last_measure_number = None
+        self.last_bounding_box = None
+        self.errors = []
+
     #TODO Documentar cómo propagamos los header_node y last_spine_operator_node...
     def run(self, reader) -> Document:
+        #self.clear()    # TODO: ¿Hace falta limpiar la información de un import anterior?
+
         tree = MultistageTree()
         document = Document(tree)
         importers = {}
@@ -164,8 +171,8 @@ class Importer():
 
         Example:
             # Create the importer and read the file
-            >>> hi = HumdrumImporter()
-            >>> hi.import_file('file.krn')
+            >>> importer = Importer()
+            >>> importer.import_file('file.krn')
         """
         with open(file_path, 'r', newline='', encoding='utf-8', errors='ignore') as file:
             reader = csv.reader(file, delimiter='\t')
@@ -176,12 +183,12 @@ class Importer():
         reader = csv.reader(lines)
         return self.run(reader)
 
-    def getErrorMessages(self):
+    def get_error_messages(self):
         result = ''
         for err in self.errors:
             result += str(err)
             result += '\n'
         return result
 
-    def hasErrors(self):
+    def has_errors(self):
         return len(self.errors) > 0

@@ -349,7 +349,7 @@ class ImporterTestCase(unittest.TestCase):
         input_kern = "!!!M1\n**kern\n*clefF4\n4c\n4d\n!!!M2\n4e\n4f\n*-"
         importer = Importer()
         importer.import_string(input_kern)
-        self.assertFalse(importer.hasErrors())
+        self.assertFalse(importer.has_errors())
 
     def test_metadatacomments_generic(self):
         input_kern_file = 'resource_dir/legacy/chor001.krn'
