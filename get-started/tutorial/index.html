@@ -9,6 +9,8 @@
       
       
       
+        <link rel="prev" href="../../about/">
+      
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -16,7 +18,7 @@
     
     
       
-        <title>Quick start - kernpy</title>
+        <title>Tutorial - kernpy</title>
       
     
     
@@ -60,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#quick-start" class="md-skip">
+        <a href="#tutorial-learning-kernpy-in-5-minutes" class="md-skip">
           Skip to content
         </a>
       
@@ -96,7 +98,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Quick start
+              Tutorial
             
           </span>
         </div>
@@ -269,11 +271,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/" class="md-nav__link">
+      <a href="../../about/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Explanation
+    About
   </span>
   
 
@@ -286,18 +288,85 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../about/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Tutorial
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
-    About
+    Tutorial
   </span>
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#running-the-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running the code
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-humdrum-kern" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is Humdrum **kern?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lets-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Let's code!
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -329,18 +398,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#running-the-code" class="md-nav__link">
     <span class="md-ellipsis">
-      Installation
+      Running the code
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
+  <a href="#what-is-humdrum-kern" class="md-nav__link">
     <span class="md-ellipsis">
-      Usage
+      What is Humdrum **kern?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lets-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Let's code!
     </span>
   </a>
   
@@ -361,12 +439,121 @@
                   
 
 
-<h1 id="quick-start">Quick start</h1>
-<h2 id="installation">Installation</h2>
-<p>First of all, you need to install <code>kernpy</code>. You can do this by running the following command:</p>
-<p>Go to <a href="../installation/">Installation</a> for more information.</p>
-<h2 id="usage">Usage</h2>
-<p>Go to the README.md file in the <a href="https://github.com/OMR-PRAIG-UA-ES/kernpy">kernpy repository</a> to learn how to use <code>kernpy</code>.</p>
+<h1 id="tutorial-learning-kernpy-in-5-minutes">Tutorial: Learning <code>kernpy</code> in 5 minutes.</h1>
+<p>This is a short introduction to <code>kernpy</code>. It will guide you through the main concepts and show you how to use the package in a few minutes.</p>
+<p>When using <code>kernpy</code>, you should be familiar with the Humdrum **kern encodings. You can easily find information in:</p>
+<ul>
+<li><a href="https://verovio.humdrum.org/" target="_blank">Verovio Humdrum Viewer</a></li>
+<li><a href="https://doc.verovio.humdrum.org/humdrum/getting_started/" target="_blank">Verovio Humdrum Viewer Documentation</a></li>
+</ul>
+<h2 id="running-the-code">Running the code</h2>
+<p><code>kernpy</code> is able to be run as a normal snippet of code or as a module by command line interface.</p>
+<h3> Usually, we recommend the import as: </h3>
+
+<pre><code class="language-python">import kernpy
+</code></pre>
+<h3> Also, you can run the code as a module by command line interface. </h3>
+
+<pre><code class="language-bash">python -m kernpy --help
+</code></pre>
+<h2 id="what-is-humdrum-kern">What is Humdrum **kern?</h2>
+<p>First of all, let's see what a Humdrum **kern file looks like:</p>
+<pre><code class="language-kern">**kern
+*clefG2
+*M4/4
+*met(c)
+=1
+4c
+4d
+4e
+4f
+=2
+*M3/2
+2g
+2f
+2d
+=
+*-
+</code></pre>
+<p><img alt="Example in **kern" src="../../assets/001.svg" /></p>
+<h2 id="lets-code">Let's code!</h2>
+<p>We can do some operations with the score.</p>
+<p>Load the file directly using the content of the file:  <br />
+Examples:</p>
+<pre><code class="language-python">import kernpy
+score = kernpy.load('**kern\n*clefG2\n*M4/4\n*met(c)\n=1\n4c\n4d\n4e\n4f\n=2\n*M3/2\n2g\n2f\n2d\n=\n*-'
+</code></pre>
+<p>Or load the file using the path to the file:</p>
+<pre><code class="language-python">import kernpy
+
+score = kernpy.read(&quot;path/to/file.krn&quot;)
+</code></pre>
+<p>Then you can access to the score attributes:</p>
+<pre><code class="language-python">print(type(score))
+# &lt;class 'kernpy.core.generic.Score'&gt;
+
+print(score.voices)
+# ['saxophone', 'clarinet', 'piano']
+</code></pre>
+<p>Now, you can export the score using the <code>ExportOptions</code> class:</p>
+<pre><code class="language-python">export_options = kernpy.ExportOptions()
+content = score.export(export_options)
+print(content)
+</code></pre>
+<p>Or you save the score to a file:</p>
+<pre><code class="language-python">export_options = kernpy.ExportOptions()
+content = score.save(export_options, &quot;path/to/file.krn&quot;)
+</code></pre>
+<h4>Let's filter the export options:</h4>
+
+<p>Select the voices to export:</p>
+<pre><code class="language-python">export_options = kernpy.ExportOptions(voices=['saxophone'])
+content = score.export(export_options)
+print(content)
+</code></pre>
+<p>Select the measures to export:</p>
+<pre><code class="language-python">export_options = kernpy.ExportOptions(from_measure=1, to_measure=2)
+content = score.export(export_options)
+print(content)
+</code></pre>
+<p>Select the token categories to export:
+Let's see the <code>kernpy.TokenCategory</code> enum class to choose the categories:</p>
+<pre><code class="language-python">export_options = kernpy.ExportOptions(token_categories=[
+    kernpy.TokenCategory.STRUCTURAL, 
+    kernpy.TokenCategory.CORE, 
+    kernpy.TokenCategory.EMPTY, 
+    kernpy.TokenCategory.SIGNATURES,
+    kernpy.TokenCategory.BARLINES,
+])
+content = score.export(export_options)
+print(content)
+</code></pre>
+<p>Actually, you can use the predefined categories:</p>
+<pre><code class="language-python">export_options = kernpy.ExportOptions(token_categories=kernpy.BEKERN_CATEGORIES)
+content = score.export(export_options)
+print(content)
+</code></pre>
+<p>Select the encoding to export:</p>
+<pre><code class="language-python">export_options = kernpy.ExportOptions(kern_type=kernpy.KernTypeExporter.normalizedKern)
+content = score.export(export_options)
+print(content)
+</code></pre>
+<p>Select a list of filters to export:</p>
+<pre><code class="language-python">export_options = kernpy.ExportOptions(
+    kern_type=kernpy.KernTypeExporter.eKern,
+    instruments=['saxophone'],
+    from_measure=1,
+    to_measure=2
+    token_categories=kernpy.BEKERN_CATEGORIES
+)
+</code></pre>
+<h3>Let's see the score in a graphical representation:</h3>
+
+<p>Show the graph representation of the score:</p>
+<h1 id="todo">TODO: ...</h1>
+<h2 id="next-steps">Next steps</h2>
+<p>Congratulations! You have learned the basics of <code>kernpy</code>. Now you can start using the package in your projects.</p>
+<p>Go to the <a href="../../reference/">API reference</a> to learn more about the <code>kernpy</code> API.</p>
 
 
 
