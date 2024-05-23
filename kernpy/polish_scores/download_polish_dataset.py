@@ -6,7 +6,7 @@ from io import BytesIO
 import os
 import json
 
-from kernpy import ExportOptions, BEKERN_CATEGORIES, Importer, Exporter
+from kernpy import ExportOptions, BEKERN_CATEGORIES, Importer, Exporter, Document
 import argparse
 
 # This script creates the Polish dataset from the kern files.
@@ -145,7 +145,7 @@ def remove_extension(file_name):
     return base_name
 
 
-def add_log(importer: Importer, path, log_filename) -> None:
+def add_log(document: Document, path, log_filename) -> None:
     try:
         def get_instruments(line):
             words = line.split(' ')
@@ -194,22 +194,22 @@ def add_log(importer: Importer, path, log_filename) -> None:
 
         info = {
             'path': path,
-            'publication_date': get_publish_date(importer.getMetacomments('PDT')[0]) if importer.getMetacomments(
+            'publication_date': get_publish_date(document.get_metacomments('PDT')[0]) if document.get_metacomments(
                 'PDT') else None,
             'original_publication_date_tag': True,
-            'iiif': importer.getMetacomments('IIIF')[0] if importer.getMetacomments('IIIF') else None,
-            'n_measures': importer.last_measure_number,
-            'composer': importer.getMetacomments('COM')[0] if importer.getMetacomments('COM') else None,
-            'composer_dates': importer.getMetacomments('CDT')[0] if importer.getMetacomments('CDT') else None,
-            'tempo': importer.getMetacomments('OTL')[0] if importer.getMetacomments('OTL') else None,
-            'piece_title': importer.getMetacomments('OPR')[0] if importer.getMetacomments('OPR') else None,
-            'segment': importer.getMetacomments('SEGMENT')[0] if importer.getMetacomments('SEGMENT') else None,
-            'n_voices': len(get_instruments(importer.getMetacomments('AIN')[0])) if importer.getMetacomments(
+            'iiif': document.get_metacomments('IIIF')[0] if document.get_metacomments('IIIF') else None,
+            'n_measures': document.last_measure_number,
+            'composer': document.get_metacomments('COM')[0] if document.get_metacomments('COM') else None,
+            'composer_dates': document.get_metacomments('CDT')[0] if document.get_metacomments('CDT') else None,
+            'tempo': document.get_metacomments('OTL')[0] if document.get_metacomments('OTL') else None,
+            'piece_title': document.get_metacomments('OPR')[0] if document.get_metacomments('OPR') else None,
+            'segment': document.get_metacomments('SEGMENT')[0] if document.get_metacomments('SEGMENT') else None,
+            'n_voices': len(get_instruments(document.get_metacomments('AIN')[0])) if document.get_metacomments(
                 'AIN') else 0,
-            'instruments': get_instruments(importer.getMetacomments('AIN')[0]) if importer.getMetacomments(
+            'instruments': get_instruments(document.get_metacomments('AIN')[0]) if document.get_metacomments(
                 'AIN') else [],
             'unique_instruments': [
-                *set(get_instruments(importer.getMetacomments('AIN')[0]))] if importer.getMetacomments('AIN') else [],
+                *set(get_instruments(document.get_metacomments('AIN')[0]))] if document.get_metacomments('AIN') else [],
         }
 
         if info['publication_date'] in (0, 1, -1, -2) or info['publication_date'] is None:
