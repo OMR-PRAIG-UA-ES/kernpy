@@ -115,13 +115,44 @@ class Document:
         else:
             raise Exception('No header stage found')
 
-    def get_metacomments(self, KeyComment=None):
+    def get_metacomments(self, KeyComment=None, clear=False) -> list:
+        """
+        Get all metacomments in the document
+
+        Args:
+            KeyComment: Filter by a specific metacomment key: e.g. Use 'COM' to get only comments starting with\
+                '!!!COM: '. If None, all metacomments are returned.
+            clear: If True, the metacomment key is removed from the comment. E.g. '!!!COM: Coltrane' -> 'Coltrane'.\
+                If False, the metacomment key is kept. E.g. '!!!COM: Coltrane' -> '!!!COM: Coltrane'. \
+                The clear functionality is equivalent to the following code:
+                ```python
+                comment = '!!!COM: Coltrane'
+                clean_comment = comment.replace(f"!!!{KeyComment}: ", "")
+                ```
+                Other formats are not supported.
+
+        Returns: A list of metacomments.
+
+        Examples:
+            >>> document.get_metacomments()
+            ['!!!COM: Coltrane', '!!!voices: 1', '!!!OPR: Blue Train']
+            >>> document.get_metacomments(KeyComment='COM')
+            ['!!!COM: Coltrane']
+            >>> document.get_metacomments(KeyComment='COM', clear=True)
+            ['Coltrane']
+            >>> document.get_metacomments(KeyComment='non_existing_key')
+            []
+        """
         traversal = MetacommentsTraversal()
         self.tree.dfs(traversal)
         result = []
         for metacomment in traversal.metacomments:
             if KeyComment is None or metacomment.encoding.startswith(f"!!!{KeyComment}"):
-                result.append(metacomment.encoding)
+                new_comment = metacomment.encoding
+                if clear:
+                    new_comment = metacomment.encoding.replace(f"!!!{KeyComment}: ", "")
+                result.append(new_comment)
+
         return result
 
     def tokens_to_encodings(self, tokens):

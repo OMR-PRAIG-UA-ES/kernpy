@@ -14,3 +14,4 @@
 !!!ONB: Harmony and Root analysis done manually by Craig Sapp
 !! Beat 2 of measure 1 chord could also be IVb (with root on C)
 !!linebreak: 2
+!!chor2scor: -l 2 -s 0.6 -o %b.pmx

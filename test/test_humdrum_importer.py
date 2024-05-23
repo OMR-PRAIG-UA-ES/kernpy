@@ -360,20 +360,30 @@ class ImporterTestCase(unittest.TestCase):
 
         importer = Importer()
         document = importer.import_file(input_kern_file)
+        output_metadata_real = document.get_metacomments()
 
-        self.assertListEqual(output_metadata_array_expected, document.get_metacomments())
+        self.assertListEqual(output_metadata_array_expected, output_metadata_real)
 
     def test_metadatacomments_specific_option(self):
         input_kern_file = 'resource_dir/legacy/chor001.krn'
-        output_metadata_array_expected = []
-        with open('resource_dir/legacy/chor001-metadata-COM.txt', 'r') as f:
-            for line in f:
-                output_metadata_array_expected.append(line.strip())
+        output_metadata_array_expected = ['!!!COM: Bach, Johann Sebastian']
 
         importer = Importer()
         document = importer.import_file(input_kern_file)
+        output_metadata_array_output = document.get_metacomments(KeyComment='COM')
 
-        self.assertListEqual(output_metadata_array_expected, document.get_metacomments(KeyComment='COM'))  # composer
+        self.assertListEqual(output_metadata_array_expected, output_metadata_array_output)  # composer
+
+    def test_metadatacomments_specific_option_clear(self):
+        input_kern_file = 'resource_dir/legacy/chor001.krn'
+        output_metadata_array_expected = ['Bach, Johann Sebastian']
+
+        importer = Importer()
+        document = importer.import_file(input_kern_file)
+        output_metadata_array_output = document.get_metacomments(KeyComment='COM', clear=True)
+
+        self.assertListEqual(output_metadata_array_expected, output_metadata_array_output)  # composer
+
 
     def has_token(self, tokens, encoding):
         for token in tokens:
