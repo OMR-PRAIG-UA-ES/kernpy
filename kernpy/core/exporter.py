@@ -176,7 +176,8 @@ class Exporter:
                 else:
                     header_type = None
 
-                if header_type and header_type in options.spine_types and not node.token.hidden:
+                if header_type and header_type in options.spine_types and not node.token.hidden and \
+                        (not options.token_categories or node.token.category in options.token_categories):
                     row.append(node.token.export())
 
             if len(row) > 0:
