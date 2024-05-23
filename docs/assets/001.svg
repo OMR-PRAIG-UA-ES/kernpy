@@ -1,0 +1,141 @@
+<svg width="520px" height="128px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mei="http://www.music-encoding.org/ns/mei" overflow="visible">
+ <desc>Engraved by Verovio 4.2.0-dev-88ccfa7-dirty</desc>
+ <defs>
+  <symbol id="E050-5c9gbb" viewBox="0 0 1000 1000" overflow="inherit">
+   <path transform="scale(1,-1)" d="M123 -513c0 66 44 123 114 123c75 0 116 -57 116 -111c0 -64 -47 -104 -94 -112c-3 0 -5 -1 -5 -3c0 -1 2 -2 3 -3c2 0 23 -5 47 -5c101 0 155 55 155 159c0 53 -12 123 -31 219c-23 -4 -50 -7 -79 -7c-186 0 -349 147 -349 334c0 200 126 322 217 406c21 17 73 70 74 71 c-17 112 -22 161 -22 215c0 84 18 212 82 288c33 39 64 51 71 51c18 0 47 -35 71 -86c16 -36 44 -110 44 -201c0 -159 -73 -284 -178 -395c8 -56 18 -115 28 -175c146 0 253 -102 253 -253c0 -103 -73 -205 -171 -237c6 -39 12 -69 15 -89c10 -57 16 -102 16 -141 c0 -63 -14 -129 -68 -167c-36 -22 -77 -34 -124 -34c-135 0 -185 87 -185 153zM332 822c-8 -31 -11 -65 -11 -102c0 -42 5 -81 11 -121c69 68 146 146 146 250c0 70 -24 118 -39 118c-52 0 -98 -105 -107 -145zM420 -206l-58 329c-58 -14 -104 -63 -104 -124 c0 -49 22 -75 61 -99c12 -8 22 -13 22 -22s-9 -13 -17 -13c-80 0 -135 96 -135 166c0 94 62 190 153 217c-7 41 -14 88 -23 142c-15 -15 -31 -29 -48 -44c-88 -76 -174 -185 -174 -307c0 -151 122 -251 265 -251c19 0 38 2 58 6zM562 -21c0 89 -65 150 -155 150 c7 -44 34 -203 55 -323c71 29 100 102 100 173z" />
+  </symbol>
+  <symbol id="E082-5c9gbb" viewBox="0 0 1000 1000" overflow="inherit">
+   <path transform="scale(1,-1)" d="M342 -39c4 10 11 14 18 14c9 0 17 -6 17 -19c0 -27 -23 -102 -41 -139s-61 -60 -93 -60s-60 16 -78 42s-29 60 -58 60c-24 0 -32 -10 -33 -16c-1 -3 -1 -6 -1 -9c0 -8 2 -19 8 -33c2 -5 3 -9 3 -13c0 -18 -17 -31 -33 -31c-12 0 -36 3 -36 50s30 89 30 89 c58 87 197 112 197 229c0 51 -11 86 -68 86c-15 0 -29 -3 -34 -5c-18 -5 -23 -12 -23 -18c0 -5 4 -10 7 -11c26 -10 46 -41 46 -69c0 -41 -33 -74 -74 -74s-75 33 -75 74c0 46 28 137 179 137s170 -83 170 -125c0 -60 -27 -112 -133 -145s-131 -71 -131 -71c10 2 18 3 26 3 c54 0 68 -40 133 -40c49 0 69 72 77 94z" />
+  </symbol>
+  <symbol id="E083-5c9gbb" viewBox="0 0 1000 1000" overflow="inherit">
+   <path transform="scale(1,-1)" d="M272 16h-2c44 -14 94 -45 94 -118c0 -109 -104 -142 -200 -142c-74 0 -149 41 -149 123c0 36 29 65 65 65s64 -29 64 -65c0 -33 -27 -62 -60 -64c11 -8 37 -16 65 -16c42 0 87 18 87 85c0 70 -23 100 -67 106c-32 5 -55 5 -72 6c-11 1 -13 12 -13 12v20s1 14 13 14 s68 4 80 6s59 11 59 74c0 54 -45 79 -87 79c-19 0 -38 -5 -52 -15l-3 -3c28 -6 50 -34 50 -63c0 -36 -28 -64 -64 -64s-65 28 -65 64l1 2h-1s-5 122 167 122s175 -113 175 -122c0 -55 -35 -87 -85 -106z" />
+  </symbol>
+  <symbol id="E08A-5c9gbb" viewBox="0 0 1000 1000" overflow="inherit">
+   <path transform="scale(1,-1)" d="M325 179c2 1 2 3 2 4c0 2 0 3 -1 5c-11 17 -32 34 -79 34c-89 0 -111 -64 -111 -120v-191c0 -88 42 -135 129 -135c88 0 147 50 151 133c0 4 4 8 8 8h13c5 0 8 -3 8 -8c-4 -107 -81 -165 -180 -165c-250 0 -265 149 -265 268c0 65 25 246 243 246c170 0 209 -92 218 -135 c2 -7 2 -14 2 -21c0 -50 -40 -90 -90 -90h-11c-41 5 -74 37 -79 78c-1 4 -1 8 -1 12c0 32 18 61 43 77z" />
+  </symbol>
+  <symbol id="E0A3-5c9gbb" viewBox="0 0 1000 1000" overflow="inherit">
+   <path transform="scale(1,-1)" d="M213 132c62 0 112 -33 112 -92c0 -88 -109 -173 -213 -173c-81 0 -112 48 -112 91c0 93 116 174 213 174zM75 -86c46 0 215 85 215 135c0 22 -16 36 -40 36c-47 0 -215 -86 -215 -135c0 -9 7 -36 40 -36z" />
+  </symbol>
+  <symbol id="E0A4-5c9gbb" viewBox="0 0 1000 1000" overflow="inherit">
+   <path transform="scale(1,-1)" d="M0 -42c0 92 116 174 213 174c62 0 112 -33 112 -92c0 -88 -109 -173 -213 -173c-81 0 -112 48 -112 91z" />
+  </symbol>
+ </defs>
+ <style type="text/css">g.page-margin{font-family:Times,serif;} g.ending, g.fing, g.reh, g.tempo{font-weight:bold;} g.dir, g.dynam, g.mNum{font-style:italic;} g.label{font-weight:normal;}</style>
+ <svg class="definition-scale" color="black" viewBox="0 0 13000 3200">
+  <g class="page-margin" transform="translate(300, 1000)">
+   <g id="m9bue2v" class="mdiv pageMilestone" />
+   <g id="ssw1wzx" class="score pageMilestone" />
+   <g id="s1vd4fb3" class="system">
+    <g id="section-L1F1" class="section systemMilestone" />
+    <g id="measure-L1" class="measure m-1">
+     <g id="staff-L1F1" class="staff">
+      <path d="M0 540 L6292 540" stroke="currentColor" stroke-width="10" />
+      <path d="M0 720 L6292 720" stroke="currentColor" stroke-width="10" />
+      <path d="M0 900 L6292 900" stroke="currentColor" stroke-width="10" />
+      <path d="M0 1080 L6292 1080" stroke="currentColor" stroke-width="10" />
+      <path d="M0 1260 L6292 1260" stroke="currentColor" stroke-width="10" />
+      <g id="ctebs2k" class="clef">
+       <use xlink:href="#E050-5c9gbb" x="135" y="1080" height="720px" width="720px" />
+      </g>
+      <g id="k10n7rbo" class="keySig" />
+      <g id="m1noeijp" class="meterSig">
+       <use xlink:href="#E08A-5c9gbb" x="775" y="900" height="720px" width="720px" />
+      </g>
+      <g class="ledgerLines below">
+       <path d="M1462 1440 L1792 1440" stroke="currentColor" stroke-width="22" />
+      </g>
+      <g id="layer-L1F1N1" class="layer">
+       <g id="note-L6F1" class="note qon-0 qoff-1 pname-c acc-n oct-4 b40c-2 b12c-0 ">
+        <g class="notehead">
+         <use xlink:href="#E0A4-5c9gbb" x="1510" y="1440" height="720px" width="720px" />
+        </g>
+        <g id="s40uz6x" class="stem">
+         <path d="M1734 1412 L1734 810" stroke="currentColor" stroke-width="18" />
+        </g>
+        <g id="accid-L6F1" class="accid" />
+       </g>
+       <g id="note-L7F1" class="note qon-1 qoff-2 pname-d acc-n oct-4 b40c-8 b12c-2 ">
+        <g class="notehead">
+         <use xlink:href="#E0A4-5c9gbb" x="2704" y="1350" height="720px" width="720px" />
+        </g>
+        <g id="snw65ws" class="stem">
+         <path d="M2928 1322 L2928 720" stroke="currentColor" stroke-width="18" />
+        </g>
+        <g id="accid-L7F1" class="accid" />
+       </g>
+       <g id="note-L8F1" class="note qon-2 qoff-3 pname-e acc-n oct-4 b40c-14 b12c-4 ">
+        <g class="notehead">
+         <use xlink:href="#E0A4-5c9gbb" x="3899" y="1260" height="720px" width="720px" />
+        </g>
+        <g id="s136g3pw" class="stem">
+         <path d="M4123 1232 L4123 630" stroke="currentColor" stroke-width="18" />
+        </g>
+        <g id="accid-L8F1" class="accid" />
+       </g>
+       <g id="note-L9F1" class="note qon-3 qoff-4 pname-f acc-n oct-4 b40c-19 b12c-5 ">
+        <g class="notehead">
+         <use xlink:href="#E0A4-5c9gbb" x="5093" y="1170" height="720px" width="720px" />
+        </g>
+        <g id="s67ya3h" class="stem">
+         <path d="M5317 1142 L5317 540" stroke="currentColor" stroke-width="18" />
+        </g>
+        <g id="accid-L9F1" class="accid" />
+       </g>
+      </g>
+     </g>
+     <g id="b11xd8p6" class="barLine">
+      <path d="M6287 540 L6287 1260" stroke="currentColor" stroke-width="10" />
+     </g>
+    </g>
+    <g id="measure-L10" class="measure m-2">
+     <g id="staff-L10F1N1" class="staff">
+      <path d="M6292 540 L12501 540" stroke="currentColor" stroke-width="10" />
+      <path d="M6292 720 L12501 720" stroke="currentColor" stroke-width="10" />
+      <path d="M6292 900 L12501 900" stroke="currentColor" stroke-width="10" />
+      <path d="M6292 1080 L12501 1080" stroke="currentColor" stroke-width="10" />
+      <path d="M6292 1260 L12501 1260" stroke="currentColor" stroke-width="10" />
+      <g id="m1hps15" class="meterSig">
+       <use xlink:href="#E083-5c9gbb" x="6377" y="720" height="720px" width="720px" />
+       <use xlink:href="#E082-5c9gbb" x="6372" y="1080" height="720px" width="720px" />
+      </g>
+      <g id="layer-L10F1N1" class="layer">
+       <g id="note-L12F1" class="note qon-4 qoff-6 pname-g acc-n oct-4 b40c-25 b12c-7 ">
+        <g class="notehead">
+         <use xlink:href="#E0A3-5c9gbb" x="7044" y="1080" height="720px" width="720px" />
+        </g>
+        <g id="svk4jnx" class="stem">
+         <path d="M7268 1052 L7268 450" stroke="currentColor" stroke-width="18" />
+        </g>
+        <g id="accid-L12F1" class="accid" />
+       </g>
+       <g id="note-L13F1" class="note qon-6 qoff-8 pname-f acc-n oct-4 b40c-19 b12c-5 ">
+        <g class="notehead">
+         <use xlink:href="#E0A3-5c9gbb" x="8861" y="1170" height="720px" width="720px" />
+        </g>
+        <g id="s1kptaim" class="stem">
+         <path d="M9085 1142 L9085 540" stroke="currentColor" stroke-width="18" />
+        </g>
+        <g id="accid-L13F1" class="accid" />
+       </g>
+       <g id="note-L14F1" class="note qon-8 qoff-10 pname-d acc-n oct-4 b40c-8 b12c-2 ">
+        <g class="notehead">
+         <use xlink:href="#E0A3-5c9gbb" x="10679" y="1350" height="720px" width="720px" />
+        </g>
+        <g id="s1ehyt5b" class="stem">
+         <path d="M10903 1322 L10903 720" stroke="currentColor" stroke-width="18" />
+        </g>
+        <g id="accid-L14F1" class="accid" />
+       </g>
+      </g>
+     </g>
+     <g id="bhos0uv" class="barLine">
+      <path d="M12496 540 L12496 1260" stroke="currentColor" stroke-width="10" />
+     </g>
+    </g>
+    <g id="spfsvxx" class="systemMilestoneEnd section-L1F1" />
+   </g>
+   <g id="pgp6ni0" class="pageMilestoneEnd ssw1wzx" />
+   <g id="p19ujlr2" class="pageMilestoneEnd m9bue2v" />
+  </g>
+ </svg>
+</svg>
