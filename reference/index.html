@@ -926,6 +926,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#kernpy.core.get_kern_from_ekern" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_kern_from_ekern
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#kernpy.core.kern_to_ekern" class="md-nav__link">
     <span class="md-ellipsis">
       kern_to_ekern
@@ -1743,6 +1752,15 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kernpy.core.get_kern_from_ekern" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_kern_from_ekern
+    </span>
+  </a>
   
 </li>
       
@@ -4967,6 +4985,69 @@ def ekern_to_krn_wrapper(ekern_file, kern_file):
 for ekern_file in ekrn_files:
     output_file = ekern_file.replace('.ekrn', '.krn')
     ekern_to_krn_wrapper(ekern_file, output_file)
+</code></pre>
+</details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="kernpy.core.get_kern_from_ekern" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_kern_from_ekern</span><span class="p">(</span><span class="n">ekern_content</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Read the content of a <strong>ekern file and return the </strong>kern content.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>ekern_content</code></td>
+            <td>
+                  <code>string</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The content of the **ekern file.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+      <p>Returns:
+    The content of the **kern file.</p>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <pre><code class="language-python"># Read **ekern file
+ekern_file = 'path/to/file.ekrn'
+with open(ekern_file, 'r') as file:
+    ekern_content = file.read()
+
+# Get **kern content
+kern_content = get_kern_from_ekern(ekern_content)
+with open('path/to/file.krn', 'w') as file:
+    file.write(kern_content)
+
 </code></pre>
 </details>
     </div>
