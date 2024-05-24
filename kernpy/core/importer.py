@@ -7,11 +7,32 @@ from kernpy.core.tokens import TokenCategory, SignatureToken, MetacommentToken, 
 from kernpy.core.document import Document, MultistageTree, BoundingBoxMeasures
 
 
-class Importer():
+class Importer:
+    """
+    Importer class.
+
+    Use this class to import the content from a file or a string to a `Document` object.
+    """
     HEADERS = {"**mens", "**kern", "**text", "**harm", "**mxhm", "**root", "**dyn", "**dynam", "**fing"}
     SPINE_OPERATIONS = {"*-", "*+", "*^", "*v", "*x"}
 
     def __init__(self):
+        """
+        Create an instance of the importer.
+
+        Raises:
+            Exception: If the importer content is not a valid **kern file.
+
+        Examples:
+            # Create the importer
+            >>> importer = Importer()
+
+            # Import the content from a file
+            >>> document = importer.import_file('file.krn')
+
+            # Import the content from a string
+            >>> document = importer.import_string("**kern\n*clefF4\nc4\n4d\n4e\n4f\n*-")
+        """
         self.last_measure_number = None
         self.last_bounding_box = None
         self.errors = []
@@ -25,7 +46,18 @@ class Importer():
         else:
             return parent.last_spine_operator_node
 
-    def clear(self):
+    def clear(self) -> None:
+        """
+        Clear the information of the importer.
+
+        When the importer is used to import a file, the information is stored in the importer. \
+        But when the importer is used again to import another file, the information of the previous file is not \
+        cleared.\
+        Use this method to clear the information before importing another file.
+
+        Returns: None
+
+        """
         self.last_measure_number = None
         self.last_bounding_box = None
         self.errors = []
@@ -169,7 +201,7 @@ class Importer():
         Returns:
             None
 
-        Example:
+        Examples:
             # Create the importer and read the file
             >>> importer = Importer()
             >>> importer.import_file('file.krn')
@@ -183,12 +215,39 @@ class Importer():
         reader = csv.reader(lines)
         return self.run(reader)
 
-    def get_error_messages(self):
+    def get_error_messages(self) -> str:
+        """
+        Get the error messages of the importer.
+
+        Returns: str - The error messages split by a new line character.
+
+        Examples:
+            # Create the importer and read the file
+            >>> importer = Importer()
+            >>> importer.import_file('file.krn')
+            >>> print(importer.get_error_messages())
+            'Error: Invalid token in row 1'
+        """
         result = ''
         for err in self.errors:
             result += str(err)
             result += '\n'
         return result
 
-    def has_errors(self):
+    def has_errors(self) -> bool:
+        """
+        Check if the importer has any errors.
+
+        Returns: bool - True if the importer has errors, False otherwise.
+
+        Examples:
+            # Create the importer and read the file
+            >>> importer = Importer()
+            >>> importer.import_file('file.krn')    # file.krn has an error
+            >>> print(importer.has_errors())
+            True
+            >>> importer.import_file('file2.krn')   # file2.krn has no errors
+            >>> print(importer.has_errors())
+            False
+        """
         return len(self.errors) > 0

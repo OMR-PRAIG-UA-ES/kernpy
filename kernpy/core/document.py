@@ -1,24 +1,41 @@
 from copy import copy
 from collections import deque, defaultdict
+from abc import ABC, abstractmethod
 
 from kernpy.core import MetacommentToken
 
 
 class SignatureNodes:
+    """
+    SignatureNodes class.
+
+    This class is used to store the last signature nodes of a tree.
+    It is used to keep track of the last signature nodes.
+    """
     def __init__(self):
+        """
+        Create an instance of SignatureNodes.
+
+        Examples:
+            >>> signature_nodes = SignatureNodes()
+            >>> signature_nodes.nodes
+            {}
+        """
         self.nodes = {}  # key = Signature descendant token class (KeyToken, MeterSymbolToken, etc...) , value = node
         # - this way, we can add several tokens without repetitions
 
     def clone(self):
+        """
+        Create a deep copy of the SignatureNodes instance.
+        Returns: A new instance of SignatureNodes with nodes copied.
+
+        """
         result = SignatureNodes()
         result.nodes = copy(self.nodes)
         return result
 
     def update(self, node):
         self.nodes[not node.token.__class__.__name__] = node
-
-
-from abc import ABC, abstractmethod
 
 
 class TreeTraversalInterface(ABC):
@@ -28,8 +45,25 @@ class TreeTraversalInterface(ABC):
 
 
 class Node:
+    """
+    Node class.
+
+    This class represents a node in a tree.
+    The `Node` class is responsible for storing the main information of the **kern file.
+    """
     def __init__(self, stage, token, parent, last_spine_operator_node, last_signature_nodes: SignatureNodes,
                  header_node):
+        """
+        Create an instance of Node.
+
+        Args:
+            stage: The stage of the node in the tree. The stage is similar to a row in the **kern file.
+            token: The specific token of the node. The token can be a `KeyToken`, `MeterSymbolToken`, etc...
+            parent: A reference to the parent `Node`. If the parent is the root, the parent is None.
+            last_spine_operator_node: The last spine operator node.
+            last_signature_nodes: A reference to the last `SignatureNodes` instance.
+            header_node:
+        """
         self.token = token
         self.parent = parent
         self.children = []
@@ -155,27 +189,73 @@ class Document:
 
         return result
 
-    def tokens_to_encodings(self, tokens):
+    @staticmethod
+    def tokens_to_encodings(tokens: list):
+        """
+        Get the encodings of a list of tokens.
+
+        The method is equivalent to the following code:
+            >>> tokens = yourModule.get_all_tokens()
+            >>> [token.encoding for token in tokens if token.encoding is not None]
+
+        Args:
+            tokens: list - A list of tokens.
+
+        Returns: list[str] - A list of token encodings.
+
+        Examples:
+            >>> tokens = document.get_all_tokens()
+            >>> Document.tokens_to_encodings(tokens)
+            ['!!!COM: Coltrane', '!!!voices: 1', '!!!OPR: Blue Train']
+        """
         encodings = [token.encoding for token in tokens if token.encoding is not None]
         return encodings
 
-    def get_all_tokens(self, filter_by_categories = None):
+    def get_all_tokens(self, filter_by_categories=None):
+        """
+        Args:
+            filter_by_categories: A list of categories to filter the tokens. If None, all tokens are returned.
+
+        Returns:
+            list - A list of tokens.
+
+
+        """
         traversal = TokensTraversal(False, filter_by_categories)
         self.tree.dfs(traversal)
         return traversal.tokens
 
     def get_all_tokens_encodings(self, filter_by_categories = None):
         tokens = self.get_all_tokens(filter_by_categories)
-        return self.tokens_to_encodings(tokens)
+        return Document.tokens_to_encodings(tokens)
 
-    def get_unique_tokens(self, filter_by_categories = None):
+    def get_unique_tokens(self, filter_by_categories = None) -> list:
+        """
+        Get unique tokens.
+
+        Args:
+            filter_by_categories: A list of categories to filter the tokens. If None, all tokens are returned.
+
+        Returns:
+            list - A list of unique tokens.
+
+        """
         traversal = TokensTraversal(True, filter_by_categories)
         self.tree.dfs(traversal)
         return traversal.tokens
 
-    def get_unique_token_encodings(self, filter_by_categories = None):
+    def get_unique_token_encodings(self, filter_by_categories = None) -> list:
+        """
+        Get unique token encodings.
+
+        Args:
+            filter_by_categories: A list of categories to filter the tokens. If None, all tokens are returned.
+
+        Returns: list[str] - A list of unique token encodings.
+
+        """
         tokens = self.get_unique_tokens(filter_by_categories)
-        return self.tokens_to_encodings(tokens)
+        return Document.tokens_to_encodings(tokens)
 
 
 # tree traversal utils
@@ -190,6 +270,12 @@ class MetacommentsTraversal(TreeTraversalInterface):
 
 class TokensTraversal(TreeTraversalInterface):
     def __init__(self, non_repeated: bool, filter_by_categories):
+        """
+        Create an instance of `TokensTraversal`.
+        Args:
+            non_repeated: If True, only unique tokens are returned. If False, all tokens are returned.
+            filter_by_categories: A list of categories to filter the tokens. If None, all tokens are returned.
+        """
         self.tokens = []
         self.seen_encodings = []
         self.non_repeated = non_repeated

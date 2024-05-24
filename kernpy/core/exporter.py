@@ -302,7 +302,7 @@ def kern_to_ekern(input_file, output_file) -> None:
     export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES,
                                    kern_type=KernTypeExporter.eKern)
     exporter = Exporter()
-    exported_ekern = exporter.export_string(export_options)
+    exported_ekern = exporter.export_string(document, export_options)
 
     with open(output_file, 'w') as file:
         file.write(exported_ekern)
