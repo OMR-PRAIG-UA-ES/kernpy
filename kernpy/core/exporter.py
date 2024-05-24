@@ -103,6 +103,58 @@ class Exporter:
         options.kern_type = KernTypeExporter.unprocessed
         return self.export_string(document, options)
 
+    def export_string_v2(self, document: Document, options: ExportOptions) -> string:
+        def get_stages_boundaries(document: Document, options: ExportOptions) -> (int, int):
+            from_stage = 0
+            to_stage = len(document.tree.stages)# ? len(document.tree.stages) -1 ??
+
+            if not options.from_measure:
+                ...
+            if not options.to_measure:
+                ...
+
+            return from_stage, to_stage
+
+
+
+
+
+        Exporter.export_options_validator(document, options)
+
+        # Get the stages in all cases
+        from_stage, to_stage = get_stages_boundaries(document, options)
+
+        # Get spines simplified operations in all cases
+        spines_operations = document.get_spines_operations(from_stage, to_stage)
+
+        # Run over all stages
+        rows = []
+        for stage in range(from_stage, to_stage):
+            row = []
+
+            for node in document.tree.stages[stage]:
+                if isinstance(node.token, HeaderToken):
+                    header_type = node.token.encoding
+                elif node.header_node:
+                    header_type = node.header_node.token.encoding
+                else:
+                    header_type = None
+
+                if header_type and header_type in options.spine_types and not node.token.hidden and \
+                        (not options.token_categories or node.token.category in options.token_categories):
+                    row.append(node.token.export())
+
+            if len(row) > 0:
+                rows.append(row)
+
+        result = ""
+        for row in rows:
+            if not empty_row(row):
+                result += '\t'.join(row) + '\n'
+        return result
+
+
+
     def export_string(self, document: Document, options: ExportOptions) -> string:
         Exporter.export_options_validator(document, options)
 
