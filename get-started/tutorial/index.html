@@ -363,6 +363,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Next steps
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -419,6 +428,15 @@
   <a href="#lets-code" class="md-nav__link">
     <span class="md-ellipsis">
       Let's code!
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Next steps
     </span>
   </a>
   
@@ -481,39 +499,53 @@
 <p>Load the file directly using the content of the file:  <br />
 Examples:</p>
 <pre><code class="language-python">import kernpy
-score = kernpy.load('**kern\n*clefG2\n*M4/4\n*met(c)\n=1\n4c\n4d\n4e\n4f\n=2\n*M3/2\n2g\n2f\n2d\n=\n*-'
+
+importer = kernpy.Importer()
+document = importer.import_string('**kern\n*clefG2\n*M4/4\n*met(c)\n=1\n4c\n4d\n4e\n4f\n=2\n*M3/2\n2g\n2f\n2d\n=\n*-')
+print(document.get_metacomments())
 </code></pre>
 <p>Or load the file using the path to the file:</p>
 <pre><code class="language-python">import kernpy
 
-score = kernpy.read(&quot;path/to/file.krn&quot;)
+importer = kernpy.Importer()
+document = importer.import_file('path/to/file.krn')
+print(document.get_metacomments())
 </code></pre>
 <p>Then you can access to the score attributes:</p>
-<pre><code class="language-python">print(type(score))
-# &lt;class 'kernpy.core.generic.Score'&gt;
+<pre><code class="language-python">print(type(document))
+# &lt;class 'kernpy.core.document.Document'&gt;
 
-print(score.voices)
+print(document.tree)
+# &lt;kernpy.core.document.DocumentTree object at 0x7f8b3b3b3d30&gt;
+
+print(document.voices)
 # ['saxophone', 'clarinet', 'piano']
 </code></pre>
 <p>Now, you can export the score using the <code>ExportOptions</code> class:</p>
 <pre><code class="language-python">export_options = kernpy.ExportOptions()
-content = score.export(export_options)
+exporter = kernpy.Exporter()
+content = exporter.export_string(document, export_options)
 print(content)
 </code></pre>
-<p>Or you save the score to a file:</p>
+<p>Save the score to a file:</p>
 <pre><code class="language-python">export_options = kernpy.ExportOptions()
-content = score.save(export_options, &quot;path/to/file.krn&quot;)
+exporter = kernpy.Exporter()
+content = exporter.export_string(document, export_options)
+with open('path/to/file.krn', 'w') as file:
+    file.write(content)
 </code></pre>
 <h4>Let's filter the export options:</h4>
 
 <p>Select the voices to export:</p>
 <pre><code class="language-python">export_options = kernpy.ExportOptions(voices=['saxophone'])
-content = score.export(export_options)
+exporter = kernpy.Exporter()
+content = exporter.export_string(document, export_options)
 print(content)
 </code></pre>
 <p>Select the measures to export:</p>
 <pre><code class="language-python">export_options = kernpy.ExportOptions(from_measure=1, to_measure=2)
-content = score.export(export_options)
+exporter = kernpy.Exporter()
+content = exporter.export_string(document, export_options)
 print(content)
 </code></pre>
 <p>Select the token categories to export:
@@ -525,17 +557,20 @@ Let's see the <code>kernpy.TokenCategory</code> enum class to choose the categor
     kernpy.TokenCategory.SIGNATURES,
     kernpy.TokenCategory.BARLINES,
 ])
-content = score.export(export_options)
+exporter = kernpy.Exporter()
+content = exporter.export_string(document, export_options)
 print(content)
 </code></pre>
 <p>Actually, you can use the predefined categories:</p>
 <pre><code class="language-python">export_options = kernpy.ExportOptions(token_categories=kernpy.BEKERN_CATEGORIES)
-content = score.export(export_options)
+exporter = kernpy.Exporter()
+content = exporter.export_string(document, export_options)
 print(content)
 </code></pre>
 <p>Select the encoding to export:</p>
 <pre><code class="language-python">export_options = kernpy.ExportOptions(kern_type=kernpy.KernTypeExporter.normalizedKern)
-content = score.export(export_options)
+exporter = kernpy.Exporter()
+content = exporter.export_string(document, export_options)
 print(content)
 </code></pre>
 <p>Select a list of filters to export:</p>
@@ -549,8 +584,17 @@ print(content)
 </code></pre>
 <h3>Let's see the score in a graphical representation:</h3>
 
-<p>Show the graph representation of the score:</p>
-<h1 id="todo">TODO: ...</h1>
+<p>Show the graph representation of the score:
+Use <code>Graphviz</code> to show the score in a graphical representation.
+```python
+import kernpy</p>
+<p>importer = kernpy.Importer()
+document = importer.import_string('<em><em>kern\n</em>clefG2\n</em>M4/4\n<em>met(c)\n=1\n4c\n4d\n4e\n4f\n=2\n</em>M3/2\n2g\n2f\n2d\n=\n*-')
+dot_exporter = kernpy.GraphvizExporter()
+dot_exporter.export_to_dot(document.tree, '/tmp/minimal.dot')
+ ```
+You can use Graphviz Dot Online editors to see the graphical representation of the score:
+- <a href="https://dreampuf.github.io/GraphvizOnline/" target="_blank">Graphviz Online</a></p>
 <h2 id="next-steps">Next steps</h2>
 <p>Congratulations! You have learned the basics of <code>kernpy</code>. Now you can start using the package in your projects.</p>
 <p>Go to the <a href="../../reference/">API reference</a> to learn more about the <code>kernpy</code> API.</p>
