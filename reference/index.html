@@ -557,6 +557,30 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#kernpy.core.Exporter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exporter
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exporter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Exporter.export_options_validator" class="md-nav__link">
+    <span class="md-ellipsis">
+      export_options_validator
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#kernpy.core.Importer" class="md-nav__link">
     <span class="md-ellipsis">
       Importer
@@ -1343,6 +1367,30 @@
   <a href="#kernpy.core.ExportOptions.__init__" class="md-nav__link">
     <span class="md-ellipsis">
       __init__
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kernpy.core.Exporter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exporter
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exporter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Exporter.export_options_validator" class="md-nav__link">
+    <span class="md-ellipsis">
+      export_options_validator
     </span>
   </a>
   
@@ -3181,6 +3229,9 @@ The duration is a number that represents the number of units of the duration.</p
     <div class="doc doc-contents ">
 
 
+      <p><code>ExportOptions</code> class.</p>
+<p>Store the options to export a **kern file.</p>
+
 
 
 
@@ -3359,6 +3410,120 @@ exported_data = exporter.export_string(document, options)</p>
 <blockquote>
 <p>options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kern_type=KernTypeExporter.eKern)
 exported_data = exporter.export_string(document, options)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="kernpy.core.Exporter" class="doc doc-heading">
+            <code>Exporter</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="kernpy.core.Exporter.export_options_validator" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">export_options_validator</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Validate the export options. Raise an exception if the options are invalid.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>document</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="kernpy.core.Document" href="#kernpy.core.Document">Document</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p><code>Document</code> - The document to export.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>options</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="kernpy.core.exporter.ExportOptions" href="#kernpy.core.ExportOptions">ExportOptions</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p><code>ExportOptions</code> - The options to export the document.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+      <p>Returns: None</p>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <blockquote>
+<blockquote>
+<blockquote>
+<p>export_options_validator(document, options)
+ValueError: option from_measure must be &gt;=0 but -1 was found.
+export_options_validator(document, options2)
+None</p>
 </blockquote>
 </blockquote>
 </blockquote>
