@@ -1,7 +1,8 @@
 import string
 from enum import Enum
 
-from kernpy.core import Document, SpineOperationToken, HeaderToken, Importer, TokenCategory, InstrumentToken
+from kernpy.core import Document, SpineOperationToken, HeaderToken, Importer, TokenCategory, InstrumentToken, \
+    TOKEN_SEPARATOR, DECORATION_SEPARATOR
 
 BEKERN_CATEGORIES = [TokenCategory.STRUCTURAL, TokenCategory.CORE, TokenCategory.EMPTY, TokenCategory.SIGNATURES,
                      TokenCategory.BARLINES, TokenCategory.ENGRAVED_SYMBOLS]
@@ -237,8 +238,8 @@ def get_kern_from_ekern(ekern_content: string) -> string:
         ```
     """
     content = ekern_content.replace("**ekern", "**kern")  # TODO Constante según las cabeceras
-    content = content.replace(kernpy.core.TOKEN_SEPARATOR, "")
-    content = content.replace(kernpy.core.DECORATION_SEPARATOR, "")
+    content = content.replace(TOKEN_SEPARATOR, "")
+    content = content.replace(DECORATION_SEPARATOR, "")
 
     return content
 

@@ -33,6 +33,7 @@ __all__ = [
     'GraphvizExporter',
     'ekern_to_krn',
     'kern_to_ekern',
+    'get_kern_from_ekern',
     'KernTypeExporter',
     'BEKERN_CATEGORIES',
     'DynSpineImporter',

@@ -10,7 +10,7 @@ from _pytest.mark.expression import TokenType
 from kernpy import (KernSpineImporter, MensSpineImporter, DynamSpineImporter, DynSpineImporter, HarmSpineImporter, \
                     RootSpineImporter, TextSpineImporter, FingSpineImporter, BEKERN_CATEGORIES, ExportOptions, Exporter,
                     TokenCategory,
-                    KernTypeExporter, Document, Importer, GraphvizExporter)
+                    KernTypeExporter, Document, Importer, GraphvizExporter, get_kern_from_ekern)
 from kernpy.core import createImporter, Token
 
 logger = logging.getLogger()
@@ -569,6 +569,15 @@ class ImporterTestCase(unittest.TestCase):
     @unittest.skip
     def test_voices_range(self):
         pass
+
+    def test_get_kern_from_ekern(self):
+        input_ekern = "**ekern\n4@c\n4@d\n4@e\n4@f\n*-"
+        expected_kern = "**kern\n4c\n4d\n4e\n4f\n*-"
+        real_kern = get_kern_from_ekern(input_ekern)
+
+        self.assertEqual(expected_kern, real_kern)
+
+
 
 
 if __name__ == '__main__':
