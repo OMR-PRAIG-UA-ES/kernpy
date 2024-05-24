@@ -30,6 +30,11 @@ class KernTypeExporter(Enum):  # TODO: Eventually, polymorphism will be used to 
 
 
 class ExportOptions:
+    """
+    `ExportOptions` class.
+
+    Store the options to export a **kern file.
+    """
     def __init__(self, spine_types=None, token_categories=None, from_measure: int = None, to_measure: int = None,
                  kern_type: KernTypeExporter = KernTypeExporter.normalizedKern, instruments=None):
         """
@@ -98,15 +103,7 @@ class Exporter:
         return self.export_string(document, options)
 
     def export_string(self, document: Document, options: ExportOptions) -> string:
-        if options.from_measure is not None and options.from_measure < 0:
-            raise ValueError(f'option from_measure must be >=0 but {options.from_measure} was found. ')
-        if options.to_measure is not None and options.to_measure > len(document.measure_start_tree_stages):
-            #"TODO: DAVID, check options.to_measure bounds. len(document.measure_start_tree_stages) or len(document.measure_start_tree_stages) - 1"
-            raise ValueError(
-                f'option to_measure must be <= {len(document.measure_start_tree_stages)} but {options.to_measure} was found. ')
-        if options.to_measure is not None and options.from_measure is not None and options.to_measure < options.from_measure:
-            raise ValueError(
-                f'option to_measure must be >= from_measure but {options.to_measure} < {options.from_measure} was found. ')
+        Exporter.export_options_validator(document, options)
 
         rows = []
         if options.from_measure:
@@ -189,6 +186,32 @@ class Exporter:
                 result += '\t'.join(row) + '\n'
         return result
 
+    @staticmethod
+    def export_options_validator(document: Document, options: ExportOptions) -> None:
+        """
+        Validate the export options. Raise an exception if the options are invalid.
+
+        Args:
+            document: `Document` - The document to export.
+            options: `ExportOptions` - The options to export the document.
+
+        Returns: None
+
+        Example:
+            >>> export_options_validator(document, options)
+            ValueError: option from_measure must be >=0 but -1 was found.
+            >>> export_options_validator(document, options2)
+            None
+        """
+        if options.from_measure is not None and options.from_measure < 0:
+            raise ValueError(f'option from_measure must be >=0 but {options.from_measure} was found. ')
+        if options.to_measure is not None and options.to_measure > len(document.measure_start_tree_stages):
+            # "TODO: DAVID, check options.to_measure bounds. len(document.measure_start_tree_stages) or len(document.measure_start_tree_stages) - 1"
+            raise ValueError(
+                f'option to_measure must be <= {len(document.measure_start_tree_stages)} but {options.to_measure} was found. ')
+        if options.to_measure is not None and options.from_measure is not None and options.to_measure < options.from_measure:
+            raise ValueError(
+                f'option to_measure must be >= from_measure but {options.to_measure} < {options.from_measure} was found. ')
 
 def get_kern_from_ekern(ekern_content: string) -> string:
     """
