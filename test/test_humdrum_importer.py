@@ -28,6 +28,11 @@ class ImporterTestCase(unittest.TestCase):
     def checkEquals(self, kern_file, expected_ekern, from_measure, to_measure) -> Document:
         importer = Importer()
         document = importer.import_file(kern_file)
+
+        dot_exporter = GraphvizExporter()
+        filename = os.path.basename(kern_file)
+        dot_exporter.export_to_dot(document.tree, f'/tmp/{filename}.dot')
+
         # Read the content of both files
         with open(expected_ekern, 'r') as file1:
             expected_content = file1.read()
@@ -67,10 +72,11 @@ class ImporterTestCase(unittest.TestCase):
     def doEKernMeasureToMeasureTest(self, kern_file, from_measure, to_measure):
         logging.info(f'Importing {kern_file} and checking the ekern')
         ekern = f'{os.path.splitext(kern_file)[0]}-m{from_measure}-to-m{to_measure}.ekrn'
-        document = self.checkEquals(kern_file, ekern, from_measure, to_measure)
+        self.checkEquals(kern_file, ekern, from_measure, to_measure)
 
 
-    # it loads a simple file
+
+# it loads a simple file
     def testReadMinimalKern(self):
         document = self.doJustImportTest('resource_dir/unit/minimal.krn')
         dot_exporter = GraphvizExporter()
@@ -253,6 +259,8 @@ class ImporterTestCase(unittest.TestCase):
     def testExtractMeasures(self):
         #self.doEKernMeasureToMeasureTest('resource_dir/polish/test2/pl-wn--mus-iii-123-982--001-004_wieniawski-henryk--l-ecole-moderne-etudes-caprices-pour-violon-seul-op-10-4-le-staccato.krn', 0, 1) # TODO: Correct it. It doesn't export all the required token_categories
         self.doEKernMeasureToMeasureTest('resource_dir/spines/2.krn', 2, 2)
+
+        raise Exception('---')
         self.doEKernMeasureToMeasureTest(
             'resource_dir/polish/test2/pl-wn--mus-iii-123-982--001-004_wieniawski-henryk--l-ecole-moderne-etudes-caprices-pour-violon-seul-op-10-4-le-staccato.krn',
             1, 2)

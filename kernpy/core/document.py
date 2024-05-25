@@ -35,7 +35,7 @@ class SignatureNodes:
         return result
 
     def update(self, node):
-        self.nodes[not node.token.__class__.__name__] = node
+        self.nodes[node.token.__class__.__name__] = node
 
 
 class TreeTraversalInterface(ABC):
@@ -45,6 +45,7 @@ class TreeTraversalInterface(ABC):
 
 
 class Node:
+    NextID = 1 # static counter
     """
     Node class.
 
@@ -64,6 +65,8 @@ class Node:
             last_signature_nodes: A reference to the last `SignatureNodes` instance.
             header_node:
         """
+        self.id = Node.NextID
+        Node.NextID += 1
         self.token = token
         self.parent = parent
         self.children = []

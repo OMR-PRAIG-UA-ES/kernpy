@@ -18,7 +18,8 @@ class GraphvizExporter():
     def export_to_dot(self, tree: MultistageTree, filename):
         with open(filename, 'w') as file:
             file.write('digraph G {\n')
-            file.write('  rankdir=TB;\n')  # Ensure the overall layout is top to bottom
+            file.write('    node [shape=record];\n');
+            file.write('    rankdir=TB;\n')  # Ensure the overall layout is top to bottom
             # Create subgraphs for each stage
             for stage_index, stage in enumerate(tree.stages):
                 if stage:
@@ -34,7 +35,19 @@ class GraphvizExporter():
             file.write('}\n')
 
     def _write_nodes(self, node, file):
-        file.write(f'  "{self.node_id(node)}" [label="{self.export_token(node.token)}"];\n')
+        header_label = f'header #{node.header_node.id}' if node.header_node else ''
+        last_spine_operator_label = f'last spine op. #{node.last_spine_operator_node.id}' if node.last_spine_operator_node else ''
+
+        top_record_label = f'{{ #{node.id}| {header_label} | {last_spine_operator_label}}}'
+        signatures_label = ''
+        if node.last_signature_nodes and node.last_signature_nodes.nodes:
+            for k, v in node.last_signature_nodes.nodes.items():
+                if signatures_label:
+                    signatures_label += '|'
+                #signatures_label += f'{{ {k} {v};\n"'
+                signatures_label += f'{k} #{v.id}'
+
+        file.write(f'  "{self.node_id(node)}" [label="{{ {top_record_label} | {signatures_label} | {self.export_token(node.token)} }}"];\n')
         for child in node.children:
             self._write_nodes(child, file)
 

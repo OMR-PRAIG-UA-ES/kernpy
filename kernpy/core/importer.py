@@ -38,11 +38,11 @@ class Importer:
         self.errors = []
 
     @staticmethod
-    def get_last_spine_operator_stage(parent, stage):
-        if parent is None or parent.last_spine_operator_node is None:
+    def get_last_spine_operator(parent):
+        if parent is None:
             return None
-        elif isinstance(parent.last_spine_operator_node.token, SpineOperationToken):
-            return stage
+        elif isinstance(parent.token, SpineOperationToken):
+            return parent
         else:
             return parent.last_spine_operator_node
 
@@ -92,7 +92,7 @@ class Importer:
                         last_node_previous_to_header = node
                     else:
                         for parent in prev_stage_parents:
-                            node = tree.add_node(tree_stage, parent, token, self.get_last_spine_operator_stage(parent, tree_stage), parent.last_signature_nodes, parent.header_node) # the same reference for all spines - TODO Recordar documentarlo
+                            node = tree.add_node(tree_stage, parent, token, self.get_last_spine_operator(parent), parent.last_signature_nodes, parent.header_node) # the same reference for all spines - TODO Recordar documentarlo
                             next_stage_parents.append(node)
                 else:
                     for column in row:
@@ -121,7 +121,7 @@ class Importer:
                                     raise Exception(f'Expected at least {icolumn+1} parents in row {row_number}, but found {len(prev_stage_parents)}: {row}')
 
                                 parent = prev_stage_parents[icolumn]
-                                node = tree.add_node(tree_stage, parent, token, self.get_last_spine_operator_stage(parent, tree_stage), parent.last_signature_nodes, parent.header_node)
+                                node = tree.add_node(tree_stage, parent, token, self.get_last_spine_operator(parent), parent.last_signature_nodes, parent.header_node)
 
                                 if column == '*-':
                                     pass # it's terminated, no continuation
@@ -160,7 +160,7 @@ class Importer:
                                         f'No token generated for input {column} in row number #{row_number} using importer {importer}')
 
                                 parent = prev_stage_parents[icolumn]
-                                node = tree.add_node(tree_stage, parent, token, self.get_last_spine_operator_stage(parent, tree_stage), parent.last_signature_nodes, parent.header_node)
+                                node = tree.add_node(tree_stage, parent, token, self.get_last_spine_operator(parent), parent.last_signature_nodes, parent.header_node)
                                 next_stage_parents.append(node)
 
                                 if token.category == TokenCategory.BARLINES or token.category == TokenCategory.CORE and len(

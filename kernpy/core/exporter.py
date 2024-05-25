@@ -168,13 +168,19 @@ class Exporter:
                 row = []
                 new_next_nodes = []
                 non_place_holder_in_row = False
+                spine_operation_row = False
+                for node in next_nodes:
+                    if isinstance(node.token, SpineOperationToken):
+                        spine_operation_row = True
+                        break
+
                 for node in next_nodes:
                     content = ''
                     if isinstance(node.token, HeaderToken):
                         content = node.token.export()
                         non_place_holder_in_row = True
-                    elif isinstance(node.token, SpineOperationToken):
-                        if node.token.is_cancelled_at(from_stage):
+                    elif spine_operation_row:
+                        if isinstance(node.token, SpineOperationToken) and node.token.is_cancelled_at(from_stage):
                             content = '*'
                         else:
                             content = node.token.export()
