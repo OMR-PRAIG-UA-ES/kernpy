@@ -80,7 +80,6 @@ class Importer:
                 tree_stage = tree_stage + 1
                 is_barline = False
                 icolumn = -1
-                collapsing_rows = False
                 if next_stage_parents:
                     prev_stage_parents = copy(next_stage_parents)
                 next_stage_parents = []
@@ -124,18 +123,18 @@ class Importer:
                                 node = tree.add_node(tree_stage, parent, token, self.get_last_spine_operator(parent), parent.last_signature_nodes, parent.header_node)
 
                                 if column == '*-':
+                                    if node.last_spine_operator_node is not None:
+                                        node.last_spine_operator_node.token.cancelled_at_stage = tree_stage
                                     pass # it's terminated, no continuation
                                 elif column == "*+" or column == "*^":
                                     next_stage_parents.append(node)
                                     next_stage_parents.append(node) # twice, the next stage two children will have this one as parent
                                 elif column == "*v":
-                                    #if not collapsing_rows or icolumn == 0 or prev_stage_parents[icolumn].header_node != prev_stage_parents[icolumn].header_node: # don't collapse two different spines
+                                    if node.last_spine_operator_node is not None:
+                                        node.last_spine_operator_node.token.cancelled_at_stage = tree_stage
+
                                     if icolumn == 0 or row[icolumn-1] != '*v' or prev_stage_parents[icolumn-1].header_node != prev_stage_parents[icolumn].header_node: # don't collapse two different spines
                                         next_stage_parents.append(node) # just one spine each two
-                                        collapsing_rows = True
-                                        #TODO *v *v *v --> uno sólo? - ver doc. encoding mOOsicae - si quito la línea de arriba hace mal el 3.krn
-                                    else:
-                                        collapsing_rows = False
                                 else:
                                     raise Exception(f'Unknown spine operator {column}')
                             else:

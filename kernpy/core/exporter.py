@@ -162,7 +162,7 @@ class Exporter:
         if options.from_measure:
             # In case of beginning not from the first measure, we recover the spine creation and the headers
             # Traversed in reverse order to only include the active spines at the given measure...
-            from_stage = document.measure_start_tree_stages[options.from_measure]
+            from_stage = document.measure_start_tree_stages[options.from_measure-1]
             next_nodes = document.tree.stages[from_stage]
             while next_nodes and len(next_nodes) > 0 and next_nodes[0] != document.tree.root:
                 row = []
@@ -180,7 +180,8 @@ class Exporter:
                         content = node.token.export()
                         non_place_holder_in_row = True
                     elif spine_operation_row:
-                        if isinstance(node.token, SpineOperationToken) and node.token.is_cancelled_at(from_stage):
+                        # either if it is the split operator that has been cancelled, or the join one
+                        if isinstance(node.token, SpineOperationToken) and (node.token.is_cancelled_at(from_stage) or node.last_spine_operator_node and node.last_spine_operator_node.token.cancelled_at_stage == node.stage):
                             content = '*'
                         else:
                             content = node.token.export()

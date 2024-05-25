@@ -1,6 +1,6 @@
 import string
 
-from kernpy.core import Token
+from kernpy.core import Token, SpineOperationToken
 from kernpy.core.document import MultistageTree, Node
 
 
@@ -38,14 +38,20 @@ class GraphvizExporter():
         header_label = f'header #{node.header_node.id}' if node.header_node else ''
         last_spine_operator_label = f'last spine op. #{node.last_spine_operator_node.id}' if node.last_spine_operator_node else ''
 
-        top_record_label = f'{{ #{node.id}| {header_label} | {last_spine_operator_label}}}'
+        top_record_label = f'{{ #{node.id}| stage {node.stage} | {header_label} | {last_spine_operator_label}}}'
         signatures_label = ''
         if node.last_signature_nodes and node.last_signature_nodes.nodes:
             for k, v in node.last_signature_nodes.nodes.items():
                 if signatures_label:
                     signatures_label += '|'
+                #else:
+                 #   signatures_label = '{{'
                 #signatures_label += f'{{ {k} {v};\n"'
                 signatures_label += f'{k} #{v.id}'
+        #signatures_label = '}}'
+
+        if isinstance(node.token, SpineOperationToken) and node.token.cancelled_at_stage:
+            signatures_label += f'| {{ cancelled at stage {node.token.cancelled_at_stage} }}'
 
         file.write(f'  "{self.node_id(node)}" [label="{{ {top_record_label} | {signatures_label} | {self.export_token(node.token)} }}"];\n')
         for child in node.children:
