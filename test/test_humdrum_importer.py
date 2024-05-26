@@ -38,7 +38,7 @@ class ImporterTestCase(unittest.TestCase):
             expected_content = file1.read()
 
         export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES,
-                                       kern_type=KernTypeExporter.eKern)
+                                       kern_type=KernTypeExporter.eKern) #TODO Tests de normalized kern
         export_options.from_measure = from_measure
         export_options.to_measure = to_measure
         exporter = Exporter()
@@ -74,9 +74,7 @@ class ImporterTestCase(unittest.TestCase):
         ekern = f'{os.path.splitext(kern_file)[0]}-m{from_measure}-to-m{to_measure}.ekrn'
         self.checkEquals(kern_file, ekern, from_measure, to_measure)
 
-
-
-# it loads a simple file
+    # it loads a simple file
     def testReadMinimalKern(self):
         document = self.doJustImportTest('resource_dir/unit/minimal.krn')
         dot_exporter = GraphvizExporter()
@@ -177,7 +175,7 @@ class ImporterTestCase(unittest.TestCase):
         dot_exporter = GraphvizExporter()
         filename = os.path.basename(kern_file)
         dot_exporter.export_to_dot(document.tree, f'/tmp/{filename}.dot')
-        self.assertEqual(expected_stage_count, len(document.tree.stages)-1, "Stage count") # -1 to remove the root
+        self.assertEqual(expected_stage_count, len(document.tree.stages) - 1, "Stage count")  # -1 to remove the root
         self.assertEqual(document.get_spine_count(), len(expected_spine_counts), "Num. spines")
 
         spine_counts = []
@@ -190,9 +188,11 @@ class ImporterTestCase(unittest.TestCase):
     def testSpines(self):
         # Tests extracted from the discussion in  https://github.com/humdrum-tools/vhv-documentation/issues/7#event-3236429526
         self.doTestCountSpines('resource_dir/spines/non_stacked_ends.krn', 12,
-                               [[1, 1, 2, 2, 3, 3, 4, 4, 2, 2, 1, 1]]) # in this test, three spines merge into one
+                               [[1, 1, 2, 2, 3, 3, 4, 4, 2, 2, 1, 1]])  # in this test, three spines merge into one
         self.doTestCountSpines('resource_dir/spines/non_stacked_ends_2.krn', 10,
-                               [[1, 1, 1, 1, 1, 1, 2, 2, 1, 1], [1, 1, 2, 2, 3, 3, 6, 6, 1, 1], [1, 1, 1, 1, 1, 1, 2, 2, 1, 1]]) # the last join in VHV leads to just one main spine - we've added an issue
+                               [[1, 1, 1, 1, 1, 1, 2, 2, 1, 1], [1, 1, 2, 2, 3, 3, 6, 6, 1, 1],
+                                [1, 1, 1, 1, 1, 1, 2, 2, 1,
+                                 1]])  # the last join in VHV leads to just one main spine - we've added an issue
 
         self.doTestCountSpines('resource_dir/spines/1.krn', 18,
                                [[1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1]])
@@ -207,7 +207,6 @@ class ImporterTestCase(unittest.TestCase):
                                [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1],
                                 [1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 1, 1, 2, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1]])
 
-
         self.doTestCountSpines('resource_dir/spines/spines-from-piano-joplin-bethena-start.krn', 23,
                                [[1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
                                 [1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 2, 2, 1, 1],
@@ -216,8 +215,6 @@ class ImporterTestCase(unittest.TestCase):
                                [[1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 3, 3, 3, 1, 1, 2, 2, 1, 1],
                                 [1, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
                                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
-
-
 
     def testLegacyTests(self):
         self.doEKernTest('resource_dir/legacy/base_tuplet.krn', [5])
@@ -257,54 +254,59 @@ class ImporterTestCase(unittest.TestCase):
         self.doJustImportTest('resource_dir/samples/unaccompanied-songs-nova073.krn')
 
     def testExtractMeasures(self):
-        #self.doEKernMeasureToMeasureTest('resource_dir/polish/test2/pl-wn--mus-iii-123-982--001-004_wieniawski-henryk--l-ecole-moderne-etudes-caprices-pour-violon-seul-op-10-4-le-staccato.krn', 0, 1) # TODO: Correct it. It doesn't export all the required token_categories
         self.doEKernMeasureToMeasureTest('resource_dir/spines/2.krn', 2, 2)
+        self.doEKernMeasureToMeasureTest('resource_dir/legacy/chor001.krn', 1, 3)
 
         self.doEKernMeasureToMeasureTest(
             'resource_dir/polish/test2/pl-wn--mus-iii-123-982--001-004_wieniawski-henryk--l-ecole-moderne-etudes-caprices-pour-violon-seul-op-10-4-le-staccato.krn',
             1, 2)
-        self.doEKernMeasureToMeasureTest('resource_dir/legacy/chor001.krn', 1, 3)
         self.doEKernMeasureToMeasureTest(
             'resource_dir/polish/test1/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 2)
         self.doEKernMeasureToMeasureTest(
             'resource_dir/polish/test1/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 3)
         self.doEKernMeasureToMeasureTest(
             'resource_dir/polish/test1/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 16)
-        #
+        #self.doEKernMeasureToMeasureTest('resource_dir/polish/test2/pl-wn--mus-iii-123-982--001-004_wieniawski-henryk--l-ecole-moderne-etudes-caprices-pour-violon-seul-op-10-4-le-staccato.krn', 0, 1) # TODO: Correct it. It doesn't export all the required token_categories
 
+    #TODO Joan: este test se puede hacer como el doEKernMeasureToMeasureTest, sin repetir tanto código...
     def test_extract_measures_same_measure(self):
-        options = ExportOptions(spine_types=['**kern'], kern_type=KernTypeExporter.normalizedKern, from_measure=2, to_measure=2)
+        options = ExportOptions(spine_types=['**kern'], kern_type=KernTypeExporter.normalizedKern, from_measure=3,
+                                to_measure=3)
         importer = Importer()
         document = importer.import_file('resource_dir/legacy/base_tuplet_longer.krn')
 
         exporter = Exporter()
         real_ouputput = exporter.export_string(document, options)
 
-        with open('resource_dir/legacy/base_tuplet_longer_m2-m2.krn', 'r') as f:
+        with open('resource_dir/legacy/base_tuplet_longer_m3-m3.krn', 'r') as f:
             expected_output = f.read()
         self.assertEqual(real_ouputput, expected_output)
 
-
     def test_extract_measures_middle_measures_to_krn(self):
-        options = ExportOptions(spine_types=['**kern'], kern_type=KernTypeExporter.normalizedKern, from_measure=1, to_measure=3)
+        options = ExportOptions(spine_types=['**kern'], kern_type=KernTypeExporter.normalizedKern, from_measure=2,
+                                to_measure=4)
         importer = Importer()
         document = importer.import_file('resource_dir/legacy/base_tuplet_longer.krn')
 
         exporter = Exporter()
         real_ouputput = exporter.export_string(document, options)
-        with open('resource_dir/legacy/base_tuplet_longer_m1-m3.krn', 'r') as f:
+        with open('resource_dir/legacy/base_tuplet_longer_m2-m4.krn', 'r') as f:
             expected_output = f.read()
         self.assertEqual(real_ouputput, expected_output)
 
     def test_extract_measures_middle_measures_to_ekrn(self):
-        options = ExportOptions(spine_types=['**kern'], kern_type=KernTypeExporter.eKern, from_measure=1, to_measure=3)
+        options = ExportOptions(spine_types=['**kern'], kern_type=KernTypeExporter.eKern, from_measure=2, to_measure=4)
         importer = Importer()
         document = importer.import_file('resource_dir/legacy/base_tuplet_longer.krn')
+
+        dot_exporter = GraphvizExporter()
+        dot_exporter.export_to_dot(document.tree, f'/tmp/base_tuplet_longer.dot')
+
         exporter = Exporter()
-        real_ouputput = exporter.export_string(document, options)
-        with open('resource_dir/legacy/base_tuplet_longer_m1-m3.ekrn', 'r') as f:
+        actual_output = exporter.export_string(document, options)
+        with open('resource_dir/legacy/base_tuplet_longer_m2-m4.ekrn', 'r') as f:
             expected_output = f.read()
-        self.assertEqual(real_ouputput, expected_output)
+        self.assertEqual(actual_output, expected_output)
 
     def test_extract_measures_bad_measures_input(self):
         importer = Importer()
@@ -331,7 +333,6 @@ class ImporterTestCase(unittest.TestCase):
         with self.assertRaises(ValueError):
             exporter.export_string(document, options)
 
-
     def testOther(self):
         importer = self.doJustImportTest(
             'resource_dir/polish/test3/pl-wn--sd-xvi-qu-273--001-020_gomolka-mikolaj--melodiae-na-psalterz-polski-xx-wsiadaj-z-dobrym-sercem-o-krolu-cnotliwy.krn')
@@ -341,7 +342,7 @@ class ImporterTestCase(unittest.TestCase):
         input_kern = "**kern\n4c\n4d\n4e\n4f\n*-"
         importer = Importer()
         document = importer.import_string(input_kern)
-        export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
+        export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kern_type = KernTypeExporter.eKern)
         exporter = Exporter()
         output_kern = exporter.export_string(document, export_options)
         expected_ekern = "**ekern\n4@c\n4@d\n4@e\n4@f\n*-\n"
@@ -404,7 +405,6 @@ class ImporterTestCase(unittest.TestCase):
 
         self.assertListEqual(output_metadata_array_expected, output_metadata_array_output)  # composer
 
-
     def has_token(self, tokens, encoding):
         for token in tokens:
             if token.encoding == encoding:
@@ -435,13 +435,13 @@ class ImporterTestCase(unittest.TestCase):
             if token.category == category:
                 return True
         return False
-    
+
     def test_has_token_category(self):
         input_kern_file = 'resource_dir/legacy/chor001.krn'
         importer = Importer()
         document = importer.import_file(input_kern_file)
         all_tokens = document.get_all_tokens()
-        
+
         self.assertTrue(self.has_category(all_tokens, TokenCategory.LINE_COMMENTS))
         self.assertTrue(self.has_category(all_tokens, TokenCategory.CORE))
         self.assertTrue(self.has_category(all_tokens, TokenCategory.EMPTY))
@@ -513,7 +513,8 @@ class ImporterTestCase(unittest.TestCase):
             expected_tokens = f.read().splitlines()
 
         # Act
-        encodings = document.get_unique_token_encodings(filter_by_categories=[TokenCategory.CORE, TokenCategory.SIGNATURES])
+        encodings = document.get_unique_token_encodings(
+            filter_by_categories=[TokenCategory.CORE, TokenCategory.SIGNATURES])
         encodings.sort()
         expected_tokens.sort()
 
@@ -583,8 +584,6 @@ class ImporterTestCase(unittest.TestCase):
         real_kern = get_kern_from_ekern(input_ekern)
 
         self.assertEqual(expected_kern, real_kern)
-
-
 
 
 if __name__ == '__main__':

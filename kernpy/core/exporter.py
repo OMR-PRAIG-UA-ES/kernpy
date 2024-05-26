@@ -2,7 +2,7 @@ import string
 from enum import Enum
 
 from kernpy.core import Document, SpineOperationToken, HeaderToken, Importer, TokenCategory, InstrumentToken, \
-    TOKEN_SEPARATOR, DECORATION_SEPARATOR
+    TOKEN_SEPARATOR, DECORATION_SEPARATOR, Token
 
 BEKERN_CATEGORIES = [TokenCategory.STRUCTURAL, TokenCategory.CORE, TokenCategory.EMPTY, TokenCategory.SIGNATURES,
                      TokenCategory.BARLINES, TokenCategory.ENGRAVED_SYMBOLS]
@@ -45,7 +45,7 @@ class ExportOptions:
         Args:
             spine_types (Iterable): **kern, **mens, etc...
             token_categories (Iterable): TokenCategory
-            from_measure (int): The measure to start exporting. When None, the exporter will start from the beginning of the file.
+            from_measure (int): The measure to start exporting. When None, the exporter will start from the beginning of the file. The first measure is 1
             to_measure (int): The measure to end exporting. When None, the exporter will end at the end of the file.
             kern_type (KernTypeExporter): The type of the kern file to export.
             instruments (Iterable): The instruments to export. When None, all the instruments will be exported.
@@ -126,20 +126,13 @@ class Exporter:
 
         # Run over all stages
         rows = []
-        for stage in range(from_stage, to_stage):
+        for stage in range(from_stage, to_stage + 1):
             row = []
 
             for node in document.tree.stages[stage]:
-                if isinstance(node.token, HeaderToken):
-                    header_type = node.token.encoding
-                elif node.header_node:
-                    header_type = node.header_node.token.encoding
-                else:
-                    header_type = None
+                header_type = self.compute_header_type(node)
 
-                if header_type and header_type in options.spine_types and not node.token.hidden and \
-                        (not options.token_categories or node.token.category in options.token_categories):
-                    row.append(node.token.export())
+                self.append_row(header_type, node, options, row)
 
             if len(row) > 0:
                 rows.append(row)
@@ -171,8 +164,8 @@ class Exporter:
 
                 for node in next_nodes:
                     content = ''
-                    if isinstance(node.token, HeaderToken):
-                        content = node.token.export()
+                    if isinstance(node.token, HeaderToken) and node.token.encoding in options.spine_types:
+                        content = self.export_token(node.token, options)
                         non_place_holder_in_row = True
                     elif spine_operation_row:
                         # either if it is the split operator that has been cancelled, or the join one
@@ -180,9 +173,10 @@ class Exporter:
                                 from_stage) or node.last_spine_operator_node and node.last_spine_operator_node.token.cancelled_at_stage == node.stage):
                             content = '*'
                         else:
-                            content = node.token.export()
+                            content = self.export_token(node.token, options)
                             non_place_holder_in_row = True
-                    row.append(content)
+                    if content:
+                        row.append(content)
                     new_next_nodes.append(node.parent)
                 next_nodes = new_next_nodes
                 if non_place_holder_in_row:  # if the row contains just place holders due to an ommitted place holder, don't add it
@@ -193,54 +187,78 @@ class Exporter:
             for node in document.tree.stages[from_stage]:
                 node_signature_rows = []
                 for signature_node in node.last_signature_nodes.nodes.values():
-                    node_signature_rows.append(signature_node.token.export())
-                if not node_signatures:
-                    node_signatures = []  # an array for each spine
-                else:
-                    if len(node_signatures[0]) != len(node_signature_rows):
-                        raise Exception('Node signature mismatch')  # TODO better message
-                node_signatures.append(node_signature_rows)
+                    node_signature_rows.append(self.export_token(signature_node.token, options))
+                if len(node_signature_rows) > 0:
+                    if not node_signatures:
+                        node_signatures = []  # an array for each spine
+                    else:
+                        if len(node_signatures[0]) != len(node_signature_rows):
+                            raise Exception('Node signature mismatch')  # TODO better message
+                    node_signatures.append(node_signature_rows)
 
             if node_signatures:
-                row = []
-                for irow in range(0, len(node_signatures[0])):  # all spines have the same number of rows
-                    for icol in range(0, len(node_signatures)):  #len(node_signatures) = number of spines
+                for irow in range(len(node_signatures[0])):  # all spines have the same number of rows
+                    row = []
+                    for icol in range(len(node_signatures)):  #len(node_signatures) = number of spines
                         row.append(node_signatures[icol][irow])
-                rows.append(row)
+                    rows.append(row)
 
         else:
             from_stage = 0
             rows = []
 
-        if options.to_measure and len(document.measure_start_tree_stages) < options.from_measure:
-            to_stage = document.measure_start_tree_stages[options.to_measure + 1]
+        if options.to_measure is not None and options.to_measure < len(document.measure_start_tree_stages):
+
+            if options.to_measure < len(document.measure_start_tree_stages) - 1:
+                to_stage = document.measure_start_tree_stages[options.to_measure] # take the barlines from the next coming measure
+            else:
+                to_stage = len(document.tree.stages) - 1  # all stages
         else:
-            to_stage = len(document.tree.stages)  # all stages
+            to_stage = len(document.tree.stages) - 1  # all stages
 
         #if not node.token.category == TokenCategory.LINE_COMMENTS and not node.token.category == TokenCategory.FIELD_COMMENTS:
-        for stage in range(from_stage, to_stage):
+        for stage in range(from_stage, to_stage + 1): # to_stage included
             row = []
-
             for node in document.tree.stages[stage]:
-                if isinstance(node.token, HeaderToken):
-                    header_type = node.token.encoding
-                elif node.header_node:
-                    header_type = node.header_node.token.encoding
-                else:
-                    header_type = None
-
-                if header_type and header_type in options.spine_types and not node.token.hidden and \
-                        (not options.token_categories or node.token.category in options.token_categories):
-                    row.append(node.token.export())
+                header_type = self.compute_header_type(node)
+                self.append_row(header_type, node, options, row)
 
             if len(row) > 0:
                 rows.append(row)
+
+        # now, add the spine terminate row
+        if options.to_measure is not None and len(rows) > 0 and rows[len(rows)-1][0] != '*-': # if the terminate is not added yet
+            spine_count = len(rows[len(rows)-1])
+            row = []
+            for i in range(spine_count):
+                row.append('*-')
+            rows.append(row)
 
         result = ""
         for row in rows:
             if not empty_row(row):
                 result += '\t'.join(row) + '\n'
         return result
+
+    def compute_header_type(self, node):
+        if isinstance(node.token, HeaderToken):
+            header_type = node.token.encoding
+        elif node.header_node:
+            header_type = node.header_node.token.encoding
+        else:
+            header_type = None
+        return header_type
+
+    def export_token(self, token: Token, options: ExportOptions):
+        if options and options.kern_type == KernTypeExporter.eKern:
+            return token.export()
+        else:
+            return token.encoding
+
+    def append_row(self, header_type, node, options, row):
+        if header_type and header_type in options.spine_types and not node.token.hidden and \
+                (not options.token_categories or node.token.category in options.token_categories):
+            row.append(self.export_token(node.token, options))
 
     @staticmethod
     def export_options_validator(document: Document, options: ExportOptions) -> None:
