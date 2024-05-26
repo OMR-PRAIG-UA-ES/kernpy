@@ -260,7 +260,6 @@ class ImporterTestCase(unittest.TestCase):
         #self.doEKernMeasureToMeasureTest('resource_dir/polish/test2/pl-wn--mus-iii-123-982--001-004_wieniawski-henryk--l-ecole-moderne-etudes-caprices-pour-violon-seul-op-10-4-le-staccato.krn', 0, 1) # TODO: Correct it. It doesn't export all the required token_categories
         self.doEKernMeasureToMeasureTest('resource_dir/spines/2.krn', 2, 2)
 
-        raise Exception('---')
         self.doEKernMeasureToMeasureTest(
             'resource_dir/polish/test2/pl-wn--mus-iii-123-982--001-004_wieniawski-henryk--l-ecole-moderne-etudes-caprices-pour-violon-seul-op-10-4-le-staccato.krn',
             1, 2)

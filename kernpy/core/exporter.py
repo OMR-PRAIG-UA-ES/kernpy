@@ -36,6 +36,7 @@ class ExportOptions:
 
     Store the options to export a **kern file.
     """
+
     def __init__(self, spine_types=None, token_categories=None, from_measure: int = None, to_measure: int = None,
                  kern_type: KernTypeExporter = KernTypeExporter.normalizedKern, instruments=None):
         """
@@ -106,7 +107,7 @@ class Exporter:
     def export_string_v2(self, document: Document, options: ExportOptions) -> string:
         def get_stages_boundaries(document: Document, options: ExportOptions) -> (int, int):
             from_stage = 0
-            to_stage = len(document.tree.stages)# ? len(document.tree.stages) -1 ??
+            to_stage = len(document.tree.stages)  # ? len(document.tree.stages) -1 ??
 
             if not options.from_measure:
                 ...
@@ -114,10 +115,6 @@ class Exporter:
                 ...
 
             return from_stage, to_stage
-
-
-
-
 
         Exporter.export_options_validator(document, options)
 
@@ -153,8 +150,6 @@ class Exporter:
                 result += '\t'.join(row) + '\n'
         return result
 
-
-
     def export_string(self, document: Document, options: ExportOptions) -> string:
         Exporter.export_options_validator(document, options)
 
@@ -162,7 +157,7 @@ class Exporter:
         if options.from_measure:
             # In case of beginning not from the first measure, we recover the spine creation and the headers
             # Traversed in reverse order to only include the active spines at the given measure...
-            from_stage = document.measure_start_tree_stages[options.from_measure-1]
+            from_stage = document.measure_start_tree_stages[options.from_measure - 1]
             next_nodes = document.tree.stages[from_stage]
             while next_nodes and len(next_nodes) > 0 and next_nodes[0] != document.tree.root:
                 row = []
@@ -181,7 +176,8 @@ class Exporter:
                         non_place_holder_in_row = True
                     elif spine_operation_row:
                         # either if it is the split operator that has been cancelled, or the join one
-                        if isinstance(node.token, SpineOperationToken) and (node.token.is_cancelled_at(from_stage) or node.last_spine_operator_node and node.last_spine_operator_node.token.cancelled_at_stage == node.stage):
+                        if isinstance(node.token, SpineOperationToken) and (node.token.is_cancelled_at(
+                                from_stage) or node.last_spine_operator_node and node.last_spine_operator_node.token.cancelled_at_stage == node.stage):
                             content = '*'
                         else:
                             content = node.token.export()
@@ -203,13 +199,13 @@ class Exporter:
                 else:
                     if len(node_signatures[0]) != len(node_signature_rows):
                         raise Exception('Node signature mismatch')  # TODO better message
-                    node_signature_rows.append(node_signature_rows)
+                node_signatures.append(node_signature_rows)
 
             if node_signatures:
                 row = []
                 for irow in range(0, len(node_signatures[0])):  # all spines have the same number of rows
                     for icol in range(0, len(node_signatures)):  #len(node_signatures) = number of spines
-                        row.append(node_signatures[icol][irow].token.export())
+                        row.append(node_signatures[icol][irow])
                 rows.append(row)
 
         else:
@@ -272,6 +268,7 @@ class Exporter:
         if options.to_measure is not None and options.from_measure is not None and options.to_measure < options.from_measure:
             raise ValueError(
                 f'option to_measure must be >= from_measure but {options.to_measure} < {options.from_measure} was found. ')
+
 
 def get_kern_from_ekern(ekern_content: string) -> string:
     """
