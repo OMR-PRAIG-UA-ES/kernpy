@@ -1,125 +1,80 @@
-from kernpy.core import Importer, ExportOptions
+from kernpy.core import Importer, Document, Exporter, ExportOptions, GraphvizExporter
+from kernpy.core.io import _write
 
-
-def read_kern(input_file: str):
+def read(path) -> Document:
     """
-    Read a kern file and return a Score object.
+    Read a Humdrum **kern file.
 
     Args:
-        inputpath: The path to the kern file.
+        path: File path to read
 
-    Returns:
-        score: The score object.
+    Returns: Document object
 
     Examples:
-        >>> import kernpy
-        >>> score = kernpy.read_kern('path/to/file.krn')
-        >>> print(score)
+        >>> import kernpy as kp
+        >>> document = kp.read('path/to/file.krn')
+
     """
     importer = Importer()
-    importer.import_file(input_file)
+    document = importer.import_file(path)
+    return document
 
-    if len(importer.errors):
-        raise Exception(f'ERROR: {input_file} has errors {importer.get_error_messages()}')
+def export(document: Document, options: ExportOptions) -> str:
+    """
+    Export a Document object to a string.
 
-    # TODO: Store the HumdrumImporter object in the Score object
-    score = Score("a")
-    return score
+    Args:
+        document: Document object to export
+        options: Export options
 
-class Score:
-    def __init__(self, name):
-        self.name = name
-        ...
+    Returns: Exported string
 
-    def transpose(self, interval: int):
-        """
-        Transpose the score by a chromatic interval.
-        Keep the same notes semantic interval. Even if double or triple accidentals are used.
+    Examples:
+        >>> import kernpy as kp
+        >>> document = kp.read('path/to/file.krn')
+        >>> options = kp.ExportOptions()
+        >>> content = kp.export(document, options)
+    """
+    exporter = Exporter()
+    return exporter.export_string(document, options)
 
-        Args:
-            interval: The chromatic interval to transpose the score.
-            
-        Returns:
-            new_score: The transposed score.
+def store(document: Document, path, options: ExportOptions) -> None:
+    """
+    Store a Document object to a file.
 
-        Examples:
-            >>> import kernpy
-            >>> score = kernpy.read_kern('path/to/file.krn')
-            >>> # Transpose 2 semitones up
-            >>> s1 = score.transpose(2)
-            >>> # Transpose 2 semitones down
-            >>> s2 = score.transpose(-2)
-            >>> # Export it to a file
-            >>> s1.to_krn('path/to/up2.krn')
-            >>> s2.to_krn('path/to/down2.krn')
-        """
-        raise NotImplementedError()
+    Args:
+        document: Document object to store
+        path: File path to store
+        options: Export options
 
-    def measure_from_time(self, time: float) -> int:
-        """
-        Greater number of the measure where the time is not greater than 10 seconds
+    Returns: None
 
-        Args:
-            time: The max time in seconds.
+    Examples:
+        >>> import kernpy as kp
+        >>> document = kp.read('path/to/file.krn')
+        >>> options = kp.ExportOptions()
+        >>> kp.store(document, 'path/to/store.krn', options)
 
-        Returns:
-            measure: The measure number.
+    """
+    exporter = Exporter()
+    content = exporter.export_string(document, options)
+    _write(path, content)
 
-        Examples:
-            >>> import kernpy
-            >>> score = kernpy.read_kern('path/to/file.krn')
-            >>> # Get the measure at 10 seconds
-            >>> measure = score.measure_from_time(10)
-            >>> # Greater number of the measure where the time is not greater than 10 seconds
-            >>> print(measure)
-        """
-        raise NotImplementedError()
+def store_graph(document: Document, path) -> None:
+    """
+    Create a graph representation of a Document object using Graphviz. Save the graph to a file.
 
-    def extract_spine(self, spine):
-        """
-        Extract a spine from the score. TODO:
-        """
-        raise NotImplementedError()
+    Args:
+        document: Document object to create graph from
+        path: File path to save the graph
 
-    def extract_measures(self, from_measure=None, to_measure=None):
-        """
-        Extract a range of measures from the score and return a new score.
+    Returns: None
 
-        Args:
-            from_measure: The measure to start the extraction. The first measure starts at 0.
-            to_measure: The measure to end the extraction. The last measure is included. \
-                        The last measure ends at len(score.measures) - 1.
-        """
-        raise NotImplementedError()
+    Examples:
+        >>> import kernpy as kp
+        >>> document = kp.read('path/to/file.krn')
+        >>> kp.store_graph(document, 'path/to/graph.dot')
+    """
+    graph_exporter = GraphvizExporter()
+    graph_exporter.export_to_dot(document.tree, path)
 
-    def tokens(self) -> set:
-        """
-        Return a set of tokens in the score.
-
-        Returns:
-            tokens: A set of tokens in the score.
-
-        Examples:
-            >>> import kernpy
-            >>> score = kernpy.read_kern('path/to/file.krn')
-            >>> tokens = score.tokens()
-            >>> print(tokens)
-            {"2r", "4G", "8c", "|" }
-
-        """
-        raise NotImplementedError()
-
-    def to_krn(self):
-        raise NotImplementedError()
-
-    def to_ekrn(self):
-        raise NotImplementedError()
-
-    def export(self, options: ExportOptions):
-        raise NotImplementedError()
-
-    def __str__(self):
-        raise NotImplementedError()
-
-    def __repr__(self):
-        raise NotImplementedError()

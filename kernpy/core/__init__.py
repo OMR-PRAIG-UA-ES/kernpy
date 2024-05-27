@@ -45,12 +45,14 @@ __all__ = [
     'RootSpineImporter',
     'TextSpineImporter',
     'SpineOperationToken',
-    'read_kern',
-    'Score',
     'PitchRest',
     'Duration',
     'DurationClassical',
     'DurationMensural',
+    'read',
+    'export',
+    'store',
+    'store_graph'
 ]
 
 
