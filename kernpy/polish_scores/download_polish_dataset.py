@@ -6,7 +6,7 @@ from io import BytesIO
 import os
 import json
 
-from kernpy import ExportOptions, BEKERN_CATEGORIES, Importer, Exporter, Document
+from kernpy import ExportOptions, BEKERN_CATEGORIES, Importer, Exporter, Document, KernTypeExporter
 import argparse
 
 # This script creates the Polish dataset from the kern files.
@@ -65,11 +65,11 @@ def download_and_save_image(url, save_path):
 
 
 def extract_and_save_measures(document, from_measure, to_measure, krn_path):
-    export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
+    export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kern_type=KernTypeExporter.eKern)
     export_options.from_measure = from_measure
     export_options.to_measure = to_measure
     exporter = Exporter()
-    exported_ekern = exporter.do_export_ekern(document, export_options)
+    exported_ekern = exporter.export_string(document, export_options)
     with open(krn_path, "w") as f:
         f.write(exported_ekern)
 
@@ -198,7 +198,7 @@ def add_log(document: Document, path, log_filename) -> None:
                 'PDT') else None,
             'original_publication_date_tag': True,
             'iiif': document.get_metacomments('IIIF')[0] if document.get_metacomments('IIIF') else None,
-            'n_measures': document.last_measure_number,
+            'n_measures': len(document.tree.stages),
             'composer': document.get_metacomments('COM')[0] if document.get_metacomments('COM') else None,
             'composer_dates': document.get_metacomments('CDT')[0] if document.get_metacomments('CDT') else None,
             'tempo': document.get_metacomments('OTL')[0] if document.get_metacomments('OTL') else None,
