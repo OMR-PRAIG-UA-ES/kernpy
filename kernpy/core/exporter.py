@@ -92,18 +92,6 @@ def empty_row(row):
 
 
 class Exporter:
-    def do_export_normalized_kern(self, document: Document, options: ExportOptions) -> string:
-        options.kern_type = KernTypeExporter.normalizedKern
-        return self.export_string(document, options)
-
-    def do_export_ekern(self, document: Document, options: ExportOptions) -> string:
-        options.kern_type = KernTypeExporter.eKern
-        return self.export_string(document, options)
-
-    def do_export_unprocessed(self, document: Document, options: ExportOptions) -> string:
-        options.kern_type = KernTypeExporter.unprocessed
-        return self.export_string(document, options)
-
     def export_string_v2(self, document: Document, options: ExportOptions) -> string:
         def get_stages_boundaries(document: Document, options: ExportOptions) -> (int, int):
             from_stage = 0
