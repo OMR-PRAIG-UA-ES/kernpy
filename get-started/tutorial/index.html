@@ -585,15 +585,15 @@ print(content)
 <h3>Let's see the score in a graphical representation:</h3>
 
 <p>Show the graph representation of the score:
-Use <code>Graphviz</code> to show the score in a graphical representation.
-```python
-import kernpy</p>
-<p>importer = kernpy.Importer()
-document = importer.import_string('<em><em>kern\n</em>clefG2\n</em>M4/4\n<em>met(c)\n=1\n4c\n4d\n4e\n4f\n=2\n</em>M3/2\n2g\n2f\n2d\n=\n*-')
+Use <code>Graphviz</code> to show the score in a graphical representation.</p>
+<pre><code class="language-python">import kernpy
+
+importer = kernpy.Importer()
+document = importer.import_string('**kern\n*clefG2\n*M4/4\n*met(c)\n=1\n4c\n4d\n4e\n4f\n=2\n*M3/2\n2g\n2f\n2d\n=\n*-')
 dot_exporter = kernpy.GraphvizExporter()
 dot_exporter.export_to_dot(document.tree, '/tmp/minimal.dot')
- ```
-You can use Graphviz Dot Online editors to see the graphical representation of the score:
+</code></pre>
+<p>You can use Graphviz Dot Online editors to see the graphical representation of the score:
 - <a href="https://dreampuf.github.io/GraphvizOnline/" target="_blank">Graphviz Online</a></p>
 <h2 id="next-steps">Next steps</h2>
 <p>Congratulations! You have learned the basics of <code>kernpy</code>. Now you can start using the package in your projects.</p>
