@@ -251,6 +251,10 @@ def main(input_directory, output_directory, log_filename="/tmp/polish_index.json
     ok_files = []
     ko_files = []
     log_file = os.path.join(output_directory, LOG_FILENAME)
+    print(f"{25*'='}"
+          f"\nProcessing {len(kern_with_bboxes)} files."
+          f"\nLog will be saved in {log_file}."
+          f"\n{25*'='}")
     for kern in kern_with_bboxes:
         try:
             filename = remove_extension(kern)
