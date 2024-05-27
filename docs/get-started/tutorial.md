@@ -48,8 +48,77 @@ First of all, let's see what a Humdrum **kern file looks like:
 
 ## Let's code!
 
+
+
 We can do some operations with the score.
 
+First of all, let's import the score:
+
+```python
+import kernpy as kp
+document = kp.read('/path/to/file.krn')
+```
+
+Now, we can access the score attributes:
+
+```python
+import kernpy as kp
+document = kp.read('/path/to/file.krn')
+print(document.tree)
+# <kernpy.core.document.DocumentTree object at 0x7f8b3b3b3d30>
+```
+
+Let's dive into the different ways to export the `Document`.
+```python
+import kernpy as kp
+
+# Select your measures to export
+middle_measures_options = kp.ExportOptions(from_measure=4, to_measure=8)
+
+# Select your voices to export
+saxophone_options = kp.ExportOptions(instruments=['saxophone'])
+
+# Select the token categories to export
+core_options = kp.ExportOptions(token_categories=[kp.TokenCategory.CORE, kp.TokenCategory.BARLINES, kp.TokenCategory.SIGNATURES])
+
+# Select the token categories to export using the predefined categories
+bekern_options = kp.ExportOptions(token_categories=kp.BEKERN_CATEGORIES)
+
+# Select the encoding to export
+normalized_kern_options = kp.ExportOptions(kern_type=kp.KernTypeExporter.normalizedKern)
+
+# Select a list of filters to export
+all_options = kp.ExportOptions(
+    kern_type=kp.KernTypeExporter.eKern,
+    instruments=['saxophone'],
+    from_measure=1,
+    to_measure=2,
+    token_categories=kp.BEKERN_CATEGORIES
+)
+```
+
+Using the `Document` object, we can export the score:
+```python
+import kernpy as kp
+document = kp.read('/path/to/file.krn')
+options = kp.ExportOptions()
+kp.store(document, '/path/to/export/file.krn', options)
+```
+
+Or we can export the score as a string for further processing:
+```python
+import kernpy as kp
+document = kp.read('/path/to/file.krn')
+options = kp.ExportOptions()
+content = kp.export(document, options)
+...  # you can use the content as you want
+print(content)
+```
+
+
+<br>
+
+## Let's use low-level functions:
 
 Load the file directly using the content of the file:    
 Examples:
