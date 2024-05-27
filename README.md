@@ -6,11 +6,41 @@ https://kernpy.pages.dev/
 ```
 
 ## Index:
+- [Code example](#code-example)
 - [Installation](#installation)
 - [Documentation](#documentation)
 - [Run tests](#run-tests)
 
-    
+
+## Code example
+```python
+import kernpy as kp
+
+# Read a **kern file
+document = kp.read("path/to/file.krn")
+
+# Handle the document if needed
+print(document.tree)
+
+# Create the options to export the document
+default_options = kp.ExportOptions()
+
+# Explore the ExportOptions class
+your_options = kp.ExportOptions(
+    token_categories=kp.BEKERN_CATEGORIES,
+    kern_type=kp.KernTypeExporter.eKern,
+    from_measure=1,         # Start from measure 1
+    to_measure=10,
+)
+
+# Store the document in a new file
+kp.store(document, "path/to/newfile.ekrn", your_options)
+
+# or store the document as a string
+content = kp.export(document, your_options)
+```
+
+
 ## Installation
 
 Install the last version of **kernpy using pip:
