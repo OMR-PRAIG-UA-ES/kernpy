@@ -227,7 +227,7 @@ def add_log(document: Document, path, log_filename) -> None:
         print(f"Error adding log:{path}:{e}")
 
 
-def main(input_directory, output_directory, log_filename="/tmp/polish_index.json") -> None:
+def main(input_directory, output_directory) -> None:
     """
     Process the files in the input_directory and save the results in the output_directory.
     http requests are made to download the images.

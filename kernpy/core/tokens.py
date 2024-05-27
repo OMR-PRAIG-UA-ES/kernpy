@@ -933,18 +933,25 @@ class NoteRestToken(Token):
 
         self.pitch_duration_subtokens = pitch_duration_subtokens
         self.decoration_subtokens = decoration_subtokens
-        #self.duration = DurationClassical(''.join([subtoken for subtoken in decoration_subtokens if subtoken.isnumeric()]))
-        duration_token = ''.join([n for n in self.encoding if n.isnumeric()])
-        if duration_token is None or len(duration_token) == 0:
-            self.duration = None
-        else:
-            self.duration = DurationFactory.create_duration(duration_token)
 
-        pitch_rest_token = ''.join([n for n in self.encoding if n in PitchRest.VALID_PITCHES])
-        if pitch_rest_token is None or len(pitch_rest_token) == 0:
+        try:
+            # TODO: Refactor this
+            duration_token = ''.join([n for n in self.encoding if n.isnumeric()])
+            if duration_token is None or len(duration_token) == 0:
+                self.duration = None
+            else:
+                self.duration = DurationFactory.create_duration(duration_token)
+        except Exception:
+            self.duration = None
+
+        try:
+            pitch_rest_token = ''.join([n for n in self.encoding if n in PitchRest.VALID_PITCHES])
+            if pitch_rest_token is None or len(pitch_rest_token) == 0:
+                self.pitch = None
+            else:
+                self.pitch = PitchRest(pitch_rest_token)
+        except Exception:
             self.pitch = None
-        else:
-            self.pitch = PitchRest(pitch_rest_token)
         # TODO: Ahora entran muchos tokens diferentes, filtrar solo los de pitch
 
     def export(self) -> string:
