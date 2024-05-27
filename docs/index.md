@@ -4,7 +4,7 @@
 
 
 ## Useful links: 
-[Installation](get-started.md) | [Source Repository](https://github.com/OMR-PRAIG-UA-ES/kernpy) {:target="_blank"} | [Project Website (PRAIG)](https://praig.ua.es/){:target="_blank"}
+[Installation](get-started.md) | [Source Repository](https://github.com/OMR-PRAIG-UA-ES/kernpy){:target="_blank"} | [Project Website (PRAIG)](https://praig.ua.es/){:target="_blank"}
 
 
 
