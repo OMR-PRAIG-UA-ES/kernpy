@@ -165,6 +165,7 @@ export_options = kernpy.ExportOptions(
 
 Show the graph representation of the score:
 Use `Graphviz` to show the score in a graphical representation.
+
 ```python
 import kernpy
 
@@ -172,7 +173,8 @@ importer = kernpy.Importer()
 document = importer.import_string('**kern\n*clefG2\n*M4/4\n*met(c)\n=1\n4c\n4d\n4e\n4f\n=2\n*M3/2\n2g\n2f\n2d\n=\n*-')
 dot_exporter = kernpy.GraphvizExporter()
 dot_exporter.export_to_dot(document.tree, '/tmp/minimal.dot')
- ```
+```
+
 You can use Graphviz Dot Online editors to see the graphical representation of the score:
 - [Graphviz Online](https://dreampuf.github.io/GraphvizOnline/){:target="_blank"}
 
