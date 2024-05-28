@@ -387,6 +387,24 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#kernpy.core.Document.get_first_measure" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_first_measure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Document.get_last_measure" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_last_measure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#kernpy.core.Document.get_metacomments" class="md-nav__link">
     <span class="md-ellipsis">
       get_metacomments
@@ -1178,6 +1196,24 @@
   <a href="#kernpy.core.Document.get_all_tokens" class="md-nav__link">
     <span class="md-ellipsis">
       get_all_tokens
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Document.get_first_measure" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_first_measure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Document.get_last_measure" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_last_measure
     </span>
   </a>
   
@@ -2124,6 +2160,60 @@ create_fragments_from_directory('/my/path/to/input_dir/', '/to/my/output_dir/',
           </tr>
       </tbody>
     </table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="kernpy.core.Document.get_first_measure" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_first_measure</span><span class="p">()</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Get the index of the first measure of the document.</p>
+<p>Returns: (Int) The index of the first measure of the document.</p>
+<p>Raises: Exception - If the document has no measures.</p>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">document</span> <span class="o">=</span> <span class="n">kernpy</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;score.krn&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="o">.</span><span class="n">get_first_measure</span><span class="p">()</span>
+<span class="go">1</span>
+</code></pre></div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="kernpy.core.Document.get_last_measure" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_last_measure</span><span class="p">()</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Get the index of the last measure of the document.</p>
+<p>Returns: (Int) The index of the last measure of the document.</p>
+<p>Raises: Exception - If the document has no measures.</p>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">document</span> <span class="o">=</span> <span class="n">kernpy</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;score.krn&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="o">.</span><span class="n">get_last_measure</span><span class="p">()</span>
+<span class="go">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">get_first_measure</span><span class="p">(),</span> <span class="n">document</span><span class="o">.</span><span class="n">get_last_measure</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>  <span class="n">options</span> <span class="o">=</span> <span class="n">kernpy</span><span class="o">.</span><span class="n">ExportOptions</span><span class="p">(</span><span class="n">from_measure</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">to_measure</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">4</span><span class="p">)</span>
+</code></pre></div>
 
     </div>
 
