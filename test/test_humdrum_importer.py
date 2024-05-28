@@ -585,6 +585,33 @@ class ImporterTestCase(unittest.TestCase):
 
         self.assertEqual(expected_kern, real_kern)
 
+    def test_document_get_first_measure_ok(self):
+        input_kern_file = 'resource_dir/legacy/chor001.krn'  # This score is correctly formatted
+        importer = Importer()
+        document = importer.import_file(input_kern_file)
+        first_measure = document.get_first_measure()
+        self.assertEqual(1, first_measure)
+
+    def test_document_get_first_measure_empty(self):
+        importer = Importer()
+        document = importer.import_string('**kern\n*-')
+        with self.assertRaises(Exception):
+            first_measure = document.get_first_measure()
+
+    def test_document_get_last_measure_ok(self):
+        input_kern_file = 'resource_dir/legacy/chor048.krn'   # This score has 10 measures
+        importer = Importer()
+        document = importer.import_file(input_kern_file)
+        last_measure = document.get_last_measure()
+        self.assertEqual(11, last_measure)
+
+    def test_document_get_last_measure_empty(self):
+        importer = Importer()
+        document = importer.import_string('**kern\n*-')
+        with self.assertRaises(Exception):
+            last_measure = document.get_last_measure()
+
+
 
 if __name__ == '__main__':
     unittest.main()

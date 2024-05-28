@@ -137,6 +137,8 @@ class Document:
         self.page_bounding_boxes = {}
         self.header_stage = None  # the stage that contains the heders
 
+    FIRST_MEASURE = 1
+
     def get_header_stage(self):
         if self.header_stage:
             return self.tree.stages[self.header_stage]
@@ -151,6 +153,44 @@ class Document:
             return len(self.tree.stages[self.header_stage])
         else:
             raise Exception('No header stage found')
+
+    def get_first_measure(self) -> int:
+        """
+        Get the index of the first measure of the document.
+
+        Returns: (Int) The index of the first measure of the document.
+
+        Raises: Exception - If the document has no measures.
+
+        Examples:
+            >>> document = kernpy.read('score.krn')
+            >>> document.get_first_measure()
+            1
+        """
+        if len(self.measure_start_tree_stages) == 0:
+            raise Exception('No measures found')
+
+        return self.FIRST_MEASURE
+
+    def get_last_measure(self) -> int:
+        """
+        Get the index of the last measure of the document.
+
+        Returns: (Int) The index of the last measure of the document.
+
+        Raises: Exception - If the document has no measures.
+
+        Examples:
+            >>> document = kernpy.read('score.krn')
+            >>> document.get_last_measure()
+            10
+            >>> for i in range(document.get_first_measure(), document.get_last_measure() + 1):
+            >>>   options = kernpy.ExportOptions(from_measure=i, to_measure=i+4)
+        """
+        if len(self.measure_start_tree_stages) == 0:
+            raise Exception('No measures found')
+
+        return len(self.measure_start_tree_stages)
 
     def get_metacomments(self, KeyComment=None, clear=False) -> list:
         """
