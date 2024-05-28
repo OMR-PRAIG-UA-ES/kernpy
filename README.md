@@ -38,6 +38,16 @@ kp.store(document, "path/to/newfile.ekrn", your_options)
 
 # or store the document as a string
 content = kp.export(document, your_options)
+
+# Iterate over the document
+doc = kp.read('resource_dir/legacy/chor048.krn')                        # 10 measures score
+for i in range(doc.get_first_measure(), doc.get_last_measure(), 1):     # from 1 to 11, step 1
+    # Export only the i-th measure (1 long measure scores)
+    options = kp.ExportOptions(from_measure=i, to_measure=i)           
+    # Export the i-th measure and the next 4 measures (5 long measure scores)
+    options_longer = kp.ExportOptions(from_measure=i, to_measure=i+4) 
+    content = kp.export(doc, options)
+    ...
 ```
 
 
