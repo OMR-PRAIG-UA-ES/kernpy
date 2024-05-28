@@ -76,7 +76,7 @@ class ExportOptions:
             >>> exported_data = exporter.export_string(document, options)
 
         """
-        self.spine_types = spine_types or []
+        self.spine_types = spine_types or ['**kern']
         self.from_measure = from_measure
         self.to_measure = to_measure
         self.token_categories = token_categories or []
