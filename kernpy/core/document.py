@@ -300,6 +300,38 @@ class Document:
         tokens = self.get_unique_tokens(filter_by_categories)
         return Document.tokens_to_encodings(tokens)
 
+    def get_kern_types(self, spines_types: list):
+        """
+        Get the kern types of the spines.
+
+        Args:
+            spines_types: A list of spine types.
+
+        Returns: A list of kern types.
+
+        Examples:
+            >>> document.get_kern_types(['**kern', '**dynam'])
+            ['**kern', '**kern', '**kern', '**kern', '**dynam']
+        """
+        raise NotImplementedError
+
+
+    def __iter__(self):
+        """
+        Get the indexes to export all the document.
+
+        Returns: An iterator with the indexes to export the document.
+        """
+        return iter(range(self.get_first_measure(), self.measures_count() + 1))
+
+    def __next__(self):
+        """
+        Get the next index to export the document.
+
+        Returns: The next index to export the document.
+        """
+        return next(iter(range(self.get_first_measure(), self.measures_count() + 1)))
+
 
 # tree traversal utils
 class MetacommentsTraversal(TreeTraversalInterface):

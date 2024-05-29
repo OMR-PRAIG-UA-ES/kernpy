@@ -639,6 +639,44 @@ class ImporterTestCase(unittest.TestCase):
         #    # if the import doesn't raise an exception, the kern is valid
         #    #self.assertFalse(iter_importer.has_errors())
 
+    def test_document_method__iter__(self):
+        # Arrange
+        all_sub_kerns = []
+        all_indexes = []
+        importer = Importer()
+        document = importer.import_file('resource_dir/legacy/chor048.krn')
+        expected_sub_kerns_size = document.measures_count()
+
+        # Act
+        for index in document:
+            all_indexes.append(index)
+            options = ExportOptions(from_measure=index, to_measure=index)
+            exporter = Exporter()
+            content = exporter.export_string(document, options)
+            all_sub_kerns.append(content)
+
+        # Assert
+        self.assertEqual(expected_sub_kerns_size, len(all_sub_kerns))
+
+    def test_document_method__next__(self):
+        # Arrange
+        all_sub_kerns = []
+        all_indexes = []
+        importer = Importer()
+        document = importer.import_file('resource_dir/legacy/chor048.krn')
+        expected_sub_kerns_size = document.measures_count()
+
+        # Act
+        iterator = iter(document)
+        for index in iterator:
+            all_indexes.append(index)
+            options = ExportOptions(from_measure=index, to_measure=index)
+            exporter = Exporter()
+            content = exporter.export_string(document, options)
+            all_sub_kerns.append(content)
+
+        # Assert
+        self.assertEqual(expected_sub_kerns_size, len(all_sub_kerns))
 
 
 
