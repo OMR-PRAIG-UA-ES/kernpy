@@ -1,5 +1,5 @@
 rm -rf kernpy/gen 2> /dev/null
-rm -rf kernpy/kern/generated 2> /dev/null
+rm -rf kernpy/core/generated 2> /dev/null
 
 cd kern
 java -jar ../antlr-4.13.1-complete.jar kernSpineLexer.g4 -Dlanguage=Python3 -o ../kernpy/core/generated
