@@ -11,7 +11,7 @@ from .generated.kernSpineParserListener import kernSpineParserListener
 from .spine_importer import SpineImporter
 from .tokens import SimpleToken, TokenCategory, Subtoken, SubTokenCategory, ChordToken, BoundingBox, \
     BoundingBoxToken, ClefToken, KeySignatureToken, TimeSignatureToken, MeterSymbolToken, BarToken, NoteRestToken, \
-    KeyToken
+    KeyToken, InstrumentToken
 
 
 class KernSpineListener(kernSpineParserListener):
@@ -192,6 +192,9 @@ class KernSpineListener(kernSpineParserListener):
         bbox = BoundingBox(int(ctx.xywh().x().getText()), int(ctx.xywh().y().getText()), int(ctx.xywh().w().getText()),
                            int(ctx.xywh().h().getText()))
         self.token = BoundingBoxToken(ctx.getText(), page, bbox)
+
+    def exitInstrument(self, ctx: kernSpineParser.InstrumentContext):
+        self.token = InstrumentToken(ctx.getText())
 
 
 class KernListenerImporter(BaseANTLRListenerImporter):
