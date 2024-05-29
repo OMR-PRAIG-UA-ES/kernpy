@@ -602,14 +602,14 @@ class ImporterTestCase(unittest.TestCase):
         input_kern_file = 'resource_dir/legacy/chor048.krn'   # This score has 10 measures
         importer = Importer()
         document = importer.import_file(input_kern_file)
-        last_measure = document.get_last_measure()
+        last_measure = document.measures_count()
         self.assertEqual(11, last_measure)
 
     def test_document_get_last_measure_empty(self):
         importer = Importer()
         document = importer.import_string('**kern\n*-')
         with self.assertRaises(Exception):
-            last_measure = document.get_last_measure()
+            last_measure = document.measures_count()
 
 
 

@@ -172,7 +172,7 @@ class Document:
 
         return self.FIRST_MEASURE
 
-    def get_last_measure(self) -> int:
+    def measures_count(self) -> int:
         """
         Get the index of the last measure of the document.
 
@@ -182,9 +182,9 @@ class Document:
 
         Examples:
             >>> document = kernpy.read('score.krn')
-            >>> document.get_last_measure()
+            >>> document.measures_count()
             10
-            >>> for i in range(document.get_first_measure(), document.get_last_measure() + 1):
+            >>> for i in range(document.get_first_measure(), document.measures_count() + 1):
             >>>   options = kernpy.ExportOptions(from_measure=i, to_measure=i+4)
         """
         if len(self.measure_start_tree_stages) == 0:
