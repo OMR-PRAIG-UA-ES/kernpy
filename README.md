@@ -49,6 +49,12 @@ for i in range(doc.get_first_measure(), doc.measures_count() + 1, 1):  # from 1 
     options_longer = kp.ExportOptions(from_measure=i, to_measure=i + 4)
     content = kp.export(doc, options)
     ...
+
+# Or use the __iter__ method
+for measure in doc:
+    options = kp.ExportOptions(from_measure=measure, to_measure=measure)
+    content = kp.export(doc, options)
+    ...
 ```
 
 
