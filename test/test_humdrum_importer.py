@@ -602,14 +602,47 @@ class ImporterTestCase(unittest.TestCase):
         input_kern_file = 'resource_dir/legacy/chor048.krn'   # This score has 10 measures
         importer = Importer()
         document = importer.import_file(input_kern_file)
-        last_measure = document.measures_count()
-        self.assertEqual(11, last_measure)
+        measures = document.measures_count()
+        self.assertEqual(10, measures)
 
     def test_document_get_last_measure_empty(self):
         importer = Importer()
         document = importer.import_string('**kern\n*-')
         with self.assertRaises(Exception):
             last_measure = document.measures_count()
+
+    def test_document_iterator_basic(self):
+        # Arrange
+        all_sub_kerns = []
+        importer = Importer()
+        document = importer.import_file('resource_dir/legacy/chor048.krn')
+        expected_sub_kerns_size = document.measures_count()
+        count = 0
+        options = ExportOptions()
+
+        # Act
+        for i in range(document.get_first_measure(), document.measures_count() + 1):
+            count += 1
+            options.from_measure = i
+            options.to_measure = i
+            exporter = Exporter()
+            content = exporter.export_string(document, options)
+            print(content)
+            all_sub_kerns.append(content)
+
+        # Assert
+        self.assertEqual(expected_sub_kerns_size, count)
+        # TODO: Check if exported content is correct
+        #for kern in all_sub_kerns:
+        #    iter_importer = Importer()
+        #    iter_document = iter_importer.import_string(kern)
+        #    # if the import doesn't raise an exception, the kern is valid
+        #    #self.assertFalse(iter_importer.has_errors())
+
+
+
+
+
 
 
 

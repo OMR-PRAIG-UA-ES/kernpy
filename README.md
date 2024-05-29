@@ -42,7 +42,7 @@ content = kp.export(document, your_options)
 
 # Iterate over the document
 doc = kp.read('resource_dir/legacy/chor048.krn')  # 10 measures score
-for i in range(doc.get_first_measure(), doc.measures_count(), 1):  # from 1 to 11, step 1
+for i in range(doc.get_first_measure(), doc.measures_count() + 1, 1):  # from 1 to 11, step 1
     # Export only the i-th measure (1 long measure scores)
     options = kp.ExportOptions(from_measure=i, to_measure=i)
     # Export the i-th measure and the next 4 measures (5 long measure scores)
