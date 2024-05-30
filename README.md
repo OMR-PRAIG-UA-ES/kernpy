@@ -28,6 +28,7 @@ default_options = kp.ExportOptions()
 
 # Explore the ExportOptions class
 your_options = kp.ExportOptions(
+    spine_types=['**kern'],  # Export only the **kern spines
     token_categories=kp.BEKERN_CATEGORIES,
     kern_type=kp.KernTypeExporter.eKern,
     from_measure=1,  # Start from measure 1

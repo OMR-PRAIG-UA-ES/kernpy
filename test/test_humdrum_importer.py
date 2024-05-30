@@ -618,7 +618,7 @@ class ImporterTestCase(unittest.TestCase):
         document = importer.import_file('resource_dir/legacy/chor048.krn')
         expected_sub_kerns_size = document.measures_count()
         count = 0
-        options = ExportOptions()
+        options = ExportOptions(spine_types=['**kern'], kern_type=KernTypeExporter.normalizedKern)
 
         # Act
         for i in range(document.get_first_measure(), document.measures_count() + 1):
@@ -650,7 +650,7 @@ class ImporterTestCase(unittest.TestCase):
         # Act
         for index in document:
             all_indexes.append(index)
-            options = ExportOptions(from_measure=index, to_measure=index)
+            options = ExportOptions(from_measure=index, to_measure=index, spine_types=['**kern'])
             exporter = Exporter()
             content = exporter.export_string(document, options)
             all_sub_kerns.append(content)
@@ -670,7 +670,7 @@ class ImporterTestCase(unittest.TestCase):
         iterator = iter(document)
         for index in iterator:
             all_indexes.append(index)
-            options = ExportOptions(from_measure=index, to_measure=index)
+            options = ExportOptions(from_measure=index, to_measure=index, spine_types=['**kern'])
             exporter = Exporter()
             content = exporter.export_string(document, options)
             all_sub_kerns.append(content)

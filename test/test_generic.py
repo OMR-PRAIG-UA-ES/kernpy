@@ -21,14 +21,3 @@ class GenericTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(expected_content, real_content, f"File content mismatch: \nExpected:\n{expected_content}\n{40 * '='}\nReal\n{real_content}")
 
-
-    def test_test(self):
-        doc = kernpy.read('resource_dir/legacy/chor048.krn')
-        print(doc)
-        for i in range (doc.get_first_measure(), doc.measures_count() + 1):
-            options = kernpy.ExportOptions(from_measure=i, to_measure=i)
-            content = kernpy.export(doc, options)
-            print(content)
-
-        for i in range(10):
-            print(i)
