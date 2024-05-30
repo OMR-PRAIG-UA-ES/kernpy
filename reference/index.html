@@ -620,6 +620,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Exporter.get_spine_types" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_spine_types
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1457,6 +1466,15 @@
   <a href="#kernpy.core.Exporter.export_options_validator" class="md-nav__link">
     <span class="md-ellipsis">
       export_options_validator
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Exporter.get_spine_types" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_spine_types
     </span>
   </a>
   
@@ -3715,6 +3733,84 @@ None</p>
 </blockquote>
 </blockquote>
 </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="kernpy.core.Exporter.get_spine_types" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_spine_types</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">spine_types</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Get the spine types from the document.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>document</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="kernpy.core.Document" href="#kernpy.core.Document">Document</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The document with the spines.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>spine_types</code></td>
+            <td>
+                  <code>list</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The spine types to export. If None, all the spine types will be exported.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+      <p>Returns: A list with the spine types.</p>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">exporter</span> <span class="o">=</span> <span class="n">Exporter</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">exporter</span><span class="o">.</span><span class="n">get_spine_types</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+<span class="go">[&#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;, &#39;**root&#39;, &#39;**harm&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">exporter</span><span class="o">.</span><span class="n">get_spine_types</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">[&#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;, &#39;**root&#39;, &#39;**harm&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">exporter</span><span class="o">.</span><span class="n">get_spine_types</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;**kern&#39;</span><span class="p">])</span>
+<span class="go">[&#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">exporter</span><span class="o">.</span><span class="n">get_spine_types</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;**kern&#39;</span><span class="p">,</span> <span class="s1">&#39;**root&#39;</span><span class="p">])</span>
+<span class="go">[&#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;, &#39;**root&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">exporter</span><span class="o">.</span><span class="n">get_spine_types</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;**kern&#39;</span><span class="p">,</span> <span class="s1">&#39;**root&#39;</span><span class="p">,</span> <span class="s1">&#39;**harm&#39;</span><span class="p">])</span>
+<span class="go">[&#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;, &#39;**root&#39;, &#39;**harm&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">exporter</span><span class="o">.</span><span class="n">get_spine_types</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="p">[])</span>
+<span class="go">[]</span>
+</code></pre></div>
+
     </div>
 
 </div>
