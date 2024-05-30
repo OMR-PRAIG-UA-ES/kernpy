@@ -52,7 +52,8 @@ __all__ = [
     'read',
     'export',
     'store',
-    'store_graph'
+    'store_graph',
+    'transposer'
 ]
 
 
