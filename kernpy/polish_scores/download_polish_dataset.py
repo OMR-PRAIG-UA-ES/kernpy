@@ -108,13 +108,24 @@ def findIIIFIds(document):
             return get_image_urls(url)
     raise Exception('Cannot find any IIIF metacomment')
 
+def is_valid_document(document, kern_spines_filter) -> bool:
+    if kern_spines_filter is None:
+        return True
 
-def convert_and_download_file(input_kern, _output_path, log_filename):
+    exporter = Exporter()
+    kern_types = exporter.get_spine_types(document, spine_types=['**kern'])
+    return len(kern_types) == int(kern_spines_filter)
+
+def convert_and_download_file(input_kern, _output_path, log_filename, kern_spines_filter: int = None):
     print(f'Converting filename {input_kern}')
     importer = Importer()
     document = importer.import_file(input_kern)
     if len(importer.errors):
         raise Exception(f'{input_kern} has errors {importer.get_error_messages()}')
+
+    if not is_valid_document(document, kern_spines_filter):
+        return
+
     map_page_label_IIIF_ids = findIIIFIds(document)
     download_and_save_page_images(document, _output_path, map_page_label_IIIF_ids, document.page_bounding_boxes,
                                   log_filename=log_filename)
@@ -226,8 +237,14 @@ def add_log(document: Document, path, log_filename) -> None:
     except Exception as e:
         print(f"Error adding log:{path}:{e}")
 
+def remove_empty_dirs(directory):
+    for root, dirs, files in os.walk(directory):
+        for dir in dirs:
+            full_dir = os.path.join(root, dir)
+            if not os.listdir(full_dir):
+                os.rmdir(full_dir)
 
-def main(input_directory, output_directory) -> None:
+def main(input_directory, output_directory, remove_empty_directories: bool = True, kern_spines_filter: int = None) -> None:
     """
     Process the files in the input_directory and save the results in the output_directory.
     http requests are made to download the images.
@@ -235,15 +252,21 @@ def main(input_directory, output_directory) -> None:
     Args:
         input_directory: directory where the input files are found
         output_directory: directory where the output files are saved
-        log_filename: filename where the log is saved
+        remove_empty_directories (bool): remove empty directories when finish processing the files
+        kern_spines_filter (int): Only process files with the number of **kern spines specified. Use it to export 2-voice files, for example.
 
     Returns:
         None
 
     Examples:
         >>> main('/kern_files', '/output_ekern')
+        None
 
-        >>> main('/kern_files', '/output_ekern', '/output_ekern/polish_index.json')
+        >>> main('/kern_files', '/output_ekern', remove_empty_directories=False)
+        None
+
+        >>> main('/kern_files', '/output_ekern', kern_spines_filter=2, remove_empty_directories=False)
+        None
 
     """
     print(f'Processing files in {input_directory} and saving to {output_directory}')
@@ -262,11 +285,14 @@ def main(input_directory, output_directory) -> None:
             output_kern_path = os.path.join(output_directory, filename)
             if not os.path.exists(output_kern_path):
                 os.makedirs(output_kern_path)
-            convert_and_download_file(kern_path, output_kern_path, log_filename=log_file)
+            convert_and_download_file(kern_path, output_kern_path, log_filename=log_file, kern_spines_filter=kern_spines_filter)
             ok_files.append(kern)
         except Exception as error:
             ko_files.append(kern)
             print(f'Errors in {kern}: {error}')
+
+    if remove_empty_directories:
+        remove_empty_dirs(output_directory)
 
     print(f'----> OK files #{len(ok_files)}')
     print(f'----> KO files #{len(ko_files)}')
