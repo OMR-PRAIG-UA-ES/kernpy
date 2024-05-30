@@ -186,5 +186,18 @@ class TestTranscription(unittest.TestCase):
         content = transposer.transpose('C3', transposer.IntervalsByName['P4'], format='american')
         self.assertEqual('F3', content)
 
+        content = transposer.transpose('G#4', transposer.IntervalsByName['P4'], format='american', direction='up')
+        self.assertEqual('C#5', content)
+
+        content = transposer.transpose('b#4', transposer.IntervalsByName['P4'], format='american', direction='down')
+        self.assertEqual('Fbb4', content)
+
+
+
+        content = transposer.transpose('C3', transposer.IntervalsByName['P4'], format='american', direction='down')
+        self.assertEqual('G2', content)
+
+
+
 
 

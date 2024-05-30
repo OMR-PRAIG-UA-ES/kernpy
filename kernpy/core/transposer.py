@@ -153,8 +153,9 @@ class AgnosticPitch:
         return 40 * self.octave + Chromas[self.name]
 
     @classmethod
-    def to_transposed(cls, agnostic_pitch: 'AgnosticPitch', raw_interval) -> 'AgnosticPitch':
-        chroma = agnostic_pitch.get_chroma() + raw_interval
+    def to_transposed(cls, agnostic_pitch: 'AgnosticPitch', raw_interval, direction: str = Direction.UP.value) -> 'AgnosticPitch':
+        delta = raw_interval if direction == Direction.UP.value else -raw_interval
+        chroma = agnostic_pitch.get_chroma() + delta
         name = ChromasByValue[chroma % 40]
         octave = chroma // 40
         return AgnosticPitch(name, octave)
@@ -198,7 +199,7 @@ class AmericanPitchImporter(PitchImporter):
 
     def _parse_pitch(self, encoding: str):
         octave = int(''.join([n for n in encoding if n.isnumeric()]))
-        chroma = ''.join([c.lower() for c in encoding if c.isalpha()])
+        chroma = ''.join([c.lower() for c in encoding if c.isalpha() or c in ['-', '+', '#', 'b']])
 
         return octave, chroma
 
@@ -286,7 +287,7 @@ def transpose(input_encoding: str, interval: int, format: str = NotationEncoding
     """
     importer = PitchImporterFactory.create(format)
     pitch: AgnosticPitch = importer.import_pitch(input_encoding)
-    transposed_pitch = AgnosticPitch.to_transposed(pitch, interval)
+    transposed_pitch = AgnosticPitch.to_transposed(pitch, interval, direction)
     exporter = PitchExporterFactory.create(format)
     content = exporter.export_pitch(transposed_pitch)
 
