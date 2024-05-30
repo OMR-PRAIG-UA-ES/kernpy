@@ -300,21 +300,30 @@ class Document:
         tokens = self.get_unique_tokens(filter_by_categories)
         return Document.tokens_to_encodings(tokens)
 
-    def get_kern_types(self, spines_types: list):
+    def get_voices(self, clean=False):
         """
-        Get the kern types of the spines.
+        Get the voices of the document.
 
-        Args:
-            spines_types: A list of spine types.
+        Args
+            clean: Remove the first '!' from the voice name.
 
-        Returns: A list of kern types.
+        Returns: A list of voices.
 
         Examples:
-            >>> document.get_kern_types(['**kern', '**dynam'])
-            ['**kern', '**kern', '**kern', '**kern', '**dynam']
+            >>> document.get_voices()
+            ['!sax', '!piano', '!bass']
+            >>> document.get_voices(clean=True)
+            ['sax', 'piano', 'bass']
+            >>> document.get_voices(clean=False)
+            ['!sax', '!piano', '!bass']
         """
-        raise NotImplementedError
+        from kernpy.core import TokenCategory
+        voices = []
+        voices = self.get_all_tokens(filter_by_categories=[TokenCategory.INSTRUMENTS])
 
+        if clean:
+            voices = [voice[1:] for voice in voices]
+        return voices
 
     def __iter__(self):
         """
@@ -357,7 +366,10 @@ class TokensTraversal(TreeTraversalInterface):
         self.filter_by_categories = filter_by_categories
 
     def visit(self, node):
-        if node.token and (not self.non_repeated or node.token.encoding not in self.seen_encodings):
+        if (node.token
+            and (not self.non_repeated or node.token.encoding not in self.seen_encodings)
+            and (self.filter_by_categories is None or node.token.category in self.filter_by_categories)
+        ):
             self.tokens.append(node.token)
             if self.non_repeated:
                 self.seen_encodings.append(node.token.encoding)

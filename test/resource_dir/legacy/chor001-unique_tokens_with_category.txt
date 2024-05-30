@@ -1,50 +1,12 @@
-!
-!! Beat 2 of measure 1 chord could also be IVb (with root on C)
-!!!AGN: 4-Part Chorale
-!!!CDT: 1685/3//-1750/7/28/
-!!!COM: Bach, Johann Sebastian
-!!!ONB1: Text by Georg Niege; 16th Century secular melody, first appears
-!!!ONB2: in sacred use in Neu Catechismus-Gesangbchlein, Hamburg, 1598.
-!!!ONB: Harmony and Root analysis done manually by Craig Sapp
-!!!OTL@@DE: Aus meines Herzens Grunde
-!!!OTL@EN:  From the depths of my heart
-!!!PDT: 1850, 1865
-!!!SCT: BH 001
-!!!SCT: BWV 269
-!!!SMA: 371 Bach Chorales, edited by Ludwig Erk, C.F. Peters
-!!!YEC: Copyright 2001 by Craig Stuart Sapp
-!!!license: GNU General Public License (http://www.gnu.org/copyleft/gpl.html)
-!!chor2scor: -l 2 -s 0.6 -o %b.pmx
-!!linebreak: 2
-!alto
-!bass
-!sprno
-!tenor
-*
-**harm
-**kern
-**root
-*-
-*>A
-*>B
-*>[A,A,B]
-*G:
-*Iorgan
 *M3/4
-*MM60
 *clefF4
 *clefG2
 *k[f#]
-.
 2.b
 2.d
 2B;
 2C;
-2CC;
 2D;
-2DD
-2DD;
-2GG
 2GG;
 2a
 2a;
@@ -59,7 +21,6 @@
 2g
 2g;
 4.BB
-4.GG
 4.a
 4.b
 4.dd
@@ -69,11 +30,8 @@
 4B
 4BB
 4C
-4CC
 4D
-4DD
 4E
-4EE
 4E]
 4F#
 4FF#
@@ -95,12 +53,9 @@
 8B
 8BB
 8C
-8CC
 8D
-8DD
 8E
 8E]
-8FF#
 8GG
 8a
 8c
@@ -111,53 +66,7 @@
 8f#]
 8g
 8g]
-=
-=1
-=10
-=11
-=12
-=13
-=14
-=15
-=16
-=17
-=18
-=19
-=2
-=20
-=21
-=3
-=4
-=5
-=6
-=7
-=8
-=9
-=:|!
-==
-I
-I;
-IV
-IV7d
-IV;
-IVb
-IVb[vi]
-Ib
-V
-V7
-V7/IV
-V7c
-V;
-Vb
 [4E
 [4G
 [4f#
 [4g
-ii
-ii7b
-iib
-iiib[Ic]
-vi
-vi7b
-viio7d
-viiob

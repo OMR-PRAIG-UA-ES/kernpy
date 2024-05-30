@@ -522,57 +522,20 @@ class ImporterTestCase(unittest.TestCase):
         self.assertEqual(len(expected_tokens), len(encodings))
         self.assertListEqual(expected_tokens, encodings)
 
-    # TODO David -> JCerveto: ¿para qué es clear? Lo comento.
-    # TODO: Implementar clear en el Importer
-    # Había un bug en el que cada vez que se importaba una partitura en el mismo objeto HumdrumImporter se \
-    # acumulaban los datos de las partituras anteriores.
-    # HumdrumImporter.clear() se llamaba antes de cada importación para limpiar los datos anteriores.
-    # Hay que ver si hay que implementar algo similar en el Importer nuevo.
-    #
-    # def test_clear(self):
-    #     # Arrange
-    #     input_kern_file = 'resource_dir/legacy/chor001.krn'
-    #     importer = Importer()
-    #     document = importer.import_file(input_kern_file)
-    #     init_spines = len(document.get_spine_count())
-    #
-    #     # Act
-    #     importer.clear()
-    #     final_spines = len(importer.spines)
-    #
-    #     # Assert
-    #     self.assertNotEqual(init_spines, final_spines)
-    #     self.assertEqual(0, final_spines)
-    #
-    # def test_clear_doImportFile(self):
-    #     # Arrange
-    #     input_kern_file = 'resource_dir/legacy/chor001.krn'
-    #     importer = HumdrumImporter()
-    #     importer.doImportFile(input_kern_file)
-    #     init_spines = len(importer.spines)
-    #
-    #     # Act
-    #     importer.clear()
-    #     importer.doImportFile(input_kern_file)
-    #     final_spines = len(importer.spines)
-    #
-    #     # Assert
-    #     self.assertEqual(init_spines, final_spines)
-    #
-    # def test_clear_doImportString(self):
-    #     # Arrange
-    #     input_kern = "**kern\n4c\n4d\n4e\n4f\n*-"
-    #     importer = HumdrumImporter()
-    #     importer.doImportString(input_kern)
-    #     init_spines = len(importer.spines)
-    #
-    #     # Act
-    #     importer.clear()
-    #     importer.doImportString(input_kern)
-    #     final_spines = len(importer.spines)
-    #
-    #     # Assert
-    #     self.assertEqual(init_spines, final_spines)
+
+    @unittest.skip("TODO: Instrument is not a valid category yet")
+    def test_document_get_voices(self):
+        input_kern_file = 'resource_dir/legacy/chor048.krn'
+        expected_voices = ['!bass', '!tenor', '!alto', '!soprno']
+        expected_voices_cleaned = ['bass', 'tenor', 'alto', 'soprno']
+
+        importer = Importer()
+        document = importer.import_file(input_kern_file)
+        voices = document.get_voices()
+        voices_cleaned = document.get_voices(clean=True)
+
+        self.assertListEqual(expected_voices, voices)
+        self.assertListEqual(expected_voices_cleaned, voices_cleaned)
 
     @unittest.skip
     def test_voices_range(self):
