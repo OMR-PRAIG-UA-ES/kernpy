@@ -132,11 +132,47 @@ class TestTranscription(unittest.TestCase):
         with self.assertRaises(ValueError):
             pitch5 = exporter.export_pitch(transposer.AgnosticPitch('zzz', -1))
 
-    @unittest.skip("Not working yet")
     def test_transposer_humdrum_pitch_importer(self):
         importer = transposer.HumdrumPitchImporter()
         pitch = importer.import_pitch('c')
         self.assertEqual('C', pitch.name)
+        self.assertEqual(4, pitch.octave)
+
+        pitch = importer.import_pitch('C')
+        self.assertEqual('C', pitch.name)
+        self.assertEqual(3, pitch.octave)
+
+        pitch = importer.import_pitch('cccc')
+        self.assertEqual('C', pitch.name)
+        self.assertEqual(7, pitch.octave)
+
+        pitch = importer.import_pitch('CCCC')
+        self.assertEqual('C', pitch.name)
+        self.assertEqual(0, pitch.octave)
+
+        pitch = importer.import_pitch('c#')
+        self.assertEqual('C+', pitch.name)
+        self.assertEqual(4, pitch.octave)
+
+        pitch = importer.import_pitch('c###')
+        self.assertEqual('C+++', pitch.name)
+        self.assertEqual(4, pitch.octave)
+
+        pitch = importer.import_pitch('c-')
+        self.assertEqual('C-', pitch.name)
+        self.assertEqual(4, pitch.octave)
+
+        pitch = importer.import_pitch('c---')
+        self.assertEqual('C---', pitch.name)
+        self.assertEqual(4, pitch.octave)
+
+        pitch = importer.import_pitch('b')
+        self.assertEqual('B', pitch.name)
+        self.assertEqual(4, pitch.octave)
+
+        pitch = importer.import_pitch('bb--')
+        self.assertEqual('B--', pitch.name)
+        self.assertEqual(5, pitch.octave)
 
     def test_transposer_humdrum_pitch_exporter(self):
         exporter = transposer.HumdrumPitchExporter()
@@ -173,11 +209,15 @@ class TestTranscription(unittest.TestCase):
 
         exporter = transposer.HumdrumPitchExporter()
         pitch = transposer.AgnosticPitch('c---', 4)
-        self.assertEqual('cbbb', exporter.export_pitch(pitch))
+        self.assertEqual('c---', exporter.export_pitch(pitch))
 
         exporter = transposer.HumdrumPitchExporter()
         pitch = transposer.AgnosticPitch('c-', 6)
-        self.assertEqual('cccb', exporter.export_pitch(pitch))
+        self.assertEqual('ccc-', exporter.export_pitch(pitch))
+
+        exporter = transposer.HumdrumPitchExporter()
+        pitch = transposer.AgnosticPitch('c---', 6)
+        self.assertEqual('ccc---', exporter.export_pitch(pitch))
 
     def test_transposer_get_chroma(self):
         pitch = transposer.AgnosticPitch('d', 4)

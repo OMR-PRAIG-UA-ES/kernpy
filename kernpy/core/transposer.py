@@ -219,23 +219,23 @@ class HumdrumPitchImporter(PitchImporter):
         super().__init__()
 
     def import_pitch(self, encoding: str) -> AgnosticPitch:
-        self.octave, self.name = self._parse_pitch(encoding)
+        self.name, self.octave = self._parse_pitch(encoding)
         return AgnosticPitch(self.name, self.octave)
 
-    def _parse_pitch(self, encoding: str):
-        if encoding.islower():
+    def _parse_pitch(self, encoding: str) -> tuple:
+        accidentals = ''.join([c for c in encoding if c in ['#', '-']])
+        accidentals = accidentals.replace('#', '+')
+        encoding = encoding.replace('#', '').replace('-', '')
+        pitch = encoding[0].lower()
+        octave = None
+        if encoding[0].islower():
             min_octave = HumdrumPitchImporter.C4_OCATAVE
             octave = min_octave + (len(encoding) - 1)
-            pitch = encoding[0].lower()
-            return pitch, octave
-
-        if encoding.isupper():
+        elif encoding[0].isupper():
             max_octave = HumdrumPitchImporter.C3_OCATAVE
             octave = max_octave - (len(encoding) - 1)
-            pitch = encoding[0].lower()
-            return pitch, octave
-
-        raise ValueError(f'Invalid name: name {self.encoding} is not a valid name representation.')
+        name = f"{pitch}{accidentals}"
+        return name, octave
 
 
 class AmericanPitchImporter(PitchImporter):
@@ -243,14 +243,14 @@ class AmericanPitchImporter(PitchImporter):
         super().__init__()
 
     def import_pitch(self, encoding: str) -> AgnosticPitch:
-        self.octave, self.name = self._parse_pitch(encoding)
+        self.name, self.octave = self._parse_pitch(encoding)
         return AgnosticPitch(self.name, self.octave)
 
     def _parse_pitch(self, encoding: str):
         octave = int(''.join([n for n in encoding if n.isnumeric()]))
         chroma = ''.join([c.lower() for c in encoding if c.isalpha() or c in ['-', '+', '#', 'b']])
 
-        return octave, chroma
+        return chroma, octave
 
 
 class PitchImporterFactory:
@@ -291,7 +291,7 @@ class HumdrumPitchExporter(PitchExporter):
 
     def export_pitch(self, pitch: AgnosticPitch) -> str:
         accidentals = ''.join([c for c in pitch.name if c in ['-', '+']])
-        accidentals = accidentals.replace('+', '#').replace('-', 'b')
+        accidentals = accidentals.replace('+', '#')
         accidentals_output = len(accidentals) * accidentals[0] if len(accidentals) > 0 else ''
         pitch.name = pitch.name.replace('+', '').replace('-', '')
 
