@@ -178,6 +178,43 @@ class PitchImporter(ABC):
         pass
 
 class HumdrumPitchImporter(PitchImporter):
+    """
+    Represents the pitch in the Humdrum Kern format.
+
+    The name is represented using the International Standard Organization (ISO) name notation.
+    The first line below the staff is the C4 in G clef. The above C is C5, the below C is C3, etc.
+
+    The Humdrum Kern format uses the following name representation:
+    'c' = C4
+    'cc' = C5
+    'ccc' = C6
+    'cccc' = C7
+
+    'C' = C3
+    'CC' = C2
+    'CCC' = C1
+
+    This class do not limit the name ranges.
+
+    In the following example, the name is represented by the letter 'c'. The name of 'c' is C4, 'cc' is C5, 'ccc' is C6.
+    ```
+    **kern
+    *clefG2
+    2c          // C4
+    2cc         // C5
+    2ccc        // C6
+    2C          // C3
+    2CC         // C2
+    2CCC        // C1
+    *-
+    ```
+    """
+    C4_PITCH_LOWERCASE = 'c'
+    C4_OCATAVE = 4
+    C3_PITCH_UPPERCASE = 'C'
+    C3_OCATAVE = 3
+    VALID_PITCHES = 'abcdefg' + 'ABCDEFG'
+
     def __init__(self):
         super().__init__()
 
@@ -185,8 +222,20 @@ class HumdrumPitchImporter(PitchImporter):
         self.octave, self.name = self._parse_pitch(encoding)
         return AgnosticPitch(self.name, self.octave)
 
-    def _parse_pitch(self, pitch: str):
-        raise NotImplementedError
+    def _parse_pitch(self, encoding: str):
+        if encoding.islower():
+            min_octave = HumdrumPitchImporter.C4_OCATAVE
+            octave = min_octave + (len(encoding) - 1)
+            pitch = encoding[0].lower()
+            return pitch, octave
+
+        if encoding.isupper():
+            max_octave = HumdrumPitchImporter.C3_OCATAVE
+            octave = max_octave - (len(encoding) - 1)
+            pitch = encoding[0].lower()
+            return pitch, octave
+
+        raise ValueError(f'Invalid name: name {self.encoding} is not a valid name representation.')
 
 
 class AmericanPitchImporter(PitchImporter):
@@ -232,11 +281,19 @@ class PitchExporter(ABC):
 
 
 class HumdrumPitchExporter(PitchExporter):
+    C4_PITCH_LOWERCASE = 'c'
+    C4_OCATAVE = 4
+    C3_PITCH_UPPERCASE = 'C'
+    C3_OCATAVE = 3
+
     def __init__(self):
         super().__init__()
 
     def export_pitch(self, pitch: AgnosticPitch) -> str:
-        raise NotImplementedError
+        if pitch.octave >= HumdrumPitchExporter.C4_OCATAVE:
+            return f"{pitch.name * (pitch.octave - HumdrumPitchExporter.C4_OCATAVE + 1)}"
+        else:
+            return f"{pitch.name * (HumdrumPitchExporter.C3_OCATAVE - pitch.octave + 1)}"
 
 
 class AmericanPitchExporter(PitchExporter):

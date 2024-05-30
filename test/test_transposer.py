@@ -132,6 +132,34 @@ class TestTranscription(unittest.TestCase):
         with self.assertRaises(ValueError):
             pitch5 = exporter.export_pitch(transposer.AgnosticPitch('zzz', -1))
 
+    @unittest.skip("Not working yet")
+    def test_transposer_humdrum_pitch_importer(self):
+        importer = transposer.HumdrumPitchImporter()
+        pitch = importer.import_pitch('c')
+        self.assertEqual('C', pitch.name)
+
+    @unittest.skip("Not working yet")
+    def test_transposer_humdrum_pitch_exporter(self):
+        exporter = transposer.HumdrumPitchExporter()
+        pitch = transposer.AgnosticPitch('c', 4)
+        self.assertEqual(exporter.export_pitch(pitch), 'c')
+
+        exporter = transposer.HumdrumPitchExporter()
+        pitch = transposer.AgnosticPitch('c', 3)
+        self.assertEqual(exporter.export_pitch(pitch), 'c')
+
+        exporter = transposer.HumdrumPitchExporter()
+        pitch = transposer.AgnosticPitch('c', 7)
+        self.assertEqual(exporter.export_pitch(pitch), 'cccc')
+
+        exporter = transposer.HumdrumPitchExporter()
+        pitch = transposer.AgnosticPitch('c', 2)
+        self.assertEqual(exporter.export_pitch(pitch), 'CCCCC')
+
+        ...# TODO: Accidental tests
+
+
+
     def test_transposer_get_chroma(self):
         pitch = transposer.AgnosticPitch('d', 4)
         self.assertEqual(168, pitch.get_chroma())
