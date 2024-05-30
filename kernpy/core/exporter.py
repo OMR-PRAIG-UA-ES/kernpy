@@ -92,45 +92,6 @@ def empty_row(row):
 
 
 class Exporter:
-    def export_string_v2(self, document: Document, options: ExportOptions) -> string:
-        def get_stages_boundaries(document: Document, options: ExportOptions) -> (int, int):
-            from_stage = 0
-            to_stage = len(document.tree.stages)  # ? len(document.tree.stages) -1 ??
-
-            if not options.from_measure:
-                ...
-            if not options.to_measure:
-                ...
-
-            return from_stage, to_stage
-
-        Exporter.export_options_validator(document, options)
-
-        # Get the stages in all cases
-        from_stage, to_stage = get_stages_boundaries(document, options)
-
-        # Get spines simplified operations in all cases
-        spines_operations = document.get_spines_operations(from_stage, to_stage)
-
-        # Run over all stages
-        rows = []
-        for stage in range(from_stage, to_stage + 1):
-            row = []
-
-            for node in document.tree.stages[stage]:
-                header_type = self.compute_header_type(node)
-
-                self.append_row(header_type, node, options, row)
-
-            if len(row) > 0:
-                rows.append(row)
-
-        result = ""
-        for row in rows:
-            if not empty_row(row):
-                result += '\t'.join(row) + '\n'
-        return result
-
     def export_string(self, document: Document, options: ExportOptions) -> string:
         Exporter.export_options_validator(document, options)
 
@@ -247,6 +208,21 @@ class Exporter:
         if header_type and header_type in options.spine_types and not node.token.hidden and \
                 (not options.token_categories or node.token.category in options.token_categories):
             row.append(self.export_token(node.token, options))
+
+    def get_spine_types(self, document: Document, spines_types: list = None):
+        options = ExportOptions(spine_types=spines_types, token_categories=[TokenCategory.STRUCTURAL])
+        rows = []
+        for stage in range(len(document.tree.stages)):
+            row = []
+            for node in document.tree.stages[stage]:
+                header_type = self.compute_header_type(node)
+                self.append_row(header_type, node, options, row)
+
+            if len(row) > 0:
+                rows.append(row)
+
+        only_spines_types = rows[0]     # **kern, **mens, etc... are always in the first row
+        return only_spines_types
 
     @staticmethod
     def export_options_validator(document: Document, options: ExportOptions) -> None:

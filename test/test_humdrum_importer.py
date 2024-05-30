@@ -678,6 +678,21 @@ class ImporterTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(expected_sub_kerns_size, len(all_sub_kerns))
 
+    def test_export_spines(self):
+        # Arrange
+        importer = Importer()
+        document = importer.import_file('resource_dir/legacy/chor048.krn')
+        expected_spines = ['**kern', '**kern', '**kern', '**kern']
+
+
+        # Act
+        exporter = Exporter()
+        real = exporter.get_spine_types(document, spines_types=['**kern'])
+        print(real)
+
+        # Assert
+        self.assertListEqual(expected_spines, real)
+
 
 
 
