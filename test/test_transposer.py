@@ -138,27 +138,46 @@ class TestTranscription(unittest.TestCase):
         pitch = importer.import_pitch('c')
         self.assertEqual('C', pitch.name)
 
-    @unittest.skip("Not working yet")
     def test_transposer_humdrum_pitch_exporter(self):
         exporter = transposer.HumdrumPitchExporter()
         pitch = transposer.AgnosticPitch('c', 4)
-        self.assertEqual(exporter.export_pitch(pitch), 'c')
+        self.assertEqual('c', exporter.export_pitch(pitch))
 
         exporter = transposer.HumdrumPitchExporter()
         pitch = transposer.AgnosticPitch('c', 3)
-        self.assertEqual(exporter.export_pitch(pitch), 'c')
+        self.assertEqual('C', exporter.export_pitch(pitch))
 
         exporter = transposer.HumdrumPitchExporter()
         pitch = transposer.AgnosticPitch('c', 7)
-        self.assertEqual(exporter.export_pitch(pitch), 'cccc')
+        self.assertEqual('cccc', exporter.export_pitch(pitch))
 
         exporter = transposer.HumdrumPitchExporter()
         pitch = transposer.AgnosticPitch('c', 2)
-        self.assertEqual(exporter.export_pitch(pitch), 'CCCCC')
+        self.assertEqual('CC', exporter.export_pitch(pitch))
 
-        ...# TODO: Accidental tests
+        exporter = transposer.HumdrumPitchExporter()
+        pitch = transposer.AgnosticPitch('c', 0)
+        self.assertEqual('CCCC', exporter.export_pitch(pitch))
 
+        exporter = transposer.HumdrumPitchExporter()
+        pitch = transposer.AgnosticPitch('c+', 4)
+        self.assertEqual('c#', exporter.export_pitch(pitch))
 
+        exporter = transposer.HumdrumPitchExporter()
+        pitch = transposer.AgnosticPitch('c+', 6)
+        self.assertEqual('ccc#', exporter.export_pitch(pitch))
+
+        exporter = transposer.HumdrumPitchExporter()
+        pitch = transposer.AgnosticPitch('c++', 4)
+        self.assertEqual('c##', exporter.export_pitch(pitch))
+
+        exporter = transposer.HumdrumPitchExporter()
+        pitch = transposer.AgnosticPitch('c---', 4)
+        self.assertEqual('cbbb', exporter.export_pitch(pitch))
+
+        exporter = transposer.HumdrumPitchExporter()
+        pitch = transposer.AgnosticPitch('c-', 6)
+        self.assertEqual('cccb', exporter.export_pitch(pitch))
 
     def test_transposer_get_chroma(self):
         pitch = transposer.AgnosticPitch('d', 4)

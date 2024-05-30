@@ -290,10 +290,15 @@ class HumdrumPitchExporter(PitchExporter):
         super().__init__()
 
     def export_pitch(self, pitch: AgnosticPitch) -> str:
+        accidentals = ''.join([c for c in pitch.name if c in ['-', '+']])
+        accidentals = accidentals.replace('+', '#').replace('-', 'b')
+        accidentals_output = len(accidentals) * accidentals[0] if len(accidentals) > 0 else ''
+        pitch.name = pitch.name.replace('+', '').replace('-', '')
+
         if pitch.octave >= HumdrumPitchExporter.C4_OCATAVE:
-            return f"{pitch.name * (pitch.octave - HumdrumPitchExporter.C4_OCATAVE + 1)}"
+            return f"{pitch.name.lower() * (pitch.octave - HumdrumPitchExporter.C4_OCATAVE + 1)}{accidentals_output}"
         else:
-            return f"{pitch.name * (HumdrumPitchExporter.C3_OCATAVE - pitch.octave + 1)}"
+            return f"{pitch.name.upper() * (HumdrumPitchExporter.C3_OCATAVE - pitch.octave + 1)}{accidentals_output}"
 
 
 class AmericanPitchExporter(PitchExporter):
