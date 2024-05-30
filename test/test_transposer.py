@@ -167,6 +167,24 @@ class TestTranscription(unittest.TestCase):
         pitch2 = transposer.AgnosticPitch('d+', 4)
         self.assertEqual(1, transposer.AgnosticPitch.get_chroma_from_interval(pitch1, pitch2))
 
+    def test_transposer_public_transpose_american(self):
+        content = transposer.transpose('G4', transposer.IntervalsByName['m3'], format='american')
+        self.assertEqual('Bb4', content)
+
+        content = transposer.transpose('G4', transposer.IntervalsByName['M3'], format='american')
+        self.assertEqual('B4', content)
+
+        content = transposer.transpose('C1', transposer.IntervalsByName['P4'], format='american')
+        self.assertEqual('F1', content)
+
+        content = transposer.transpose('A3', transposer.IntervalsByName['m2'], format='american')
+        self.assertEqual('Bb3', content)
+
+        content = transposer.transpose('C3', transposer.IntervalsByName['d4'], format='american')
+        self.assertEqual('Fb3', content)
+
+        content = transposer.transpose('C3', transposer.IntervalsByName['P4'], format='american')
+        self.assertEqual('F3', content)
 
 
 
