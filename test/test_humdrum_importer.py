@@ -682,18 +682,20 @@ class ImporterTestCase(unittest.TestCase):
         # Arrange
         importer = Importer()
         document = importer.import_file('resource_dir/legacy/chor048.krn')
-        expected_spines = ['**kern', '**kern', '**kern', '**kern']
+        expected_kern_spines = ['**kern', '**kern', '**kern', '**kern']
+        expected_all_spines = ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
 
 
         # Act
         exporter = Exporter()
-        real = exporter.get_spine_types(document, spines_types=['**kern'])
-        print(real)
+        real_1 = exporter.get_spine_types(document, spine_types=['**kern'])
+        real_2 = exporter.get_spine_types(document, spine_types=['**kern', '**root', '**harm'])
+        real_3 = exporter.get_spine_types(document, spine_types=None)
 
         # Assert
-        self.assertListEqual(expected_spines, real)
-
-
+        self.assertListEqual(expected_kern_spines, real_1)
+        self.assertListEqual(expected_all_spines, real_2)
+        self.assertListEqual(expected_all_spines, real_3)
 
 
 

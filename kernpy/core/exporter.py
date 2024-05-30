@@ -76,7 +76,7 @@ class ExportOptions:
             >>> exported_data = exporter.export_string(document, options)
 
         """
-        self.spine_types = spine_types or ['**kern']
+        self.spine_types = spine_types
         self.from_measure = from_measure
         self.to_measure = to_measure
         self.token_categories = token_categories or []
@@ -204,13 +204,39 @@ class Exporter:
         else:
             return token.encoding
 
-    def append_row(self, header_type, node, options, row):
-        if header_type and header_type in options.spine_types and not node.token.hidden and \
-                (not options.token_categories or node.token.category in options.token_categories):
+    def append_row(self, header_type, node, options: ExportOptions, row: list):
+        if (header_type
+                and (not options.spine_types or header_type in options.spine_types)  # if the spine_type is None, compute all the spines
+                and not node.token.hidden
+                and (not options.token_categories or node.token.category in options.token_categories)):
             row.append(self.export_token(node.token, options))
 
-    def get_spine_types(self, document: Document, spines_types: list = None):
-        options = ExportOptions(spine_types=spines_types, token_categories=[TokenCategory.STRUCTURAL])
+    def get_spine_types(self, document: Document, spine_types: list = None):
+        """
+        Get the spine types from the document.
+
+        Args:
+            document (Document): The document with the spines.
+            spine_types (list): The spine types to export. If None, all the spine types will be exported.
+
+        Returns: A list with the spine types.
+
+        Examples:
+            >>> exporter = Exporter()
+            >>> exporter.get_spine_types(document)
+            ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
+            >>> exporter.get_spine_types(document, None)
+            ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
+            >>> exporter.get_spine_types(document, ['**kern'])
+            ['**kern', '**kern', '**kern', '**kern']
+            >>> exporter.get_spine_types(document, ['**kern', '**root'])
+            ['**kern', '**kern', '**kern', '**kern', '**root']
+            >>> exporter.get_spine_types(document, ['**kern', '**root', '**harm'])
+            ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
+            >>> exporter.get_spine_types(document, [])
+            []
+        """
+        options = ExportOptions(spine_types=spine_types, token_categories=[TokenCategory.STRUCTURAL])
         rows = []
         for stage in range(len(document.tree.stages)):
             row = []
@@ -221,8 +247,8 @@ class Exporter:
             if len(row) > 0:
                 rows.append(row)
 
-        only_spines_types = rows[0]     # **kern, **mens, etc... are always in the first row
-        return only_spines_types
+        only_spine_types = rows[0]     # **kern, **mens, etc... are always in the first row
+        return only_spine_types
 
     @staticmethod
     def export_options_validator(document: Document, options: ExportOptions) -> None:
