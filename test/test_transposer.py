@@ -148,21 +148,19 @@ class TestTranscription(unittest.TestCase):
     def test_transposer_agnostic_pitch_transpose(self):
         pitch = transposer.AgnosticPitch('d', 4)
         pitch = transposer.AgnosticPitch.to_transposed(pitch, 1)
-        self.assertEqual(168+1, pitch.get_chroma())
-        exp = transposer.AmericanPitchExporter()
-        value = exp.export_pitch(pitch)
+        self.assertEqual(169, pitch.get_chroma())
 
         pitch = transposer.AgnosticPitch('f+', 4)
         pitch = transposer.AgnosticPitch.to_transposed(pitch, 24)
-        self.assertEqual(180+24, pitch.get_chroma())
+        self.assertEqual(204, pitch.get_chroma())
 
         pitch = transposer.AgnosticPitch('b', 60)
         pitch = transposer.AgnosticPitch.to_transposed(pitch, -2400)
-        self.assertEqual(2437-2400, pitch.get_chroma())
+        self.assertEqual(37, pitch.get_chroma())
 
         pitch = transposer.AgnosticPitch('c', 7)
         pitch = transposer.AgnosticPitch.to_transposed(pitch, 0)
-        self.assertEqual(282+0, pitch.get_chroma())
+        self.assertEqual(282, pitch.get_chroma())
 
     def test_transposer_agnostic_pitch_get_intervals(self):
         pitch1 = transposer.AgnosticPitch('d', 4)
