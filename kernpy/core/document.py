@@ -325,8 +325,22 @@ class Document:
             voices = [voice[1:] for voice in voices]
         return voices
 
+    def clone(self):
+        """
+        Create a deep copy of the Document instance.
+
+        Returns: A new instance of Document with the tree copied.
+
+        """
+        result = Document(copy(self.tree))
+        result.measure_start_tree_stages = copy(self.measure_start_tree_stages)
+        result.page_bounding_boxes = copy(self.page_bounding_boxes)
+        result.header_stage = self.header_stage
+        return result
+
     @classmethod
     def to_concat(cls, content_a: 'Document', content_b: 'Document') -> str:
+        new_doc = content_a.clone()
         raise NotImplementedError
 
     def __iter__(self):
