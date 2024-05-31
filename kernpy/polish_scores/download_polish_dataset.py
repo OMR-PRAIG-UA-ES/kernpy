@@ -245,7 +245,7 @@ def remove_empty_dirs(directory):
             if not os.listdir(full_dir):
                 os.rmdir(full_dir)
 
-def main(input_directory, output_directory, remove_empty_directories: bool = True, kern_spines_filter: int = None) -> None:
+def main(input_directory, output_directory, remove_empty_directories: bool = True, kern_spines_filter: int = 2) -> None:
     """
     Process the files in the input_directory and save the results in the output_directory.
     http requests are made to download the images.
