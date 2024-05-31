@@ -53,7 +53,8 @@ __all__ = [
     'export',
     'store',
     'store_graph',
-    'transposer'
+    'transposer',
+    'get_spine_types',
 ]
 
 

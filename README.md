@@ -22,6 +22,14 @@ document = kp.read("path/to/file.krn")
 
 # Handle the document if needed
 print(document.tree)
+kp.get_spine_types(document)
+# ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
+
+kp.get_spine_types(document, None)
+# ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
+
+kp.get_spine_types(document, ['**kern'])
+# ['**kern', '**kern', '**kern', '**kern']
 
 # Create the options to export the document
 default_options = kp.ExportOptions()

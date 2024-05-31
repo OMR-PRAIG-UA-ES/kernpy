@@ -84,3 +84,31 @@ def store_graph(document: Document, path) -> None:
     graph_exporter = GraphvizExporter()
     graph_exporter.export_to_dot(document.tree, path)
 
+def get_spine_types(document: Document, spine_types: list = None) -> list:
+    """
+    Get the spines of a Document object.
+
+    Args:
+        document(Document): Document object to get spines from
+        spine_types(list): List of spine types to get. If None, all spines are returned.
+
+    Returns: List of spines
+
+    Examples:
+        >>> import kernpy as kp
+        >>> document = kp.read('path/to/file.krn')
+        >>> kp.get_spine_types(document)
+        ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
+        >>> kp.get_spine_types(document, None)
+        ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
+        >>> kp.get_spine_types(document, ['**kern'])
+        ['**kern', '**kern', '**kern', '**kern']
+        >>> kp.get_spine_types(document, ['**kern', '**root'])
+        ['**kern', '**kern', '**kern', '**kern', '**root']
+        >>> kp.get_spine_types(document, ['**kern', '**root', '**harm'])
+        ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
+        >>> kp.get_spine_types(document, [])
+        []
+    """
+    exporter = Exporter()
+    return exporter.get_spine_types(document)
