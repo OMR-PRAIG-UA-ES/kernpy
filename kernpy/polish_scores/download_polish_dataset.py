@@ -114,6 +114,7 @@ def is_valid_document(document, kern_spines_filter) -> bool:
 
     exporter = Exporter()
     kern_types = exporter.get_spine_types(document, spine_types=['**kern'])
+    print("DEBUG: ", kern_types, 'real=', len(kern_types), 'expected=', kern_spines_filter)
     return len(kern_types) == int(kern_spines_filter)
 
 def convert_and_download_file(input_kern, _output_path, log_filename, kern_spines_filter: int = None):
