@@ -64,6 +64,11 @@ for measure in doc:
     options = kp.ExportOptions(from_measure=measure, to_measure=measure)
     content = kp.export(doc, options)
     ...
+
+# Concat two documents
+score_a = '**kern\n*clefG2\n=1\n4c\n4d\n4e\n4f\n*-\n'
+score_b = '**kern\n*clefG2\n=1\n4a\n4c\n4d\n4c\n*-\n'
+concatenated = kp.concat(score_a, score_b)
 ```
 
 

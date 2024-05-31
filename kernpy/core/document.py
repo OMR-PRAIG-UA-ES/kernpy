@@ -325,6 +325,10 @@ class Document:
             voices = [voice[1:] for voice in voices]
         return voices
 
+    @classmethod
+    def to_concat(cls, content_a: 'Document', content_b: 'Document') -> str:
+        raise NotImplementedError
+
     def __iter__(self):
         """
         Get the indexes to export all the document.

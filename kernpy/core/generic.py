@@ -112,3 +112,28 @@ def get_spine_types(document: Document, spine_types: list = None) -> list:
     """
     exporter = Exporter()
     return exporter.get_spine_types(document)
+
+def concat(content_a: str, content_b: str, options: ExportOptions = None) -> str:
+    """
+    Concatenate two **kern strings.
+
+    Args:
+        content_a (str): First **kern string
+        content_b (str): Second **kern string
+        options (ExportOptions): Export options for the concatenated string
+
+    Returns: Concatenated **kern string
+
+    Examples:
+        >>> import kernpy as kp
+        >>> content_a = '**kern\n4e\n4f\n4g\n*-\n'
+        >>> content_b = '**kern\n4a\n4b\n4c\n*-\n'
+        >>> kp.concat(content_a, content_b)
+        '**kern\n4e\n4f\n4g\n*-\n**kern\n4a\n4b\n4c\n*-'
+    """
+    importer = Importer()
+    document_a = importer.import_string(content_a)
+    document_b = importer.import_string(content_b)
+    document_concat = Document.to_concat(document_a, document_b)
+    exporter = Exporter()
+    return exporter.export_string(document_a, ExportOptions())
