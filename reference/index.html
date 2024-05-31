@@ -414,15 +414,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#kernpy.core.Document.get_kern_types" class="md-nav__link">
-    <span class="md-ellipsis">
-      get_kern_types
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#kernpy.core.Document.get_metacomments" class="md-nav__link">
     <span class="md-ellipsis">
       get_metacomments
@@ -444,6 +435,15 @@
   <a href="#kernpy.core.Document.get_unique_tokens" class="md-nav__link">
     <span class="md-ellipsis">
       get_unique_tokens
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Document.get_voices" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_voices
     </span>
   </a>
   
@@ -1265,15 +1265,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#kernpy.core.Document.get_kern_types" class="md-nav__link">
-    <span class="md-ellipsis">
-      get_kern_types
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#kernpy.core.Document.get_metacomments" class="md-nav__link">
     <span class="md-ellipsis">
       get_metacomments
@@ -1295,6 +1286,15 @@
   <a href="#kernpy.core.Document.get_unique_tokens" class="md-nav__link">
     <span class="md-ellipsis">
       get_unique_tokens
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Document.get_voices" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_voices
     </span>
   </a>
   
@@ -2302,59 +2302,6 @@ create_fragments_from_directory('/my/path/to/input_dir/', '/to/my/output_dir/',
 <div class="doc doc-object doc-function">
 
 
-<h3 id="kernpy.core.Document.get_kern_types" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">get_kern_types</span><span class="p">(</span><span class="n">spines_types</span><span class="p">)</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-      <p>Get the kern types of the spines.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td><code>spines_types</code></td>
-            <td>
-                  <code>list</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>A list of spine types.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-      <p>Returns: A list of kern types.</p>
-
-
-<p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="o">.</span><span class="n">get_kern_types</span><span class="p">([</span><span class="s1">&#39;**kern&#39;</span><span class="p">,</span> <span class="s1">&#39;**dynam&#39;</span><span class="p">])</span>
-<span class="go">[&#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;, &#39;**dynam&#39;]</span>
-</code></pre></div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
 <h3 id="kernpy.core.Document.get_metacomments" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">get_metacomments</span><span class="p">(</span><span class="n">KeyComment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
@@ -2536,6 +2483,36 @@ clean_comment = comment.replace(f&quot;!!!{KeyComment}: &quot;, &quot;&quot;)
           </tr>
       </tbody>
     </table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="kernpy.core.Document.get_voices" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_voices</span><span class="p">(</span><span class="n">clean</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Get the voices of the document.</p>
+<p>Args
+    clean: Remove the first '!' from the voice name.</p>
+<p>Returns: A list of voices.</p>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="o">.</span><span class="n">get_voices</span><span class="p">()</span>
+<span class="go">[&#39;!sax&#39;, &#39;!piano&#39;, &#39;!bass&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="o">.</span><span class="n">get_voices</span><span class="p">(</span><span class="n">clean</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">[&#39;sax&#39;, &#39;piano&#39;, &#39;bass&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="o">.</span><span class="n">get_voices</span><span class="p">(</span><span class="n">clean</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">[&#39;!sax&#39;, &#39;!piano&#39;, &#39;!bass&#39;]</span>
+</code></pre></div>
 
     </div>
 
@@ -5808,7 +5785,7 @@ If the offset is 4, and measure_length is 4, the fragments will be: 1-4, 5-8, 9-
 
 
 <h2 id="kernpy.polish_scores.main" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">main</span><span class="p">(</span><span class="n">input_directory</span><span class="p">,</span> <span class="n">output_directory</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">main</span><span class="p">(</span><span class="n">input_directory</span><span class="p">,</span> <span class="n">output_directory</span><span class="p">,</span> <span class="n">remove_empty_directories</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kern_spines_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 </h2>
 
@@ -5857,16 +5834,31 @@ http requests are made to download the images.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>log_filename</code></td>
+            <td><code>remove_empty_directories</code></td>
             <td>
+                  <code>bool</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>filename where the log is saved</p>
+                <p>remove empty directories when finish processing the files</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>kern_spines_filter</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Only process files with the number of **kern spines specified. Use it to export 2-voice files, for example.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
             </td>
           </tr>
       </tbody>
@@ -5898,8 +5890,13 @@ http requests are made to download the images.</p>
 
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">main</span><span class="p">(</span><span class="s1">&#39;/kern_files&#39;</span><span class="p">,</span> <span class="s1">&#39;/output_ekern&#39;</span><span class="p">)</span>
+<span class="go">None</span>
 </code></pre></div>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">main</span><span class="p">(</span><span class="s1">&#39;/kern_files&#39;</span><span class="p">,</span> <span class="s1">&#39;/output_ekern&#39;</span><span class="p">,</span> <span class="s1">&#39;/output_ekern/polish_index.json&#39;</span><span class="p">)</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">main</span><span class="p">(</span><span class="s1">&#39;/kern_files&#39;</span><span class="p">,</span> <span class="s1">&#39;/output_ekern&#39;</span><span class="p">,</span> <span class="n">remove_empty_directories</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">None</span>
+</code></pre></div>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">main</span><span class="p">(</span><span class="s1">&#39;/kern_files&#39;</span><span class="p">,</span> <span class="s1">&#39;/output_ekern&#39;</span><span class="p">,</span> <span class="n">kern_spines_filter</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">remove_empty_directories</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">None</span>
 </code></pre></div>
 
     </div>
