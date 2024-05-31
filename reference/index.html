@@ -887,6 +887,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#kernpy.core.concat" class="md-nav__link">
+    <span class="md-ellipsis">
+      concat
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#kernpy.core.ekern_to_krn" class="md-nav__link">
     <span class="md-ellipsis">
       ekern_to_krn
@@ -1741,6 +1750,15 @@
   <a href="#kernpy.core.TokenCategory" class="md-nav__link">
     <span class="md-ellipsis">
       TokenCategory
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kernpy.core.concat" class="md-nav__link">
+    <span class="md-ellipsis">
+      concat
     </span>
   </a>
   
@@ -4843,6 +4861,57 @@ Args:
 
 </div>
 
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="kernpy.core.concat" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">concat</span><span class="p">(</span><span class="n">content_a</span><span class="p">,</span> <span class="n">content_b</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <pre><code>Concatenate two **kern strings.
+
+Args:
+    content_a (str): First **kern string
+    content_b (str): Second **kern string
+    options (ExportOptions): Export options for the concatenated string
+
+Returns: Concatenated **kern string
+
+Examples:
+    &gt;&gt;&gt; import kernpy as kp
+    &gt;&gt;&gt; content_a = '**kern
+</code></pre>
+<p>4e
+4f
+4g
+<em>-
+'
+        &gt;&gt;&gt; content_b = '</em><em>kern
+4a
+4b
+4c
+</em>-
+'
+        &gt;&gt;&gt; kp.concat(content_a, content_b)
+        '<strong>kern
+4e
+4f
+4g
+*-
+</strong>kern
+4a
+4b
+4c
+*-'</p>
+
+    </div>
+
+</div>
 
 <div class="doc doc-object doc-function">
 
