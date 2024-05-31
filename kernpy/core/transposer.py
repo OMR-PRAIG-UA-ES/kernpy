@@ -346,6 +346,26 @@ def transpose(input_encoding: str, interval: int, format: str = NotationEncoding
 
     Returns:
         str: The transposed pitch.
+
+    Examples:
+        >>> transpose('ccc', IntervalsByName['P4'], format='kern')
+        'fff'
+        >>> transpose('ccc', IntervalsByName['P4'], format=NotationEncoding.HUMDRUM.value)
+        'fff'
+        >>> transpose('ccc', IntervalsByName['P4'], format='kern', direction='down')
+        'gg'
+        >>> transpose('ccc', IntervalsByName['P4'], format='kern', direction=Direction.DOWN.value)
+        'gg'
+        >>> transpose('ccc#', IntervalsByName['P4'])
+        'fff#'
+        >>> transpose('G4', IntervalsByName['m3'], format='american')
+        'Bb4'
+        >>> transpose('G4', IntervalsByName['m3'], format=NotationEncoding.AMERICAN.value)
+        'Bb4'
+        >>> transpose('C3', IntervalsByName['P4'], format='american', direction='down')
+        'G2'
+
+
     """
     importer = PitchImporterFactory.create(format)
     pitch: AgnosticPitch = importer.import_pitch(input_encoding)

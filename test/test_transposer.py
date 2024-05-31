@@ -279,10 +279,17 @@ class TestTranscription(unittest.TestCase):
         content = transposer.transpose('b#4', transposer.IntervalsByName['P4'], format='american', direction='down')
         self.assertEqual('Fbb4', content)
 
-
-
         content = transposer.transpose('C3', transposer.IntervalsByName['P4'], format='american', direction='down')
         self.assertEqual('G2', content)
+
+        content = transposer.transpose('ccc', transposer.IntervalsByName['P4'], format=transposer.NotationEncoding.HUMDRUM.value)
+        self.assertEqual('fff', content)
+
+        content = transposer.transpose('ccc#', transposer.IntervalsByName['P4'], format=transposer.NotationEncoding.HUMDRUM.value)
+        self.assertEqual('fff#', content)
+
+        content = transposer.transpose('ccc', transposer.IntervalsByName['P4'], format=transposer.NotationEncoding.HUMDRUM.value, direction='down')
+        self.assertEqual('gg', content)
 
 
 
