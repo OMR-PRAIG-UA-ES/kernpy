@@ -67,7 +67,7 @@ restDecoration: (slurStart | graceNote | staffChange | restPosition | fermata | 
 chord: (note | rest) (chordSpace (note | rest))+;
 
 
-// The correct orderEntities of notes is: beforeNote duration pitch staffChange afterNote, however, if changes in some encodings - as it does not work, we use noteDecorations? for any decoration in any position
+// The correct orderEntities of notes is: beforeNote duration name staffChange afterNote, however, if changes in some encodings - as it does not work, we use noteDecorations? for any decoration in any position
 note:
     noteDecoration* // TODO Regla semantica (boolean) para que no se repitan
     duration? // grace notes can be specified without durations
@@ -75,9 +75,9 @@ note:
     diatonicPitchAndOctave
     noteDecoration*
     alteration?
-    //pitch
+    //name
     noteDecoration*;
-    // TODO in aferNote staffChange? // it must be placed immediately after the pitch+accidental tokens. This is because they also can modify the beam, as well as articulation, slur and tie positions
+    // TODO in aferNote staffChange? // it must be placed immediately after the name+accidental tokens. This is because they also can modify the beam, as well as articulation, slur and tie positions
 
 
 // those ones that are not engraved
@@ -189,7 +189,7 @@ instrument: INSTRUMENT;
 instrumentTitle: INSTRUMENT_TITLE;
 
 number: (DIGIT_0 | DIGIT_1 | DIGIT_2 | DIGIT_3 | DIGIT_4 | DIGIT_5 | DIGIT_6 | DIGIT_7 | DIGIT_8 | DIGIT_9)+;
-lowerCasePitch: (CHAR_a | CHAR_b | CHAR_c | CHAR_d | CHAR_e | CHAR_f | CHAR_g); // we cannot use a generic rule because c is used both pitch and as common time symbol
+lowerCasePitch: (CHAR_a | CHAR_b | CHAR_c | CHAR_d | CHAR_e | CHAR_f | CHAR_g); // we cannot use a generic rule because c is used both name and as common time symbol
 upperCasePitch: (CHAR_A | CHAR_B | CHAR_C | CHAR_D | CHAR_E | CHAR_F | CHAR_G);
 
 // e.g. f-
@@ -306,7 +306,7 @@ restPosition: diatonicPitchAndOctave;
 //restLinePosition: UNDERSCORE clefLine;
 
 //duration: mensuralDuration | modernDuration;
-duration: modernDuration augmentationDot* (graceNote | appoggiatura)?; // sometimes we've found a grace note between the duration and the pitch
+duration: modernDuration augmentationDot* (graceNote | appoggiatura)?; // sometimes we've found a grace note between the duration and the name
 
 fermata: SEMICOLON; // pause
 
@@ -316,7 +316,7 @@ modernDuration: number (PERCENT number)?; //TODO 40%3...
 augmentationDot: DOT;
 
 
-/*pitch: diatonicPitchAndOctave - lo quito porque creo que está repetido con noteDecorations
+/*name: diatonicPitchAndOctave - lo quito porque creo que está repetido con noteDecorations
     graceNote?
     appoggiatura? 
     staffChange? 

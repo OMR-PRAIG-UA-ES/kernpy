@@ -42,12 +42,12 @@ class SubTokenCategory(Enum):
 
 class PitchRest:
     """
-    Represents a pitch or a rest in a note.
+    Represents a name or a rest in a note.
 
-    The pitch is represented using the International Standard Organization (ISO) pitch notation.
+    The name is represented using the International Standard Organization (ISO) name notation.
     The first line below the staff is the C4 in G clef. The above C is C5, the below C is C3, etc.
 
-    The Humdrum Kern format uses the following pitch representation:
+    The Humdrum Kern format uses the following name representation:
     'c' = C4
     'cc' = C5
     'ccc' = C6
@@ -57,12 +57,12 @@ class PitchRest:
     'CC' = C2
     'CCC' = C1
 
-    The rests are represented by the letter 'r'. The rests do not have pitch.
+    The rests are represented by the letter 'r'. The rests do not have name.
 
-    This class do not limit the pitch ranges.
+    This class do not limit the name ranges.
 
 
-    In the following example, the pitch is represented by the letter 'c'. The pitch of 'c' is C4, 'cc' is C5, 'ccc' is C6.
+    In the following example, the name is represented by the letter 'c'. The name of 'c' is C4, 'cc' is C5, 'ccc' is C6.
     ```
     **kern
     *clefG2
@@ -88,7 +88,7 @@ class PitchRest:
         Create a new PitchRest object.
 
         Args:
-            raw_pitch (str): pitch representation in Humdrum Kern format
+            raw_pitch (str): name representation in Humdrum Kern format
 
         Examples:
             >>> pitch_rest = PitchRest('c')
@@ -96,7 +96,7 @@ class PitchRest:
             >>> pitch_rest = PitchRest('DDD')
         """
         if raw_pitch is None or len(raw_pitch) == 0:
-            raise ValueError(f'Empty pitch: pitch can not be None or empty. But {raw_pitch} was provided.')
+            raise ValueError(f'Empty name: name can not be None or empty. But {raw_pitch} was provided.')
 
         self.encoding = raw_pitch
         self.pitch, self.octave = self.__parse_pitch_octave()
@@ -117,14 +117,14 @@ class PitchRest:
             pitch = self.encoding[0].lower()
             return pitch, octave
 
-        raise ValueError(f'Invalid pitch: pitch {self.encoding} is not a valid pitch representation.')
+        raise ValueError(f'Invalid name: name {self.encoding} is not a valid name representation.')
 
     def is_rest(self) -> bool:
         """
-        Check if the pitch is a rest.
+        Check if the name is a rest.
 
         Returns:
-            bool: True if the pitch is a rest, False otherwise.
+            bool: True if the name is a rest, False otherwise.
 
         Examples:
             >>> pitch_rest = PitchRest('c')
@@ -141,11 +141,11 @@ class PitchRest:
         """
         Compare two pitches of the same octave.
 
-        The lower pitch is 'a'. So 'a' < 'b' < 'c' < 'd' < 'e' < 'f' < 'g'
+        The lower name is 'a'. So 'a' < 'b' < 'c' < 'd' < 'e' < 'f' < 'g'
 
         Args:
-            pitch_a: One pitch of 'abcdefg'
-            pitch_b: Another pitch of 'abcdefg'
+            pitch_a: One name of 'abcdefg'
+            pitch_b: Another name of 'abcdefg'
 
         Returns:
             -1 if pitch1 is lower than pitch2
@@ -170,14 +170,14 @@ class PitchRest:
         return f'{self.encoding}'
 
     def __repr__(self):
-        return f'[PitchRest: {self.encoding}, pitch={self.pitch}, octave={self.octave}]'
+        return f'[PitchRest: {self.encoding}, name={self.pitch}, octave={self.octave}]'
 
     def __eq__(self, other):
         """
         Compare two pitches and rests.
 
         Args:
-            other: The other pitch to compare
+            other: The other name to compare
 
         Returns:
             True if the pitches are equal, False otherwise
@@ -213,7 +213,7 @@ class PitchRest:
         """
         Compare two pitches and rests.
         Args:
-            other: The other pitch to compare
+            other: The other name to compare
 
         Returns:
             True if the pitches are different, False otherwise
@@ -245,9 +245,9 @@ class PitchRest:
         If any of the pitches is a rest, the comparison raise an exception.
 
         Args:
-            other: The other pitch to compare
+            other: The other name to compare
 
-        Returns: True if this pitch is higher than the other, False otherwise
+        Returns: True if this name is higher than the other, False otherwise
 
         Examples:
             >>> pitch_rest = PitchRest('c')
@@ -277,7 +277,7 @@ class PitchRest:
 
         """
         if self.is_rest() or other.is_rest():
-            raise ValueError(f'Invalid comparison: > operator can not be used to compare pitch of a rest.\n\
+            raise ValueError(f'Invalid comparison: > operator can not be used to compare name of a rest.\n\
             self={repr(self)} > other={repr(other)}')
 
         if self.octave > other.octave:
@@ -293,10 +293,10 @@ class PitchRest:
         If any of the pitches is a rest, the comparison raise an exception.
 
         Args:
-            other: The other pitch to compare
+            other: The other name to compare
 
         Returns:
-            True if this pitch is lower than the other, False otherwise
+            True if this name is lower than the other, False otherwise
 
         Examples:
             >>> pitch_rest = PitchRest('c')
@@ -326,7 +326,7 @@ class PitchRest:
 
         """
         if self.is_rest() or other.is_rest():
-            raise ValueError(f'Invalid comparison: < operator can not be used to compare pitch of a rest.\n\
+            raise ValueError(f'Invalid comparison: < operator can not be used to compare name of a rest.\n\
             self={repr(self)} < other={repr(other)}')
 
         if self.octave < other.octave:
@@ -339,10 +339,10 @@ class PitchRest:
         """
         Compare two pitches. If any of the PitchRest is a rest, the comparison raise an exception.
         Args:
-            other: The other pitch to compare
+            other: The other name to compare
 
         Returns:
-            True if this pitch is higher or equal than the other, False otherwise
+            True if this name is higher or equal than the other, False otherwise
 
         Examples:
             >>> pitch_rest = PitchRest('c')
@@ -378,9 +378,9 @@ class PitchRest:
         """
         Compare two pitches. If any of the PitchRest is a rest, the comparison raise an exception.
         Args:
-            other: The other pitch to compare
+            other: The other name to compare
 
-        Returns: True if this pitch is lower or equal than the other, False otherwise
+        Returns: True if this name is lower or equal than the other, False otherwise
 
         Examples:
             >>> pitch_rest = PitchRest('c')
@@ -929,30 +929,33 @@ class NoteRestToken(Token):
         """
         super().__init__(encoding, TokenCategory.CORE)
         if not pitch_duration_subtokens or len(pitch_duration_subtokens) == 0:
-            raise Exception('Empty pitch-duration subtokens')
+            raise Exception('Empty name-duration subtokens')
 
         self.pitch_duration_subtokens = pitch_duration_subtokens
         self.decoration_subtokens = decoration_subtokens
 
         try:
+            self.duration = None
             # TODO: Refactor this
-            duration_token = ''.join([n for n in self.encoding if n.isnumeric()])
-            if duration_token is None or len(duration_token) == 0:
-                self.duration = None
-            else:
-                self.duration = DurationFactory.create_duration(duration_token)
+            #duration_token = ''.join([n for n in self.encoding if n.isnumeric()])
+            #if duration_token is None or len(duration_token) == 0:
+            #    self.duration = None
+            #else:
+            #    self.duration = DurationFactory.create_duration(duration_token)
         except Exception:
             self.duration = None
 
         try:
-            pitch_rest_token = ''.join([n for n in self.encoding if n in PitchRest.VALID_PITCHES])
-            if pitch_rest_token is None or len(pitch_rest_token) == 0:
-                self.pitch = None
-            else:
-                self.pitch = PitchRest(pitch_rest_token)
+            self.pitch = None
+            # TODO: Refactor this
+            #pitch_rest_token = ''.join([n for n in self.encoding if n in PitchRest.VALID_PITCHES])
+            #if pitch_rest_token is None or len(pitch_rest_token) == 0:
+            #    self.pitch = None
+            #else:
+            #    self.pitch = PitchRest(pitch_rest_token)
         except Exception:
             self.pitch = None
-        # TODO: Ahora entran muchos tokens diferentes, filtrar solo los de pitch
+        # TODO: Ahora entran muchos tokens diferentes, filtrar solo los de name
 
     def export(self) -> string:
         result = ''
