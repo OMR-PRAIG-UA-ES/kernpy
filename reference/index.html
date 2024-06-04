@@ -4155,10 +4155,10 @@ exported = exporter.export_string(options)</p>
     <div class="doc doc-contents ">
 
 
-      <p>Represents a pitch or a rest in a note.</p>
-<p>The pitch is represented using the International Standard Organization (ISO) pitch notation.
+      <p>Represents a name or a rest in a note.</p>
+<p>The name is represented using the International Standard Organization (ISO) name notation.
 The first line below the staff is the C4 in G clef. The above C is C5, the below C is C3, etc.</p>
-<p>The Humdrum Kern format uses the following pitch representation:
+<p>The Humdrum Kern format uses the following name representation:
 'c' = C4
 'cc' = C5
 'ccc' = C6
@@ -4166,9 +4166,9 @@ The first line below the staff is the C4 in G clef. The above C is C5, the below
 <p>'C' = C3
 'CC' = C2
 'CCC' = C1</p>
-<p>The rests are represented by the letter 'r'. The rests do not have pitch.</p>
-<p>This class do not limit the pitch ranges.</p>
-<p>In the following example, the pitch is represented by the letter 'c'. The pitch of 'c' is C4, 'cc' is C5, 'ccc' is C6.</p>
+<p>The rests are represented by the letter 'r'. The rests do not have name.</p>
+<p>This class do not limit the name ranges.</p>
+<p>In the following example, the name is represented by the letter 'c'. The name of 'c' is C4, 'cc' is C5, 'ccc' is C6.</p>
 <pre><code>**kern
 *clefG2
 2c          // C4
@@ -4224,7 +4224,7 @@ The first line below the staff is the C4 in G clef. The above C is C5, the below
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The other pitch to compare</p>
+                <p>The other name to compare</p>
               </div>
             </td>
             <td>
@@ -4293,7 +4293,7 @@ The first line below the staff is the C4 in G clef. The above C is C5, the below
 
       <p>Compare two pitches. If any of the PitchRest is a rest, the comparison raise an exception.
 Args:
-    other: The other pitch to compare</p>
+    other: The other name to compare</p>
 
 
     <p><span class="doc-section-title">Returns:</span></p>
@@ -4310,7 +4310,7 @@ Args:
             </td>
             <td>
               <div class="doc-md-description">
-                <p>True if this pitch is higher or equal than the other, False otherwise</p>
+                <p>True if this name is higher or equal than the other, False otherwise</p>
               </div>
             </td>
           </tr>
@@ -4381,7 +4381,7 @@ Args:
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The other pitch to compare</p>
+                <p>The other name to compare</p>
               </div>
             </td>
             <td>
@@ -4390,7 +4390,7 @@ Args:
           </tr>
       </tbody>
     </table>
-      <p>Returns: True if this pitch is higher than the other, False otherwise</p>
+      <p>Returns: True if this name is higher than the other, False otherwise</p>
 
 
 <p><span class="doc-section-title">Examples:</span></p>
@@ -4455,7 +4455,7 @@ Args:
             </td>
             <td>
               <div class="doc-md-description">
-                <p>pitch representation in Humdrum Kern format</p>
+                <p>name representation in Humdrum Kern format</p>
               </div>
             </td>
             <td>
@@ -4489,8 +4489,8 @@ Args:
 
       <p>Compare two pitches. If any of the PitchRest is a rest, the comparison raise an exception.
 Args:
-    other: The other pitch to compare</p>
-<p>Returns: True if this pitch is lower or equal than the other, False otherwise</p>
+    other: The other name to compare</p>
+<p>Returns: True if this name is lower or equal than the other, False otherwise</p>
 
 
 <p><span class="doc-section-title">Examples:</span></p>
@@ -4556,7 +4556,7 @@ Args:
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The other pitch to compare</p>
+                <p>The other name to compare</p>
               </div>
             </td>
             <td>
@@ -4581,7 +4581,7 @@ Args:
             </td>
             <td>
               <div class="doc-md-description">
-                <p>True if this pitch is lower than the other, False otherwise</p>
+                <p>True if this name is lower than the other, False otherwise</p>
               </div>
             </td>
           </tr>
@@ -4633,7 +4633,7 @@ Args:
 
       <p>Compare two pitches and rests.
 Args:
-    other: The other pitch to compare</p>
+    other: The other name to compare</p>
 
 
     <p><span class="doc-section-title">Returns:</span></p>
@@ -4692,7 +4692,7 @@ Args:
 
     <div class="doc doc-contents ">
 
-      <p>Check if the pitch is a rest.</p>
+      <p>Check if the name is a rest.</p>
 
 
     <p><span class="doc-section-title">Returns:</span></p>
@@ -4710,7 +4710,7 @@ Args:
             </td>
             <td>
               <div class="doc-md-description">
-                <p>True if the pitch is a rest, False otherwise.</p>
+                <p>True if the name is a rest, False otherwise.</p>
               </div>
             </td>
           </tr>
@@ -4747,7 +4747,7 @@ Args:
     <div class="doc doc-contents ">
 
       <p>Compare two pitches of the same octave.</p>
-<p>The lower pitch is 'a'. So 'a' &lt; 'b' &lt; 'c' &lt; 'd' &lt; 'e' &lt; 'f' &lt; 'g'</p>
+<p>The lower name is 'a'. So 'a' &lt; 'b' &lt; 'c' &lt; 'd' &lt; 'e' &lt; 'f' &lt; 'g'</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -4768,7 +4768,7 @@ Args:
             </td>
             <td>
               <div class="doc-md-description">
-                <p>One pitch of 'abcdefg'</p>
+                <p>One name of 'abcdefg'</p>
               </div>
             </td>
             <td>
@@ -4782,7 +4782,7 @@ Args:
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Another pitch of 'abcdefg'</p>
+                <p>Another name of 'abcdefg'</p>
               </div>
             </td>
             <td>
