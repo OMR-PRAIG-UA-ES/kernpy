@@ -44,28 +44,10 @@ class Importer:
         elif isinstance(parent.token, SpineOperationToken):
             return parent
         else:
-            return parent.last_spine_operator_node
-
-    def clear(self) -> None:
-        """
-        Clear the information of the importer.
-
-        When the importer is used to import a file, the information is stored in the importer. \
-        But when the importer is used again to import another file, the information of the previous file is not \
-        cleared.\
-        Use this method to clear the information before importing another file.
-
-        Returns: None
-
-        """
-        self.last_measure_number = None
-        self.last_bounding_box = None
-        self.errors = []
+            return parent.last_spine_operator_noded
 
     #TODO Documentar cómo propagamos los header_node y last_spine_operator_node...
     def run(self, reader) -> Document:
-        #self.clear()    # TODO: ¿Hace falta limpiar la información de un import anterior?
-
         tree = MultistageTree()
         document = Document(tree)
         importers = {}
