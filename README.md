@@ -88,10 +88,6 @@ for page_label, bounding_box_measure in doc.bounding_boxes.items():
     )
     kp.store(doc, f"foo_{page_label}.ekrn", options)
 
-    # Export the page
-    options = kp.ExportOptions(from_measure=bounding_box_measure, to_measure=bounding_box_measure)
-    content = kp.export(doc, options)
-    ...
 
 # Concat two documents
 score_a = '**kern\n*clefG2\n=1\n4c\n4d\n4e\n4f\n*-\n'
