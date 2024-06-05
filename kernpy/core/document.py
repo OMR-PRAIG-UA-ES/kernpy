@@ -163,7 +163,7 @@ class Document:
         Raises: Exception - If the document has no measures.
 
         Examples:
-            >>> document = kernpy.read('score.krn')
+            >>> document, err = kernpy.read('score.krn')
             >>> document.get_first_measure()
             1
         """
@@ -181,7 +181,7 @@ class Document:
         Raises: Exception - If the document has no measures.
 
         Examples:
-            >>> document = kernpy.read('score.krn')
+            >>> document, _ = kernpy.read('score.krn')
             >>> document.measures_count()
             10
             >>> for i in range(document.get_first_measure(), document.measures_count() + 1):

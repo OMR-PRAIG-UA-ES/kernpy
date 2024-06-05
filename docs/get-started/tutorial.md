@@ -56,14 +56,14 @@ First of all, let's import the score:
 
 ```python
 import kernpy as kp
-document = kp.read('/path/to/file.krn')
+document, errors = kp.read('/path/to/file.krn')
 ```
 
 Now, we can access the score attributes:
 
 ```python
 import kernpy as kp
-document = kp.read('/path/to/file.krn')
+document, _ = kp.read('/path/to/file.krn')
 print(document.tree)
 # <kernpy.core.document.DocumentTree object at 0x7f8b3b3b3d30>
 ```
@@ -100,7 +100,7 @@ all_options = kp.ExportOptions(
 Using the `Document` object, we can export the score:
 ```python
 import kernpy as kp
-document = kp.read('/path/to/file.krn')
+document, errors = kp.read('/path/to/file.krn')
 options = kp.ExportOptions()
 kp.store(document, '/path/to/export/file.krn', options)
 ```
@@ -108,7 +108,7 @@ kp.store(document, '/path/to/export/file.krn', options)
 Or we can export the score as a string for further processing:
 ```python
 import kernpy as kp
-document = kp.read('/path/to/file.krn')
+document, errors = kp.read('/path/to/file.krn')
 options = kp.ExportOptions()
 content = kp.export(document, options)
 ...  # you can use the content as you want

@@ -7,23 +7,27 @@ The main functions for handling the input and output of **kern files are provide
 from kernpy.core import Importer, Document, Exporter, ExportOptions, GraphvizExporter
 from kernpy.core.io import _write
 
-def read(path) -> Document:
+def read(path) -> (Document, list):
     """
     Read a Humdrum **kern file.
 
     Args:
         path: File path to read
 
-    Returns: Document object
+    Returns (Document, list): Document object and list of error messages. Empty list if no errors.
 
     Examples:
         >>> import kernpy as kp
-        >>> document = kp.read('path/to/file.krn')
+        >>> document, _ = kp.read('path/to/file.krn')
 
+        >>> document, errors = kp.read('path/to/file.krn')
+        >>> if errors:      # If there are errors (empty list if no errors)
+        >>>     print(errors)
     """
     importer = Importer()
     document = importer.import_file(path)
-    return document
+    errors = importer.get_error_messages().split('\n')
+    return document, errors
 
 def export(document: Document, options: ExportOptions) -> str:
     """
@@ -37,7 +41,7 @@ def export(document: Document, options: ExportOptions) -> str:
 
     Examples:
         >>> import kernpy as kp
-        >>> document = kp.read('path/to/file.krn')
+        >>> document, errors = kp.read('path/to/file.krn')
         >>> options = kp.ExportOptions()
         >>> content = kp.export(document, options)
     """
@@ -57,7 +61,7 @@ def store(document: Document, path, options: ExportOptions) -> None:
 
     Examples:
         >>> import kernpy as kp
-        >>> document = kp.read('path/to/file.krn')
+        >>> document, errors = kp.read('path/to/file.krn')
         >>> options = kp.ExportOptions()
         >>> kp.store(document, 'path/to/store.krn', options)
 
@@ -96,7 +100,7 @@ def get_spine_types(document: Document, spine_types: list = None) -> list:
 
     Examples:
         >>> import kernpy as kp
-        >>> document = kp.read('path/to/file.krn')
+        >>> document, _ = kp.read('path/to/file.krn')
         >>> kp.get_spine_types(document)
         ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
         >>> kp.get_spine_types(document, None)
@@ -136,4 +140,4 @@ def concat(content_a: str, content_b: str, options: ExportOptions = None) -> str
     document_b = importer.import_string(content_b)
     document_concat = Document.to_concat(document_a, document_b)
     exporter = Exporter()
-    return exporter.export_string(document_a, ExportOptions())
+    return exporter.export_string(document_concat, ExportOptions())

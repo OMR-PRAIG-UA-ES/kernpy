@@ -18,7 +18,7 @@ https://kernpy.pages.dev/
 import kernpy as kp
 
 # Read a **kern file
-document = kp.read("path/to/file.krn")
+document, errors = kp.read("path/to/file.krn")
 
 # Handle the document if needed
 print(document.tree)
@@ -50,7 +50,7 @@ kp.store(document, "path/to/newfile.ekrn", your_options)
 content = kp.export(document, your_options)
 
 # Iterate over the document
-doc = kp.read('resource_dir/legacy/chor048.krn')  # 10 measures score
+doc, _ = kp.read('resource_dir/legacy/chor048.krn')  # 10 measures score
 for i in range(doc.get_first_measure(), doc.measures_count() + 1, 1):  # from 1 to 11, step 1
     # Export only the i-th measure (1 long measure scores)
     options = kp.ExportOptions(from_measure=i, to_measure=i)

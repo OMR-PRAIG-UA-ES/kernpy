@@ -15,7 +15,7 @@ class GenericTestCase(unittest.TestCase):
             expected_content = f.read()
 
         # Act
-        doc = kernpy.read(current_krn)
+        doc, _ = kernpy.read(current_krn)
         options = kernpy.ExportOptions(kern_type=kernpy.KernTypeExporter.eKern)
         real_content = kernpy.export(doc, options)
 
@@ -24,7 +24,7 @@ class GenericTestCase(unittest.TestCase):
 
     def test_store_non_existing_file(self):
         # Arrange
-        doc = kernpy.read('resource_dir/legacy/base_tuplet.krn')
+        doc, _ = kernpy.read('resource_dir/legacy/base_tuplet.krn')
         options = kernpy.ExportOptions()
         with TemporaryDirectory() as temp_dir:
             file_path = os.path.join(temp_dir, 'test.krn')
