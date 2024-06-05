@@ -6,7 +6,7 @@ from io import BytesIO
 import os
 import json
 
-from kernpy import ExportOptions, BEKERN_CATEGORIES, Importer, Exporter, Document, KernTypeExporter
+from kernpy import ExportOptions, BEKERN_CATEGORIES, Importer, Exporter, Document, KernTypeExporter, read
 import argparse
 
 # This script creates the Polish dataset from the kern files.
@@ -84,9 +84,12 @@ def download_and_save_page_images(document, _output_path, map_page_label_iiif_id
 
         if page_iiif_id is not None:
             bounding_box = bounding_box_measure.bounding_box
-            print(
-                f"Page: {page_label}, Bounding box: {bounding_box}, ID: {page_iiif_id}, from bar {bounding_box_measure.from_measure}, to bar {bounding_box_measure.to_measure}")
-            url = f'{page_iiif_id}/{bounding_box.xywh()}/full/0/default.jpg'
+            print(f"Page: {page_label}, "
+                  f"Bounding box: {bounding_box}, "
+                  f"ID: {page_iiif_id}, "
+                  f"from bar {bounding_box_measure.from_measure}, "
+                  f"to bar {bounding_box_measure.to_measure}")
+            url = os.path.join(page_iiif_id, bounding_box.xywh(), 'full', '0', 'default.jpg')
             print(url)
             image_path = os.path.join(_output_path, page_label + ".jpg")
             download_and_save_image(url, image_path)
@@ -118,11 +121,10 @@ def is_valid_document(document, kern_spines_filter) -> bool:
     return len(kern_types) == int(kern_spines_filter)
 
 def convert_and_download_file(input_kern, _output_path, log_filename, kern_spines_filter: int = None):
-    print(f'Converting filename {input_kern}')
-    importer = Importer()
-    document = importer.import_file(input_kern)
-    if len(importer.errors):
-        raise Exception(f'{input_kern} has errors {importer.get_error_messages()}')
+    document, errors = read(input_kern)
+    if errors:
+        print(f'ERRORS when kernpy.read:{input_kern} has errors {errors}\nContinue...', file=sys.stderr)
+        #raise Exception(f'ERRORS when kernpy.read:{input_kern} has errors {errors}')
 
     if not is_valid_document(document, kern_spines_filter):
         return
