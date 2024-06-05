@@ -15,6 +15,7 @@ https://kernpy.pages.dev/
 ## Code example
 
 ```python
+import kernpy.core
 import kernpy as kp
 
 # Read a **kern file
@@ -62,6 +63,33 @@ for i in range(doc.get_first_measure(), doc.measures_count() + 1, 1):  # from 1 
 # Or use the __iter__ method
 for measure in doc:
     options = kp.ExportOptions(from_measure=measure, to_measure=measure)
+    content = kp.export(doc, options)
+    ...
+
+# Iterate over the pages using the bounding boxes
+doc, _ = kp.read('kern_having_bounding_boxes.krn')
+
+# Inspect the bounding boxes
+print(doc.bounding_boxes)
+print(len(doc.get_all_tokens(filter_by_categories=[kernpy.TokenCategory.BOUNDING_BOXES])) > 0)
+
+# Iterate over the pages
+for page_label, bounding_box_measure in doc.bounding_boxes.items():
+    print(f"Page: {page_label}"
+          f"Bounding box: {bounding_box_measure}"
+          f"from_measure: {bounding_box_measure.from_measure}"
+          f"to_measure+1: {bounding_box_measure.to_measure}")  # TODO: Check bounds
+    options = kp.ExportOptions(
+        spine_types=['**kern'],
+        token_categories=kp.BEKERN_CATEGORIES,
+        kern_type=kp.KernTypeExporter.eKern,
+        from_measure=bounding_box_measure.from_measure,
+        to_measure=bounding_box_measure.to_measure - 1  # TODO: Check bounds
+    )
+    kp.store(doc, f"foo_{page_label}.ekrn", options)
+
+    # Export the page
+    options = kp.ExportOptions(from_measure=bounding_box_measure, to_measure=bounding_box_measure)
     content = kp.export(doc, options)
     ...
 
