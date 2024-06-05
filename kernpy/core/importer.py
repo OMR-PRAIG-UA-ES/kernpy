@@ -44,7 +44,7 @@ class Importer:
         elif isinstance(parent.token, SpineOperationToken):
             return parent
         else:
-            return parent.last_spine_operator_noded
+            return parent.last_spine_operator_node
 
     #TODO Documentar cómo propagamos los header_node y last_spine_operator_node...
     def run(self, reader) -> Document:
