@@ -335,13 +335,17 @@ class Document:
         result = Document(copy(self.tree))
         result.measure_start_tree_stages = copy(self.measure_start_tree_stages)
         result.page_bounding_boxes = copy(self.page_bounding_boxes)
-        result.header_stage = self.header_stage
+        result.header_stage = copy(self.header_stage)
+
         return result
 
     @classmethod
-    def to_concat(cls, content_a: 'Document', content_b: 'Document') -> str:
+    def to_concat(cls, content_a: 'Document', content_b: 'Document') -> 'Document':
         new_doc = content_a.clone()
-        raise NotImplementedError
+        print(new_doc.header_stage)
+        new_tokens = content_b.get_all_tokens()
+        for token in new_tokens:
+            new_doc.tree.add_node(new_doc.tree, ...)
 
     def __iter__(self):
         """
