@@ -70,11 +70,11 @@ for measure in doc:
 doc, _ = kp.read('kern_having_bounding_boxes.krn')
 
 # Inspect the bounding boxes
-print(doc.bounding_boxes)
+print(doc.page_bounding_boxes)
 print(len(doc.get_all_tokens(filter_by_categories=[kernpy.TokenCategory.BOUNDING_BOXES])) > 0)
 
 # Iterate over the pages
-for page_label, bounding_box_measure in doc.bounding_boxes.items():
+for page_label, bounding_box_measure in doc.page_bounding_boxes.items():
     print(f"Page: {page_label}"
           f"Bounding box: {bounding_box_measure}"
           f"from_measure: {bounding_box_measure.from_measure}"
