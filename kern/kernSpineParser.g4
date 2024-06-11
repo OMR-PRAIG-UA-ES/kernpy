@@ -210,10 +210,10 @@ staff: TANDEM_STAFF
 // e.g. *clefG2
 clef: TANDEM_CLEF  clefValue;
 
-clefValue: clefSign ( clefLine)? ( clefOctave)?;
+clefValue: clefSign clefOctave? clefLine?;
 clefSign: CHAR_C | CHAR_F | CHAR_G | CHAR_P | CHAR_T;
 clefLine: DIGIT_1 | DIGIT_2 | DIGIT_3 | DIGIT_4 | DIGIT_5;
-clefOctave: CHAR_v CHAR_v? DIGIT_2 | CIRCUMFLEX CIRCUMFLEX? DIGIT_2;
+clefOctave: CHAR_v CHAR_v? | CIRCUMFLEX CIRCUMFLEX?;
 
 // e.g. *k[f#c#]
 keySignature: TANDEM_KEY_SIGNATURE  LEFT_BRACKET keySignaturePitchClass* RIGHT_BRACKET keySignatureCancel?;

@@ -2,7 +2,7 @@ import string
 from enum import Enum
 
 from kernpy.core import Document, SpineOperationToken, HeaderToken, Importer, TokenCategory, InstrumentToken, \
-    TOKEN_SEPARATOR, DECORATION_SEPARATOR, Token
+    TOKEN_SEPARATOR, DECORATION_SEPARATOR, Token, NoteRestToken
 
 BEKERN_CATEGORIES = [TokenCategory.STRUCTURAL, TokenCategory.CORE, TokenCategory.EMPTY, TokenCategory.SIGNATURES,
                      TokenCategory.BARLINES, TokenCategory.ENGRAVED_SYMBOLS]
@@ -96,6 +96,16 @@ class Exporter:
         Exporter.export_options_validator(document, options)
 
         rows = []
+
+        if options.to_measure is not None and options.to_measure < len(document.measure_start_tree_stages):
+
+            if options.to_measure < len(document.measure_start_tree_stages) - 1:
+                to_stage = document.measure_start_tree_stages[options.to_measure] # take the barlines from the next coming measure
+            else:
+                to_stage = len(document.tree.stages) - 1  # all stages
+        else:
+            to_stage = len(document.tree.stages) - 1  # all stages
+
         if options.from_measure:
             # In case of beginning not from the first measure, we recover the spine creation and the headers
             # Traversed in reverse order to only include the active spines at the given measure...
@@ -136,7 +146,8 @@ class Exporter:
             for node in document.tree.stages[from_stage]:
                 node_signature_rows = []
                 for signature_node in node.last_signature_nodes.nodes.values():
-                    node_signature_rows.append(self.export_token(signature_node.token, options))
+                    if not self.is_signature_cancelled(signature_node, node, from_stage, to_stage):
+                        node_signature_rows.append(self.export_token(signature_node.token, options))
                 if len(node_signature_rows) > 0:
                     if not node_signatures:
                         node_signatures = []  # an array for each spine
@@ -155,15 +166,6 @@ class Exporter:
         else:
             from_stage = 0
             rows = []
-
-        if options.to_measure is not None and options.to_measure < len(document.measure_start_tree_stages):
-
-            if options.to_measure < len(document.measure_start_tree_stages) - 1:
-                to_stage = document.measure_start_tree_stages[options.to_measure] # take the barlines from the next coming measure
-            else:
-                to_stage = len(document.tree.stages) - 1  # all stages
-        else:
-            to_stage = len(document.tree.stages) - 1  # all stages
 
         #if not node.token.category == TokenCategory.LINE_COMMENTS and not node.token.category == TokenCategory.FIELD_COMMENTS:
         for stage in range(from_stage, to_stage + 1): # to_stage included
@@ -277,6 +279,16 @@ class Exporter:
             raise ValueError(
                 f'option to_measure must be >= from_measure but {options.to_measure} < {options.from_measure} was found. ')
 
+    def is_signature_cancelled(self, signature_node, node, from_stage, to_stage) -> bool:
+        if node.token.__class__ == signature_node.token.__class__:
+            return True
+        elif isinstance(node.token, NoteRestToken):
+            return False
+        elif from_stage < to_stage:
+            for child in node.children:
+                if self.is_signature_cancelled(signature_node, child, from_stage + 1, to_stage):
+                    return True
+            return False
 
 def get_kern_from_ekern(ekern_content: string) -> string:
     """
