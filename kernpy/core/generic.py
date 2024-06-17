@@ -3,11 +3,13 @@ Public API for KernPy.
 
 The main functions for handling the input and output of **kern files are provided here.
 """
+import copy
 
 from kernpy.core import Importer, Document, Exporter, ExportOptions, GraphvizExporter
 from kernpy.core.io import _write
 
-def read(path) -> (Document, list):
+
+def read(path) -> (Document, []):
     """
     Read a Humdrum **kern file.
 
@@ -21,13 +23,16 @@ def read(path) -> (Document, list):
         >>> document, _ = kp.read('path/to/file.krn')
 
         >>> document, errors = kp.read('path/to/file.krn')
-        >>> if errors:      # If there are errors (empty list if no errors)
+        >>> if len(errors) > 0:
         >>>     print(errors)
+        ['Error: Invalid **kern spine: 1', 'Error: Invalid **kern spine: 2']
     """
     importer = Importer()
     document = importer.import_file(path)
-    errors = importer.get_error_messages().split('\n')
+    errors = copy.deepcopy(importer.errors)
+
     return document, errors
+
 
 def export(document: Document, options: ExportOptions) -> str:
     """
@@ -47,6 +52,7 @@ def export(document: Document, options: ExportOptions) -> str:
     """
     exporter = Exporter()
     return exporter.export_string(document, options)
+
 
 def store(document: Document, path, options: ExportOptions) -> None:
     """
