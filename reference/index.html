@@ -5330,8 +5330,9 @@ for krn_file in krn_files:
 <span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;path/to/file.krn&#39;</span><span class="p">)</span>
 </code></pre></div>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;path/to/file.krn&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">errors</span><span class="p">:</span>      <span class="c1"># If there are errors (empty list if no errors)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span>
+<span class="go">[&#39;Error: Invalid **kern spine: 1&#39;, &#39;Error: Invalid **kern spine: 2&#39;]</span>
 </code></pre></div>
 
     </div>
@@ -7537,8 +7538,9 @@ for krn_file in krn_files:
 <span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;path/to/file.krn&#39;</span><span class="p">)</span>
 </code></pre></div>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;path/to/file.krn&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">errors</span><span class="p">:</span>      <span class="c1"># If there are errors (empty list if no errors)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span>
+<span class="go">[&#39;Error: Invalid **kern spine: 1&#39;, &#39;Error: Invalid **kern spine: 2&#39;]</span>
 </code></pre></div>
 
     </div>
