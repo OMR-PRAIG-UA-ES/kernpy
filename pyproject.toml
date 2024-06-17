@@ -16,6 +16,13 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
+dependencies = [
+   'antlr4-python3-runtime',
+    'Pillow',
+    'requests',
+    'urllib3==1.26.6',
+    'tqdm'
+]
 
 [project.urls]
 Homepage = "https://github.com/OMR-PRAIG-UA-ES/kernpy.git"
