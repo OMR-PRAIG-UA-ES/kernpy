@@ -117,7 +117,6 @@ def is_valid_document(document, kern_spines_filter) -> bool:
 
     exporter = Exporter()
     kern_types = exporter.get_spine_types(document, spine_types=['**kern'])
-    print("DEBUG: ", kern_types, 'real=', len(kern_types), 'expected=', kern_spines_filter)
     return len(kern_types) == int(kern_spines_filter)
 
 
@@ -241,12 +240,19 @@ def add_log(document: Document, path, log_filename) -> None:
     except Exception as e:
         print(f"Error adding log:{path}:{e}")
 
+
 def remove_empty_dirs(directory):
     for root, dirs, files in os.walk(directory):
         for dir in dirs:
             full_dir = os.path.join(root, dir)
             if not os.listdir(full_dir):
                 os.rmdir(full_dir)
+
+
+def store_error_log(filename, msg: dict):
+    with open(filename, encoding='utf-8', mode='a') as f:
+        f.write(f'{json.dumps(msg)}\n')
+
 
 def main(input_directory, output_directory, remove_empty_directories: bool = True, kern_spines_filter: int = 2) -> None:
     """
@@ -294,6 +300,7 @@ def main(input_directory, output_directory, remove_empty_directories: bool = Tru
         except Exception as error:
             ko_files.append(kern)
             print(f'Errors in {kern}: {error}')
+            store_error_log(os.path.join(output_directory, 'errors.json'), {'kern': kern, 'error': str(error)})
 
     if remove_empty_directories:
         remove_empty_dirs(output_directory)
@@ -303,41 +310,7 @@ def main(input_directory, output_directory, remove_empty_directories: bool = Tru
     print(ko_files)
 
 
-if __name__ == "__main__":
-    # Replace for the path where the kern files are found
-    #input_path = "/Users/drizo/cmg/omr/datasets/humdrum-polish-scores/data-github"
-    input_path = "/tmp/zzz"
-    #input_path = "/Users/drizo/githubs/OMR-PRAIG-UA-ES/kernpy/test/resource_dir/polish/test2"
-    output_path = '/Users/drizo/cmg/omr/datasets/humdrum-polish-scores/output/pl-wn'
+if __name__ == '__main__':
+    print(f'Usage: python -m kernpy --polish --input_directory /path/to/input --output_directory /path/to/output')
+    sys.exit(1)
 
-    #TODO parser = argparse.ArgumentParser(description="Download Polish scores.")
-
-    # Add arguments_log
-    #TODO parser.add_argument("input_folder", type=str, help="Path to the input folder")
-    #TODO parser.add_argument("output_folder", type=str, help="Path to the output folder")
-
-    # Parse arguments
-    #TODO args = parser.parse_args()
-    #TODO input_path = args.input_folder
-    #TODO output_path = args.output_folder
-
-    kern_with_bboxes = search_files_with_string(input_path, 'xywh')
-    ok_files = []
-    ko_files = []
-    log_file = os.path.join(output_path, LOG_FILENAME)
-    for kern in kern_with_bboxes:
-        try:
-            filename = remove_extension(kern)
-            kern_path = os.path.join(input_path, kern)
-            output_kern_path = os.path.join(output_path, filename)
-            if not os.path.exists(output_kern_path):
-                os.makedirs(output_kern_path)
-            convert_and_download_file(kern_path, output_kern_path, log_filename=log_file)
-            ok_files.append(kern)
-        except Exception as error:
-            ko_files.append(kern)
-            print(f'Errors in {kern}: {error}')
-
-    print(f'----> OK files #{len(ok_files)}')
-    print(f'----> KO files #{len(ko_files)}')
-    print(ko_files)
