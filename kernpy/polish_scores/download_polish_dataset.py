@@ -120,11 +120,12 @@ def is_valid_document(document, kern_spines_filter) -> bool:
     print("DEBUG: ", kern_types, 'real=', len(kern_types), 'expected=', kern_spines_filter)
     return len(kern_types) == int(kern_spines_filter)
 
+
 def convert_and_download_file(input_kern, _output_path, log_filename, kern_spines_filter: int = None):
     document, errors = read(input_kern)
-    if errors:
+    if len(errors) > 0:
         print(f'ERRORS when kernpy.read:{input_kern} has errors {errors}\nContinue...', file=sys.stderr)
-        #raise Exception(f'ERRORS when kernpy.read:{input_kern} has errors {errors}')
+        raise Exception(f'ERRORS when kernpy.read: {input_kern}. Has errors: {errors}')
 
     if not is_valid_document(document, kern_spines_filter):
         return
