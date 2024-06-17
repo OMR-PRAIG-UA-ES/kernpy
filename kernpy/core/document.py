@@ -339,13 +339,41 @@ class Document:
 
         return result
 
+    def add_document(self, other: 'Document'):
+        """
+        Concatenate one document to the current document: Mutates the current object!
+
+        Args:
+            other: The document to concatenate.
+
+        Returns: None
+        """
+        current_header_nodes = self.get_header_stage()
+        other_header_nodes = other.get_header_stage()
+
+        if len(current_header_nodes) != len(other_header_nodes):
+            raise Exception(f"Header nodes count mismatch: {len(current_header_nodes)} != {len(other_header_nodes)}")
+
+        for current_node, other_node in zip(current_header_nodes, other_header_nodes):
+            current_node.children.extend(other_node.children)
+
     @classmethod
-    def to_concat(cls, content_a: 'Document', content_b: 'Document') -> 'Document':
-        new_doc = content_a.clone()
-        print(new_doc.header_stage)
-        new_tokens = content_b.get_all_tokens()
-        for token in new_tokens:
-            new_doc.tree.add_node(new_doc.tree, ...)
+    def to_concat(cls, first_doc: 'Document', second_doc: 'Document', deep_copy=True) -> 'Document':
+        """
+        Concatenate two documents.
+
+        Args:
+            first_doc: The first document.
+            second_doc: The second document.
+            deep_copy: If True, the documents are deep copied. If False, the documents are shallow copied.
+
+        Returns: A new instance of Document with the documents concatenated.
+        """
+        first_doc = first_doc.clone() if deep_copy else first_doc
+        second_doc = second_doc.clone() if deep_copy else second_doc
+        first_doc.add_document(second_doc)
+
+        return first_doc
 
     def __iter__(self):
         """
