@@ -238,6 +238,9 @@ class Exporter:
             >>> exporter.get_spine_types(document, [])
             []
         """
+        if spine_types is not None and len(spine_types) == 0:
+            return []
+
         options = ExportOptions(spine_types=spine_types, token_categories=[TokenCategory.STRUCTURAL])
         rows = []
         for stage in range(len(document.tree.stages)):
@@ -249,7 +252,7 @@ class Exporter:
             if len(row) > 0:
                 rows.append(row)
 
-        only_spine_types = rows[0]     # **kern, **mens, etc... are always in the first row
+        only_spine_types = rows[0] if len(rows) > 0 else []     # **kern, **mens, etc... are always in the first row
         return only_spine_types
 
     @staticmethod

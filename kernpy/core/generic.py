@@ -121,7 +121,7 @@ def get_spine_types(document: Document, spine_types: list = None) -> list:
         []
     """
     exporter = Exporter()
-    return exporter.get_spine_types(document)
+    return exporter.get_spine_types(document, spine_types=spine_types)
 
 def concat(content_a: str, content_b: str, options: ExportOptions = None) -> str:
     """
