@@ -285,6 +285,7 @@ def main(input_directory, output_directory, remove_empty_directories: bool = Tru
         kern_spines_filter (int): Only process files with the number of **kern spines specified.\
             Use it to export 2-voice files. Default is 2.\
             Use None to process all files.
+        exporter_kern_type (str): the type of kern exporter. It can be 'kern' or 'ekern'
 
 
 
