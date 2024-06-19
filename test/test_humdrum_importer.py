@@ -10,7 +10,7 @@ from _pytest.mark.expression import TokenType
 from kernpy import (KernSpineImporter, MensSpineImporter, DynamSpineImporter, DynSpineImporter, HarmSpineImporter, \
                     RootSpineImporter, TextSpineImporter, FingSpineImporter, BEKERN_CATEGORIES, ExportOptions, Exporter,
                     TokenCategory,
-                    KernTypeExporter, Document, Importer, GraphvizExporter, get_kern_from_ekern)
+                    KernTypeExporter, Document, Importer, GraphvizExporter, get_kern_from_ekern, read, export)
 from kernpy.core import createImporter, Token
 
 logger = logging.getLogger()
@@ -672,6 +672,54 @@ class ImporterTestCase(unittest.TestCase):
         self.assertListEqual(expected_kern_spines, real_1)
         self.assertListEqual(expected_all_spines, real_2)
         self.assertListEqual(expected_all_spines, real_3)
+
+    @unittest.skip("TODO: Complete bug. ISSUE #12 test Eliseo")
+    def test_export_string_two_different_spines(self):
+        # Arrange
+        doc, err = read('resource_dir/legacy/chor048.krn')
+
+        options = ExportOptions(spine_types=['**kern', '**root', '**harm'],
+                                kern_type=KernTypeExporter.eKern)
+        content = export(doc, options)
+        importer = Importer()
+        document = importer.import_string(content)
+
+        print(content)
+
+    def test_never_export_measure_numbers(self):
+        # Arrange
+        importer = Importer()
+        document = importer.import_file('resource_dir/legacy/chor009.krn')
+        options = ExportOptions(spine_types=None,       # TODO: David. Así se exportan todos los spines
+                                kern_type=KernTypeExporter.eKern,
+                                show_measure_numbers=False)
+        exporter = Exporter()
+        content = exporter.export_string(document, options)
+        print(content)
+        measures = range(1, document.measures_count() + 1)
+        measures = [f'={m}' for m in measures]          # TODO: David. En los spines que no son kerns siempre se exportan los números de compás
+        for measure in measures:
+            self.assertNotIn(measure, content)
+
+    def test_always_export_measure_numbers(self):
+        # Arrange
+        importer = Importer()
+        document = importer.import_file('resource_dir/legacy/chor009.krn')
+        options = ExportOptions(spine_types=None,
+                                kern_type=KernTypeExporter.eKern,
+                                show_measure_numbers=True)
+        exporter = Exporter()
+        content = exporter.export_string(document, options)
+        print(content)
+        measures = range(1, document.measures_count() + 1)
+        measures = [f'={m}' for m in measures]
+        for measure in measures:
+            for line in content.splitlines():       # Find the line with the measure numbers
+                if measure in line:
+                    tokens = line.split('\t')       # Split the line in tokens
+                    for token in tokens:
+                        self.assertEqual(measure, token)
+
 
 
 
