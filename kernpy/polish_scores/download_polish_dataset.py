@@ -69,14 +69,14 @@ def factory_get_kern_type_exporter(kern_type: str) -> KernTypeExporter:
     Factory method to get the KernTypeExporter
 
     Args:
-        kern_type (str): the type of kern exporter. It can be 'kern' or 'ekern'
+        kern_type (str): the type of kern exporter. It can be 'krn' or 'ekrn'
 
     Returns:
         KernTypeExporter: the KernTypeExporter instance
     """
-    if kern_type == 'kern':
+    if kern_type == 'krn':
         return KernTypeExporter.normalizedKern
-    elif kern_type == 'ekern':
+    elif kern_type == 'ekrn':
         return KernTypeExporter.eKern
     else:
         raise Exception(f'Unknown export kern type: {kern_type}')
@@ -112,7 +112,7 @@ def download_and_save_page_images(document, _output_path, map_page_label_iiif_id
             print(url)
             image_path = os.path.join(_output_path, page_label + ".jpg")
             download_and_save_image(url, image_path)
-            krn_path = os.path.join(_output_path, page_label + ".ekrn")
+            krn_path = os.path.join(_output_path, page_label + f'.{exporter_kern_type}')
             extract_and_save_measures(document, bounding_box_measure.from_measure, bounding_box_measure.to_measure - 1,
                                       krn_path, exporter_kern_type=exporter_kern_type)
             add_log(document, krn_path, log_filename=log_filename)
@@ -285,7 +285,7 @@ def main(input_directory, output_directory, remove_empty_directories: bool = Tru
         kern_spines_filter (int): Only process files with the number of **kern spines specified.\
             Use it to export 2-voice files. Default is 2.\
             Use None to process all files.
-        exporter_kern_type (str): the type of kern exporter. It can be 'kern' or 'ekern'
+        exporter_kern_type (str): the type of kern exporter. It can be 'krn' or 'ekrn'
 
 
 
@@ -303,6 +303,12 @@ def main(input_directory, output_directory, remove_empty_directories: bool = Tru
         None
 
         >>> main('/kern_files', '/output_ekern', kern_spines_filter=None, remove_empty_directories=False)
+        None
+
+        >>> main('/kern_files', '/output_ekern', exporter_kern_type='krn', remove_empty_directories=True)
+        None
+
+        >>> main('/kern_files', '/output_ekern', exporter_kern_type='ekrn', remove_empty_directories=True, kern_spines_filter=2)
         None
 
     """
