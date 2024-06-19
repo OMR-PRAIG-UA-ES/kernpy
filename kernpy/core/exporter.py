@@ -45,7 +45,7 @@ class ExportOptions:
                  kern_type: KernTypeExporter = KernTypeExporter.normalizedKern,
                  instruments: [] = None,
                  show_measure_numbers: bool = False
-    ):
+                 ):
         """
         Create a new ExportOptions object.
 
@@ -91,6 +91,56 @@ class ExportOptions:
         self.instruments = instruments if instruments is not None else []
         self.show_measure_numbers = show_measure_numbers
 
+    def __eq__(self, other) -> bool:
+        """
+        Compare two ExportOptions objects.
+
+        Args:
+            other: The other ExportOptions object to compare.
+
+        Returns:
+            True if the objects are equal, False otherwise.
+
+        Examples:
+            >>> options1 = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
+            >>> options2 = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
+            >>> options1 == options2
+            True
+
+            >>> options3 = ExportOptions(spine_types=['**kern', '**harm'], token_categories=BEKERN_CATEGORIES)
+            >>> options1 == options3
+            False
+        """
+        return self.spine_types == other.spine_types and \
+            self.token_categories == other.token_categories and \
+            self.from_measure == other.from_measure and \
+            self.to_measure == other.to_measure and \
+            self.kern_type == other.kern_type and \
+            self.instruments == other.instruments and \
+            self.show_measure_numbers == other.show_measure_numbers
+
+    def __ne__(self, other):
+        """
+        Compare two ExportOptions objects.
+
+        Args:
+            other: The other ExportOptions object to compare.
+
+        Returns:
+            True if the objects are not equal, False otherwise.
+
+        Examples:
+            >>> options1 = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
+            >>> options2 = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES)
+            >>> options1 != options2
+            False
+
+            >>> options3 = ExportOptions(spine_types=['**kern', '**harm'], token_categories=BEKERN_CATEGORIES)
+            >>> options1 != options3
+            True
+        """
+        return not self.__eq__(other)
+
 
 def empty_row(row):
     for col in row:
@@ -108,7 +158,8 @@ class Exporter:
         if options.to_measure is not None and options.to_measure < len(document.measure_start_tree_stages):
 
             if options.to_measure < len(document.measure_start_tree_stages) - 1:
-                to_stage = document.measure_start_tree_stages[options.to_measure] # take the barlines from the next coming measure
+                to_stage = document.measure_start_tree_stages[
+                    options.to_measure]  # take the barlines from the next coming measure
             else:
                 to_stage = len(document.tree.stages) - 1  # all stages
         else:
@@ -176,7 +227,7 @@ class Exporter:
             rows = []
 
         #if not node.token.category == TokenCategory.LINE_COMMENTS and not node.token.category == TokenCategory.FIELD_COMMENTS:
-        for stage in range(from_stage, to_stage + 1): # to_stage included
+        for stage in range(from_stage, to_stage + 1):  # to_stage included
             row = []
             for node in document.tree.stages[stage]:
                 header_type = self.compute_header_type(node)
@@ -186,8 +237,9 @@ class Exporter:
                 rows.append(row)
 
         # now, add the spine terminate row
-        if options.to_measure is not None and len(rows) > 0 and rows[len(rows)-1][0] != '*-': # if the terminate is not added yet
-            spine_count = len(rows[len(rows)-1])
+        if options.to_measure is not None and len(rows) > 0 and rows[len(rows) - 1][
+            0] != '*-':  # if the terminate is not added yet
+            spine_count = len(rows[len(rows) - 1])
             row = []
             for i in range(spine_count):
                 row.append('*-')
@@ -216,7 +268,8 @@ class Exporter:
 
     def append_row(self, header_type, node, options: ExportOptions, row: list):
         if (header_type
-                and (not options.spine_types or header_type in options.spine_types)  # if the spine_type is None, compute all the spines
+                and (
+                        not options.spine_types or header_type in options.spine_types)  # if the spine_type is None, compute all the spines
                 and not node.token.hidden
                 and (not options.token_categories or node.token.category in options.token_categories)):
             row.append(self.export_token(node.token, options))
@@ -260,7 +313,7 @@ class Exporter:
             if len(row) > 0:
                 rows.append(row)
 
-        only_spine_types = rows[0] if len(rows) > 0 else []     # **kern, **mens, etc... are always in the first row
+        only_spine_types = rows[0] if len(rows) > 0 else []  # **kern, **mens, etc... are always in the first row
         return only_spine_types
 
     @staticmethod
@@ -300,6 +353,7 @@ class Exporter:
                 if self.is_signature_cancelled(signature_node, child, from_stage + 1, to_stage):
                     return True
             return False
+
 
 def get_kern_from_ekern(ekern_content: string) -> string:
     """
