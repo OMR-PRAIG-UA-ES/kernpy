@@ -37,8 +37,15 @@ class ExportOptions:
     Store the options to export a **kern file.
     """
 
-    def __init__(self, spine_types=None, token_categories=None, from_measure: int = None, to_measure: int = None,
-                 kern_type: KernTypeExporter = KernTypeExporter.normalizedKern, instruments=None):
+    def __init__(self,
+                 spine_types: [] = None,
+                 token_categories: [] = None,
+                 from_measure: int = None,
+                 to_measure: int = None,
+                 kern_type: KernTypeExporter = KernTypeExporter.normalizedKern,
+                 instruments: [] = None,
+                 show_measure_numbers: bool = False
+    ):
         """
         Create a new ExportOptions object.
 
@@ -49,7 +56,7 @@ class ExportOptions:
             to_measure (int): The measure to end exporting. When None, the exporter will end at the end of the file.
             kern_type (KernTypeExporter): The type of the kern file to export.
             instruments (Iterable): The instruments to export. When None, all the instruments will be exported.
-
+            show_measure_numbers (Bool): Show the measure numbers in the exported file.
 
         Example:
             >>> import kernpy
@@ -79,9 +86,10 @@ class ExportOptions:
         self.spine_types = spine_types
         self.from_measure = from_measure
         self.to_measure = to_measure
-        self.token_categories = token_categories or []
+        self.token_categories = token_categories if token_categories is not None else []
         self.kern_type = kern_type
-        self.instruments = instruments or []
+        self.instruments = instruments if instruments is not None else []
+        self.show_measure_numbers = show_measure_numbers
 
 
 def empty_row(row):
