@@ -205,6 +205,8 @@ from .core import *
 
 from .util import *
 
+from .polish_scores import *
+
 
 
 
