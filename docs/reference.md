@@ -12,7 +12,6 @@ Find the basics of the `kernpy` package in the [Tutorial](get-started/tutorial.m
 
 ::: kernpy.util
 
-::: kernpy.polish_scores
 
 
 
