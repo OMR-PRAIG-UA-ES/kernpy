@@ -64,8 +64,27 @@ def download_and_save_image(url, save_path):
         print(f"An error occurred: {e}")
 
 
-def extract_and_save_measures(document, from_measure, to_measure, krn_path):
-    export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kern_type=KernTypeExporter.eKern)
+def factory_get_kern_type_exporter(kern_type: str) -> KernTypeExporter:
+    """
+    Factory method to get the KernTypeExporter
+
+    Args:
+        kern_type (str): the type of kern exporter. It can be 'kern' or 'ekern'
+
+    Returns:
+        KernTypeExporter: the KernTypeExporter instance
+    """
+    if kern_type == 'kern':
+        return KernTypeExporter.normalizedKern
+    elif kern_type == 'ekern':
+        return KernTypeExporter.eKern
+    else:
+        raise Exception(f'Unknown export kern type: {kern_type}')
+
+
+def extract_and_save_measures(document, from_measure, to_measure, krn_path, exporter_kern_type='ekern'):
+    exporter_kern_type = factory_get_kern_type_exporter(exporter_kern_type)
+    export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kern_type=exporter_kern_type)
     export_options.from_measure = from_measure
     export_options.to_measure = to_measure
     exporter = Exporter()
@@ -74,7 +93,7 @@ def extract_and_save_measures(document, from_measure, to_measure, krn_path):
         f.write(exported_ekern)
 
 
-def download_and_save_page_images(document, _output_path, map_page_label_iiif_ids, page_bounding_boxes, log_filename):
+def download_and_save_page_images(document, _output_path, map_page_label_iiif_ids, page_bounding_boxes, log_filename, exporter_kern_type='ekern'):
     print(f'Bounding boxes {page_bounding_boxes}')
 
     for page_label, bounding_box_measure in page_bounding_boxes.items():
@@ -95,7 +114,7 @@ def download_and_save_page_images(document, _output_path, map_page_label_iiif_id
             download_and_save_image(url, image_path)
             krn_path = os.path.join(_output_path, page_label + ".ekrn")
             extract_and_save_measures(document, bounding_box_measure.from_measure, bounding_box_measure.to_measure - 1,
-                                      krn_path)
+                                      krn_path, exporter_kern_type=exporter_kern_type)
             add_log(document, krn_path, log_filename=log_filename)
         else:
             raise Exception(f'Cannot find IIIF id for page with label "{page_label}"')
@@ -120,7 +139,7 @@ def is_valid_document(document, kern_spines_filter) -> bool:
     return len(kern_types) == int(kern_spines_filter)
 
 
-def convert_and_download_file(input_kern, _output_path, log_filename, kern_spines_filter: int = None):
+def convert_and_download_file(input_kern, _output_path, log_filename, kern_spines_filter: int = None, exporter_kern_type='ekern') -> None:
     document, errors = read(input_kern)
     if len(errors) > 0:
         print(f'ERRORS when kernpy.read:{input_kern} has errors {errors}\nContinue...', file=sys.stderr)
@@ -131,7 +150,7 @@ def convert_and_download_file(input_kern, _output_path, log_filename, kern_spine
 
     map_page_label_IIIF_ids = findIIIFIds(document)
     download_and_save_page_images(document, _output_path, map_page_label_IIIF_ids, document.page_bounding_boxes,
-                                  log_filename=log_filename)
+                                  log_filename=log_filename, exporter_kern_type='ekern')
 
 
 def search_files_with_string(root_folder, target_string):
@@ -254,7 +273,7 @@ def store_error_log(filename, msg: dict):
         f.write(f'{json.dumps(msg)}\n')
 
 
-def main(input_directory, output_directory, remove_empty_directories: bool = True, kern_spines_filter: int = 2) -> None:
+def main(input_directory, output_directory, remove_empty_directories: bool = True, kern_spines_filter: int = 2, exporter_kern_type='ekern'):
     """
     Process the files in the input_directory and save the results in the output_directory.
     http requests are made to download the images.
@@ -263,7 +282,11 @@ def main(input_directory, output_directory, remove_empty_directories: bool = Tru
         input_directory: directory where the input files are found
         output_directory: directory where the output files are saved
         remove_empty_directories (bool): remove empty directories when finish processing the files
-        kern_spines_filter (int): Only process files with the number of **kern spines specified. Use it to export 2-voice files, for example.
+        kern_spines_filter (int): Only process files with the number of **kern spines specified.\
+            Use it to export 2-voice files. Default is 2.\
+            Use None to process all files.
+
+
 
     Returns:
         None
@@ -276,6 +299,9 @@ def main(input_directory, output_directory, remove_empty_directories: bool = Tru
         None
 
         >>> main('/kern_files', '/output_ekern', kern_spines_filter=2, remove_empty_directories=False)
+        None
+
+        >>> main('/kern_files', '/output_ekern', kern_spines_filter=None, remove_empty_directories=False)
         None
 
     """
@@ -295,7 +321,7 @@ def main(input_directory, output_directory, remove_empty_directories: bool = Tru
             output_kern_path = os.path.join(output_directory, filename)
             if not os.path.exists(output_kern_path):
                 os.makedirs(output_kern_path)
-            convert_and_download_file(kern_path, output_kern_path, log_filename=log_file, kern_spines_filter=kern_spines_filter)
+            convert_and_download_file(kern_path, output_kern_path, log_filename=log_file, kern_spines_filter=kern_spines_filter, exporter_kern_type=exporter_kern_type)
             ok_files.append(kern)
         except Exception as error:
             ko_files.append(kern)
