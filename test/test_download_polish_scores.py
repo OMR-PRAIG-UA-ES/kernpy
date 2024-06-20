@@ -37,7 +37,7 @@ class DownloadPolishScoresTestCase(unittest.TestCase):
             content2 = file2.read()
             self.assertEqual(content1, content2)
 
-    def test(self):
+    def test_convert_and_download_file(self):
         temp_dir = tempfile.mkdtemp()
         input_folder = 'resource_dir/polish/test1'
         log_file = os.path.join(temp_dir, 'polish_index.json')
@@ -46,6 +46,10 @@ class DownloadPolishScoresTestCase(unittest.TestCase):
         for i in range(9, 11):
             self.checkEqualFiles(input_folder + f'/pages/{i}.ekrn', temp_dir + f'/{i}.ekrn')
             self.check_image_sizes_equal(input_folder + f'/pages/{i}.jpg', temp_dir + f'/{i}.jpg')
+
+    def test_polish_package_import(self):
+        from kernpy.polish_scores import download_polish_scores
+        self.assertIsNotNone(download_polish_scores)
 
 
 if __name__ == '__main__':
