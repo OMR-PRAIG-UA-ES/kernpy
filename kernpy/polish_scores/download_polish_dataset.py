@@ -82,7 +82,7 @@ def factory_get_kern_type_exporter(kern_type: str) -> KernTypeExporter:
         raise Exception(f'Unknown export kern type: {kern_type}')
 
 
-def extract_and_save_measures(document, from_measure, to_measure, krn_path, exporter_kern_type='ekern'):
+def extract_and_save_measures(document, from_measure, to_measure, krn_path, exporter_kern_type='ekrn'):
     exporter_kern_type = factory_get_kern_type_exporter(exporter_kern_type)
     export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kern_type=exporter_kern_type)
     export_options.from_measure = from_measure
@@ -93,7 +93,7 @@ def extract_and_save_measures(document, from_measure, to_measure, krn_path, expo
         f.write(exported_ekern)
 
 
-def download_and_save_page_images(document, _output_path, map_page_label_iiif_ids, page_bounding_boxes, log_filename, exporter_kern_type='ekern'):
+def download_and_save_page_images(document, _output_path, map_page_label_iiif_ids, page_bounding_boxes, log_filename, exporter_kern_type='ekrn'):
     print(f'Bounding boxes {page_bounding_boxes}')
 
     for page_label, bounding_box_measure in page_bounding_boxes.items():
@@ -130,6 +130,7 @@ def findIIIFIds(document):
             return get_image_urls(url)
     raise Exception('Cannot find any IIIF metacomment')
 
+
 def is_valid_document(document, kern_spines_filter) -> bool:
     if kern_spines_filter is None:
         return True
@@ -139,7 +140,7 @@ def is_valid_document(document, kern_spines_filter) -> bool:
     return len(kern_types) == int(kern_spines_filter)
 
 
-def convert_and_download_file(input_kern, _output_path, log_filename, kern_spines_filter: int = None, exporter_kern_type='ekern') -> None:
+def convert_and_download_file(input_kern, _output_path, log_filename, kern_spines_filter: int = None, exporter_kern_type='ekrn') -> None:
     document, errors = read(input_kern)
     if len(errors) > 0:
         print(f'ERRORS when kernpy.read:{input_kern} has errors {errors}\nContinue...', file=sys.stderr)
@@ -150,7 +151,7 @@ def convert_and_download_file(input_kern, _output_path, log_filename, kern_spine
 
     map_page_label_IIIF_ids = findIIIFIds(document)
     download_and_save_page_images(document, _output_path, map_page_label_IIIF_ids, document.page_bounding_boxes,
-                                  log_filename=log_filename, exporter_kern_type='ekern')
+                                  log_filename=log_filename, exporter_kern_type=exporter_kern_type)
 
 
 def search_files_with_string(root_folder, target_string):
