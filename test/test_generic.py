@@ -3,6 +3,7 @@ import unittest
 import logging
 import sys
 from tempfile import TemporaryDirectory
+from unittest.mock import patch
 
 import kernpy
 
@@ -56,3 +57,15 @@ class GenericTestCase(unittest.TestCase):
 
         spine_types = kernpy.get_spine_types(doc, spine_types=[])
         self.assertEqual([], spine_types)
+
+    @patch('kernpy.Exporter.get_spine_types')
+    def test_get_spine_types_uses_exporter_get_spines_types(self, mock_get_spines_types):
+        # Arrange
+        doc, _ = kernpy.read('resource_dir/legacy/chor048.krn')
+
+        # Act
+        _ = kernpy.get_spine_types(doc)
+
+        # Assert
+        mock_get_spines_types.assert_called_once()
+
