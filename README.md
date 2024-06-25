@@ -98,10 +98,25 @@ concatenated = kp.concat(score_a, score_b)
 
 ## Installation
 
-Install the last version of **kernpy using pip:
+### Production version:
+Just install the last version of **kernpy** using pip:
 ```shell
 pip install git+https://github.com/OMR-PRAIG-UA-ES/kernpy.git 
 ```
+
+> [!NOTE]
+> This module is downloaded by default in the _/tmp_ directory. So it is removed when shutdown the machine.
+
+<hr>
+
+### Development version:
+
+> [!IMPORTANT]  
+> - Add the development dependencies to the `requirements.txt` file.
+> - Add the production dependencies to the `pyproject.toml` file.
+> - After every change in the grammar, the next steps are mandatory:
+> - - Run the `antlr4.sh` script (JAVA required).
+> - - Commit & push the changes to the repository.
 
 
 - Generate antrl4 grammar:
@@ -152,17 +167,10 @@ pip install tqdm
 Documentation available at [https://kernpy.pages.dev/](https://kernpy.pages.dev/)
 
 
-Execute the following command to run **kernpy** as a module:
+**kernpy** also supports been executed as a module. Find out the available commands:
 ```shell
 python -m kernpy --help
 python -m kernpy <command> <options>
-```
-
-Run `kernpy` from your script:
-```python
-import kernpy
-
-help(kernpy)
 ```
 
 
