@@ -59,6 +59,9 @@ def create_parser() -> argparse.ArgumentParser:
         polish_args.add_argument('--input_directory', required=True, type=str, help='Input directory path')
         polish_args.add_argument('--output_directory', required=True, type=str, help='Output directory path')
         polish_args.add_argument('--instrument', required=False, type=str, help='Instrument name')
+        polish_args.add_argument('--kern_type', required=False, type=str, help='Kern type: "krn" or "ekrn"')
+        polish_args.add_argument('--kern_spines_filter', required=False, type=str, help='How many kern spines scores will be exported. A number greater than 0', default=None)
+        polish_args.add_argument('--remove_empty_dirs', required=False, action='store_true', help='Remove empty directories after exporting the scores', default=True)
 
     # Generate fragments
     # Create a group for optional arguments
@@ -93,7 +96,13 @@ def handle_polish_exporter(args) -> None:
     else:
         print("Instrument: Not specified")
 
-    polish_scores.download_polish_dataset.main(args.input_directory, args.output_directory)
+    polish_scores.download_polish_dataset.main(
+        input_directory=args.input_directory,
+        output_directory=args.output_directory,
+        kern_spines_filter=args.kern_spines_filter,
+        exporter_kern_type=args.kern_type,
+        remove_empty_directories=args.remove_empty_dirs
+    )
 
 
 def handle_ekern2kern(args) -> None:
