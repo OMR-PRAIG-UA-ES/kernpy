@@ -36,28 +36,6 @@ class GenericTestCase(unittest.TestCase):
             # Assert
             self.assertTrue(os.path.exists(file_path), f"File not created: {file_path}")
 
-    def test_get_spine_types(self):
-        # Arrange
-        doc, _ = kernpy.read('resource_dir/legacy/chor048.krn')
-
-        spine_types = kernpy.get_spine_types(doc)
-        self.assertEqual(['**kern', '**kern', '**kern', '**kern', '**root', '**harm'], spine_types)
-
-        spine_types = kernpy.get_spine_types(doc, spine_types=None)
-        self.assertEqual(['**kern', '**kern', '**kern', '**kern', '**root', '**harm'], spine_types)
-
-        spine_types = kernpy.get_spine_types(doc, spine_types=['**kern'])
-        self.assertEqual(['**kern', '**kern', '**kern', '**kern'], spine_types)
-
-        spine_types = kernpy.get_spine_types(doc, spine_types=['**root'])
-        self.assertEqual(['**root'], spine_types)
-
-        spine_types = kernpy.get_spine_types(doc, spine_types=['**not-exists'])
-        self.assertEqual([], spine_types)
-
-        spine_types = kernpy.get_spine_types(doc, spine_types=[])
-        self.assertEqual([], spine_types)
-
     @patch('kernpy.Exporter.get_spine_types')
     def test_get_spine_types_uses_exporter_get_spines_types(self, mock_get_spines_types):
         # Arrange
@@ -68,4 +46,27 @@ class GenericTestCase(unittest.TestCase):
 
         # Assert
         mock_get_spines_types.assert_called_once()
+
+    @patch('kernpy.Importer.import_file')
+    def test_read_use_importer_run(self, mock_importer_run):
+        # Arrange
+        file_path = 'resource_dir/legacy/chor048.krn'
+
+        # Act
+        _ = kernpy.read(file_path)
+
+        # Assert
+        mock_importer_run.assert_called_once_with(file_path)
+
+    @patch('kernpy.Exporter.export_string')
+    def test_export_use_exporter_run(self, mock_exporter_run):
+        # Arrange
+        doc, _ = kernpy.read('resource_dir/legacy/chor048.krn')
+        options = kernpy.ExportOptions()
+
+        # Act
+        _ = kernpy.export(doc, options)
+
+        # Assert
+        mock_exporter_run.assert_called_once_with(doc, options)
 
