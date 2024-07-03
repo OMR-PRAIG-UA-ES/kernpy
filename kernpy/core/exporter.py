@@ -83,12 +83,12 @@ class ExportOptions:
             >>> exported_data = exporter.export_string(document, options)
 
         """
-        self.spine_types = spine_types
+        self.spine_types = spine_types if spine_types is not None else ['**kern']
         self.from_measure = from_measure
         self.to_measure = to_measure
-        self.token_categories = token_categories if token_categories is not None else []
+        self.token_categories = token_categories if token_categories is not None else [c for c in TokenCategory]
         self.kern_type = kern_type
-        self.instruments = instruments if instruments is not None else []
+        self.instruments = instruments
         self.show_measure_numbers = show_measure_numbers
 
     def __eq__(self, other) -> bool:

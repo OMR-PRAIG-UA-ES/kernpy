@@ -5,16 +5,27 @@ import kernpy as kp
 
 class TestExportOptions(unittest.TestCase):
     def test_default_values(self):
-        expected_options = kp.ExportOptions(
-            spine_types=None,
-            token_categories=None,
-            to_measure=None,
-            kern_type=kp.KernTypeExporter.normalizedKern,
-            instruments=None,
-            show_measure_numbers=False
-        )
+        expected_options = kp.ExportOptions()
+        expected_options.spine_types = ['**kern']
+        expected_options.token_categories = [c for c in kp.TokenCategory]
+        expected_options.from_measure = None
+        expected_options.to_measure = None
+        expected_options.kern_type = kp.KernTypeExporter.normalizedKern
+        expected_options.instruments = None
+        expected_options.show_measure_numbers = False
+
         real_options = kp.ExportOptions()
 
         self.assertEqual(expected_options, real_options)
+
+    def test__eq__(self):
+        a = kp.ExportOptions()
+        b = kp.ExportOptions()
+        self.assertEqual(a, b)
+
+    def test__ne__(self):
+        a = kp.ExportOptions()
+        b = kp.ExportOptions(instruments=['piano'])
+        self.assertNotEqual(a, b)
 
 
