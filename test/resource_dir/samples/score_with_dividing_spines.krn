@@ -1,0 +1,107 @@
+**kern
+*clefG2
+*k[]
+*M4/4
+=1
+!LO:TX:a:t=Sora's Theme&colon; Main motif
+6dd\
+6a/
+6b\
+2cc\
+=2
+4r
+8b\L
+8cc\J
+6dd\
+6cc\
+6b\
+=3
+8.a/L
+16f#X/Jk
+2a/
+4r
+=4
+!LO:TX:a:t=Yozora's Theme&colon; Main Motif
+6ee\
+6dd\
+6ee\
+2a/
+=5
+!!linebreak:original
+4r
+4b\
+8.cc\L
+8.dd\
+8b\J
+=6
+6ee\
+6dd\
+6ee\
+2a/
+=7
+!LO:TX:a:t=Both Motifs Harmonized
+6a\ 6ee
+6e/ 6dd
+6f#X\ 6ee
+2g/ 2a
+=8
+*^
+4r	4r
+4b/	8f#X\L
+.	8g\J
+8.cc/L	6a\
+.	6g\
+8.dd/	.
+.	6f#\
+8b/J	.
+=9	=9
+6ee/	8.e\L
+6dd/	.
+.	16d-X\Jk
+.	2e\
+6ee/	.
+2a/	.
+.	4r
+*v	*v
+=10
+1r
+=11
+!!linebreak:original
+!LO:TX:a:t=Secret Ep Cutscene 1&colon; Sora's theme variation
+4e/
+8a/L
+8b/J
+2cc\
+=12
+4r
+4r
+4b\
+4cc\
+=13
+4dd\
+4b\
+8cc\L
+8b\J
+4a/
+=14
+1r
+=15
+!!linebreak:original
+!LO:TX:a:t=Yozora's theme continued with the variation on Sora's theme
+6ee\
+6dd\
+6ee\
+2a/
+=16
+4r
+4b\
+8.cc\L
+8.dd\
+8b\J
+=17
+8cc\L
+8b\J
+2a/
+4r
+==
+*-

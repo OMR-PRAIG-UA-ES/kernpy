@@ -346,6 +346,19 @@ class ImporterTestCase(unittest.TestCase):
         with self.assertRaises(ValueError):
             exporter.export_string(document, options)
 
+    def test_extract_measures_when_spines_split(self):
+        doc, err = read('resource_dir/samples/score_with_dividing_spines.krn')
+        export_otions = ExportOptions(spine_types=['**kern'],
+                                      kern_type=KernTypeExporter.normalizedKern,
+                                      from_measure=9,
+                                      to_measure=13)
+
+        exported_real = export(doc, export_otions)
+
+        with open('resource_dir/samples/score_with_dividing_spines_m9-m13.krn', 'r') as f:
+            expected_output = f.read()
+        self.assertEqual(expected_output, exported_real)
+
     def testOther(self):
         importer = self.doJustImportTest(
             'resource_dir/polish/test3/pl-wn--sd-xvi-qu-273--001-020_gomolka-mikolaj--melodiae-na-psalterz-polski-xx-wsiadaj-z-dobrym-sercem-o-krolu-cnotliwy.krn')
