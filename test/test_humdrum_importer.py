@@ -346,8 +346,8 @@ class ImporterTestCase(unittest.TestCase):
         with self.assertRaises(ValueError):
             exporter.export_string(document, options)
 
-    def test_extract_measures_when_spines_split(self):
-        doc, err = read('resource_dir/samples/score_with_dividing_spines.krn')
+    def test_extract_measures_when_spines_split_one_spine(self):
+        doc, err = read('resource_dir/samples/score_with_dividing_one_spine.krn')
         export_otions = ExportOptions(spine_types=['**kern'],
                                       kern_type=KernTypeExporter.normalizedKern,
                                       from_measure=9,
@@ -355,7 +355,20 @@ class ImporterTestCase(unittest.TestCase):
 
         exported_real = export(doc, export_otions)
 
-        with open('resource_dir/samples/score_with_dividing_spines_m9-m13.krn', 'r') as f:
+        with open('resource_dir/samples/score_with_dividing_one_spine_m9-m13.krn', 'r') as f:
+            expected_output = f.read()
+        self.assertEqual(expected_output, exported_real)
+
+    def test_extract_measures_when_spines_split_two_spines(self):
+        doc, err = read('resource_dir/samples/score_with_dividing_two_spines.krn')
+        export_otions = ExportOptions(spine_types=['**kern'],
+                                      kern_type=KernTypeExporter.normalizedKern,
+                                      from_measure=49,
+                                      to_measure=56)
+
+        exported_real = export(doc, export_otions)
+
+        with open('resource_dir/samples/score_with_dividing_two_spines_m49-m56.krn', 'r') as f:
             expected_output = f.read()
         self.assertEqual(expected_output, exported_real)
 
