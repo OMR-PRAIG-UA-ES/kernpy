@@ -70,3 +70,15 @@ class GenericTestCase(unittest.TestCase):
         # Assert
         mock_exporter_run.assert_called_once_with(doc, options)
 
+    def test_create_document(self):
+        # Arrange
+        file_path = 'resource_dir/legacy/chor048.krn'
+        with open(file_path, 'r') as f:
+            content = f.read()
+
+        # Act
+        doc, _ = kernpy.create(content)
+
+        # Assert
+        self.assertIsInstance(doc, kernpy.Document)
+

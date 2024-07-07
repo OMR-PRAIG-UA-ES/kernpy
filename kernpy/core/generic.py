@@ -34,6 +34,29 @@ def read(path) -> (Document, []):
     return document, errors
 
 
+def create(content: str) -> (Document, []):
+    """
+    Create a Document object from a string encoded in Humdrum **kern format.
+
+    Args:
+        content: String encoded in Humdrum **kern format
+
+    Returns (Document, list): Document object and list of error messages. Empty list if no errors.
+
+    Examples:
+        >>> import kernpy as kp
+        >>> document, errors = kp.create('**kern\n4e\n4f\n4g\n*-\n')
+        >>> if len(errors) > 0:
+        >>>     print(errors)
+        ['Error: Invalid **kern spine: 1', 'Error: Invalid **kern spine: 2']
+    """
+    importer = Importer()
+    document = importer.import_string(content)
+    errors = copy.deepcopy(importer.errors)
+
+    return document, errors
+
+
 def export(document: Document, options: ExportOptions) -> str:
     """
     Export a Document object to a string.
@@ -76,6 +99,7 @@ def store(document: Document, path, options: ExportOptions) -> None:
     content = exporter.export_string(document, options)
     _write(path, content)
 
+
 def store_graph(document: Document, path) -> None:
     """
     Create a graph representation of a Document object using Graphviz. Save the graph to a file.
@@ -93,6 +117,7 @@ def store_graph(document: Document, path) -> None:
     """
     graph_exporter = GraphvizExporter()
     graph_exporter.export_to_dot(document.tree, path)
+
 
 def get_spine_types(document: Document, spine_types: list = None) -> list:
     """
@@ -122,6 +147,7 @@ def get_spine_types(document: Document, spine_types: list = None) -> list:
     """
     exporter = Exporter()
     return exporter.get_spine_types(document, spine_types=spine_types)
+
 
 def concat(content_a: str, content_b: str, options: ExportOptions = None) -> str:
     """

@@ -50,6 +50,7 @@ __all__ = [
     'DurationClassical',
     'DurationMensural',
     'read',
+    'create',
     'export',
     'store',
     'store_graph',
