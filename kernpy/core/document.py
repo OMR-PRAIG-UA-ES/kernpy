@@ -339,6 +339,32 @@ class Document:
 
         return result
 
+    def append_spines(self, spines) -> None:
+        """
+        Append the spines directly to current document tree.
+
+        Args:
+            spines(list): A list of spines to append.
+
+        Returns: None
+
+        Examples:
+            >>> import kernpy as kp
+            >>> doc, _ = kp.read('score.krn')
+            >>> spines = [
+            >>> '4e\t4f\t4g\t4a\n4b\t4c\t4d\t4e\n=\t=\t=\t=\n',
+            >>> '4c\t4d\t4e\t4f\n4g\t4a\t4b\t4c\n=\t=\t=\t=\n',
+           >>> ]
+           >>> doc.append_spines(spines)
+           None
+        """
+        raise NotImplementedError()
+        if len(spines) != self.get_spine_count():
+            raise Exception(f"Spines count mismatch: {len(spines)} != {self.get_spine_count()}")
+
+        for spine in spines:
+            return
+
     def add_document(self, other: 'Document'):
         """
         Concatenate one document to the current document: Mutates the current object!

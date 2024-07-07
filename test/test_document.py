@@ -4,6 +4,7 @@ import logging
 import sys
 from tempfile import TemporaryDirectory
 
+import kernpy
 import kernpy as kp
 
 
@@ -21,4 +22,11 @@ class DocumentTestCase(unittest.TestCase):
 
         # compare
         ...
+
+    @unittest.skip("TODO: Not implemented yet")
+    def test_document_append_spines(self):
+        doc, _ = kp.read('resource_dir/legacy/base_tuplet.krn')
+        doc.append_spines(spines=['4e\t4f\t4g\t4a\n4b\t4c\t4d\t4e\n*_\t*_\t*_\t*_\n'])
+
+        pass
 
