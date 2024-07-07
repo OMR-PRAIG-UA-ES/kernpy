@@ -387,6 +387,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#kernpy.Document.append_spines" class="md-nav__link">
+    <span class="md-ellipsis">
+      append_spines
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#kernpy.Document.clone" class="md-nav__link">
     <span class="md-ellipsis">
       clone
@@ -1176,6 +1185,15 @@
   <a href="#kernpy.core.Document.add_document" class="md-nav__link">
     <span class="md-ellipsis">
       add_document
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Document.append_spines" class="md-nav__link">
+    <span class="md-ellipsis">
+      append_spines
     </span>
   </a>
   
@@ -2411,6 +2429,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#kernpy.Document.append_spines" class="md-nav__link">
+    <span class="md-ellipsis">
+      append_spines
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#kernpy.Document.clone" class="md-nav__link">
     <span class="md-ellipsis">
       clone
@@ -3200,6 +3227,15 @@
   <a href="#kernpy.core.Document.add_document" class="md-nav__link">
     <span class="md-ellipsis">
       add_document
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Document.append_spines" class="md-nav__link">
+    <span class="md-ellipsis">
+      append_spines
     </span>
   </a>
   
@@ -4563,6 +4599,45 @@ create_fragments_from_directory('/my/path/to/input_dir/', '/to/my/output_dir/',
       </tbody>
     </table>
       <p>Returns: None</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="kernpy.Document.append_spines" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">append_spines</span><span class="p">(</span><span class="n">spines</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+      <pre><code>    Append the spines directly to current document tree.
+
+    Args:
+        spines(list): A list of spines to append.
+
+    Returns: None
+
+    Examples:
+        &gt;&gt;&gt; import kernpy as kp
+        &gt;&gt;&gt; doc, _ = kp.read('score.krn')
+        &gt;&gt;&gt; spines = [
+        &gt;&gt;&gt; '4e     4f      4g      4a
+</code></pre>
+<p>4b      4c      4d      4e
+=       =       =       =
+',
+            &gt;&gt;&gt; '4c     4d      4e      4f
+4g      4a      4b      4c
+=       =       =       =
+',
+           &gt;&gt;&gt; ]
+           &gt;&gt;&gt; doc.append_spines(spines)
+           None</p>
 
     </div>
 
@@ -8838,6 +8913,45 @@ for krn_file in krn_files:
       </tbody>
     </table>
       <p>Returns: None</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="kernpy.core.Document.append_spines" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">append_spines</span><span class="p">(</span><span class="n">spines</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+      <pre><code>    Append the spines directly to current document tree.
+
+    Args:
+        spines(list): A list of spines to append.
+
+    Returns: None
+
+    Examples:
+        &gt;&gt;&gt; import kernpy as kp
+        &gt;&gt;&gt; doc, _ = kp.read('score.krn')
+        &gt;&gt;&gt; spines = [
+        &gt;&gt;&gt; '4e     4f      4g      4a
+</code></pre>
+<p>4b      4c      4d      4e
+=       =       =       =
+',
+            &gt;&gt;&gt; '4c     4d      4e      4f
+4g      4a      4b      4c
+=       =       =       =
+',
+           &gt;&gt;&gt; ]
+           &gt;&gt;&gt; doc.append_spines(spines)
+           None</p>
 
     </div>
 
