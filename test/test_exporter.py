@@ -5,24 +5,35 @@ import kernpy
 
 
 class ExporterTestCase(unittest.TestCase):
-    def test_get_spine_types(self):
-        # Arrange
-        doc, _ = kernpy.read('resource_dir/legacy/chor048.krn')
+    @classmethod
+    def setUpClass(cls):
+        # Read the basic score document once before all tests
+        cls.doc, _ = kernpy.read('resource_dir/legacy/chor048.krn')
 
-        spine_types = kernpy.get_spine_types(doc)
+    def test_get_spine_types_1(self):
+        spine_types = kernpy.get_spine_types(self.doc)
         self.assertEqual(['**kern', '**kern', '**kern', '**kern', '**root', '**harm'], spine_types)
 
-        spine_types = kernpy.get_spine_types(doc, spine_types=None)
+    def test_get_spine_types_2(self):
+        spine_types = kernpy.get_spine_types(self.doc, spine_types=None)
         self.assertEqual(['**kern', '**kern', '**kern', '**kern', '**root', '**harm'], spine_types)
 
-        spine_types = kernpy.get_spine_types(doc, spine_types=['**kern'])
+    def test_get_spine_types_3(self):
+        spine_types = kernpy.get_spine_types(self.doc, spine_types=['**kern'])
         self.assertEqual(['**kern', '**kern', '**kern', '**kern'], spine_types)
 
-        spine_types = kernpy.get_spine_types(doc, spine_types=['**root'])
+    def test_get_spine_types_4(self):
+        spine_types = kernpy.get_spine_types(self.doc, spine_types=['**root'])
         self.assertEqual(['**root'], spine_types)
 
-        spine_types = kernpy.get_spine_types(doc, spine_types=['**not-exists'])
+    def test_get_spine_types_5(self):
+        spine_types = kernpy.get_spine_types(self.doc, spine_types=['**harm'])
+        self.assertEqual(['**harm'], spine_types)
+
+    def test_get_spine_types_6(self):
+        spine_types = kernpy.get_spine_types(self.doc, spine_types=['**not-exists'])
         self.assertEqual([], spine_types)
 
-        spine_types = kernpy.get_spine_types(doc, spine_types=[])
+    def test_get_spine_types_7(self):
+        spine_types = kernpy.get_spine_types(self.doc, spine_types=[])
         self.assertEqual([], spine_types)
