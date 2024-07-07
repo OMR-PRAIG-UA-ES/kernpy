@@ -9,12 +9,13 @@ from kernpy.core import Importer, Document, Exporter, ExportOptions, GraphvizExp
 from kernpy.core.io import _write
 
 
-def read(path) -> (Document, []):
+def read(path, strict=False) -> (Document, []):
     """
     Read a Humdrum **kern file.
 
     Args:
         path: File path to read
+        strict: If True, raise an error if the **kern file has any errors. Otherwise, return a list of errors.
 
     Returns (Document, list): Document object and list of error messages. Empty list if no errors.
 
@@ -31,15 +32,19 @@ def read(path) -> (Document, []):
     document = importer.import_file(path)
     errors = copy.deepcopy(importer.errors)
 
+    if strict and len(errors) > 0:
+        raise Exception(importer.get_error_messages())
+
     return document, errors
 
 
-def create(content: str) -> (Document, []):
+def create(content: str, strict=False) -> (Document, []):
     """
     Create a Document object from a string encoded in Humdrum **kern format.
 
     Args:
         content: String encoded in Humdrum **kern format
+        strict: If True, raise an error if the **kern file has any errors. Otherwise, return a list of errors.
 
     Returns (Document, list): Document object and list of error messages. Empty list if no errors.
 
@@ -53,6 +58,9 @@ def create(content: str) -> (Document, []):
     importer = Importer()
     document = importer.import_string(content)
     errors = copy.deepcopy(importer.errors)
+
+    if strict and len(errors) > 0:
+        raise Exception(importer.get_error_messages())
 
     return document, errors
 
