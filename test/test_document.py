@@ -30,3 +30,13 @@ class DocumentTestCase(unittest.TestCase):
 
         pass
 
+    @unittest.skip("TODO: Not implemented yet")
+    def test_document_get_voices(self):
+        doc, _ = kernpy.read('resource_dir/legacy/chor048.krn')
+
+        voices = doc.get_voices()
+        self.assertEqual(['!sax', '!piano', '!bass'], voices)
+
+        voices = doc.get_voices(clean=True)
+        self.assertEqual(['sax', 'piano', 'bass'], voices)
+
