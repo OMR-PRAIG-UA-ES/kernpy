@@ -923,6 +923,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#kernpy.create" class="md-nav__link">
+    <span class="md-ellipsis">
+      create
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#kernpy.create_fragments_from_directory" class="md-nav__link">
     <span class="md-ellipsis">
       create_fragments_from_directory
@@ -1868,6 +1877,15 @@
   <a href="#kernpy.core.concat" class="md-nav__link">
     <span class="md-ellipsis">
       concat
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kernpy.core.create" class="md-nav__link">
+    <span class="md-ellipsis">
+      create
     </span>
   </a>
   
@@ -2965,6 +2983,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#kernpy.create" class="md-nav__link">
+    <span class="md-ellipsis">
+      create
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#kernpy.create_fragments_from_directory" class="md-nav__link">
     <span class="md-ellipsis">
       create_fragments_from_directory
@@ -3910,6 +3937,15 @@
   <a href="#kernpy.core.concat" class="md-nav__link">
     <span class="md-ellipsis">
       concat
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kernpy.core.create" class="md-nav__link">
+    <span class="md-ellipsis">
+      create
     </span>
   </a>
   
@@ -7566,6 +7602,42 @@ Examples:
 <div class="doc doc-object doc-function">
 
 
+<h2 id="kernpy.create" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">create</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <pre><code>Create a Document object from a string encoded in Humdrum **kern format.
+
+Args:
+    content: String encoded in Humdrum **kern format
+    strict: If True, raise an error if the **kern file has any errors. Otherwise, return a list of errors.
+
+Returns (Document, list): Document object and list of error messages. Empty list if no errors.
+
+Examples:
+    &gt;&gt;&gt; import kernpy as kp
+    &gt;&gt;&gt; document, errors = kp.create('**kern
+</code></pre>
+<p>4e
+4f
+4g
+<em>-
+')
+        &gt;&gt;&gt; if len(errors) &gt; 0:
+        &gt;&gt;&gt;     print(errors)
+        ['Error: Invalid </em><em>kern spine: 1', 'Error: Invalid </em>*kern spine: 2']</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h2 id="kernpy.create_fragments_from_directory" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">create_fragments_from_directory</span><span class="p">(</span><span class="n">input_directory</span><span class="p">,</span> <span class="n">output_directory</span><span class="p">,</span> <span class="n">log_file</span><span class="p">,</span> <span class="n">check_file_extension</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_processes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="n">DEFAULT_MEAN</span><span class="p">,</span> <span class="n">std_dev</span><span class="o">=</span><span class="n">DEFAULT_STD_DEV</span><span class="p">)</span></code>
 
@@ -8480,7 +8552,7 @@ for krn_file in krn_files:
 
 
 <h2 id="kernpy.read" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h2>
 
@@ -8512,6 +8584,19 @@ for krn_file in krn_files:
             </td>
             <td>
                 <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>strict</code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, raise an error if the **kern file has any errors. Otherwise, return a list of errors.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
             </td>
           </tr>
       </tbody>
@@ -12336,6 +12421,42 @@ Examples:
 <div class="doc doc-object doc-function">
 
 
+<h2 id="kernpy.core.create" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">create</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+      <pre><code>Create a Document object from a string encoded in Humdrum **kern format.
+
+Args:
+    content: String encoded in Humdrum **kern format
+    strict: If True, raise an error if the **kern file has any errors. Otherwise, return a list of errors.
+
+Returns (Document, list): Document object and list of error messages. Empty list if no errors.
+
+Examples:
+    &gt;&gt;&gt; import kernpy as kp
+    &gt;&gt;&gt; document, errors = kp.create('**kern
+</code></pre>
+<p>4e
+4f
+4g
+<em>-
+')
+        &gt;&gt;&gt; if len(errors) &gt; 0:
+        &gt;&gt;&gt;     print(errors)
+        ['Error: Invalid </em><em>kern spine: 1', 'Error: Invalid </em>*kern spine: 2']</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h2 id="kernpy.core.ekern_to_krn" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">ekern_to_krn</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span></code>
 
@@ -12741,7 +12862,7 @@ for krn_file in krn_files:
 
 
 <h2 id="kernpy.core.read" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h2>
 
@@ -12773,6 +12894,19 @@ for krn_file in krn_files:
             </td>
             <td>
                 <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>strict</code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, raise an error if the **kern file has any errors. Otherwise, return a list of errors.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
             </td>
           </tr>
       </tbody>
