@@ -101,7 +101,7 @@ concatenated = kp.concat(score_a, score_b)
 ### Production version:
 Just install the last version of **kernpy** using pip:
 ```shell
-pip install git+https://github.com/OMR-PRAIG-UA-ES/kernpy.git 
+pip install git+https://github.com/OMR-PRAIG-UA-ES/kernpy.git --upgrade
 ```
 
 > [!NOTE]
