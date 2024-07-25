@@ -3,7 +3,6 @@ Public API for KernPy.
 
 The main functions for handling the input and output of **kern files are provided here.
 """
-import copy
 
 from kernpy.core import Importer, Document, Exporter, ExportOptions, GraphvizExporter
 from kernpy.core.io import _write
@@ -30,7 +29,7 @@ def read(path, strict=False) -> (Document, []):
     """
     importer = Importer()
     document = importer.import_file(path)
-    errors = copy.deepcopy(importer.errors)
+    errors = importer.errors
 
     if strict and len(errors) > 0:
         raise Exception(importer.get_error_messages())
@@ -57,7 +56,7 @@ def create(content: str, strict=False) -> (Document, []):
     """
     importer = Importer()
     document = importer.import_string(content)
-    errors = copy.deepcopy(importer.errors)
+    errors = importer.errors
 
     if strict and len(errors) > 0:
         raise Exception(importer.get_error_messages())
