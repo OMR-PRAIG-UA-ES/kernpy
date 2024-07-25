@@ -10,7 +10,8 @@ from _pytest.mark.expression import TokenType
 from kernpy import (KernSpineImporter, MensSpineImporter, DynamSpineImporter, DynSpineImporter, HarmSpineImporter, \
                     RootSpineImporter, TextSpineImporter, FingSpineImporter, BEKERN_CATEGORIES, ExportOptions, Exporter,
                     TokenCategory,
-                    KernTypeExporter, Document, Importer, GraphvizExporter, get_kern_from_ekern, read, export)
+                    KernTypeExporter, Document, Importer, GraphvizExporter, get_kern_from_ekern, read, export,
+                    store_graph)
 from kernpy.core import createImporter, Token
 
 logger = logging.getLogger()
@@ -353,6 +354,7 @@ class ImporterTestCase(unittest.TestCase):
                                       from_measure=9,
                                       to_measure=13)
 
+        store_graph(doc, '/tmp/x.dot')
         exported_real = export(doc, export_otions)
 
         with open('resource_dir/samples/score_with_dividing_one_spine_m9-m13.krn', 'r') as f:

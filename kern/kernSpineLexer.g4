@@ -1,5 +1,9 @@
 /*
+This grammar is used in mOOsicae and kernpy. It must be kept synchronised
+Changes (please, add here the authors and date of each change):
+
 @author: David Rizo (drizo@dlsi.ua.es) Feb, 2024.
+It parses just a token inside a **kern spine
 */
 lexer grammar kernSpineLexer;
 
