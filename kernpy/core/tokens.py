@@ -1,4 +1,3 @@
-import string
 from abc import ABC, abstractmethod
 from enum import Enum, auto
 import copy
@@ -137,7 +136,7 @@ class PitchRest:
         return self.octave is None
 
     @staticmethod
-    def pitch_comparator(pitch_a: string, pitch_b: string) -> int:
+    def pitch_comparator(pitch_a: str, pitch_b: str) -> int:
         """
         Compare two pitches of the same octave.
 
@@ -530,7 +529,7 @@ class DurationClassical(Duration):
         Create a new Duration object.
 
         Args:
-            raw_duration (str): duration representation in Humdrum Kern format
+            duration (str): duration representation in Humdrum Kern format
 
         Examples:
             >>> duration = DurationClassical(2)
@@ -767,85 +766,188 @@ class DurationClassical(Duration):
 
 
 class Subtoken:
+    """
+    Subtoken class
+
+    Attributes:
+        encoding: The complete unprocessed encoding
+        category: The subtoken category, one of SubTokenCategory
+    """
     DECORATION = None
 
     def __init__(self, encoding, category):
         """
-        :param encoding: The complete unprocessed encoding
-        :param category: The subtoken category, one of SubTokenCategory
+        Subtoken constructor
+
+        Args:
+            encoding: The complete unprocessed encoding
+            category: The subtoken category, one of SubTokenCategory
+
         """
         self.encoding = encoding
         self.category = category
 
 
 class AbstractToken(ABC):
-    def __init__(self, encoding, category):
+    """
+    An abstract base class representing a token.
+
+    This class serves as a blueprint for creating various types of tokens, which are
+    categorized based on their TokenCategory.
+
+    Attributes:
+        encoding (str): The original representation of the token.
+        category (TokenCategory): The category of the token.
+        hidden (bool): A flag indicating whether the token is hidden. Defaults to False.
+    """
+
+    def __init__(self, encoding: str, category: TokenCategory):
+        """
+        AbstractToken constructor
+
+        Args:
+            encoding(str): The original representation of the token.
+            category(TokenCategory): The category of the token.
+        """
         self.encoding = encoding
         self.category = category
         self.hidden = False
 
     @abstractmethod
-    def export(self) -> string:
+    def export(self) -> str:
+        """
+        Exports the token.
+
+        Returns:
+            str: The encoding of the token.
+
+        Examples:
+            >>> token = AbstractToken('*clefF4', TokenCategory.SIGNATURES)
+            >>> token.export()
+            '*clefF4'
+        """
         pass
 
 
 class ErrorToken(AbstractToken):
-    """Used to wrap tokens that have not been parsed"""
+    """
+    Used to wrap tokens that have not been parsed.
+    """
 
-    def __init__(self, encoding, line, error):
+    def __init__(self, encoding: str, line: int, error: str):
+        """
+        ErrorToken constructor
+
+        Args:
+            encoding(str): The original representation of the token.
+            line(int): The line number of the token in the score.
+            error(str): The error message thrown by the parser.
+        """
         super().__init__(encoding, TokenCategory.EMPTY)
         self.error = error
         self.line = line
 
-    def export(self) -> string:
+    def export(self) -> str:
         return ''  # TODO Qué exportamos?
 
     def __str__(self):
-        return f'Error token at line {self.line} with encoding "{self.encoding}": {self.error}'
+        """
+        Information about the error token.
+
+        Returns:
+            str: The information about the error token.
+        """
+        return f'Error token found at line {self.line} with encoding "{self.encoding}". Description: {self.error}'
 
 
 class MetacommentToken(AbstractToken):
+    """
+    MetacommentToken class stores the metacomments of the score.
+    Usually these are comments starting with `!!`.
+
+    """
+
     def __init__(self, encoding):
         super().__init__(encoding, TokenCategory.LINE_COMMENTS)
 
-    def export(self) -> string:
+    def export(self) -> str:
         return self.encoding
 
 
 class InstrumentToken(AbstractToken):
+    """
+    InstrumentToken class stores the instruments of the score.
+
+    These tokens usually look like `*I"Organo`.
+    """
+
     def __init__(self, encoding):
         super().__init__(encoding, TokenCategory.INSTRUMENTS)
 
-    def export(self) -> string:
+    def export(self) -> str:
         return self.encoding
 
 
 class FieldCommentToken(AbstractToken):
+    """
+    FieldCommentToken class stores the metacomments of the score.
+    Usually these are comments starting with `!!!`.
+
+    """
+
     def __init__(self, encoding):
         super().__init__(encoding, TokenCategory.FIELD_COMMENTS)
 
-    def export(self) -> string:
+    def export(self) -> str:
         return self.encoding
 
 
 class HeaderToken(AbstractToken):
+    """
+    HeaderTokens class.
+    """
+
     def __init__(self, encoding):
         super().__init__(encoding, TokenCategory.STRUCTURAL)
 
-    def export(self) -> string:
+    def export(self) -> str:
         extended_header = '**e' + self.encoding[2:]  # remove the **, and append the e
         return extended_header
 
 
 class SpineOperationToken(AbstractToken):
+    """
+    SpineOperationToken class.
+
+    This token represents different operations in the Humdrum kern encoding.
+    These are the available operations:
+        - `*-`:  spine-path terminator.
+        - `*`: null interpretation.
+        - `*+`: add spines.
+        - `*^`: split spines.
+        - `*x`: exchange spines.
+
+    Attributes:
+        cancelled_at_stage (int): The stage at which the operation was cancelled. Defaults to None.
+    """
+
     def __init__(self, encoding):
         super().__init__(encoding, TokenCategory.STRUCTURAL)
         self.cancelled_at_stage = None
 
-    def export(self) -> string:
+    def export(self) -> str:
         return self.encoding
 
-    def is_cancelled_at(self, stage):
+    def is_cancelled_at(self, stage) -> bool:
+        """
+        Checks if the operation was cancelled at the given stage.
+
+        Args:
+            stage (int): The stage at which the operation was cancelled.
+
+        Returns:
+            bool: True if the operation was cancelled at the given stage, False otherwise.
+        """
         if self.cancelled_at_stage is None:
             return False
         else:
@@ -853,49 +955,76 @@ class SpineOperationToken(AbstractToken):
 
 
 class Token(AbstractToken, ABC):
+    """
+    Abstract Token class.
+    """
     def __init__(self, encoding, category):
         super().__init__(encoding, category)
 
 
 class SimpleToken(Token):
+    """
+    SimpleToken class.
+    """
     def __init__(self, encoding, category):
         super().__init__(encoding, category)
 
-    def export(self) -> string:
+    def export(self) -> str:
         return self.encoding
 
 
 class BarToken(SimpleToken):
+    """
+    BarToken class.
+    """
     def __init__(self, encoding):
         super().__init__(encoding, TokenCategory.BARLINES)
 
 
 class SignatureToken(SimpleToken):
+    """
+    SignatureToken class for all signature tokens. It will be overridden by more specific classes.
+    """
     def __init__(self, encoding):
         super().__init__(encoding, TokenCategory.SIGNATURES)
 
 
 class ClefToken(SignatureToken):
+    """
+    ClefToken class.
+    """
     def __init__(self, encoding):
         super().__init__(encoding)
 
 
 class TimeSignatureToken(SignatureToken):
+    """
+    TimeSignatureToken class.
+    """
     def __init__(self, encoding):
         super().__init__(encoding)
 
 
 class MeterSymbolToken(SignatureToken):
+    """
+    MeterSymbolToken class.
+    """
     def __init__(self, encoding):
         super().__init__(encoding)
 
 
 class KeySignatureToken(SignatureToken):
+    """
+    KeySignatureToken class.
+    """
     def __init__(self, encoding):
         super().__init__(encoding)
 
 
 class KeyToken(SignatureToken):
+    """
+    KeyToken class.
+    """
     def __init__(self, encoding):
         super().__init__(encoding)
 
@@ -910,7 +1039,7 @@ class CompoundToken(Token):
         super().__init__(encoding, category)
         self.subtokens = subtokens
 
-    def export(self) -> string:
+    def export(self) -> str:
         result = ''
         for subtoken in self.subtokens:
             if len(result) > 0:
@@ -921,11 +1050,21 @@ class CompoundToken(Token):
 
 
 class NoteRestToken(Token):
+    """
+    NoteRestToken class.
+
+    Attributes:
+        pitch_duration_subtokens (list): The subtokens for the pitch and duration
+        decoration_subtokens (list): The subtokens for the decorations
+    """
     def __init__(self, encoding, pitch_duration_subtokens, decoration_subtokens):
         """
-        :param encoding: The complete unprocessed encoding
-        :param category: The token category, one of TokenCategory
-        :param subtokens: The individual elements of the token, of type Subtoken
+        NoteRestToken constructor.
+
+        Args:
+            encoding: The complete unprocessed encoding
+            pitch_duration_subtokens: The subtokens for the pitch and duration
+            decoration_subtokens: The subtokens for the decorations. Individual elements of the token, of type Subtoken
         """
         super().__init__(encoding, TokenCategory.CORE)
         if not pitch_duration_subtokens or len(pitch_duration_subtokens) == 0:
@@ -957,7 +1096,7 @@ class NoteRestToken(Token):
             self.pitch = None
         # TODO: Ahora entran muchos tokens diferentes, filtrar solo los de name
 
-    def export(self) -> string:
+    def export(self) -> str:
         result = ''
         for subtoken in self.pitch_duration_subtokens:
             if len(result) > 0:
@@ -977,14 +1116,24 @@ class NoteRestToken(Token):
 
 class ChordToken(SimpleToken):
     """
+    ChordToken class.
+
     It contains a list of compound tokens
     """
 
     def __init__(self, encoding, category, notes_tokens):
+        """
+        ChordToken constructor.
+
+        Args:
+            encoding: The complete unprocessed encoding
+            category: The token category, one of TokenCategory
+            notes_tokens: The subtokens for the notes. Individual elements of the token, of type Subtoken
+        """
         super().__init__(encoding, category)
         self.notes_tokens = notes_tokens
 
-    def export(self) -> string:
+    def export(self) -> str:
         result = ''
         for note_token in self.notes_tokens:
             if len(result) > 0:
@@ -996,41 +1145,117 @@ class ChordToken(SimpleToken):
 
 
 class BoundingBox:
+    """
+    BoundingBox class.
+
+    It contains the coordinates of the score bounding box. Useful for full-page tasks.
+
+    Attributes:
+        from_x (int): The x coordinate of the top left corner
+        from_y (int): The y coordinate of the top left corner
+        to_x (int): The x coordinate of the bottom right corner
+        to_y (int): The y coordinate of the bottom right corner
+    """
     def __init__(self, x, y, w, h):
+        """
+        BoundingBox constructor.
+
+        Args:
+            x (int): The x coordinate of the top left corner
+            y (int): The y coordinate of the top left corner
+            w (int): The width
+            h (int): The height
+        """
         self.from_x = x
         self.from_y = y
         self.to_x = x + w
         self.to_y = y + h
 
-    def w(self):
+    def w(self) -> int:
+        """
+        Returns the width of the box
+
+        Returns:
+            int: The width of the box
+        """
         return self.to_x - self.from_x
 
-    def h(self):
+    def h(self) -> int:
+        """
+        Returns the height of the box
+
+        Returns:
+            int: The height of the box
+        return self.to_y - self.from_y
+        """
         return self.to_y - self.from_y
 
-    def extend(self, bounding_box):
+    def extend(self, bounding_box) -> None:
+        """
+        Extends the bounding box. Modify the current object.
+
+        Args:
+            bounding_box (BoundingBox): The bounding box to extend
+
+        Returns:
+            None
+        """
         self.from_x = min(self.from_x, bounding_box.from_x)
         self.from_y = min(self.from_y, bounding_box.from_y)
         self.to_x = max(self.to_x, bounding_box.to_x)
         self.to_y = max(self.to_y, bounding_box.to_y)
 
     def __str__(self):
+        """
+        Returns a string representation of the bounding box
+
+        Returns:
+            str: The string representation of the bounding box
+        """
         return f'(x={self.from_x}, y={self.from_y}, w={self.w()}, h={self.h()})'
 
-    def xywh(self):
+    def xywh(self) -> str:
+        """
+        Returns a string representation of the bounding box.
+
+        Returns:
+            str: The string representation of the bounding box
+        """
         return f'{self.from_x},{self.from_y},{self.w()},{self.h()}'
 
 
 class BoundingBoxToken(AbstractToken):
+    """
+    BoundingBoxToken class.
+
+    It contains the coordinates of the score bounding box. Useful for full-page tasks.
+
+    Attributes:
+        encoding (str): The complete unprocessed encoding
+        page_number (int): The page number
+        bounding_box (BoundingBox): The bounding box
+    """
     def __init__(self, encoding, page_number, bounding_box):
+        """
+        BoundingBoxToken constructor.
+
+        Args:
+            encoding: The complete unprocessed encoding
+            page_number: The page number
+            bounding_box: The bounding box
+        """
         super().__init__(encoding, TokenCategory.BOUNDING_BOXES)
         self.page_number = page_number
         self.bounding_box = bounding_box
 
-    def export(self) -> string:
+    def export(self) -> str:
         return self.encoding
 
 
 class MHXMToken(AbstractToken):
-    def export(self) -> string:
+    """
+    MHXMToken class.
+    """
+    # TODO: Implement constructor
+    def export(self) -> str:
         return self.encoding
