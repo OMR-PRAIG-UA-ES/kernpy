@@ -332,7 +332,13 @@ class PitchExporterFactory:
             raise ValueError(f"Invalid encoding: {encoding}. \nUse one of {NotationEncoding.__members__.values()}")
 
 
-def transpose(input_encoding: str, interval: int, format: str = NotationEncoding.HUMDRUM.value, direction: str = Direction.UP.value) -> str:
+def transpose(
+        input_encoding: str,
+        interval: int,
+        input_format: str = NotationEncoding.HUMDRUM.value,
+        output_format: str = NotationEncoding.HUMDRUM.value,
+        direction: str = Direction.UP.value
+) -> str:
     """
     Transpose a pitch by a given interval.
 
@@ -341,36 +347,39 @@ def transpose(input_encoding: str, interval: int, format: str = NotationEncoding
     Args:
         input_encoding (str): The pitch to transpose.
         interval (int): The interval to transpose the pitch.
-        format (str): The encoding format of the pitch. Default is HUMDRUM.
+        input_format (str): The encoding format of the pitch. Default is HUMDRUM.
+        output_format (str): The encoding format of the transposed pitch. Default is HUMDRUM.
         direction (str): The direction of the transposition.'UP' or 'DOWN' Default is 'UP'.
 
     Returns:
         str: The transposed pitch.
 
     Examples:
-        >>> transpose('ccc', IntervalsByName['P4'], format='kern')
+        >>> transpose('ccc', IntervalsByName['P4'], input_format='kern', output_format='kern')
         'fff'
-        >>> transpose('ccc', IntervalsByName['P4'], format=NotationEncoding.HUMDRUM.value)
+        >>> transpose('ccc', IntervalsByName['P4'], input_format=NotationEncoding.HUMDRUM.value)
         'fff'
-        >>> transpose('ccc', IntervalsByName['P4'], format='kern', direction='down')
+        >>> transpose('ccc', IntervalsByName['P4'], input_format='kern', direction='down')
         'gg'
-        >>> transpose('ccc', IntervalsByName['P4'], format='kern', direction=Direction.DOWN.value)
+        >>> transpose('ccc', IntervalsByName['P4'], input_format='kern', direction=Direction.DOWN.value)
         'gg'
         >>> transpose('ccc#', IntervalsByName['P4'])
         'fff#'
-        >>> transpose('G4', IntervalsByName['m3'], format='american')
+        >>> transpose('G4', IntervalsByName['m3'], input_format='american')
         'Bb4'
-        >>> transpose('G4', IntervalsByName['m3'], format=NotationEncoding.AMERICAN.value)
+        >>> transpose('G4', IntervalsByName['m3'], input_format=NotationEncoding.AMERICAN.value)
         'Bb4'
-        >>> transpose('C3', IntervalsByName['P4'], format='american', direction='down')
+        >>> transpose('C3', IntervalsByName['P4'], input_format='american', direction='down')
         'G2'
 
 
     """
-    importer = PitchImporterFactory.create(format)
+    importer = PitchImporterFactory.create(input_format)
     pitch: AgnosticPitch = importer.import_pitch(input_encoding)
+
     transposed_pitch = AgnosticPitch.to_transposed(pitch, interval, direction)
-    exporter = PitchExporterFactory.create(format)
+
+    exporter = PitchExporterFactory.create(output_format)
     content = exporter.export_pitch(transposed_pitch)
 
     return content

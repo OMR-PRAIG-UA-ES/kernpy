@@ -2,6 +2,7 @@ import unittest
 
 import kernpy as kp
 
+
 class TestTranscription(unittest.TestCase):
     def test_importer_factory(self):
         importer = kp.transposer.PitchImporterFactory.create(kp.transposer.NotationEncoding.HUMDRUM.value)
@@ -254,43 +255,103 @@ class TestTranscription(unittest.TestCase):
         pitch2 = kp.transposer.AgnosticPitch('d+', 4)
         self.assertEqual(1, kp.transposer.AgnosticPitch.get_chroma_from_interval(pitch1, pitch2))
 
-    def test_transposer_public_transpose_american(self):
-        content = kp.transposer.transpose('G4', kp.transposer.IntervalsByName['m3'], format='american')
+    def test_transposer_public_transpose_american_to_american(self):
+        content = kp.transposer.transpose('G4', kp.transposer.IntervalsByName['m3'], input_format='american',
+                                          output_format='american')
         self.assertEqual('Bb4', content)
 
-        content = kp.transposer.transpose('G4', kp.transposer.IntervalsByName['M3'], format='american')
+        content = kp.transposer.transpose('G4', kp.transposer.IntervalsByName['M3'], input_format='american',
+                                          output_format='american')
         self.assertEqual('B4', content)
 
-        content = kp.transposer.transpose('C1', kp.transposer.IntervalsByName['P4'], format='american')
+        content = kp.transposer.transpose('C1', kp.transposer.IntervalsByName['P4'], input_format='american',
+                                          output_format='american')
         self.assertEqual('F1', content)
 
-        content = kp.transposer.transpose('A3', kp.transposer.IntervalsByName['m2'], format='american')
+        content = kp.transposer.transpose('A3', kp.transposer.IntervalsByName['m2'], input_format='american',
+                                          output_format='american')
         self.assertEqual('Bb3', content)
 
-        content = kp.transposer.transpose('C3', kp.transposer.IntervalsByName['d4'], format='american')
+        content = kp.transposer.transpose('C3', kp.transposer.IntervalsByName['d4'], input_format='american',
+                                          output_format='american')
         self.assertEqual('Fb3', content)
 
-        content = kp.transposer.transpose('C3', kp.transposer.IntervalsByName['P4'], format='american')
+        content = kp.transposer.transpose('C3', kp.transposer.IntervalsByName['P4'], input_format='american',
+                                          output_format='american')
         self.assertEqual('F3', content)
 
-        content = kp.transposer.transpose('G#4', kp.transposer.IntervalsByName['P4'], format='american', direction='up')
+        content = kp.transposer.transpose('G#4', kp.transposer.IntervalsByName['P4'], input_format='american',
+                                          output_format='american', direction='up')
         self.assertEqual('C#5', content)
 
-        content = kp.transposer.transpose('b#4', kp.transposer.IntervalsByName['P4'], format='american', direction='down')
+        content = kp.transposer.transpose('b#4', kp.transposer.IntervalsByName['P4'], input_format='american',
+                                          output_format='american',
+                                          direction='down')
         self.assertEqual('Fbb4', content)
 
-        content = kp.transposer.transpose('C3', kp.transposer.IntervalsByName['P4'], format='american', direction='down')
+        content = kp.transposer.transpose('C3', kp.transposer.IntervalsByName['P4'], input_format='american',
+                                          output_format='american',
+                                          direction='down')
         self.assertEqual('G2', content)
 
-        content = kp.transposer.transpose('ccc', kp.transposer.IntervalsByName['P4'], format=transposer.NotationEncoding.HUMDRUM.value)
+    def test_transposer_public_transpose_humdrum_to_humdrum(self):
+        content = kp.transposer.transpose('ccc', kp.transposer.IntervalsByName['P4'],
+                                          input_format=kp.transposer.NotationEncoding.HUMDRUM.value,
+                                          output_format=kp.transposer.NotationEncoding.HUMDRUM.value)
         self.assertEqual('fff', content)
 
-        content = kp.transposer.transpose('ccc#', kp.transposer.IntervalsByName['P4'], format=transposer.NotationEncoding.HUMDRUM.value)
+        content = kp.transposer.transpose('ccc', kp.transposer.IntervalsByName['P4'],
+                                          input_format=kp.transposer.NotationEncoding.HUMDRUM.value,
+                                          output_format=kp.transposer.NotationEncoding.HUMDRUM.value, direction='up')
+        self.assertEqual('fff', content)
+
+        content = kp.transposer.transpose('ccc#', kp.transposer.IntervalsByName['P4'],
+                                          input_format=kp.transposer.NotationEncoding.HUMDRUM.value,
+                                          output_format=kp.transposer.NotationEncoding.HUMDRUM.value, direction='up')
         self.assertEqual('fff#', content)
 
-        content = kp.transposer.transpose('ccc', kp.transposer.IntervalsByName['P4'], format=transposer.NotationEncoding.HUMDRUM.value, direction='down')
+        content = kp.transposer.transpose('ccc', kp.transposer.IntervalsByName['P4'],
+                                          input_format=kp.transposer.NotationEncoding.HUMDRUM.value, direction='down',
+                                          output_format=kp.transposer.NotationEncoding.HUMDRUM.value)
         self.assertEqual('gg', content)
 
+        content = kp.transposer.transpose('ccc#', kp.transposer.IntervalsByName['P4'],
+                                          input_format=kp.transposer.NotationEncoding.HUMDRUM.value, direction='down',
+                                          output_format=kp.transposer.NotationEncoding.HUMDRUM.value)
+        self.assertEqual('gg#', content)
+
+
+    def test_transposer_public_transpose_american_to_humdrum(self):
+        content = kp.transposer.transpose('G4', kp.transposer.IntervalsByName['m3'],
+                                          input_format=kp.transposer.NotationEncoding.AMERICAN.value,
+                                          output_format=kp.transposer.NotationEncoding.HUMDRUM.value)
+        self.assertEqual('b-', content)
+
+        content = kp.transposer.transpose('G4', kp.transposer.IntervalsByName['M3'],
+                                          input_format=kp.transposer.NotationEncoding.AMERICAN.value,
+                                          output_format=kp.transposer.NotationEncoding.HUMDRUM.value)
+        self.assertEqual('b', content)
+
+        content = kp.transposer.transpose('C1', kp.transposer.IntervalsByName['P4'],
+                                          input_format=kp.transposer.NotationEncoding.AMERICAN.value,
+                                          output_format=kp.transposer.NotationEncoding.HUMDRUM.value)
+        self.assertEqual('FFF', content)
+
+        content = kp.transposer.transpose('C1', kp.transposer.IntervalsByName['P4'],
+                                          input_format=kp.transposer.NotationEncoding.AMERICAN.value,
+                                          output_format=kp.transposer.NotationEncoding.HUMDRUM.value)
+        self.assertEqual('FFF', content)
+
+    def test_transposer_public_transpose_humdrum_to_american(self):
+        content = kp.transposer.transpose('b-', kp.transposer.IntervalsByName['m3'],
+                                          input_format=kp.transposer.NotationEncoding.HUMDRUM.value,
+                                          output_format=kp.transposer.NotationEncoding.AMERICAN.value)
+        self.assertEqual('Db5', content)
+
+        content = kp.transposer.transpose('b', kp.transposer.IntervalsByName['M3'],
+                                          input_format=kp.transposer.NotationEncoding.HUMDRUM.value,
+                                          output_format=kp.transposer.NotationEncoding.AMERICAN.value)
+        self.assertEqual('D#5', content)
 
 
 
