@@ -7,12 +7,7 @@ import sys
 
 from _pytest.mark.expression import TokenType
 
-from kernpy import (KernSpineImporter, MensSpineImporter, DynamSpineImporter, DynSpineImporter, HarmSpineImporter, \
-                    RootSpineImporter, TextSpineImporter, FingSpineImporter, BEKERN_CATEGORIES, ExportOptions, Exporter,
-                    TokenCategory,
-                    KernTypeExporter, Document, Importer, GraphvizExporter, get_kern_from_ekern, read, export,
-                    store_graph)
-from kernpy.core import createImporter, Token
+import kernpy as kp
 
 logger = logging.getLogger()
 logger.level = logging.INFO  # change it DEBUG to trace errors
@@ -20,22 +15,21 @@ logger.addHandler(logging.StreamHandler(sys.stdout))
 
 
 class ImporterTestCase(unittest.TestCase):
-    def doJustImportTest(self, kern_file) -> Document:
+    def doJustImportTest(self, kern_file) -> kp.Document:
         logging.info(f'Importing {kern_file}')
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_file(kern_file)
         return document
 
-    def checkEquals(self, kern_file, expected_ekern, from_measure, to_measure) -> Document:
-        importer = Importer()
+    def checkEquals(self, kern_file, expected_ekern, from_measure, to_measure) -> kp.Document:
+        importer = kp.Importer()
         document = importer.import_file(kern_file)
         if len(importer.errors) > 0:
             logging.error(f'Import errors for {kern_file}')
             for error in importer.errors:
                 logging.error(f'\t{error}')
 
-
-        dot_exporter = GraphvizExporter()
+        dot_exporter = kp.GraphvizExporter()
         filename = os.path.basename(kern_file)
         #TODO No sé por qué me da error de recursión
         #dot_exporter.export_to_dot(document.tree, f'/tmp/{filename}.dot')
@@ -44,11 +38,11 @@ class ImporterTestCase(unittest.TestCase):
         with open(expected_ekern, 'r') as file1:
             expected_content = file1.read()
 
-        export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES,
-                                       kern_type=KernTypeExporter.eKern) #TODO Tests de normalized kern
+        export_options = kp.ExportOptions(spine_types=['**kern'], token_categories=kp.BEKERN_CATEGORIES,
+                                          kern_type=kp.KernTypeExporter.eKern)  #TODO Tests de normalized kern
         export_options.from_measure = from_measure
         export_options.to_measure = to_measure
-        exporter = Exporter()
+        exporter = kp.Exporter()
         exported_ekern = exporter.export_string(document, export_options)
 
         if exported_ekern != expected_content:
@@ -84,7 +78,7 @@ class ImporterTestCase(unittest.TestCase):
     # it loads a simple file
     def testReadMinimalKern(self):
         document = self.doJustImportTest('resource_dir/unit/minimal.krn')
-        dot_exporter = GraphvizExporter()
+        dot_exporter = kp.GraphvizExporter()
         dot_exporter.export_to_dot(document.tree, '/tmp/minimal.dot')
         # self.assertEqual(1, len(ts.files))
 
@@ -165,21 +159,21 @@ class ImporterTestCase(unittest.TestCase):
         # self.assertEqual(1, len(ts.files))
 
     def testHeader(self):
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_file('resource_dir/unit/headers.krn')
         self.assertEqual(8, document.get_spine_count())
         header_stage = document.tree.stages[document.header_stage]
-        expected_importers = [KernSpineImporter, MensSpineImporter, DynamSpineImporter, DynSpineImporter,
-                              HarmSpineImporter, RootSpineImporter, TextSpineImporter, FingSpineImporter]
+        expected_importers = [kp.KernSpineImporter, kp.MensSpineImporter, kp.DynamSpineImporter, kp.DynSpineImporter,
+                              kp.HarmSpineImporter, kp.RootSpineImporter, kp.TextSpineImporter, kp.FingSpineImporter]
         for node, expected_importer in zip(header_stage, expected_importers):
-            importer = createImporter(node.token.encoding)
+            importer = kp.createImporter(node.token.encoding)
             self.assertTrue(isinstance(importer, expected_importer))
 
     def doTestCountSpines(self, kern_file, expected_stage_count, expected_spine_counts):
         logging.info(f'Importing {kern_file}')
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_file(kern_file)
-        dot_exporter = GraphvizExporter()
+        dot_exporter = kp.GraphvizExporter()
         filename = os.path.basename(kern_file)
         dot_exporter.export_to_dot(document.tree, f'/tmp/{filename}.dot')
         self.assertEqual(expected_stage_count, len(document.tree.stages) - 1, "Stage count")  # -1 to remove the root
@@ -264,7 +258,6 @@ class ImporterTestCase(unittest.TestCase):
         self.doEKernMeasureToMeasureTest(
             'resource_dir/grandstaff/5901766.krn', 24, 28)
 
-
         self.doEKernMeasureToMeasureTest('resource_dir/spines/2.krn', 2, 2)
         self.doEKernMeasureToMeasureTest('resource_dir/legacy/chor001.krn', 1, 3)
 
@@ -280,16 +273,14 @@ class ImporterTestCase(unittest.TestCase):
 
         #self.doEKernMeasureToMeasureTest('resource_dir/polish/test2/pl-wn--mus-iii-123-982--001-004_wieniawski-henryk--l-ecole-moderne-etudes-caprices-pour-violon-seul-op-10-4-le-staccato.krn', 0, 1) # TODO: Correct it. It doesn't export all the required token_categories
 
-
-
     #TODO Joan: este test se puede hacer como el doEKernMeasureToMeasureTest, sin repetir tanto código...
     def test_extract_measures_same_measure(self):
-        options = ExportOptions(spine_types=['**kern'], kern_type=KernTypeExporter.normalizedKern, from_measure=3,
-                                to_measure=3)
-        importer = Importer()
+        options = kp.ExportOptions(spine_types=['**kern'], kern_type=kp.KernTypeExporter.normalizedKern, from_measure=3,
+                                   to_measure=3)
+        importer = kp.Importer()
         document = importer.import_file('resource_dir/legacy/base_tuplet_longer.krn')
 
-        exporter = Exporter()
+        exporter = kp.Exporter()
         real_ouputput = exporter.export_string(document, options)
 
         with open('resource_dir/legacy/base_tuplet_longer_m3-m3.krn', 'r') as f:
@@ -297,78 +288,79 @@ class ImporterTestCase(unittest.TestCase):
         self.assertEqual(real_ouputput, expected_output)
 
     def test_extract_measures_middle_measures_to_krn(self):
-        options = ExportOptions(spine_types=['**kern'], kern_type=KernTypeExporter.normalizedKern, from_measure=2,
-                                to_measure=4)
-        importer = Importer()
+        options = kp.ExportOptions(spine_types=['**kern'], kern_type=kp.KernTypeExporter.normalizedKern, from_measure=2,
+                                   to_measure=4)
+        importer = kp.Importer()
         document = importer.import_file('resource_dir/legacy/base_tuplet_longer.krn')
 
-        exporter = Exporter()
+        exporter = kp.Exporter()
         real_ouputput = exporter.export_string(document, options)
         with open('resource_dir/legacy/base_tuplet_longer_m2-m4.krn', 'r') as f:
             expected_output = f.read()
         self.assertEqual(real_ouputput, expected_output)
 
     def test_extract_measures_middle_measures_to_ekrn(self):
-        options = ExportOptions(spine_types=['**kern'], kern_type=KernTypeExporter.eKern, from_measure=2, to_measure=4)
-        importer = Importer()
+        options = kp.ExportOptions(spine_types=['**kern'], kern_type=kp.KernTypeExporter.eKern, from_measure=2,
+                                   to_measure=4)
+        importer = kp.Importer()
         document = importer.import_file('resource_dir/legacy/base_tuplet_longer.krn')
 
-        dot_exporter = GraphvizExporter()
+        dot_exporter = kp.GraphvizExporter()
         dot_exporter.export_to_dot(document.tree, f'/tmp/base_tuplet_longer.dot')
 
-        exporter = Exporter()
+        exporter = kp.Exporter()
         actual_output = exporter.export_string(document, options)
         with open('resource_dir/legacy/base_tuplet_longer_m2-m4.ekrn', 'r') as f:
             expected_output = f.read()
         self.assertEqual(actual_output, expected_output)
 
     def test_extract_measures_bad_measures_input(self):
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_file('resource_dir/legacy/base_tuplet_longer.krn')
 
-        options = ExportOptions(spine_types=['**kern'], from_measure=-1, to_measure=2)
-        exporter = Exporter()
+        options = kp.ExportOptions(spine_types=['**kern'], from_measure=-1, to_measure=2)
+        exporter = kp.Exporter()
         with self.assertRaises(ValueError):
             exporter.export_string(document, options)
 
-        options = ExportOptions(spine_types=['**kern'], from_measure=2, to_measure=-1)
+        options = kp.ExportOptions(spine_types=['**kern'], from_measure=2, to_measure=-1)
         with self.assertRaises(ValueError):
             exporter.export_string(document, options)
 
-        options = ExportOptions(spine_types=['**kern'], from_measure=3, to_measure=2)
+        options = kp.ExportOptions(spine_types=['**kern'], from_measure=3, to_measure=2)
         with self.assertRaises(ValueError):
             exporter.export_string(document, options)
 
-        options = ExportOptions(spine_types=['**kern'], from_measure=None, to_measure=99999)
+        options = kp.ExportOptions(spine_types=['**kern'], from_measure=None, to_measure=99999)
         with self.assertRaises(ValueError):
             exporter.export_string(document, options)
 
-        options = ExportOptions(spine_types=['**kern'], from_measure=None, to_measure=7)
+        options = kp.ExportOptions(spine_types=['**kern'], from_measure=None, to_measure=7)
         with self.assertRaises(ValueError):
             exporter.export_string(document, options)
 
     def test_extract_measures_when_spines_split_one_spine(self):
-        doc, err = read('resource_dir/samples/score_with_dividing_one_spine.krn')
-        export_otions = ExportOptions(spine_types=['**kern'],
-                                      kern_type=KernTypeExporter.normalizedKern,
-                                      from_measure=9,
-                                      to_measure=13)
+        doc, err = kp.read('resource_dir/samples/score_with_dividing_one_spine.krn')
+        export_otions = kp.ExportOptions(spine_types=['**kern'],
+                                         kern_type=kp.KernTypeExporter.normalizedKern,
+                                         from_measure=9,
+                                         to_measure=13)
 
-        store_graph(doc, '/tmp/x.dot')
-        exported_real = export(doc, export_otions)
+        kp.store_graph(doc, '/tmp/x.dot')
+        exported_real = kp.export(doc, export_otions)
 
         with open('resource_dir/samples/score_with_dividing_one_spine_m9-m13.krn', 'r') as f:
             expected_output = f.read()
         self.assertEqual(expected_output, exported_real)
 
     def test_extract_measures_when_spines_split_two_spines(self):
-        doc, err = read('resource_dir/samples/score_with_dividing_two_spines.krn')
-        export_otions = ExportOptions(spine_types=['**kern'],
-                                      kern_type=KernTypeExporter.normalizedKern,
-                                      from_measure=49,
-                                      to_measure=56)
+        doc, err = kp.read('resource_dir/samples/score_with_dividing_two_spines.krn')
+        export_otions = kp.ExportOptions(spine_types=['**kern'],
+                                         kern_type=kp.KernTypeExporter.normalizedKern,
+                                         from_measure=49,
+                                         to_measure=56)
 
-        exported_real = export(doc, export_otions)
+        exported_real = kp.export(doc, export_otions)
 
         with open('resource_dir/samples/score_with_dividing_two_spines_m49-m56.krn', 'r') as f:
             expected_output = f.read()
@@ -381,35 +373,36 @@ class ImporterTestCase(unittest.TestCase):
 
     def testStringImporter(self):
         input_kern = "**kern\n4c\n4d\n4e\n4f\n*-"
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_string(input_kern)
-        export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kern_type = KernTypeExporter.eKern)
-        exporter = Exporter()
+        export_options = kp.ExportOptions(spine_types=['**kern'], token_categories=kp.BEKERN_CATEGORIES,
+                                          kern_type=kp.KernTypeExporter.eKern)
+        exporter = kp.Exporter()
         output_kern = exporter.export_string(document, export_options)
         expected_ekern = "**ekern\n4@c\n4@d\n4@e\n4@f\n*-\n"
         self.assertEqual(expected_ekern, output_kern)
 
     def testLexicalError(self):
         input_kern = "**kern\ncleF4\n4c\n4d\n4e\n4f\n*-"
-        importer = Importer()
+        importer = kp.Importer()
         importer.import_string(input_kern)
         self.assertEqual(1, len(importer.errors))
 
     def testParserError(self):
         input_kern = "**kern\n*clefF4\nc4\n4d\n4e\n4f\n*-"
-        importer = Importer()
+        importer = kp.Importer()
         importer.import_string(input_kern)
         self.assertEqual(1, len(importer.errors))
 
     def testLexicalParserError(self):
         input_kern = "**kern\ncleF4\nc4\n4d\n4e\n4f\n*-"
-        importer = Importer()
+        importer = kp.Importer()
         importer.import_string(input_kern)
         self.assertEqual(2, len(importer.errors))
 
     def testMetacomment(self):
         input_kern = "!!!M1\n**kern\n*clefF4\n4c\n4d\n!!!M2\n4e\n4f\n*-"
-        importer = Importer()
+        importer = kp.Importer()
         importer.import_string(input_kern)
         self.assertFalse(importer.has_errors())
 
@@ -420,7 +413,7 @@ class ImporterTestCase(unittest.TestCase):
             for line in f:
                 output_metadata_array_expected.append(line.strip())
 
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_file(input_kern_file)
         output_metadata_real = document.get_metacomments()
 
@@ -430,7 +423,7 @@ class ImporterTestCase(unittest.TestCase):
         input_kern_file = 'resource_dir/legacy/chor001.krn'
         output_metadata_array_expected = ['!!!COM: Bach, Johann Sebastian']
 
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_file(input_kern_file)
         output_metadata_array_output = document.get_metacomments(KeyComment='COM')
 
@@ -440,7 +433,7 @@ class ImporterTestCase(unittest.TestCase):
         input_kern_file = 'resource_dir/legacy/chor001.krn'
         output_metadata_array_expected = ['Bach, Johann Sebastian']
 
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_file(input_kern_file)
         output_metadata_array_output = document.get_metacomments(KeyComment='COM', clear=True)
 
@@ -454,7 +447,7 @@ class ImporterTestCase(unittest.TestCase):
 
     def test_has_token(self):
         input_kern_file = 'resource_dir/legacy/chor001.krn'
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_file(input_kern_file)
         all_tokens = document.get_all_tokens()
         self.assertTrue(self.has_token(all_tokens, '**kern'))
@@ -479,23 +472,23 @@ class ImporterTestCase(unittest.TestCase):
 
     def test_has_token_category(self):
         input_kern_file = 'resource_dir/legacy/chor001.krn'
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_file(input_kern_file)
         all_tokens = document.get_all_tokens()
 
-        self.assertTrue(self.has_category(all_tokens, TokenCategory.LINE_COMMENTS))
-        self.assertTrue(self.has_category(all_tokens, TokenCategory.CORE))
-        self.assertTrue(self.has_category(all_tokens, TokenCategory.EMPTY))
-        self.assertTrue(self.has_category(all_tokens, TokenCategory.OTHER))
-        self.assertTrue(self.has_category(all_tokens, TokenCategory.OTHER_CONTEXTUAL))
-        self.assertTrue(self.has_category(all_tokens, TokenCategory.BARLINES))
-        self.assertTrue(self.has_category(all_tokens, TokenCategory.SIGNATURES))
-        self.assertTrue(self.has_category(all_tokens, TokenCategory.STRUCTURAL))
+        self.assertTrue(self.has_category(all_tokens, kp.TokenCategory.LINE_COMMENTS))
+        self.assertTrue(self.has_category(all_tokens, kp.TokenCategory.CORE))
+        self.assertTrue(self.has_category(all_tokens, kp.TokenCategory.EMPTY))
+        self.assertTrue(self.has_category(all_tokens, kp.TokenCategory.OTHER))
+        self.assertTrue(self.has_category(all_tokens, kp.TokenCategory.OTHER_CONTEXTUAL))
+        self.assertTrue(self.has_category(all_tokens, kp.TokenCategory.BARLINES))
+        self.assertTrue(self.has_category(all_tokens, kp.TokenCategory.SIGNATURES))
+        self.assertTrue(self.has_category(all_tokens, kp.TokenCategory.STRUCTURAL))
 
     def test_get_all_tokens(self):
         # Arrange
         input_kern_file = 'resource_dir/legacy/chor001.krn'
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_file(input_kern_file)
         expected_tokens = []
         with open('resource_dir/legacy/chor001-all_tokens.txt', 'r') as f:
@@ -513,7 +506,7 @@ class ImporterTestCase(unittest.TestCase):
     def test_get_unique_tokens(self):
         # Arrange
         input_kern_file = 'resource_dir/legacy/chor001.krn'
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_file(input_kern_file)
         with open('resource_dir/legacy/chor001-unique_tokens.txt', 'r') as f:
             expected_tokens = f.read().splitlines()
@@ -531,7 +524,7 @@ class ImporterTestCase(unittest.TestCase):
     def test_get_unique_tokens_when_removing_measure_numbers(self):
         # Arrange
         input_kern_file = 'resource_dir/legacy/chor001.krn'
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_file(input_kern_file)
         with open('resource_dir/legacy/chor001-unique_tokens_without_measure_numbers.txt', 'r') as f:
             expected_tokens = f.read().splitlines()
@@ -548,14 +541,14 @@ class ImporterTestCase(unittest.TestCase):
     def test_get_unique_tokens_when_filter_by_categories(self):
         # Arrange
         input_kern_file = 'resource_dir/legacy/chor001.krn'
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_file(input_kern_file)
         with open('resource_dir/legacy/chor001-unique_tokens_with_category.txt', 'r') as f:
             expected_tokens = f.read().splitlines()
 
         # Act
         encodings = document.get_unique_token_encodings(
-            filter_by_categories=[TokenCategory.CORE, TokenCategory.SIGNATURES])
+            filter_by_categories=[kp.TokenCategory.CORE, kp.TokenCategory.SIGNATURES])
         encodings.sort()
         expected_tokens.sort()
 
@@ -563,14 +556,13 @@ class ImporterTestCase(unittest.TestCase):
         self.assertEqual(len(expected_tokens), len(encodings))
         self.assertListEqual(expected_tokens, encodings)
 
-
     @unittest.skip("TODO: Instrument is not a valid category yet")
     def test_document_get_voices(self):
         input_kern_file = 'resource_dir/legacy/chor048.krn'
         expected_voices = ['!bass', '!tenor', '!alto', '!soprno']
         expected_voices_cleaned = ['bass', 'tenor', 'alto', 'soprno']
 
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_file(input_kern_file)
         voices = document.get_voices()
         voices_cleaned = document.get_voices(clean=True)
@@ -585,32 +577,32 @@ class ImporterTestCase(unittest.TestCase):
     def test_get_kern_from_ekern(self):
         input_ekern = "**ekern\n4@c\n4@d\n4@e\n4@f\n*-"
         expected_kern = "**kern\n4c\n4d\n4e\n4f\n*-"
-        real_kern = get_kern_from_ekern(input_ekern)
+        real_kern = kp.get_kern_from_ekern(input_ekern)
 
         self.assertEqual(expected_kern, real_kern)
 
     def test_document_get_first_measure_ok(self):
         input_kern_file = 'resource_dir/legacy/chor001.krn'  # This score is correctly formatted
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_file(input_kern_file)
         first_measure = document.get_first_measure()
         self.assertEqual(1, first_measure)
 
     def test_document_get_first_measure_empty(self):
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_string('**kern\n*-')
         with self.assertRaises(Exception):
             first_measure = document.get_first_measure()
 
     def test_document_get_last_measure_ok(self):
-        input_kern_file = 'resource_dir/legacy/chor048.krn'   # This score has 10 measures
-        importer = Importer()
+        input_kern_file = 'resource_dir/legacy/chor048.krn'  # This score has 10 measures
+        importer = kp.Importer()
         document = importer.import_file(input_kern_file)
         measures = document.measures_count()
         self.assertEqual(10, measures)
 
     def test_document_get_last_measure_empty(self):
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_string('**kern\n*-')
         with self.assertRaises(Exception):
             last_measure = document.measures_count()
@@ -618,18 +610,18 @@ class ImporterTestCase(unittest.TestCase):
     def test_document_iterator_basic(self):
         # Arrange
         all_sub_kerns = []
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_file('resource_dir/legacy/chor048.krn')
         expected_sub_kerns_size = document.measures_count()
         count = 0
-        options = ExportOptions(spine_types=['**kern'], kern_type=KernTypeExporter.normalizedKern)
+        options = kp.ExportOptions(spine_types=['**kern'], kern_type=kp.KernTypeExporter.normalizedKern)
 
         # Act
         for i in range(document.get_first_measure(), document.measures_count() + 1):
             count += 1
             options.from_measure = i
             options.to_measure = i
-            exporter = Exporter()
+            exporter = kp.Exporter()
             content = exporter.export_string(document, options)
             print(content)
             all_sub_kerns.append(content)
@@ -647,15 +639,15 @@ class ImporterTestCase(unittest.TestCase):
         # Arrange
         all_sub_kerns = []
         all_indexes = []
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_file('resource_dir/legacy/chor048.krn')
         expected_sub_kerns_size = document.measures_count()
 
         # Act
         for index in document:
             all_indexes.append(index)
-            options = ExportOptions(from_measure=index, to_measure=index, spine_types=['**kern'])
-            exporter = Exporter()
+            options = kp.ExportOptions(from_measure=index, to_measure=index, spine_types=['**kern'])
+            exporter = kp.Exporter()
             content = exporter.export_string(document, options)
             all_sub_kerns.append(content)
 
@@ -666,7 +658,7 @@ class ImporterTestCase(unittest.TestCase):
         # Arrange
         all_sub_kerns = []
         all_indexes = []
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_file('resource_dir/legacy/chor048.krn')
         expected_sub_kerns_size = document.measures_count()
 
@@ -674,8 +666,8 @@ class ImporterTestCase(unittest.TestCase):
         iterator = iter(document)
         for index in iterator:
             all_indexes.append(index)
-            options = ExportOptions(from_measure=index, to_measure=index, spine_types=['**kern'])
-            exporter = Exporter()
+            options = kp.ExportOptions(from_measure=index, to_measure=index, spine_types=['**kern'])
+            exporter = kp.Exporter()
             content = exporter.export_string(document, options)
             all_sub_kerns.append(content)
 
@@ -684,14 +676,13 @@ class ImporterTestCase(unittest.TestCase):
 
     def test_export_spines(self):
         # Arrange
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_file('resource_dir/legacy/chor048.krn')
         expected_kern_spines = ['**kern', '**kern', '**kern', '**kern']
         expected_all_spines = ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
 
-
         # Act
-        exporter = Exporter()
+        exporter = kp.Exporter()
         real_1 = exporter.get_spine_types(document, spine_types=['**kern'])
         real_2 = exporter.get_spine_types(document, spine_types=['**kern', '**root', '**harm'])
         real_3 = exporter.get_spine_types(document, spine_types=None)
@@ -704,53 +695,50 @@ class ImporterTestCase(unittest.TestCase):
     @unittest.skip("TODO: Complete bug. ISSUE #12 test Eliseo")
     def test_export_string_two_different_spines(self):
         # Arrange
-        doc, err = read('resource_dir/legacy/chor048.krn')
+        doc, err = kp.read('resource_dir/legacy/chor048.krn')
 
-        options = ExportOptions(spine_types=['**kern', '**root', '**harm'],
-                                kern_type=KernTypeExporter.eKern)
-        content = export(doc, options)
-        importer = Importer()
+        options = kp.ExportOptions(spine_types=['**kern', '**root', '**harm'],
+                                   kern_type=kp.KernTypeExporter.eKern)
+        content = kp.export(doc, options)
+        importer = kp.Importer()
         document = importer.import_string(content)
 
         print(content)
 
     def test_never_export_measure_numbers(self):
         # Arrange
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_file('resource_dir/legacy/chor009.krn')
-        options = ExportOptions(spine_types=None,       # TODO: David. Así se exportan todos los spines
-                                kern_type=KernTypeExporter.eKern,
-                                show_measure_numbers=False)
-        exporter = Exporter()
+        options = kp.ExportOptions(spine_types=None,  # TODO: David. Así se exportan todos los spines
+                                   kern_type=kp.KernTypeExporter.eKern,
+                                   show_measure_numbers=False)
+        exporter = kp.Exporter()
         content = exporter.export_string(document, options)
         print(content)
         measures = range(1, document.measures_count() + 1)
-        measures = [f'={m}' for m in measures]          # TODO: David. En los spines que no son kerns siempre se exportan los números de compás
+        measures = [f'={m}' for m in
+                    measures]  # TODO: David. En los spines que no son kerns siempre se exportan los números de compás
         for measure in measures:
             self.assertNotIn(measure, content)
 
     def test_always_export_measure_numbers(self):
         # Arrange
-        importer = Importer()
+        importer = kp.Importer()
         document = importer.import_file('resource_dir/legacy/chor009.krn')
-        options = ExportOptions(spine_types=None,
-                                kern_type=KernTypeExporter.eKern,
-                                show_measure_numbers=True)
-        exporter = Exporter()
+        options = kp.ExportOptions(spine_types=None,
+                                   kern_type=kp.KernTypeExporter.eKern,
+                                   show_measure_numbers=True)
+        exporter = kp.Exporter()
         content = exporter.export_string(document, options)
         print(content)
         measures = range(1, document.measures_count() + 1)
         measures = [f'={m}' for m in measures]
         for measure in measures:
-            for line in content.splitlines():       # Find the line with the measure numbers
+            for line in content.splitlines():  # Find the line with the measure numbers
                 if measure in line:
-                    tokens = line.split('\t')       # Split the line in tokens
+                    tokens = line.split('\t')  # Split the line in tokens
                     for token in tokens:
                         self.assertEqual(measure, token)
-
-
-
-
 
 
 if __name__ == '__main__':

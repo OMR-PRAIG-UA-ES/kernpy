@@ -4,7 +4,6 @@ import logging
 import sys
 from tempfile import TemporaryDirectory
 
-import kernpy
 import kernpy as kp
 
 
@@ -32,7 +31,7 @@ class DocumentTestCase(unittest.TestCase):
 
     @unittest.skip("TODO: Not implemented yet")
     def test_document_get_voices(self):
-        doc, _ = kernpy.read('resource_dir/legacy/chor048.krn')
+        doc, _ = kp.read('resource_dir/legacy/chor048.krn')
 
         voices = doc.get_voices()
         self.assertEqual(['!sax', '!piano', '!bass'], voices)

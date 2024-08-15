@@ -57,6 +57,7 @@ __all__ = [
     'transposer',
     'get_spine_types',
     'concat',
+    'createImporter',
 ]
 
 

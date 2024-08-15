@@ -2,7 +2,7 @@ import os
 import unittest
 import tempfile
 
-import kernpy
+import kernpy as kp
 
 
 class GenericTestCase(unittest.TestCase):
@@ -21,7 +21,7 @@ class GenericTestCase(unittest.TestCase):
         num_processes = None
 
         # Act
-        kernpy.create_fragments_from_kern(
+        kp.create_fragments_from_kern(
             input_kern_file=input_kern_file,
             output_directory=real_output_directory,
             measure_length=measure_length,
@@ -62,7 +62,7 @@ class GenericTestCase(unittest.TestCase):
         num_processes = 4
 
         # Act
-        kernpy.create_fragments_from_kern(
+        kp.create_fragments_from_kern(
             input_kern_file=input_kern_file,
             output_directory=real_output_directory,
             measure_length=measure_length,
@@ -103,7 +103,7 @@ class GenericTestCase(unittest.TestCase):
         std_dev = 0
 
         # Act
-        kernpy.create_fragments_from_directory(
+        kp.create_fragments_from_directory(
             input_directory=input_directory,
             output_directory=real_output_directory,
             log_file=log_file,
@@ -144,7 +144,7 @@ class GenericTestCase(unittest.TestCase):
         std_dev = 0
 
         # Act
-        kernpy.create_fragments_from_directory(
+        kp.create_fragments_from_directory(
             input_directory=input_directory,
             output_directory=real_output_directory,
             log_file=log_file,

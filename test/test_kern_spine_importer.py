@@ -4,7 +4,7 @@ import unittest
 import logging
 import sys
 
-from kernpy import KernSpineImporter
+import kernpy as kp
 
 logger = logging.getLogger()
 logger.level = logging.INFO  # change it DEBUG to trace errors
@@ -15,7 +15,7 @@ class KernSpineImporterTest(unittest.TestCase):
     """Used to test individual tokens"""
 
     def doTest(self, input, expected):
-        importer = KernSpineImporter()
+        importer = kp.KernSpineImporter()
         token = importer.import_token(input)
         self.assertIsNotNone(token)
         self.assertEqual(expected, token.export())
