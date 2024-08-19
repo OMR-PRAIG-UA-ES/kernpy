@@ -1,4 +1,5 @@
 import csv
+import io
 import string
 from copy import copy
 
@@ -180,7 +181,7 @@ class Importer:
             file_path: The path to the file.
 
         Returns:
-            None
+            Document - The document with the imported content.
 
         Examples:
             # Create the importer and read the file
@@ -192,8 +193,27 @@ class Importer:
             return self.run(reader)
 
     def import_string(self, text: string) -> Document:
+        """
+        Import the content from the content of the score in string format.
+
+        Args:
+            text: The content of the score in string format.
+
+        Returns:
+            Document - The document with the imported content.
+
+        Examples:
+            # Create the importer and read the file
+            >>> importer = Importer()
+            >>> importer.import_string("**kern\n*clefF4\nc4\n4d\n4e\n4f\n*-")
+            # Read the content from a file
+            >>> with open('file.krn',  'r', newline='', encoding='utf-8', errors='ignore') as f: # We encourage you to use these open file options
+            >>>     content = f.read()
+            >>> importer.import_string(content)
+            >>> document = importer.import_string(content)
+        """
         lines = text.splitlines()
-        reader = csv.reader(lines)
+        reader = csv.reader(lines, delimiter='\t')
         return self.run(reader)
 
     def get_error_messages(self) -> str:
