@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.31">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.32">
     
     
       
@@ -761,6 +761,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#kernpy.Importer.import_string" class="md-nav__link">
+    <span class="md-ellipsis">
+      import_string
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1808,6 +1817,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Importer.import_string" class="md-nav__link">
+    <span class="md-ellipsis">
+      import_string
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2522,6 +2540,15 @@
         
       </ul>
     </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.util.Importer.import_string" class="md-nav__link">
+    <span class="md-ellipsis">
+      import_string
+    </span>
+  </a>
   
 </li>
         
@@ -3160,6 +3187,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#kernpy.Importer.import_string" class="md-nav__link">
+    <span class="md-ellipsis">
+      import_string
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4207,6 +4243,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Importer.import_string" class="md-nav__link">
+    <span class="md-ellipsis">
+      import_string
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4921,6 +4966,15 @@
         
       </ul>
     </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.util.Importer.import_string" class="md-nav__link">
+    <span class="md-ellipsis">
+      import_string
+    </span>
+  </a>
   
 </li>
         
@@ -7374,7 +7428,7 @@ Args:
             </td>
             <td>
               <div class="doc-md-description">
-                <p>None</p>
+                <p>Document - The document with the imported content.</p>
               </div>
             </td>
           </tr>
@@ -7387,6 +7441,46 @@ Args:
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span> <span class="o">=</span> <span class="n">Importer</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span><span class="o">.</span><span class="n">import_file</span><span class="p">(</span><span class="s1">&#39;file.krn&#39;</span><span class="p">)</span>
 </code></pre></div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="kernpy.Importer.import_string" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">import_string</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+      <pre><code>    Import the content from the content of the score in string format.
+
+    Args:
+        text: The content of the score in string format.
+
+    Returns:
+        Document - The document with the imported content.
+
+    Examples:
+        # Create the importer and read the file
+        &gt;&gt;&gt; importer = Importer()
+        &gt;&gt;&gt; importer.import_string("**kern
+</code></pre>
+<p><em>clefF4
+c4
+4d
+4e
+4f
+</em>-")
+            # Read the content from a file
+            &gt;&gt;&gt; with open('file.krn',  'r', newline='', encoding='utf-8', errors='ignore') as f: # We encourage you to use these open file options
+            &gt;&gt;&gt;     content = f.read()
+            &gt;&gt;&gt; importer.import_string(content)
+            &gt;&gt;&gt; document = importer.import_string(content)</p>
 
     </div>
 
@@ -13023,7 +13117,7 @@ Args:
             </td>
             <td>
               <div class="doc-md-description">
-                <p>None</p>
+                <p>Document - The document with the imported content.</p>
               </div>
             </td>
           </tr>
@@ -13036,6 +13130,46 @@ Args:
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span> <span class="o">=</span> <span class="n">Importer</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span><span class="o">.</span><span class="n">import_file</span><span class="p">(</span><span class="s1">&#39;file.krn&#39;</span><span class="p">)</span>
 </code></pre></div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="kernpy.core.Importer.import_string" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">import_string</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+      <pre><code>    Import the content from the content of the score in string format.
+
+    Args:
+        text: The content of the score in string format.
+
+    Returns:
+        Document - The document with the imported content.
+
+    Examples:
+        # Create the importer and read the file
+        &gt;&gt;&gt; importer = Importer()
+        &gt;&gt;&gt; importer.import_string("**kern
+</code></pre>
+<p><em>clefF4
+c4
+4d
+4e
+4f
+</em>-")
+            # Read the content from a file
+            &gt;&gt;&gt; with open('file.krn',  'r', newline='', encoding='utf-8', errors='ignore') as f: # We encourage you to use these open file options
+            &gt;&gt;&gt;     content = f.read()
+            &gt;&gt;&gt; importer.import_string(content)
+            &gt;&gt;&gt; document = importer.import_string(content)</p>
 
     </div>
 
@@ -16461,7 +16595,7 @@ Args:
             </td>
             <td>
               <div class="doc-md-description">
-                <p>None</p>
+                <p>Document - The document with the imported content.</p>
               </div>
             </td>
           </tr>
@@ -16474,6 +16608,46 @@ Args:
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span> <span class="o">=</span> <span class="n">Importer</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span><span class="o">.</span><span class="n">import_file</span><span class="p">(</span><span class="s1">&#39;file.krn&#39;</span><span class="p">)</span>
 </code></pre></div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="kernpy.util.Importer.import_string" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">import_string</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+      <pre><code>    Import the content from the content of the score in string format.
+
+    Args:
+        text: The content of the score in string format.
+
+    Returns:
+        Document - The document with the imported content.
+
+    Examples:
+        # Create the importer and read the file
+        &gt;&gt;&gt; importer = Importer()
+        &gt;&gt;&gt; importer.import_string("**kern
+</code></pre>
+<p><em>clefF4
+c4
+4d
+4e
+4f
+</em>-")
+            # Read the content from a file
+            &gt;&gt;&gt; with open('file.krn',  'r', newline='', encoding='utf-8', errors='ignore') as f: # We encourage you to use these open file options
+            &gt;&gt;&gt;     content = f.read()
+            &gt;&gt;&gt; importer.import_string(content)
+            &gt;&gt;&gt; document = importer.import_string(content)</p>
 
     </div>
 
@@ -16978,7 +17152,7 @@ If the offset is 4, and measure_length is 4, the fragments will be: 1-4, 5-8, 9-
     <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.fe8b6f2b.min.js"></script>
+      <script src="../assets/javascripts/bundle.471ce7a9.min.js"></script>
       
     
   </body>
