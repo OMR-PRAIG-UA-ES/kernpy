@@ -1,6 +1,5 @@
 import csv
 import io
-import string
 from copy import copy
 
 from kernpy.core.tokens import TokenCategory, SignatureToken, MetacommentToken, HeaderToken, SpineOperationToken, FieldCommentToken, ErrorToken, \
@@ -174,7 +173,7 @@ class Importer:
             last_page_bb.bounding_box.extend(token.bounding_box)
             last_page_bb.to_measure = self.last_measure_number
 
-    def import_file(self, file_path: string) -> Document:
+    def import_file(self, file_path: str) -> Document:
         """
         Import the content from the importer to the file.
         Args:
@@ -192,7 +191,7 @@ class Importer:
             reader = csv.reader(file, delimiter='\t')
             return self.run(reader)
 
-    def import_string(self, text: string) -> Document:
+    def import_string(self, text: str) -> Document:
         """
         Import the content from the content of the score in string format.
 
