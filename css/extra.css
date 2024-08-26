@@ -1,0 +1,39 @@
+/* Grid container for the main sections */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1.25rem; /* Use rem for consistent spacing */
+    margin-top: 1.25rem;
+}
+
+/* Grid items */
+.grid-item {
+    background-color: #f5f5f5;
+    padding: 1.25rem; /* Padding with rem units */
+    border-radius: 0.5rem;
+    text-align: center;
+    box-shadow: 0 0.125rem 0.3125rem rgba(0, 0, 0, 0.1);
+}
+
+/* SVG icon styling */
+.grid-icon {
+    width: 4rem;  /* Smaller size with rem units */
+    height: 4rem; /* Keep it square */
+    margin-bottom: 0.625rem; /* Adjusted spacing */
+}
+
+/* Button styling */
+.grid-item .btn {
+    display: inline-block;
+    margin-top: 0.625rem;
+    padding: 0.625rem 1rem;
+    background-color: #4a90e2;
+    color: white;
+    text-decoration: none;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+}
+
+.grid-item .btn:hover {
+    background-color: #357ab7;
+}
