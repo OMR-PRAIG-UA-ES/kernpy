@@ -24,7 +24,7 @@ pip install git+https://github.com/OMR-PRAIG-UA-ES/kernpy.git@<commit-tag>
 ```
 
 ## Next steps
-- [Tutorial](tutorial)
+- [Tutorial](get-started/tutorial.md)
     Learn how to use `kernpy` in a few minutes.
 
 
