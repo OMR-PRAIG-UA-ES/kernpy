@@ -1,4 +1,3 @@
-import string
 from enum import Enum
 
 from kernpy.core import Document, SpineOperationToken, HeaderToken, Importer, TokenCategory, InstrumentToken, \
@@ -91,14 +90,14 @@ class ExportOptions:
         self.instruments = instruments
         self.show_measure_numbers = show_measure_numbers
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: 'ExportOptions') -> bool:
         """
         Compare two ExportOptions objects.
 
         Args:
             other: The other ExportOptions object to compare.
 
-        Returns:
+        Returns (bool):
             True if the objects are equal, False otherwise.
 
         Examples:
@@ -119,14 +118,14 @@ class ExportOptions:
             self.instruments == other.instruments and \
             self.show_measure_numbers == other.show_measure_numbers
 
-    def __ne__(self, other):
+    def __ne__(self, other: 'ExportOptions') -> bool:
         """
         Compare two ExportOptions objects.
 
         Args:
-            other: The other ExportOptions object to compare.
+            other (ExportOptions): The other ExportOptions object to compare.
 
-        Returns:
+        Returns (bool):
             True if the objects are not equal, False otherwise.
 
         Examples:
@@ -150,7 +149,7 @@ def empty_row(row):
 
 
 class Exporter:
-    def export_string(self, document: Document, options: ExportOptions) -> string:
+    def export_string(self, document: Document, options: ExportOptions) -> str:
         Exporter.export_options_validator(document, options)
 
         rows = []
@@ -355,7 +354,7 @@ class Exporter:
             return False
 
 
-def get_kern_from_ekern(ekern_content: string) -> string:
+def get_kern_from_ekern(ekern_content: str) -> str:
     """
     Read the content of a **ekern file and return the **kern content.
 
@@ -385,13 +384,16 @@ def get_kern_from_ekern(ekern_content: string) -> string:
     return content
 
 
-def ekern_to_krn(input_file, output_file) -> None:
+def ekern_to_krn(
+        input_file: str,
+        output_file: str
+) -> None:
     """
     Convert one .ekrn file to .krn file.
 
     Args:
-        input_file: Filepath to the input **ekern
-        output_file: Filepath to the output **kern
+        input_file (str): Filepath to the input **ekern
+        output_file (str): Filepath to the output **kern
     Returns:
         None
 
@@ -425,13 +427,16 @@ def ekern_to_krn(input_file, output_file) -> None:
         file.write(kern_content)
 
 
-def kern_to_ekern(input_file, output_file) -> None:
+def kern_to_ekern(
+        input_file: str,
+        output_file: str
+) -> None:
     """
     Convert one .krn file to .ekrn file
 
     Args:
-        input_file: Filepath to the input **kern
-        output_file: Filepath to the output **ekern
+        input_file (str): Filepath to the input **kern
+        output_file (str): Filepath to the output **ekern
 
     Returns:
         None

@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from enum import Enum, auto
 import copy
+from typing import List, Iterable
 
 TOKEN_SEPARATOR = '@'
 DECORATION_SEPARATOR = '·'
@@ -171,14 +172,14 @@ class PitchRest:
     def __repr__(self):
         return f'[PitchRest: {self.encoding}, name={self.pitch}, octave={self.octave}]'
 
-    def __eq__(self, other):
+    def __eq__(self, other: 'PitchRest') -> bool:
         """
         Compare two pitches and rests.
 
         Args:
-            other: The other name to compare
+            other (PitchRest): The other name to compare
 
-        Returns:
+        Returns (bool):
             True if the pitches are equal, False otherwise
 
         Examples:
@@ -208,13 +209,13 @@ class PitchRest:
             return False
         return self.pitch == other.pitch and self.octave == other.octave
 
-    def __ne__(self, other):
+    def __ne__(self, other: 'PitchRest') -> bool:
         """
         Compare two pitches and rests.
         Args:
-            other: The other name to compare
+            other (PitchRest): The other name to compare
 
-        Returns:
+        Returns (bool):
             True if the pitches are different, False otherwise
 
         Examples:
@@ -237,16 +238,16 @@ class PitchRest:
         """
         return not self.__eq__(other)
 
-    def __gt__(self, other):
+    def __gt__(self, other: 'PitchRest') -> bool:
         """
         Compare two pitches.
 
         If any of the pitches is a rest, the comparison raise an exception.
 
         Args:
-            other: The other name to compare
+            other (PitchRest): The other name to compare
 
-        Returns: True if this name is higher than the other, False otherwise
+        Returns (bool): True if this name is higher than the other, False otherwise
 
         Examples:
             >>> pitch_rest = PitchRest('c')
@@ -285,7 +286,7 @@ class PitchRest:
             return PitchRest.pitch_comparator(self.pitch, other.pitch) > 0
         return False
 
-    def __lt__(self, other):
+    def __lt__(self, other: 'PitchRest') -> bool:
         """
         Compare two pitches.
 
@@ -334,13 +335,13 @@ class PitchRest:
             return PitchRest.pitch_comparator(self.pitch, other.pitch) < 0
         return False
 
-    def __ge__(self, other):
+    def __ge__(self, other: 'PitchRest') -> bool:
         """
         Compare two pitches. If any of the PitchRest is a rest, the comparison raise an exception.
         Args:
-            other: The other name to compare
+            other (PitchRest): The other name to compare
 
-        Returns:
+        Returns (bool):
             True if this name is higher or equal than the other, False otherwise
 
         Examples:
@@ -373,13 +374,13 @@ class PitchRest:
         """
         return self.__gt__(other) or self.__eq__(other)
 
-    def __le__(self, other):
+    def __le__(self, other: 'PitchRest') -> bool:
         """
         Compare two pitches. If any of the PitchRest is a rest, the comparison raise an exception.
         Args:
-            other: The other name to compare
+            other (PitchRest): The other name to compare
 
-        Returns: True if this name is lower or equal than the other, False otherwise
+        Returns (bool): True if this name is lower or equal than the other, False otherwise
 
         Examples:
             >>> pitch_rest = PitchRest('c')
@@ -562,8 +563,7 @@ class DurationClassical(Duration):
         Args:
             ratio (int): The factor to modify the duration. The factor must be greater than 0.
 
-        Returns:
-            DurationClassical: The new duration object with the modified duration.
+        Returns (DurationClassical): The new duration object with the modified duration.
 
         Examples:
             >>> duration = DurationClassical(2)
@@ -588,26 +588,18 @@ class DurationClassical(Duration):
 
         return copy.deepcopy(DurationClassical(self.duration * ratio))
 
-    def __deepcopy__(self, memo=None):
-        if memo is None:
-            memo = {}
-
-        new_instance = DurationClassical(self.duration)
-        new_instance.duration = self.duration
-        return new_instance
-
     def __str__(self):
         return f'{self.duration}'
 
-    def __eq__(self, other):
+    def __eq__(self, other: 'DurationClassical') -> bool:
         """
         Compare two durations.
 
         Args:
-            other: The other duration to compare
+            other (DurationClassical): The other duration to compare
 
-        Returns:
-            True if the durations are equal, False otherwise
+        Returns (bool): True if the durations are equal, False otherwise
+
 
         Examples:
             >>> duration = DurationClassical(2)
@@ -623,14 +615,14 @@ class DurationClassical(Duration):
             return False
         return self.duration == other.duration
 
-    def __ne__(self, other):
+    def __ne__(self, other: 'DurationClassical') -> bool:
         """
         Compare two durations.
 
         Args:
-            other: The other duration to compare
+            other (DurationClassical): The other duration to compare
 
-        Returns:
+        Returns (bool):
             True if the durations are different, False otherwise
 
         Examples:
@@ -645,14 +637,14 @@ class DurationClassical(Duration):
         """
         return not self.__eq__(other)
 
-    def __gt__(self, other):
+    def __gt__(self, other: 'DurationClassical') -> bool:
         """
         Compare two durations.
 
         Args:
             other: The other duration to compare
 
-        Returns:
+        Returns (bool):
             True if this duration is higher than the other, False otherwise
 
         Examples:
@@ -673,14 +665,14 @@ class DurationClassical(Duration):
             raise ValueError(f'Invalid comparison: > operator can not be used to compare duration with {type(other)}')
         return self.duration > other.duration
 
-    def __lt__(self, other):
+    def __lt__(self, other: 'DurationClassical') -> bool:
         """
         Compare two durations.
 
         Args:
-            other: The other duration to compare
+            other (DurationClassical): The other duration to compare
 
-        Returns:
+        Returns (bool):
             True if this duration is lower than the other, False otherwise
 
         Examples:
@@ -701,14 +693,14 @@ class DurationClassical(Duration):
             raise ValueError(f'Invalid comparison: < operator can not be used to compare duration with {type(other)}')
         return self.duration < other.duration
 
-    def __ge__(self, other):
+    def __ge__(self, other: 'DurationClassical') -> bool:
         """
         Compare two durations.
 
         Args:
-            other: The other duration to compare
+            other (DurationClassical): The other duration to compare
 
-        Returns:
+        Returns (bool):
             True if this duration is higher or equal than the other, False otherwise
 
         Examples:
@@ -727,12 +719,12 @@ class DurationClassical(Duration):
         """
         return self.__gt__(other) or self.__eq__(other)
 
-    def __le__(self, other):
+    def __le__(self, other: 'DurationClassical') -> bool:
         """
         Compare two durations.
 
         Args:
-            other: The other duration to compare
+            other (DurationClassical): The other duration to compare
 
         Returns:
             True if this duration is lower or equal than the other, False otherwise
@@ -753,8 +745,8 @@ class DurationClassical(Duration):
         """
         return self.__lt__(other) or self.__eq__(other)
 
-    @staticmethod
-    def __is_valid_duration(duration: int) -> bool:
+    @classmethod
+    def __is_valid_duration(cls, duration: int) -> bool:
         try:
             duration = int(duration)
             if duration is None or duration <= 0:
@@ -806,8 +798,8 @@ class AbstractToken(ABC):
         AbstractToken constructor
 
         Args:
-            encoding(str): The original representation of the token.
-            category(TokenCategory): The category of the token.
+            encoding (str): The original representation of the token.
+            category (TokenCategory): The category of the token.
         """
         self.encoding = encoding
         self.category = category
@@ -834,14 +826,19 @@ class ErrorToken(AbstractToken):
     Used to wrap tokens that have not been parsed.
     """
 
-    def __init__(self, encoding: str, line: int, error: str):
+    def __init__(
+            self,
+            encoding: str,
+            line: int,
+            error: str
+    ):
         """
         ErrorToken constructor
 
         Args:
-            encoding(str): The original representation of the token.
-            line(int): The line number of the token in the score.
-            error(str): The error message thrown by the parser.
+            encoding (str): The original representation of the token.
+            line (int): The line number of the token in the score.
+            error (str): The error message thrown by the parser.
         """
         super().__init__(encoding, TokenCategory.EMPTY)
         self.error = error
@@ -854,8 +851,7 @@ class ErrorToken(AbstractToken):
         """
         Information about the error token.
 
-        Returns:
-            str: The information about the error token.
+        Returns (str) The information about the error token.
         """
         return f'Error token found at line {self.line} with encoding "{self.encoding}". Description: {self.error}'
 
@@ -1057,18 +1053,23 @@ class NoteRestToken(Token):
         pitch_duration_subtokens (list): The subtokens for the pitch and duration
         decoration_subtokens (list): The subtokens for the decorations
     """
-    def __init__(self, encoding, pitch_duration_subtokens, decoration_subtokens):
+    def __init__(
+            self,
+            encoding: str,
+            pitch_duration_subtokens,
+            decoration_subtokens
+    ):
         """
         NoteRestToken constructor.
 
         Args:
-            encoding: The complete unprocessed encoding
+            encoding (str): The complete unprocessed encoding
             pitch_duration_subtokens: The subtokens for the pitch and duration
             decoration_subtokens: The subtokens for the decorations. Individual elements of the token, of type Subtoken
         """
         super().__init__(encoding, TokenCategory.CORE)
         if not pitch_duration_subtokens or len(pitch_duration_subtokens) == 0:
-            raise Exception('Empty name-duration subtokens')
+            raise ValueError('Empty name-duration subtokens')
 
         self.pitch_duration_subtokens = pitch_duration_subtokens
         self.decoration_subtokens = decoration_subtokens
@@ -1121,14 +1122,18 @@ class ChordToken(SimpleToken):
     It contains a list of compound tokens
     """
 
-    def __init__(self, encoding, category, notes_tokens):
+    def __init__(self,
+                 encoding: str,
+                 category: TokenCategory,
+                 notes_tokens: Iterable[Token]
+                 ):
         """
         ChordToken constructor.
 
         Args:
-            encoding: The complete unprocessed encoding
-            category: The token category, one of TokenCategory
-            notes_tokens: The subtokens for the notes. Individual elements of the token, of type Subtoken
+            encoding (str): The complete unprocessed encoding
+            category (TokenCategory): The token category, one of TokenCategory
+            notes_tokens (Iterable[Subtoken]): The subtokens for the notes. Individual elements of the token, of type Subtoken
         """
         super().__init__(encoding, category)
         self.notes_tokens = notes_tokens
@@ -1205,12 +1210,11 @@ class BoundingBox:
         self.to_x = max(self.to_x, bounding_box.to_x)
         self.to_y = max(self.to_y, bounding_box.to_y)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns a string representation of the bounding box
 
-        Returns:
-            str: The string representation of the bounding box
+        Returns (str): The string representation of the bounding box
         """
         return f'(x={self.from_x}, y={self.from_y}, w={self.w()}, h={self.h()})'
 
@@ -1235,14 +1239,19 @@ class BoundingBoxToken(AbstractToken):
         page_number (int): The page number
         bounding_box (BoundingBox): The bounding box
     """
-    def __init__(self, encoding, page_number, bounding_box):
+    def __init__(
+            self,
+            encoding: str,
+            page_number: int,
+            bounding_box: BoundingBox
+    ):
         """
         BoundingBoxToken constructor.
 
         Args:
-            encoding: The complete unprocessed encoding
-            page_number: The page number
-            bounding_box: The bounding box
+            encoding (str): The complete unprocessed encoding
+            page_number (int): The page number
+            bounding_box (BoundingBox): The bounding box
         """
         super().__init__(encoding, TokenCategory.BOUNDING_BOXES)
         self.page_number = page_number

@@ -4,19 +4,24 @@ Public API for KernPy.
 The main functions for handling the input and output of **kern files are provided here.
 """
 
+from typing import List, Iterable, Optional
+
 from kernpy.core import Importer, Document, Exporter, ExportOptions, GraphvizExporter
 from kernpy.core.io import _write
 
 
-def read(path, strict=False) -> (Document, []):
+def read(
+        path: str,
+        strict: Optional[bool] = False
+) -> (Document, List[str]):
     """
     Read a Humdrum **kern file.
 
     Args:
-        path: File path to read
-        strict: If True, raise an error if the **kern file has any errors. Otherwise, return a list of errors.
+        path (str): File path to read
+        strict (Optional[bool]): If True, raise an error if the **kern file has any errors. Otherwise, return a list of errors.
 
-    Returns (Document, list): Document object and list of error messages. Empty list if no errors.
+    Returns (Document, List[str]): Document object and list of error messages. Empty list if no errors.
 
     Examples:
         >>> import kernpy as kp
@@ -84,14 +89,18 @@ def export(document: Document, options: ExportOptions) -> str:
     return exporter.export_string(document, options)
 
 
-def store(document: Document, path, options: ExportOptions) -> None:
+def store(
+        document: Document,
+        path: str,
+        options: ExportOptions
+) -> None:
     """
     Store a Document object to a file.
 
     Args:
-        document: Document object to store
-        path: File path to store
-        options: Export options
+        document (Document): Document object to store
+        path (str): File path to store
+        options (ExportOptions): Export options
 
     Returns: None
 
@@ -107,13 +116,16 @@ def store(document: Document, path, options: ExportOptions) -> None:
     _write(path, content)
 
 
-def store_graph(document: Document, path) -> None:
+def store_graph(
+        document: Document,
+        path: str
+) -> None:
     """
     Create a graph representation of a Document object using Graphviz. Save the graph to a file.
 
     Args:
-        document: Document object to create graph from
-        path: File path to save the graph
+        document (Document): Document object to create graph from
+        path (str): File path to save the graph
 
     Returns: None
 
@@ -126,15 +138,18 @@ def store_graph(document: Document, path) -> None:
     graph_exporter.export_to_dot(document.tree, path)
 
 
-def get_spine_types(document: Document, spine_types: list = None) -> list:
+def get_spine_types(
+        document: Document,
+        spine_types: Optional[Iterable[str]] = None
+) -> List[str]:
     """
     Get the spines of a Document object.
 
     Args:
-        document(Document): Document object to get spines from
-        spine_types(list): List of spine types to get. If None, all spines are returned.
+        document (Document): Document object to get spines from
+        spine_types (Optional[Iterable[str]]): List of spine types to get. If None, all spines are returned.
 
-    Returns: List of spines
+    Returns (List[str]): List of spines
 
     Examples:
         >>> import kernpy as kp
@@ -156,7 +171,11 @@ def get_spine_types(document: Document, spine_types: list = None) -> list:
     return exporter.get_spine_types(document, spine_types=spine_types)
 
 
-def concat(content_a: str, content_b: str, options: ExportOptions = None) -> str:
+def concat(
+        content_a: str,
+        content_b: str,
+        options: ExportOptions = None
+) -> str:
     """
     Concatenate two **kern strings.
 

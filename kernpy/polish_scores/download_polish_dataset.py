@@ -5,9 +5,10 @@ from PIL import Image
 from io import BytesIO
 import os
 import json
+from typing import List, Iterable, Optional
 
 from kernpy import ExportOptions, BEKERN_CATEGORIES, Importer, Exporter, Document, KernTypeExporter, read
-import argparse
+
 
 # This script creates the Polish dataset from the kern files.
 # It downloads both the systems and full pages
@@ -274,19 +275,25 @@ def store_error_log(filename, msg: dict):
         f.write(f'{json.dumps(msg)}\n')
 
 
-def main(input_directory, output_directory, remove_empty_directories: bool = True, kern_spines_filter: int = 2, exporter_kern_type='ekern'):
+def main(
+        input_directory: str,
+        output_directory: str,
+        remove_empty_directories: Optional[bool] = True,
+        kern_spines_filter: Optional[int] = 2,
+        exporter_kern_type: Optional[str] = 'ekern'
+) -> None:
     """
     Process the files in the input_directory and save the results in the output_directory.
     http requests are made to download the images.
 
     Args:
-        input_directory: directory where the input files are found
-        output_directory: directory where the output files are saved
-        remove_empty_directories (bool): remove empty directories when finish processing the files
-        kern_spines_filter (int): Only process files with the number of **kern spines specified.\
+        input_directory (str): directory where the input files are found
+        output_directory (str): directory where the output files are saved
+        remove_empty_directories (Optional[bool]): remove empty directories when finish processing the files
+        kern_spines_filter (Optional[int]): Only process files with the number of **kern spines specified.\
             Use it to export 2-voice files. Default is 2.\
             Use None to process all files.
-        exporter_kern_type (str): the type of kern exporter. It can be 'krn' or 'ekrn'
+        exporter_kern_type (Optional[str]): the type of kern exporter. It can be 'krn' or 'ekrn'
 
 
 
