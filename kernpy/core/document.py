@@ -1,8 +1,10 @@
 from copy import copy
 from collections import deque, defaultdict
 from abc import ABC, abstractmethod
+from typing import Iterable, List, Optional
 
-from kernpy.core import MetacommentToken
+from kernpy.core import TokenCategory
+from kernpy.core import MetacommentToken, AbstractToken
 
 
 class SignatureNodes:
@@ -11,24 +13,35 @@ class SignatureNodes:
 
     This class is used to store the last signature nodes of a tree.
     It is used to keep track of the last signature nodes.
+
+    Attributes: nodes (dict): A dictionary that stores the last signature nodes. This way, we can add several tokens
+    without repetitions. - The key is the signature descendant token class (KeyToken, MeterSymbolToken, etc...) - The
+    value = node
+
     """
+
     def __init__(self):
         """
-        Create an instance of SignatureNodes.
+        Create an instance of SignatureNodes. Initialize the nodes as an empty dictionary.
 
         Examples:
             >>> signature_nodes = SignatureNodes()
             >>> signature_nodes.nodes
             {}
         """
-        self.nodes = {}  # key = Signature descendant token class (KeyToken, MeterSymbolToken, etc...) , value = node
-        # - this way, we can add several tokens without repetitions
+        self.nodes = {}
 
     def clone(self):
         """
         Create a deep copy of the SignatureNodes instance.
         Returns: A new instance of SignatureNodes with nodes copied.
 
+        # TODO: This method is equivalent to the following code:
+        # from copy import deepcopy
+        # signature_nodes_to_copy = SignatureNodes()
+        # ...
+        # result = deepcopy(signature_nodes_to_copy)
+        # It should be tested.
         """
         result = SignatureNodes()
         result.nodes = copy(self.nodes)
@@ -39,31 +52,55 @@ class SignatureNodes:
 
 
 class TreeTraversalInterface(ABC):
+    """
+    TreeTraversalInterface class.
+
+    This class is used to traverse the tree. The `TreeTraversalInterface` class is responsible for implementing
+    the `visit` method.
+    """
+
     @abstractmethod
     def visit(self, node):
         pass
 
 
 class Node:
-    NextID = 1 # static counter
     """
     Node class.
 
     This class represents a node in a tree.
     The `Node` class is responsible for storing the main information of the **kern file.
+
+    Attributes:
+        id(int): The unique id of the node.
+        token(Optional[AbstractToken]): The specific token of the node. The token can be a `KeyToken`, `MeterSymbolToken`, etc...
+        parent(Optional['Node']): A reference to the parent `Node`. If the parent is the root, the parent is None.
+        children(List['Node']): A list of the children `Node`.
+        stage(int): The stage of the node in the tree. The stage is similar to a row in the **kern file.
+        last_spine_operator_node(Optional['Node']): The last spine operator node.
+        last_signature_nodes(Optional[SignatureNodes]): A reference to the last `SignatureNodes` instance.
+        header_node(Optional['Node']): The header node.
     """
-    def __init__(self, stage, token, parent, last_spine_operator_node, last_signature_nodes: SignatureNodes,
-                 header_node):
+    NextID = 1  # static counter
+
+    def __init__(self,
+                 stage: int,
+                 token: Optional[AbstractToken],
+                 parent: Optional['Node'],
+                 last_spine_operator_node: Optional['Node'],
+                 last_signature_nodes: Optional[SignatureNodes],
+                 header_node: Optional['Node']
+                 ):
         """
         Create an instance of Node.
 
         Args:
-            stage: The stage of the node in the tree. The stage is similar to a row in the **kern file.
-            token: The specific token of the node. The token can be a `KeyToken`, `MeterSymbolToken`, etc...
-            parent: A reference to the parent `Node`. If the parent is the root, the parent is None.
-            last_spine_operator_node: The last spine operator node.
-            last_signature_nodes: A reference to the last `SignatureNodes` instance.
-            header_node:
+            stage (int): The stage of the node in the tree. The stage is similar to a row in the **kern file.
+            token (Optional[AbstractToken]): The specific token of the node. The token can be a `KeyToken`, `MeterSymbolToken`, etc...
+            parent (Optional['Node']): A reference to the parent `Node`. If the parent is the root, the parent is None.
+            last_spine_operator_node (Optional['Node']): The last spine operator node.
+            last_signature_nodes (Optional[SignatureNodes]): A reference to the last `SignatureNodes` instance.
+            header_node (Optional['Node']): The header node.
         """
         self.id = Node.NextID
         Node.NextID += 1
@@ -72,13 +109,26 @@ class Node:
         self.children = []
         self.stage = stage
         self.header_node = header_node
-        if last_signature_nodes:
+        if last_signature_nodes is not None:
             self.last_signature_nodes = last_signature_nodes.clone()  #TODO Documentar todo esto - composición
+            # self.last_signature_nodes = copy.deepcopy(last_signature_nodes) # TODO: Ver en SignatureNodes.clone
         else:
             self.last_signature_nodes = SignatureNodes()
         self.last_spine_operator_node = last_spine_operator_node
 
-    def count_nodes_by_stage(self):
+    def count_nodes_by_stage(self) -> List[int]:
+        """
+        Count the number of nodes in each stage of the tree.
+
+        Examples:
+            >>> node = Node(0, None, None, None, None, None)
+            >>> ...
+            >>> node.count_nodes_by_stage()
+            [2, 2, 2, 2, 3, 3, 3, 2]
+
+        Returns:
+            List[int]: A list with the number of nodes in each stage of the tree.
+        """
         level_counts = defaultdict(int)
         queue = deque([(self, 0)])  # (node, level)
         # breadth-first search (BFS)
@@ -95,6 +145,12 @@ class Node:
         return counts_by_level
 
     def dfs(self, tree_traversal: TreeTraversalInterface):
+        """
+        Depth-first search (DFS)
+
+        Args:
+            tree_traversal (TreeTraversalInterface): The tree traversal interface. Object used to visit the nodes of the tree.
+        """
         node = self
         tree_traversal.visit(node)
         for child in self.children:
@@ -102,57 +158,150 @@ class Node:
 
 
 class BoundingBoxMeasures:
-    def __init__(self, bounding_box, from_measure, to_measure):
+    """
+    BoundingBoxMeasures class.
+    """
+
+    def __init__(
+            self,
+            bounding_box,
+            from_measure: int,
+            to_measure: int
+    ):
+        """
+        Create an instance of BoundingBoxMeasures.
+
+        Args:
+            bounding_box: The bounding box object of the node.
+            from_measure (int): The first measure of the score in the BoundingBoxMeasures object.
+            to_measure (int): The last measure of the score in the BoundingBoxMeasures object.
+        """
         self.from_measure = from_measure
         self.to_measure = to_measure
         self.bounding_box = bounding_box
 
 
 class MultistageTree:
+    """
+    MultistageTree class.
+    """
     def __init__(self):
+        """
+        Constructor for MultistageTree class.
+
+        Create an empty Node object to serve as the root, \
+        and start the stages list by placing this root node inside a new list.
+
+        """
         self.root = Node(0, None, None, None, None, None)
         self.stages = []
         self.stages.append([self.root])
 
-    def add_node(self, stage, parent, token, last_spine_operator_node, previous_signature_nodes,
-                 header_node=None) -> Node:
+    def add_node(
+            self,
+            stage: int,
+            parent: Node,
+            token: Optional[AbstractToken],
+            last_spine_operator_node: Optional[Node],
+            previous_signature_nodes: Optional[SignatureNodes],
+            header_node: Optional[Node] = None
+    ) -> Node:
+        """
+        Add a new node to the tree.
+        Args:
+            stage (int):
+            parent (Node):
+            token (Optional[AbstractToken]):
+            last_spine_operator_node (Optional[Node]):
+            previous_signature_nodes (Optional[SignatureNodes]):
+            header_node (Optional[Node]):
+
+        Returns: Node - The added node object.
+
+        """
         node = Node(stage, token, parent, last_spine_operator_node, previous_signature_nodes, header_node)
         if stage == len(self.stages):
             self.stages.append([node])
         elif stage > len(self.stages):
-            raise Exception(f'Cannot add node in stage {stage} for max. {len(self.stages)} stages')
+            raise ValueError(f'Cannot add node in stage {stage} when there are only {len(self.stages)} stages')
         else:
             self.stages[stage].append(node)
+
         parent.children.append(node)
         return node
 
-    def dfs(self, visit_method):
+    def dfs(self, visit_method) -> None:
+        """
+        Depth-first search (DFS)
+
+        Args:
+            visit_method (TreeTraversalInterface): The tree traversal interface.
+
+        Returns: None
+
+        """
         self.root.dfs(visit_method)
 
 
 class Document:
+    """
+    Document class.
+
+    This class store the score content using an agnostic tree structure.
+
+    Attributes:
+        tree (MultistageTree): The tree structure of the document where all the nodes are stored. \
+            Each stage of the tree corresponds to a row in the Humdrum **kern file encoding.
+        measure_start_tree_stages (List[List[Node]]): The list of nodes that corresponds to the measures. \
+            Empty list by default.
+            The index of the list is starting from 1. Rows after removing empty lines and line comments
+        page_bounding_boxes (Dict[int, BoundingBoxMeasures]): The dictionary of page bounding boxes. \
+            - key: page number
+            - value: BoundingBoxMeasures object
+        header_stage (int): The index of the stage that contains the headers. None by default.
+    """
     def __init__(self, tree: MultistageTree):
-        self.tree = tree  # each stage of the tree corresponds to a row in the **kern file
-        self.measure_start_tree_stages = []  # starting from 1. Rows after removing empty lines and line comments
+        """
+        Constructor for Document class.
+
+        Args:
+            tree (MultistageTree): The tree structure of the document where all the nodes are stored.
+        """
+        self.tree = tree  # TODO: ? Should we use copy.deepcopy() here?
+        self.measure_start_tree_stages = []
         self.page_bounding_boxes = {}
-        self.header_stage = None  # the stage that contains the heders
+        self.header_stage = None
 
     FIRST_MEASURE = 1
 
-    def get_header_stage(self):
+    def get_header_stage(self) -> List[Node]:
+        """
+        Get the Node list of the header stage.
+
+        Returns: (List[Node]) The Node list of the header stage.
+
+        Raises: Exception - If the document has no header stage.
+        """
         if self.header_stage:
             return self.tree.stages[self.header_stage]
         else:
             raise Exception('No header stage found')
 
-    def get_leaves(self):
+    def get_leaves(self) -> List[Node]:
+        """
+        Get the leaves of the tree.
+
+        Returns: (List[Node]) The leaves of the tree.
+        """
         return self.tree.stages[len(self.tree.stages) - 1]
 
-    def get_spine_count(self):
-        if self.header_stage:
-            return len(self.tree.stages[self.header_stage])
-        else:
-            raise Exception('No header stage found')
+    def get_spine_count(self) -> int:
+        """
+        Get the number of spines in the document.
+
+        Returns (int): The number of spines in the document.
+        """
+        return len(self.get_header_stage())  # TODO: test refactor
 
     def get_first_measure(self) -> int:
         """
@@ -163,7 +312,8 @@ class Document:
         Raises: Exception - If the document has no measures.
 
         Examples:
-            >>> document, err = kernpy.read('score.krn')
+            >>> import kernpy as kp
+            >>> document, err = kp.read('score.krn')
             >>> document.get_first_measure()
             1
         """
@@ -192,7 +342,7 @@ class Document:
 
         return len(self.measure_start_tree_stages) - 1  # starting from 1 (remove the root)
 
-    def get_metacomments(self, KeyComment=None, clear=False) -> list:
+    def get_metacomments(self, KeyComment: Optional[str] = None, clear: bool = False) -> List[str]:
         """
         Get all metacomments in the document
 
@@ -232,19 +382,19 @@ class Document:
 
         return result
 
-    @staticmethod
-    def tokens_to_encodings(tokens: list):
+    @classmethod
+    def tokens_to_encodings(cls, tokens: Iterable[AbstractToken]):
         """
         Get the encodings of a list of tokens.
 
         The method is equivalent to the following code:
-            >>> tokens = yourModule.get_all_tokens()
+            >>> tokens = kp.get_all_tokens()
             >>> [token.encoding for token in tokens if token.encoding is not None]
 
         Args:
-            tokens: list - A list of tokens.
+            tokens (Iterable[AbstractToken]): list - A list of tokens.
 
-        Returns: list[str] - A list of token encodings.
+        Returns: List[str] - A list of token encodings.
 
         Examples:
             >>> tokens = document.get_all_tokens()
@@ -254,58 +404,75 @@ class Document:
         encodings = [token.encoding for token in tokens if token.encoding is not None]
         return encodings
 
-    def get_all_tokens(self, filter_by_categories=None):
+    def get_all_tokens(self, filter_by_categories: Optional[Iterable[TokenCategory]] = None) -> List[AbstractToken]:
         """
         Args:
-            filter_by_categories: A list of categories to filter the tokens. If None, all tokens are returned.
+            filter_by_categories (Optional[Iterable[TokenCategory]]): A list of categories to filter the tokens. If None, all tokens are returned.
 
         Returns:
-            list - A list of tokens.
+            List[AbstractToken] - A list of all tokens.
 
-
+        Examples:
+            >>> tokens = document.get_all_tokens()
+            >>> Document.tokens_to_encodings(tokens)
+            >>> [type(t) for t in tokens]
+            [<class 'kernpy.core.token.Token'>, <class 'kernpy.core.token.Token'>, <class 'kernpy.core.token.Token'>]
         """
         traversal = TokensTraversal(False, filter_by_categories)
         self.tree.dfs(traversal)
         return traversal.tokens
 
-    def get_all_tokens_encodings(self, filter_by_categories = None):
+    def get_all_tokens_encodings(self, filter_by_categories: Optional[Iterable[TokenCategory]] = None) -> List[str]:
+        """
+        Args:
+            filter_by_categories (Optional[Iterable[TokenCategory]]): A list of categories to filter the tokens. If None, all tokens are returned.
+
+
+        Returns:
+            list[str] - A list of all token encodings.
+
+        Examples:
+            >>> tokens = document.get_all_tokens_encodings()
+            >>> Document.tokens_to_encodings(tokens)
+            ['!!!COM: Coltrane', '!!!voices: 1', '!!!OPR: Blue Train']
+        """
         tokens = self.get_all_tokens(filter_by_categories)
         return Document.tokens_to_encodings(tokens)
 
-    def get_unique_tokens(self, filter_by_categories = None) -> list:
+    def get_unique_tokens(self, filter_by_categories: Optional[Iterable[TokenCategory]] = None) -> List[AbstractToken]:
         """
         Get unique tokens.
 
         Args:
-            filter_by_categories: A list of categories to filter the tokens. If None, all tokens are returned.
+            filter_by_categories (Optional[Iterable[TokenCategory]]): A list of categories to filter the tokens. If None, all tokens are returned.
 
         Returns:
-            list - A list of unique tokens.
+            List[AbstractToken] - A list of unique tokens.
 
         """
         traversal = TokensTraversal(True, filter_by_categories)
         self.tree.dfs(traversal)
         return traversal.tokens
 
-    def get_unique_token_encodings(self, filter_by_categories = None) -> list:
+    def get_unique_token_encodings(self, filter_by_categories: Optional[Iterable[TokenCategory]] = None) -> List[str]:
         """
         Get unique token encodings.
 
         Args:
-            filter_by_categories: A list of categories to filter the tokens. If None, all tokens are returned.
+            filter_by_categories (Optional[Iterable[TokenCategory]]): A list of categories to filter the tokens. If None, all tokens are returned.
 
-        Returns: list[str] - A list of unique token encodings.
+        Returns: List[str] - A list of unique token encodings.
 
         """
         tokens = self.get_unique_tokens(filter_by_categories)
         return Document.tokens_to_encodings(tokens)
 
-    def get_voices(self, clean=False):
+    def get_voices(self, clean: bool = False):
         """
         Get the voices of the document.
 
         Args
-            clean: Remove the first '!' from the voice name.
+            clean (bool): Remove the first '!' from the voice name.
 
         Returns: A list of voices.
 
@@ -318,7 +485,6 @@ class Document:
             ['!sax', '!piano', '!bass']
         """
         from kernpy.core import TokenCategory
-        voices = []
         voices = self.get_all_tokens(filter_by_categories=[TokenCategory.INSTRUMENTS])
 
         if clean:
@@ -384,14 +550,14 @@ class Document:
             current_node.children.extend(other_node.children)
 
     @classmethod
-    def to_concat(cls, first_doc: 'Document', second_doc: 'Document', deep_copy=True) -> 'Document':
+    def to_concat(cls, first_doc: 'Document', second_doc: 'Document', deep_copy: bool = True) -> 'Document':
         """
         Concatenate two documents.
 
         Args:
-            first_doc: The first document.
-            second_doc: The second document.
-            deep_copy: If True, the documents are deep copied. If False, the documents are shallow copied.
+            first_doc (Document): The first document.
+            second_doc (Document: The second document.
+            deep_copy (bool): If True, the documents are deep copied. If False, the documents are shallow copied.
 
         Returns: A new instance of Document with the documents concatenated.
         """
@@ -439,12 +605,12 @@ class TokensTraversal(TreeTraversalInterface):
         self.tokens = []
         self.seen_encodings = []
         self.non_repeated = non_repeated
-        self.filter_by_categories = filter_by_categories
+        self.filter_by_categories = [t for t in TokenCategory] if filter_by_categories is None else filter_by_categories
 
     def visit(self, node):
         if (node.token
-            and (not self.non_repeated or node.token.encoding not in self.seen_encodings)
-            and (self.filter_by_categories is None or node.token.category in self.filter_by_categories)
+                and (not self.non_repeated or node.token.encoding not in self.seen_encodings)
+                and (self.filter_by_categories is None or node.token.category in self.filter_by_categories)
         ):
             self.tokens.append(node.token)
             if self.non_repeated:
