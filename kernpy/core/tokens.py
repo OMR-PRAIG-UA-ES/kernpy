@@ -588,6 +588,14 @@ class DurationClassical(Duration):
 
         return copy.deepcopy(DurationClassical(self.duration * ratio))
 
+    def __deepcopy__(self, memo=None):
+        if memo is None:
+            memo = {}
+
+        new_instance = DurationClassical(self.duration)
+        new_instance.duration = self.duration
+        return new_instance
+
     def __str__(self):
         return f'{self.duration}'
 
@@ -954,6 +962,7 @@ class Token(AbstractToken, ABC):
     """
     Abstract Token class.
     """
+
     def __init__(self, encoding, category):
         super().__init__(encoding, category)
 
@@ -962,6 +971,7 @@ class SimpleToken(Token):
     """
     SimpleToken class.
     """
+
     def __init__(self, encoding, category):
         super().__init__(encoding, category)
 
@@ -973,6 +983,7 @@ class BarToken(SimpleToken):
     """
     BarToken class.
     """
+
     def __init__(self, encoding):
         super().__init__(encoding, TokenCategory.BARLINES)
 
@@ -981,6 +992,7 @@ class SignatureToken(SimpleToken):
     """
     SignatureToken class for all signature tokens. It will be overridden by more specific classes.
     """
+
     def __init__(self, encoding):
         super().__init__(encoding, TokenCategory.SIGNATURES)
 
@@ -989,6 +1001,7 @@ class ClefToken(SignatureToken):
     """
     ClefToken class.
     """
+
     def __init__(self, encoding):
         super().__init__(encoding)
 
@@ -997,6 +1010,7 @@ class TimeSignatureToken(SignatureToken):
     """
     TimeSignatureToken class.
     """
+
     def __init__(self, encoding):
         super().__init__(encoding)
 
@@ -1005,6 +1019,7 @@ class MeterSymbolToken(SignatureToken):
     """
     MeterSymbolToken class.
     """
+
     def __init__(self, encoding):
         super().__init__(encoding)
 
@@ -1013,6 +1028,7 @@ class KeySignatureToken(SignatureToken):
     """
     KeySignatureToken class.
     """
+
     def __init__(self, encoding):
         super().__init__(encoding)
 
@@ -1021,6 +1037,7 @@ class KeyToken(SignatureToken):
     """
     KeyToken class.
     """
+
     def __init__(self, encoding):
         super().__init__(encoding)
 
@@ -1053,6 +1070,7 @@ class NoteRestToken(Token):
         pitch_duration_subtokens (list): The subtokens for the pitch and duration
         decoration_subtokens (list): The subtokens for the decorations
     """
+
     def __init__(
             self,
             encoding: str,
@@ -1161,6 +1179,7 @@ class BoundingBox:
         to_x (int): The x coordinate of the bottom right corner
         to_y (int): The y coordinate of the bottom right corner
     """
+
     def __init__(self, x, y, w, h):
         """
         BoundingBox constructor.
@@ -1239,6 +1258,7 @@ class BoundingBoxToken(AbstractToken):
         page_number (int): The page number
         bounding_box (BoundingBox): The bounding box
     """
+
     def __init__(
             self,
             encoding: str,
@@ -1265,6 +1285,7 @@ class MHXMToken(AbstractToken):
     """
     MHXMToken class.
     """
+
     # TODO: Implement constructor
     def export(self) -> str:
         return self.encoding
