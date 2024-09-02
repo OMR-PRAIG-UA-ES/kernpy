@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from collections.abc import Iterable
+from collections.abc import Collection
 from enum import Enum, auto
 import copy
 from typing import List
@@ -1145,7 +1145,7 @@ class ChordToken(SimpleToken):
     def __init__(self,
                  encoding: str,
                  category: TokenCategory,
-                 notes_tokens: Iterable[Token]
+                 notes_tokens: Collection[Token]
                  ):
         """
         ChordToken constructor.
@@ -1153,7 +1153,7 @@ class ChordToken(SimpleToken):
         Args:
             encoding (str): The complete unprocessed encoding
             category (TokenCategory): The token category, one of TokenCategory
-            notes_tokens (Iterable[Subtoken]): The subtokens for the notes. Individual elements of the token, of type Subtoken
+            notes_tokens (Collection[Token]): The subtokens for the notes. Individual elements of the token, of type Subtoken
         """
         super().__init__(encoding, category)
         self.notes_tokens = notes_tokens

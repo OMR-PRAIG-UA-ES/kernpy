@@ -5,7 +5,7 @@ from PIL import Image
 from io import BytesIO
 import os
 import json
-from typing import List, Iterable, Optional
+from typing import List, Optional
 
 from kernpy import ExportOptions, BEKERN_CATEGORIES, Importer, Exporter, Document, KernTypeExporter, read
 
