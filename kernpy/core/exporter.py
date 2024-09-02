@@ -1,4 +1,6 @@
 from enum import Enum
+from typing import Optional
+from collections.abc import Sequence
 
 from kernpy.core import Document, SpineOperationToken, HeaderToken, Importer, TokenCategory, InstrumentToken, \
     TOKEN_SEPARATOR, DECORATION_SEPARATOR, Token, NoteRestToken
@@ -36,15 +38,16 @@ class ExportOptions:
     Store the options to export a **kern file.
     """
 
-    def __init__(self,
-                 spine_types: [] = None,
-                 token_categories: [] = None,
-                 from_measure: int = None,
-                 to_measure: int = None,
-                 kern_type: KernTypeExporter = KernTypeExporter.normalizedKern,
-                 instruments: [] = None,
-                 show_measure_numbers: bool = False
-                 ):
+    def __init__(
+            self,
+            spine_types: [] = None,
+            token_categories: [] = None,
+            from_measure: int = None,
+            to_measure: int = None,
+            kern_type: KernTypeExporter = KernTypeExporter.normalizedKern,
+            instruments: [] = None,
+            show_measure_numbers: bool = False
+    ):
         """
         Create a new ExportOptions object.
 
