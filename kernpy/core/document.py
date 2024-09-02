@@ -2,7 +2,7 @@ from copy import copy
 from collections import deque, defaultdict
 from abc import ABC, abstractmethod
 from typing import List, Optional
-from collections.abc import Collection
+from collections.abc import Sequence
 
 from kernpy.core import TokenCategory
 from kernpy.core import MetacommentToken, AbstractToken
@@ -186,6 +186,7 @@ class MultistageTree:
     """
     MultistageTree class.
     """
+
     def __init__(self):
         """
         Constructor for MultistageTree class.
@@ -261,6 +262,7 @@ class Document:
             - value: BoundingBoxMeasures object
         header_stage (int): The index of the stage that contains the headers. None by default.
     """
+
     def __init__(self, tree: MultistageTree):
         """
         Constructor for Document class.
@@ -384,7 +386,7 @@ class Document:
         return result
 
     @classmethod
-    def tokens_to_encodings(cls, tokens: Collection[AbstractToken]):
+    def tokens_to_encodings(cls, tokens: Sequence[AbstractToken]):
         """
         Get the encodings of a list of tokens.
 
@@ -393,7 +395,7 @@ class Document:
             >>> [token.encoding for token in tokens if token.encoding is not None]
 
         Args:
-            tokens (Collection): list - A list of tokens.
+            tokens (Sequence[AbstractToken]): list - A list of tokens.
 
         Returns: List[str] - A list of token encodings.
 
@@ -405,10 +407,10 @@ class Document:
         encodings = [token.encoding for token in tokens if token.encoding is not None]
         return encodings
 
-    def get_all_tokens(self, filter_by_categories: Optional[Collection[TokenCategory]] = None) -> List[AbstractToken]:
+    def get_all_tokens(self, filter_by_categories: Optional[Sequence[TokenCategory]] = None) -> List[AbstractToken]:
         """
         Args:
-            filter_by_categories (Optional[Collection[TokenCategory]]): A list of categories to filter the tokens. If None, all tokens are returned.
+            filter_by_categories (Optional[Sequence[TokenCategory]]): A list of categories to filter the tokens. If None, all tokens are returned.
 
         Returns:
             List[AbstractToken] - A list of all tokens.
@@ -423,10 +425,13 @@ class Document:
         self.tree.dfs(traversal)
         return traversal.tokens
 
-    def get_all_tokens_encodings(self, filter_by_categories: Optional[Collection[TokenCategory]] = None) -> List[str]:
+    def get_all_tokens_encodings(
+            self,
+            filter_by_categories: Optional[Sequence[TokenCategory]] = None
+    ) -> List[str]:
         """
         Args:
-            filter_by_categories (Optional[Collection[TokenCategory]]): A list of categories to filter the tokens. If None, all tokens are returned.
+            filter_by_categories (Optional[Sequence[TokenCategory]]): A list of categories to filter the tokens. If None, all tokens are returned.
 
 
         Returns:
@@ -440,12 +445,15 @@ class Document:
         tokens = self.get_all_tokens(filter_by_categories)
         return Document.tokens_to_encodings(tokens)
 
-    def get_unique_tokens(self, filter_by_categories: Optional[Collection[TokenCategory]] = None) -> List[AbstractToken]:
+    def get_unique_tokens(
+            self,
+            filter_by_categories: Optional[Sequence[TokenCategory]] = None
+    ) -> List[AbstractToken]:
         """
         Get unique tokens.
 
         Args:
-            filter_by_categories (Optional[Collection[TokenCategory]]): A list of categories to filter the tokens. If None, all tokens are returned.
+            filter_by_categories (Optional[Sequence[TokenCategory]]): A list of categories to filter the tokens. If None, all tokens are returned.
 
         Returns:
             List[AbstractToken] - A list of unique tokens.
@@ -455,12 +463,15 @@ class Document:
         self.tree.dfs(traversal)
         return traversal.tokens
 
-    def get_unique_token_encodings(self, filter_by_categories: Optional[Collection[TokenCategory]] = None) -> List[str]:
+    def get_unique_token_encodings(
+            self,
+            filter_by_categories: Optional[Sequence[TokenCategory]] = None
+    ) -> List[str]:
         """
         Get unique token encodings.
 
         Args:
-            filter_by_categories (Optional[Collection[TokenCategory]]): A list of categories to filter the tokens. If None, all tokens are returned.
+            filter_by_categories (Optional[Sequence[TokenCategory]]): A list of categories to filter the tokens. If None, all tokens are returned.
 
         Returns: List[str] - A list of unique token encodings.
 

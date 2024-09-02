@@ -5,7 +5,7 @@ The main functions for handling the input and output of **kern files are provide
 """
 
 from typing import List, Optional
-from collections.abc import Collection
+from collections.abc import Sequence
 
 from kernpy.core import Importer, Document, Exporter, ExportOptions, GraphvizExporter
 from kernpy.core.io import _write
@@ -141,14 +141,14 @@ def store_graph(
 
 def get_spine_types(
         document: Document,
-        spine_types: Optional[Collection[str]] = None
+        spine_types: Optional[Sequence[str]] = None
 ) -> List[str]:
     """
     Get the spines of a Document object.
 
     Args:
         document (Document): Document object to get spines from
-        spine_types (Optional[Collection[str]]): List of spine types to get. If None, all spines are returned.
+        spine_types (Optional[Sequence[str]]): List of spine types to get. If None, all spines are returned.
 
     Returns (List[str]): List of spines
 
