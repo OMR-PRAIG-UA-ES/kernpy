@@ -1,7 +1,8 @@
 from copy import copy
 from collections import deque, defaultdict
 from abc import ABC, abstractmethod
-from typing import Iterable, List, Optional
+from typing import List, Optional
+from collections.abc import Iterable
 
 from kernpy.core import TokenCategory
 from kernpy.core import MetacommentToken, AbstractToken

@@ -4,7 +4,8 @@ Public API for KernPy.
 The main functions for handling the input and output of **kern files are provided here.
 """
 
-from typing import List, Iterable, Optional
+from typing import List, Optional
+from collections.abc import Iterable
 
 from kernpy.core import Importer, Document, Exporter, ExportOptions, GraphvizExporter
 from kernpy.core.io import _write

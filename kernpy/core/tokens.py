@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
+from collections.abc import Iterable
 from enum import Enum, auto
 import copy
-from typing import List, Iterable
+from typing import List
+
 
 TOKEN_SEPARATOR = '@'
 DECORATION_SEPARATOR = '·'
