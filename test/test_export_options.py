@@ -6,7 +6,7 @@ import kernpy as kp
 class TestExportOptions(unittest.TestCase):
     def test_default_values(self):
         expected_options = kp.ExportOptions()
-        expected_options.spine_types = ['**kern']
+        expected_options.spine_types = kp.core.HEADERS
         expected_options.token_categories = [c for c in kp.TokenCategory]
         expected_options.from_measure = None
         expected_options.to_measure = None
