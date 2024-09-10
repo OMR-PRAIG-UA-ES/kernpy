@@ -2,8 +2,9 @@ import csv
 import io
 from copy import copy
 
-from kernpy.core.tokens import TokenCategory, SignatureToken, MetacommentToken, HeaderToken, SpineOperationToken, FieldCommentToken, ErrorToken, \
-    BoundingBoxToken
+from kernpy.core.tokens import TokenCategory, SignatureToken, MetacommentToken, HeaderToken, SpineOperationToken, \
+    FieldCommentToken, ErrorToken, \
+    BoundingBoxToken, SPINE_OPERATIONS, HEADERS
 from kernpy.core.document import Document, MultistageTree, BoundingBoxMeasures
 
 
@@ -13,9 +14,6 @@ class Importer:
 
     Use this class to import the content from a file or a string to a `Document` object.
     """
-    HEADERS = {"**mens", "**kern", "**text", "**harm", "**mxhm", "**root", "**dyn", "**dynam", "**fing"}
-    SPINE_OPERATIONS = {"*-", "*+", "*^", "*v", "*x"}
-
     def __init__(self):
         """
         Create an instance of the importer.
@@ -78,7 +76,7 @@ class Importer:
                 else:
                     for column in row:
                         icolumn = icolumn + 1
-                        if column in self.HEADERS:
+                        if column in HEADERS:
                             if header_row_number is not None and header_row_number != row_number:
                                 raise Exception(
                                     f"Several header rows not supported, there is a header row in #{header_row_number} and another in #{row_number} ")
@@ -95,7 +93,7 @@ class Importer:
                             node.header_node = node # this value will be propagated
                             next_stage_parents.append(node)
                         else:
-                            if column in self.SPINE_OPERATIONS:
+                            if column in SPINE_OPERATIONS:
                                 token = SpineOperationToken(column)
 
                                 if icolumn >= len(prev_stage_parents):

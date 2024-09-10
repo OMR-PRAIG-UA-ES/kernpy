@@ -1,9 +1,10 @@
+from copy import deepcopy
 from enum import Enum
 from typing import Optional
 from collections.abc import Sequence
 
 from kernpy.core import Document, SpineOperationToken, HeaderToken, Importer, TokenCategory, InstrumentToken, \
-    TOKEN_SEPARATOR, DECORATION_SEPARATOR, Token, NoteRestToken
+    TOKEN_SEPARATOR, DECORATION_SEPARATOR, Token, NoteRestToken, HEADERS
 
 BEKERN_CATEGORIES = [TokenCategory.STRUCTURAL, TokenCategory.CORE, TokenCategory.EMPTY, TokenCategory.SIGNATURES,
                      TokenCategory.BARLINES, TokenCategory.ENGRAVED_SYMBOLS]
@@ -85,7 +86,7 @@ class ExportOptions:
             >>> exported_data = exporter.export_string(document, options)
 
         """
-        self.spine_types = spine_types if spine_types is not None else ['**kern']
+        self.spine_types = spine_types if spine_types is not None else deepcopy(HEADERS)
         self.from_measure = from_measure
         self.to_measure = to_measure
         self.token_categories = token_categories if token_categories is not None else [c for c in TokenCategory]

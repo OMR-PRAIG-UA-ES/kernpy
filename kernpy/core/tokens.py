@@ -7,6 +7,8 @@ from typing import List
 
 TOKEN_SEPARATOR = '@'
 DECORATION_SEPARATOR = '·'
+HEADERS = {"**mens", "**kern", "**text", "**harm", "**mxhm", "**root", "**dyn", "**dynam", "**fing"}
+SPINE_OPERATIONS = {"*-", "*+", "*^", "*v", "*x"}
 
 
 # We don't use inheritance here for all elements but enum, because we don't need any polymorphism mechanism, just a grouping one
