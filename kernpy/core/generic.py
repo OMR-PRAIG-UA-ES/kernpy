@@ -4,11 +4,9 @@ Public API for KernPy.
 The main functions for handling the input and output of **kern files are provided here.
 """
 
-from typing import List, Optional
+from typing import List, Optional, Any
 from collections.abc import Sequence
-from overloading import overload
 
-from kernpy import KernTypeExporter
 from kernpy.core import Importer, Document, Exporter, ExportOptions, GraphvizExporter
 from kernpy.core._io import _write
 
@@ -232,7 +230,7 @@ def create(
         strict=strict
     )
 
-@overload
+
 def export(
         document: Document,
         options: ExportOptions
@@ -257,47 +255,7 @@ def export(
         options=options
     )
 
-@overload
-def export(
-        document: Document,
-        spine_types: Optional[Sequence[str]] = None,
-        token_categories: Optional[Sequence[str]] = None,
-        from_measure: Optional[int] = None,
-        to_measure: Optional[int] = None,
-        kern_type: Optional[KernTypeExporter] = None,
-        instruments: Optional[Sequence[str]] = None,
-        show_measure_numbers: Optional[bool] = None
-) -> str:
-    """
-    Export a Document object to a string.
 
-    Args:
-        document (Document): Document object to store
-        spine_types (Iterable): **kern, **mens, etc...
-        token_categories (Iterable): TokenCategory
-        from_measure (int): The measure to start exporting. When None, the exporter will start from the beginning of the file. The first measure is 1
-        to_measure (int): The measure to end exporting. When None, the exporter will end at the end of the file.
-        kern_type (KernTypeExporter): The type of the kern file to export.
-        instruments (Iterable): The instruments to export. When None, all the instruments will be exported.
-        show_measure_numbers (Bool): Show the measure numbers in the exported file.
-
-    Returns (str): Content of the exported file
-
-    Examples:
-        >>> import kernpy as kp
-        >>> document, errors = kp.read('path/to/file.krn')
-        >>> content = kp.export(
-            document, ['**kern'],
-            kp.BEKERN_CATEGORIES,
-            1,
-            3,
-            kp.KernTypeExporter.eKern,
-            ['Piano', 'Trumpet'])
-
-    """
-
-
-@overload
 def store(
         document: Document,
         path: str,
@@ -326,48 +284,6 @@ def store(
         options=options
     )
 
-
-@overload
-def store(
-        document: Document,
-        path: str,
-        spine_types: Optional[Sequence[str]] = None,
-        token_categories: Optional[Sequence[str]] = None,
-        from_measure: Optional[int] = None,
-        to_measure: Optional[int] = None,
-        kern_type: Optional[KernTypeExporter] = None,
-        instruments: Optional[Sequence[str]] = None,
-        show_measure_numbers: Optional[bool] = None
-) -> None:
-    """
-    Args:
-        document (Document): Document object to store
-        path (str): File path to store
-        spine_types (Iterable): **kern, **mens, etc...
-        token_categories (Iterable): TokenCategory
-        from_measure (int): The measure to start exporting. When None, the exporter will start from the beginning of the file. The first measure is 1
-        to_measure (int): The measure to end exporting. When None, the exporter will end at the end of the file.
-        kern_type (KernTypeExporter): The type of the kern file to export.
-        instruments (Iterable): The instruments to export. When None, all the instruments will be exported.
-        show_measure_numbers (Bool): Show the measure numbers in the exported file.
-
-
-    Returns: None
-
-    """
-    options = ExportOptions(
-        spine_types=spine_types,
-        token_categories=token_categories,
-        from_measure=from_measure,
-        to_measure=to_measure,
-        kern_type=kern_type,
-        instruments=instruments,
-        show_measure_numbers=show_measure_numbers)
-    return Generic.store(
-        document=document,
-        path=path,
-        options=options
-    )
 
 
 def store_graph(
@@ -429,39 +345,6 @@ def get_spine_types(
     )
 
 
-@overload
-def concat(
-        content_a: str,
-        content_b: str,
-        options: ExportOptions,
-        strict: Optional[bool] = False
-) -> str:
-    """
-    Concatenate two **kern strings.
-
-    Args:
-        content_a (str): First **kern string
-        content_b (str): Second **kern string
-        options (ExportOptions): Export options for the concatenated string
-        strict (Optional[bool]): If True, raise an error if the concatenated string exceeds the maximum length. If False, truncate the concatenated string to the maximum length.
-
-    Returns: Concatenated **kern string
-
-    Examples:
-        >>> import kernpy as kp
-        >>> content_a = '**kern\n4e\n4f\n4g\n*-\n'
-        >>> content_b = '**kern\n4a\n4b\n4c\n*-\n'
-        >>> kp.concat(content_a, content_b)
-        '**kern\n4e\n4f\n4g\n*-\n**kern\n4a\n4b\n4c\n*-'
-    """
-    return Generic.concat(
-        contents=[content_a, content_b],
-        options=options,
-        strict=strict
-    )
-
-
-@overload
 def concat(
         contents: Sequence[str],
         options: ExportOptions,
