@@ -14,28 +14,62 @@ https://kernpy.pages.dev/
 
 ## Code example
 
+Reading `**kern` files.
 ```python
-import kernpy.core
 import kernpy as kp
 
 # Read a **kern file
 document, errors = kp.read("path/to/file.krn")
+```
 
-# Handle the document if needed
-print(document.tree)
+Use `kernpy` utilities.
+
+### Spines analysis
+- Get all the spines in the document.
+```python
 kp.get_spine_types(document)
 # ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
 
-kp.get_spine_types(document, None)
+kp.get_spine_types(document, spine_types=None)
 # ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
+```
 
-kp.get_spine_types(document, ['**kern'])
+- Get specific **kern spines.
+```python
+def how_many_instrumental_spines(document):
+    print(kp.get_spine_types(document, ['**kern']))
+    return len(kp.get_spine_types(document, ['**kern']))
 # ['**kern', '**kern', '**kern', '**kern']
+# 4
 
+def has_voice(document):
+    return kp.get_spine_types(document, ['**text']) > 0
+# True
+```
+
+### On your own
+
+Handle the document if needed.
+```python
+# Access the document tree
+print(document.tree)
+# <kernpy.core.document.DocumentTree object at 0x7f8b3b3b3d30>
+
+# View the tree-based Document structure for debugging.
+kp.store_graph(document, '/tmp/graph.dot')
+# Render the graph 
+# - using Graphviz extension in your IDE
+# - in the browser here: https://dreampuf.github.io/GraphvizOnline/
+```
+
+### Create the new score using your owb options:
+
+Create your options to export the document.
+```
 # Create the options to export the document
 default_options = kp.ExportOptions()
 
-# Explore the ExportOptions class
+# Customize the ExportOptions object
 your_options = kp.ExportOptions(
     spine_types=['**kern'],  # Export only the **kern spines
     token_categories=kp.BEKERN_CATEGORIES,
@@ -43,35 +77,61 @@ your_options = kp.ExportOptions(
     from_measure=1,  # Start from measure 1
     to_measure=10,
 )
+```
+
+Extract the new score using the options.
+```
 
 # Store the document in a new file
 kp.store(document, "path/to/newfile.ekrn", your_options)
 
 # or store the document as a string
 content = kp.export(document, your_options)
+```
 
-# Iterate over the document
+
+### How many measures are there in the document? Which measures do you want to export?
+
+After reading the score into the `Document` object. You can get some useful data:
+```python
+first_measure: int = document.get_first_measure()
+last_measure: int = document.measures_count()
+```
+
+Iterate over all the measures of the document.
+```python
 doc, _ = kp.read('resource_dir/legacy/chor048.krn')  # 10 measures score
-for i in range(doc.get_first_measure(), doc.measures_count() + 1, 1):  # from 1 to 11, step 1
+for i in range(doc.get_first_measure(), doc.measures_count(), 1):  # from 1 to 11, step 1
     # Export only the i-th measure (1 long measure scores)
     options = kp.ExportOptions(from_measure=i, to_measure=i)
+    content_ith_measure = kp.export(doc, options)
+    
     # Export the i-th measure and the next 4 measures (5 long measure scores)
-    options_longer = kp.ExportOptions(from_measure=i, to_measure=i + 4)
-    content = kp.export(doc, options)
+    if i + 4 <= doc.measures_count():
+        options_longer = kp.ExportOptions(from_measure=i, to_measure=i + 4)
+        content_longer = kp.export(doc, options_longer)
     ...
+```
 
-# Or use the __iter__ method
+When iterating over all the measures is easier using the `for measure in doc:` loop.
+(using the __ iter__ method):
+```python
 for measure in doc:
     options = kp.ExportOptions(from_measure=measure, to_measure=measure)
     content = kp.export(doc, options)
     ...
+```
 
+Exploring the page bounding boxes. 
+```python
 # Iterate over the pages using the bounding boxes
 doc, _ = kp.read('kern_having_bounding_boxes.krn')
 
 # Inspect the bounding boxes
 print(doc.page_bounding_boxes)
-print(len(doc.get_all_tokens(filter_by_categories=[kernpy.TokenCategory.BOUNDING_BOXES])) > 0)
+def are_there_bounding_boxes(doc):
+    return len(doc.get_all_tokens(filter_by_categories=[kernpy.TokenCategory.BOUNDING_BOXES])) > 0
+# True
 
 # Iterate over the pages
 for page_label, bounding_box_measure in doc.page_bounding_boxes.items():
@@ -88,11 +148,17 @@ for page_label, bounding_box_measure in doc.page_bounding_boxes.items():
     )
     kp.store(doc, f"foo_{page_label}.ekrn", options)
 
+```
 
+```python
+# NOT AVAILABLE YET!!!
 # Concat two documents
 score_a = '**kern\n*clefG2\n=1\n4c\n4d\n4e\n4f\n*-\n'
 score_b = '**kern\n*clefG2\n=1\n4a\n4c\n4d\n4c\n*-\n'
-concatenated = kp.concat(score_a, score_b)
+concatenated = kp.concat(
+    contents=[score_a, score_b],
+    options=kp.ExportOptions(kern_type=kp.KernTypeExporter.eKern),
+)
 ```
 
 
@@ -101,11 +167,12 @@ concatenated = kp.concat(score_a, score_b)
 ### Production version:
 Just install the last version of **kernpy** using pip:
 ```shell
-pip install git+https://github.com/OMR-PRAIG-UA-ES/kernpy.git --upgrade
+pip3 uninstall kernpy     # Uninstall the previous version before installing the new one
+pip3 install git+https://github.com/OMR-PRAIG-UA-ES/kernpy.git
 ```
 
 > [!NOTE]
-> This module is downloaded by default in the _/tmp_ directory. So it is removed when shutdown the machine.
+> This module is downloaded by default in the _/tmp_ directory in Linux. So it is removed when shutdown the machine.
 
 <hr>
 
