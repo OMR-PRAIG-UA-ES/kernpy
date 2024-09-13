@@ -348,6 +348,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#we-will-import-kernpy-as-the-following-way" class="md-nav__link">
+    <span class="md-ellipsis">
+      We will import kernpy as the following way:
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-is-humdrum-kern" class="md-nav__link">
     <span class="md-ellipsis">
       What is Humdrum **kern?
@@ -427,6 +436,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#we-will-import-kernpy-as-the-following-way" class="md-nav__link">
+    <span class="md-ellipsis">
+      We will import kernpy as the following way:
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-is-humdrum-kern" class="md-nav__link">
     <span class="md-ellipsis">
       What is Humdrum **kern?
@@ -486,43 +504,45 @@
 </ul>
 <h2 id="running-the-code">Running the code</h2>
 <p><code>kernpy</code> is able to be run as a normal snippet of code or as a module by command line interface.</p>
-<h3> Usually, we recommend the import as: </h3>
-
-<pre><code class="language-python">import kernpy
-</code></pre>
-<h3> Also, you can run the code as a module by command line interface. </h3>
-
-<pre><code class="language-bash">python -m kernpy --help
+<h2 id="we-will-import-kernpy-as-the-following-way">We will import <code>kernpy</code> as the following way:</h2>
+<pre><code class="language-python">import kernpy as kp
 </code></pre>
 <h2 id="what-is-humdrum-kern">What is Humdrum **kern?</h2>
 <p>First of all, let's see what a Humdrum **kern file looks like:</p>
-<pre><code class="language-kern">**kern
-*clefG2
-*M4/4
-*met(c)
-=1
-4c
-4d
-4e
-4f
-=2
-*M3/2
-2g
-2f
-2d
-=
-*-
+<pre><code class="language-kern">**kern  **text  **kern  **dynam **text
+*clefG2 *   *clefG2 *   *
+*M4/4   *   *   *   *
+=1  =1  =1  =1  =1
+4g  kern    4c  p   kern-
+4f  kern    4d  &lt;   -py
+4g  kern    4e  (   mo-
+4c  kern-   4f  (   -du-
+.   .   .   [   .
+=2  =2  =2  =2  =2
+2c  -py 2g  f   -le
+.   .   .   &gt;   .
+4B  kern    4f  )   is
+4A  kern-   4d  )   the
+=   =   =   =   =
+1G  -py 1c  ]   best
+==  ==  ==  ==  ==
+*-  *-  *-  *-  *-
 </code></pre>
-<p><img alt="Example in **kern" src="../../assets/001.svg" /></p>
+<p><img alt="Example in **kern" src="../assets/001.svg" /></p>
 <h2 id="lets-code">Let's code!</h2>
-<p>We can do some operations with the score.</p>
+<ul>
+<li>We can do some operations with the score.</li>
+</ul>
 <p>First of all, let's import the score:</p>
 <pre><code class="language-python">import kernpy as kp
 document, errors = kp.read('/path/to/file.krn')
 </code></pre>
-<p>Now, we can access the score attributes:</p>
+<p>Let´s see what are the spines of the score:</p>
 <pre><code class="language-python">import kernpy as kp
 document, _ = kp.read('/path/to/file.krn')
+
+# Get the spines
+kp.get_spine_types(document, spine_types=['**kern'])
 print(document.tree)
 # &lt;kernpy.core.document.DocumentTree object at 0x7f8b3b3b3d30&gt;
 </code></pre>
@@ -668,6 +688,10 @@ dot_exporter.export_to_dot(document.tree, '/tmp/minimal.dot')
 </code></pre>
 <p>You can use Graphviz Dot Online editors to see the graphical representation of the score:
 - <a href="https://dreampuf.github.io/GraphvizOnline/" target="_blank">Graphviz Online</a></p>
+<h3> Also, you can run the code as a module by command line interface. </h3>
+
+<pre><code class="language-bash">python -m kernpy --help
+</code></pre>
 <h2 id="next-steps">Next steps</h2>
 <p>Congratulations! You have learned the basics of <code>kernpy</code>. Now you can start using the package in your projects.</p>
 <p>Go to the <a href="../../reference/">API reference</a> to learn more about the <code>kernpy</code> API.</p>
