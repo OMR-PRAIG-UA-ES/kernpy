@@ -65,22 +65,24 @@ kp.store_graph(document, '/tmp/graph.dot')
 ### Create the new score using your owb options:
 
 Create your options to export the document.
-```
+```python
 # Create the options to export the document
 default_options = kp.ExportOptions()
 
 # Customize the ExportOptions object
 your_options = kp.ExportOptions(
-    spine_types=['**kern'],  # Export only the **kern spines
-    token_categories=kp.BEKERN_CATEGORIES,
-    kern_type=kp.KernTypeExporter.eKern,
-    from_measure=1,  # Start from measure 1
-    to_measure=10,
+    spine_types=['**kern'],                   # Export only the **kern spines
+    token_categories=kp.BEKERN_CATEGORIES,    # Token catogories to export
+    kern_type=kp.KernTypeExporter.eKern,      # Kern encoding
+    from_measure=1,                           # First from measure 1
+    to_measure=10,                            # Last measure exported
+    spine_ids=[0, 1]                          # Export only the first and the second spine
+    
 )
 ```
 
 Extract the new score using the options.
-```
+```python
 
 # Store the document in a new file
 kp.store(document, "path/to/newfile.ekrn", your_options)
