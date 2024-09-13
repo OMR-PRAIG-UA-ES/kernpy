@@ -5,7 +5,7 @@ from typing import List, Optional
 from collections.abc import Sequence
 
 from kernpy.core import TokenCategory
-from kernpy.core import MetacommentToken, AbstractToken
+from kernpy.core import MetacommentToken, AbstractToken, HeaderToken
 
 
 class SignatureNodes:
@@ -277,11 +277,11 @@ class Document:
 
     FIRST_MEASURE = 1
 
-    def get_header_stage(self) -> List[Node]:
+    def get_header_stage(self) -> list[Node] | list[list[Node]]:
         """
         Get the Node list of the header stage.
 
-        Returns: (List[Node]) The Node list of the header stage.
+        Returns: (List[Node] | List[List[Node]]) The Node list of the header stage.
 
         Raises: Exception - If the document has no header stage.
         """
@@ -560,6 +560,27 @@ class Document:
 
         for current_node, other_node in zip(current_header_nodes, other_header_nodes):
             current_node.children.extend(other_node.children)
+
+    def get_header_nodes(self) -> List[HeaderToken]:
+        """
+        Get the header nodes of the current document.
+
+        Returns: List[HeaderToken]: A list with the header nodes of the current document.
+        """
+        raise NotImplementedError
+
+    def get_spine_ids(self) -> List[int]:
+        """
+        Get the indexes of the current document.
+
+        Returns List[int]: A list with the indexes of the current document.
+
+        Examples:
+            >>> document.get_all_spine_indexes()
+            [0, 1, 2, 3, 4]
+        """
+        header_nodes = self.get_header_nodes()
+        return [node.spine_id for node in header_nodes]
 
     @classmethod
     def to_concat(cls, first_doc: 'Document', second_doc: 'Document', deep_copy: bool = True) -> 'Document':
