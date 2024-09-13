@@ -915,8 +915,19 @@ class HeaderToken(AbstractToken):
     HeaderTokens class.
     """
 
-    def __init__(self, encoding):
+    def __init__(self, encoding, spine_id: int):
+        """
+        Constructor for the HeaderToken class.
+
+        Args:
+            encoding (str): The original representation of the token.
+            spine_id (int): The spine id of the token. The spine id is used to identify the token in the score.\
+                The spine_id starts from 0 and increases by 1 for each new spine like the following example:
+                **kern  **kern  **kern **dyn **text
+                0   1   2   3   4
+        """
         super().__init__(encoding, TokenCategory.STRUCTURAL)
+        self.spine_id = spine_id
 
     def export(self) -> str:
         extended_header = '**e' + self.encoding[2:]  # remove the **, and append the e

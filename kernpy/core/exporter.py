@@ -47,7 +47,8 @@ class ExportOptions:
             to_measure: int = None,
             kern_type: KernTypeExporter = KernTypeExporter.normalizedKern,
             instruments: [] = None,
-            show_measure_numbers: bool = False
+            show_measure_numbers: bool = False,
+            spine_ids: [int] = None
     ):
         """
         Create a new ExportOptions object.
@@ -60,6 +61,7 @@ class ExportOptions:
             kern_type (KernTypeExporter): The type of the kern file to export.
             instruments (Iterable): The instruments to export. When None, all the instruments will be exported.
             show_measure_numbers (Bool): Show the measure numbers in the exported file.
+            spine_ids (Iterable): The ids of the spines to export. When None, all the spines will be exported. Spines ids start from 0 and they are increased by 1.
 
         Example:
             >>> import kernpy
@@ -93,6 +95,7 @@ class ExportOptions:
         self.kern_type = kern_type
         self.instruments = instruments
         self.show_measure_numbers = show_measure_numbers
+        self.spine_ids = spine_ids  # When exporting, if spine_ids=None all the spines will be exported.
 
     def __eq__(self, other: 'ExportOptions') -> bool:
         """
@@ -120,7 +123,8 @@ class ExportOptions:
             self.to_measure == other.to_measure and \
             self.kern_type == other.kern_type and \
             self.instruments == other.instruments and \
-            self.show_measure_numbers == other.show_measure_numbers
+            self.show_measure_numbers == other.show_measure_numbers and \
+            self.spine_ids == other.spine_ids
 
     def __ne__(self, other: 'ExportOptions') -> bool:
         """
@@ -233,8 +237,7 @@ class Exporter:
         for stage in range(from_stage, to_stage + 1):  # to_stage included
             row = []
             for node in document.tree.stages[stage]:
-                header_type = self.compute_header_type(node)
-                self.append_row(header_type, node, options, row)
+                self.append_row(document=document, node=node, options=options, row=row)
 
             if len(row) > 0:
                 rows.append(row)
@@ -254,11 +257,20 @@ class Exporter:
                 result += '\t'.join(row) + '\n'
         return result
 
-    def compute_header_type(self, node):
+    def compute_header_type(self, node) -> Optional[HeaderToken]:
+        """
+        Compute the header type of the node.
+
+        Args:
+            node (Node): The node to compute.
+
+        Returns (Optional[Token]): The header type `Node`object. None if the current node is the header.
+
+        """
         if isinstance(node.token, HeaderToken):
-            header_type = node.token.encoding
+            header_type = node.token
         elif node.header_node:
-            header_type = node.header_node.token.encoding
+            header_type = node.header_node.token
         else:
             header_type = None
         return header_type
@@ -269,13 +281,30 @@ class Exporter:
         else:
             return token.encoding
 
-    def append_row(self, header_type, node, options: ExportOptions, row: list):
-        if (header_type
-                and (
-                        not options.spine_types or header_type in options.spine_types)  # if the spine_type is None, compute all the spines
+    def append_row(self, document: Document, node, options: ExportOptions, row: list) -> bool:
+        """
+        Append a row to the row list if the node accomplishes the requirements.
+        Args:
+            document (Document): The document with the spines.
+            node (Node): The node to append.
+            options (ExportOptions): The export options to filter the token.
+            row (list): The row to append.
+
+        Returns (bool): True if the row was appended. False if the row was not appended.
+        """
+        header_type = self.compute_header_type(node)
+
+        if (header_type is not None
+                and header_type.encoding in options.spine_types
                 and not node.token.hidden
-                and (not options.token_categories or node.token.category in options.token_categories)):
+                and node.token.category in options.token_categories
+                and (options.spine_ids is None or header_type.spine_id in options.spine_ids)
+        # If None, all the spines will be exported. TODO: put all the spines as spine_ids = None
+        ):
             row.append(self.export_token(node.token, options))
+            return True
+
+        return False
 
     def get_spine_types(self, document: Document, spine_types: list = None):
         """
@@ -310,8 +339,7 @@ class Exporter:
         for stage in range(len(document.tree.stages)):
             row = []
             for node in document.tree.stages[stage]:
-                header_type = self.compute_header_type(node)
-                self.append_row(header_type, node, options, row)
+                self.append_row(document=document, node=node, options=options, row=row)
 
             if len(row) > 0:
                 rows.append(row)

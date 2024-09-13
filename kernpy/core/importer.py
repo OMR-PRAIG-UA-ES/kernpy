@@ -88,7 +88,7 @@ class Importer:
                                 importer = createImporter(column)
                                 importers[column] = importer
 
-                            token = HeaderToken(column)
+                            token = HeaderToken(column, spine_id=icolumn)
                             node = tree.add_node(tree_stage, last_node_previous_to_header, token, None, None)
                             node.header_node = node # this value will be propagated
                             next_stage_parents.append(node)
