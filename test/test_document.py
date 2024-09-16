@@ -39,10 +39,23 @@ class DocumentTestCase(unittest.TestCase):
         voices = doc.get_voices(clean=True)
         self.assertEqual(['sax', 'piano', 'bass'], voices)
 
+    def test_document_get_header_nodes(self):
+        input_kern_file = 'resource_dir/mozart/divertimento-quartet.krn'
+        doc, err = kp.read(input_kern_file)
+        headers_nodes = doc.get_header_nodes()
+
+        self.assertEqual(8, len(headers_nodes))
+        for node in headers_nodes:
+            self.assertIsInstance(node, kp.core.HeaderToken)
+        self.assertListEqual(
+            ['**kern', '**dynam', '**kern', '**dynam', '**kern', '**dynam', '**kern', '**dynam'],
+            [t.encoding for t in headers_nodes])
 
     def test_document_get_all_spines_ids(self):
-        input_kern_file = 'resource_dir/legacy/chor001.krn'
+        input_kern_file = 'resource_dir/mozart/divertimento-quartet.krn'
 
         doc, err = kp.read(input_kern_file)
         spines_ids = doc.get_spine_ids()
-        self.assertListEqual([0, 1, 2, 3, 4, 5], spines_ids)
+        self.assertListEqual(
+            [0, 1, 2, 3, 4, 5, 6, 7],
+            spines_ids)

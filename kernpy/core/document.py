@@ -3,6 +3,7 @@ from collections import deque, defaultdict
 from abc import ABC, abstractmethod
 from typing import List, Optional
 from collections.abc import Sequence
+from queue import Queue
 
 from kernpy.core import TokenCategory
 from kernpy.core import MetacommentToken, AbstractToken, HeaderToken
@@ -567,18 +568,18 @@ class Document:
 
         Returns: List[HeaderToken]: A list with the header nodes of the current document.
         """
-        raise NotImplementedError
+        return [token for token in self.get_all_tokens(None) if isinstance(token, HeaderToken)]
 
     def get_spine_ids(self) -> List[int]:
         """
-        Get the indexes of the current document.
+                Get the indexes of the current document.
 
-        Returns List[int]: A list with the indexes of the current document.
+                Returns List[int]: A list with the indexes of the current document.
 
-        Examples:
-            >>> document.get_all_spine_indexes()
-            [0, 1, 2, 3, 4]
-        """
+                Examples:
+                    >>> document.get_all_spine_indexes()
+                    [0, 1, 2, 3, 4]
+                """
         header_nodes = self.get_header_nodes()
         return [node.spine_id for node in header_nodes]
 
@@ -628,7 +629,11 @@ class MetacommentsTraversal(TreeTraversalInterface):
 
 
 class TokensTraversal(TreeTraversalInterface):
-    def __init__(self, non_repeated: bool, filter_by_categories):
+    def __init__(
+            self,
+            non_repeated: bool,
+            filter_by_categories
+    ):
         """
         Create an instance of `TokensTraversal`.
         Args:
