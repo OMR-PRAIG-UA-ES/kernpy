@@ -5,8 +5,7 @@
 **kern	**dynam	**kern	**dynam	**kern	**dynam	**kern	**dynam
 *part4	*part4	*part3	*part3	*part2	*part2	*part1	*part1
 *staff4	*staff4	*staff3	*staff3	*staff2	*staff2	*staff1	*staff1
-*I"
-                           	*	*I"Viola	*	*I"Violino II	*	*I"Violino I	*
+*I"	*	*I"Viola	*	*I"Violino II	*	*I"Violino I	*
 *	*	*I'Vla	*	*I'Vln	*	*I'Vln	*
 *clefF4	*	*clefC3	*	*clefG2	*	*clefG2	*
 *k[b-e-]	*	*k[b-e-]	*	*k[b-e-]	*	*k[b-e-]	*
