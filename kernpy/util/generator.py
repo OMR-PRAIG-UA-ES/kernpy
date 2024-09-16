@@ -2,18 +2,30 @@ import os
 import random
 import multiprocessing
 import sys
+from typing import Optional, List
+from abc import ABC, abstractmethod
+
 from tqdm import tqdm
 
 from kernpy.core.exporter import ExportOptions, BEKERN_CATEGORIES, Exporter, KernTypeExporter
 from kernpy.core.importer import Importer
+from .. import read, store
+from ..core._io import find_all_files
 
 DEFAULT_MEAN = 4.0
 DEFAULT_STD_DEV = 0.0
 
 
-def create_fragments_from_kern(input_kern_file: str, output_directory: str, measure_length: int,
-                               offset: int, log_file: str, verbose: int = 1, num_processes: int = None,
-                               ) -> None:
+def create_fragments_from_kern(
+        input_kern_file: str,
+        output_directory: str,
+        measure_length: int,
+        offset: int,
+        log_file: str,
+        verbose: int = 1,
+        num_processes: int = None,
+        export_options: Optional[ExportOptions] = None,
+) -> None:
     """
     Create a bunch of little kern files from a single kern file.
 
@@ -29,7 +41,7 @@ def create_fragments_from_kern(input_kern_file: str, output_directory: str, meas
         verbose: The verbosity level
         num_processes: The number of processes to use for parallel processing.\
             If None, or num_processes <= 1, the processing will be done in a single process.
-
+        export_options(Optional[ExportOptions]): The export options
     Returns:
         None
 
@@ -47,20 +59,34 @@ def create_fragments_from_kern(input_kern_file: str, output_directory: str, meas
 
 
     """
-    fg = FragmentGenerator(offset=offset, verbose=verbose, num_processes=num_processes, log_file=log_file)
-    fg.create_fragments_from_file(input_kern_file=input_kern_file,
-                                  output_directory=output_directory,
-                                  measure_length=measure_length)
+    fg = FragmentGenerator(
+        offset=offset,
+        verbose=verbose,
+        num_processes=num_processes,
+        log_file=log_file,
+        export_options=export_options, )
+    fg.create_fragments_from_file(
+        input_kern_file=input_kern_file,
+        output_directory=output_directory,
+        measure_length=measure_length)
 
 
-def create_fragments_from_directory(input_directory: str, output_directory: str, log_file: str,
-                                    check_file_extension: bool = True, offset: int = 0,
-                                    verbose: int = 1, num_processes: int = None,
-                                    mean: float = DEFAULT_MEAN, std_dev: float = DEFAULT_STD_DEV) -> None:
+def create_fragments_from_directory(
+        input_directory: str, output_directory: str,
+        log_file: str,
+        check_file_extension: bool = True,
+        offset: int = 0,
+        verbose: int = 1,
+        num_processes: int = None,
+        mean: float = DEFAULT_MEAN,
+        std_dev: float = DEFAULT_STD_DEV,
+        export_options: Optional[ExportOptions] = None
+) -> None:
     """
     Create a bunch of little kern files from a directory of kern files.
 
     Args:
+        export_options (Optional[ExportOptions]): The export options
         log_file: The log file to store the results
         input_directory: The input directory with the kern files
         output_directory: The output directory where the fragments will be stored
@@ -102,20 +128,33 @@ def create_fragments_from_directory(input_directory: str, output_directory: str,
     if check_file_extension is None:
         check_file_extension = True
 
-    fg = FragmentGenerator(offset=offset, verbose=verbose, num_processes=num_processes, log_file=log_file,
-                           mean=mean, std_dev=std_dev)
-    fg.create_fragments_from_directory(input_directory=input_directory,
-                                       output_directory=output_directory,
-                                       check_file_extension=check_file_extension)
+    fg = FragmentGenerator(
+        offset=offset,
+        verbose=verbose,
+        num_processes=num_processes,
+        log_file=log_file,
+        mean=mean,
+        std_dev=std_dev,
+        export_options=export_options)
+    fg.create_fragments_from_directory(
+        input_directory=input_directory,
+        output_directory=output_directory,
+        check_file_extension=check_file_extension)
 
 
 class FragmentGenerator:
-    def __init__(self, log_file: str, offset=None, verbose=1, num_processes=None, mean=DEFAULT_MEAN,
-                 std_dev=DEFAULT_STD_DEV):
+    def __init__(
+            self,
+            log_file: str,
+            offset: Optional[int] = None,
+            verbose: int = 1,
+            num_processes: Optional[int] = None,
+            mean: float = DEFAULT_MEAN,
+            std_dev: float = DEFAULT_STD_DEV,
+            export_options: Optional[ExportOptions] = None
+    ):
         if offset is None or offset < 1:
             raise ValueError('offset must be greater than 0')
-        #if mean is None or mean < 1:
-        #    raise ValueError('mean must be greater than 0')
 
         self.log_file = str(log_file)
         self.offset = int(offset)
@@ -123,76 +162,57 @@ class FragmentGenerator:
         self.num_processes = num_processes
         self.mean = float(mean)
         self.std_dev = float(std_dev)
+        self.export_options = export_options
 
-    def create_fragments_from_directory(self, input_directory: str, output_directory: str,
-                                        check_file_extension=True) -> None:
+    def create_fragments_from_directory(
+            self,
+            input_directory: str,
+            output_directory: str,
+            check_file_extension: Optional[bool] = True
+    ) -> None:
         # Create output directory if it doesn't exist
         if not os.path.exists(output_directory):
-            os.makedirs(output_directory)
+            os.makedirs(output_directory, exist_ok=True)
 
         # Get all files in the input directory
-        clean_input_files = []
-        for root, dirs, files in os.walk(input_directory):
-            for file in files:
-                if not check_file_extension or file.endswith('.krn'):
-                    clean_input_files.append(os.path.join(root, file))
+        all_files = find_all_files(input_directory, '.krn') if check_file_extension \
+            else find_all_files(input_directory, None)
 
         # Get the measure length for each file
-        measures = self.measures_normal_distribution(clean_input_files)
-
-        # Create tasks
-        tasks = [(clean_input_files[i], output_directory, measures[i]) for i in range(len(clean_input_files))]
+        measures: List[int] = self.measures_normal_distribution(all_files)
 
         # Process tasks: single process or multiprocessing
-        if self.num_processes is None or self.num_processes <= 1:
-            for task in tqdm(tasks, desc='Creating fragments'):
-                self.create_fragments_from_file(*task)
-        else:
-            with multiprocessing.Pool(processes=self.num_processes) as pool:
-                list(tqdm(pool.imap_unordered(self.create_fragment_task_wrapper, tasks),
-                          total=len(tasks), desc='Creating fragments'))
+        runner = FGRunnerFactory.create(
+            fragment_generator=self,
+            files=all_files,
+            output_directory=output_directory,
+            measures_length=measures,
+            num_processes=self.num_processes
+        )
+        runner.run()
 
-    def create_fragment_task_wrapper(self, args):
-        try:
-            if self.verbose < 2:
-                # Redirect stdout and stderr
-                sys.stdout = open(os.devnull, 'w')
-                sys.stderr = open(os.devnull, 'w')
-
-            self.create_fragments_from_file(*args)
-        except Exception as e:
-            self.add_log(str(e) + str(e), False)
-            if self.verbose >= 2:
-                print(f"Error processing {args}: {e}", file=sys.stderr)
-        finally:
-            # Reset stdout and stderr
-            sys.stdout = sys.__stdout__
-            sys.stderr = sys.__stderr__
-
-    def create_fragments_from_file(self, input_kern_file: str, output_directory: str, measure_length: int,
-                                   find_only_1_spine_scores=False) -> None:
+    def create_fragments_from_file(
+            self,
+            input_kern_file: str,
+            output_directory: str,
+            measure_length: int,
+            export_options: Optional[ExportOptions] = None,
+    ) -> None:
         if self.verbose >= 2:
             print(f"Processing {input_kern_file} into {output_directory} using measure_length={measure_length}")
 
-        importer = Importer()
-        document = importer.import_file(input_kern_file)
+        doc, err = read(input_kern_file)
 
-        # check if there is only 1 spine if required
-        if find_only_1_spine_scores and len(importer.spines) != 1:
-            self.add_log(f'{input_kern_file}->More than 1 spine', False)
-            return
-
-        options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kern_type=KernTypeExporter.normalizedKern)
+        options = export_options if export_options is not None \
+            else ExportOptions(spine_types=['**kern'],
+                               token_categories=BEKERN_CATEGORIES,
+                               kern_type=KernTypeExporter.normalizedKern)
 
         # Create folder for the current file
         current_folder = FragmentGenerator.get_output_filename_directory(input_kern_file, output_directory)
-        if self.verbose >= 2:
-            print(f'Creating folder: {current_folder}')
         os.makedirs(current_folder, exist_ok=True)
 
-        print("WARNING: Check options.from_measure=1. Raise exception if 1 or 0",
-              file=sys.stderr)  # TODO: Change importer interface. 0-1 boundaries
-        for i in range(1, importer.last_measure_number, self.offset):
+        for i in range(doc.get_first_measure(), doc.measures_count() + 1, self.offset):
             current_kern_file = os.path.join(current_folder, f'from-{i}-to-{i + measure_length}.krn')
             options.from_measure = i
             options.to_measure = i + measure_length
@@ -200,13 +220,11 @@ class FragmentGenerator:
             # Check if the measures options are within the range of the file
             if options.to_measure is None or options.from_measure is None:
                 continue
-            if options.to_measure > importer.last_measure_number:
+            if options.to_measure > doc.get_first_measure():
                 break
 
-            exporter = Exporter()
-            exported = exporter.export_string(document, options)
-            FragmentGenerator.store_kern_file(current_kern_file, exported)
-        self.add_log(f'{input_kern_file}#{current_folder}', True)
+            store(doc, current_kern_file, options)
+        self.add_log(f'Created {input_kern_file} from file {input_kern_file}', True)
 
     def add_log(self, msg: str, is_correct: bool) -> None:
         SEPARATOR = ','
@@ -243,3 +261,84 @@ class FragmentGenerator:
     def store_kern_file(current_kern_file: str, exported: str) -> None:
         with open(current_kern_file, 'w') as f:
             f.write(exported)
+
+
+class Runner(ABC):
+    def __init__(
+            self,
+            fragment_generator: FragmentGenerator,
+            files,
+            output_directory: str,
+            measures_length: List[int]
+    ):
+        self.fg = fragment_generator
+        self.files = files
+        self.output_directory = output_directory
+        self.measures_length = measures_length
+
+    @abstractmethod
+    def run(self) -> None:
+        pass
+
+
+class SingleProcessRunner(Runner):
+    def __init__(
+            self,
+            fragment_generator: FragmentGenerator,
+            files: List[str],
+            output_directory: str,
+            measures_length: List[int]
+    ):
+        super().__init__(fragment_generator, files, output_directory, measures_length)
+
+    def run(self) -> None:
+        for i, file in enumerate(self.files):
+            self.fg.create_fragments_from_file(
+                file,
+                self.output_directory,
+                self.measures_length[i],
+                self.fg.export_options)
+
+
+class MultiProcessRunner(Runner):
+    def __init__(
+            self,
+            fragment_generator: FragmentGenerator,
+            files: List[str],
+            output_directory: str,
+            measures_length: List[int],
+            num_processes: int
+    ):
+        super().__init__(fragment_generator, files, output_directory, measures_length)
+        self.processes = int(num_processes)
+
+    def run(self) -> None:
+        with multiprocessing.Pool(processes=self.processes) as pool:
+            list(tqdm(pool.imap_unordered(
+                self.fg.create_fragments_from_file,
+                [(file, self.output_directory, self.measures_length, self.fg.export_options) for file in self.files]),
+                total=len(self.files), desc='Creating fragments'))
+
+
+class FGRunnerFactory:
+    @classmethod
+    def create(
+            cls,
+            fragment_generator: FragmentGenerator,
+            files: List[str],
+            output_directory: str,
+            measures_length: List[int],
+            num_processes: Optional[int] = None) -> Runner:
+        if num_processes is None or num_processes == 1:
+            return SingleProcessRunner(
+                fragment_generator=fragment_generator,
+                files=files,
+                output_directory=output_directory,
+                measures_length=measures_length)
+        else:
+            return MultiProcessRunner(
+                fragment_generator=fragment_generator,
+                files=files,
+                output_directory=output_directory,
+                measures_length=measures_length,
+                num_processes=num_processes)
