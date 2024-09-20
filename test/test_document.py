@@ -59,3 +59,12 @@ class DocumentTestCase(unittest.TestCase):
         self.assertListEqual(
             [0, 1, 2, 3, 4, 5, 6, 7],
             spines_ids)
+
+    def test_document_maximum_recursion_depth_exceeded_in_tree_traversal_dfs(self):
+        doc, err = kp.read('resource_dir/samples/score_with_dividing_two_spines.krn')
+        tokens = doc.get_all_tokens(filter_by_categories=[kp.TokenCategory.CORE])
+
+        # optimize this dfs implementation for not exceeding maximum recursion depth
+        # use memoization to speed up the process
+        # use queues
+        self.assertTrue(len(tokens) > 0)
