@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.35">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.35f28582.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.8c3ca2c6.min.css">
       
       
 
@@ -2245,6 +2245,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#kernpy.core.MultistageTree.dfs_iterative" class="md-nav__link">
+    <span class="md-ellipsis">
+      dfs_iterative
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2282,6 +2291,15 @@
   <a href="#kernpy.core.Node.dfs" class="md-nav__link">
     <span class="md-ellipsis">
       dfs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Node.dfs_iterative" class="md-nav__link">
+    <span class="md-ellipsis">
+      dfs_iterative
     </span>
   </a>
   
@@ -2612,6 +2630,30 @@
   <a href="#kernpy.core.TokensTraversal.__init__" class="md-nav__link">
     <span class="md-ellipsis">
       __init__
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kernpy.core.TraversalFactory" class="md-nav__link">
+    <span class="md-ellipsis">
+      TraversalFactory
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TraversalFactory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.TraversalFactory.create" class="md-nav__link">
+    <span class="md-ellipsis">
+      create
     </span>
   </a>
   
@@ -5115,6 +5157,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#kernpy.core.MultistageTree.dfs_iterative" class="md-nav__link">
+    <span class="md-ellipsis">
+      dfs_iterative
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -5152,6 +5203,15 @@
   <a href="#kernpy.core.Node.dfs" class="md-nav__link">
     <span class="md-ellipsis">
       dfs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Node.dfs_iterative" class="md-nav__link">
+    <span class="md-ellipsis">
+      dfs_iterative
     </span>
   </a>
   
@@ -5482,6 +5542,30 @@
   <a href="#kernpy.core.TokensTraversal.__init__" class="md-nav__link">
     <span class="md-ellipsis">
       __init__
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kernpy.core.TraversalFactory" class="md-nav__link">
+    <span class="md-ellipsis">
+      TraversalFactory
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TraversalFactory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.TraversalFactory.create" class="md-nav__link">
+    <span class="md-ellipsis">
+      create
     </span>
   </a>
   
@@ -15569,6 +15653,53 @@ Args:
 
 </div>
 
+<div class="doc doc-object doc-function">
+
+
+<h3 id="kernpy.core.MultistageTree.dfs_iterative" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">dfs_iterative</span><span class="p">(</span><span class="n">visit_method</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Depth-first search (DFS). Iterative version.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>visit_method</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="kernpy.core.document.TreeTraversalInterface" href="#kernpy.core.TreeTraversalInterface">TreeTraversalInterface</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The tree traversal interface.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+        <p>Returns: None</p>
+
+    </div>
+
+</div>
+
 
 
   </div>
@@ -15907,6 +16038,53 @@ The <code>Node</code> class is responsible for storing the main information of t
           </tr>
       </tbody>
     </table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="kernpy.core.Node.dfs_iterative" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">dfs_iterative</span><span class="p">(</span><span class="n">tree_traversal</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Depth-first search (DFS). Iterative version.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>tree_traversal</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="kernpy.core.document.TreeTraversalInterface" href="#kernpy.core.TreeTraversalInterface">TreeTraversalInterface</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The tree traversal interface. Object used to visit the nodes of the tree.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+        <p>Returns: None</p>
 
     </div>
 
@@ -17326,6 +17504,69 @@ These are the available operations:
 Args:
     non_repeated: If True, only unique tokens are returned. If False, all tokens are returned.
     filter_by_categories: A list of categories to filter the tokens. If None, all tokens are returned.</p>
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="kernpy.core.TraversalFactory" class="doc doc-heading">
+            <code>TraversalFactory</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="kernpy.core.TraversalFactory.create" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">create</span><span class="p">(</span><span class="n">traversal_type</span><span class="p">,</span> <span class="n">non_repeated</span><span class="p">,</span> <span class="n">filter_by_categories</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Create an instance of <code>TreeTraversalInterface</code> based on the <code>traversal_type</code>.
+Args:
+    non_repeated:
+    filter_by_categories:
+    traversal_type: The type of traversal to use. Possible values are:
+        - "metacomments"
+        - "tokens"</p>
+<p>Returns: An instance of <code>TreeTraversalInterface</code>.</p>
 
     </div>
 
@@ -19646,7 +19887,7 @@ Args:
     <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.56dfad97.min.js"></script>
+      <script src="../assets/javascripts/bundle.525ec568.min.js"></script>
       
     
   </body>
