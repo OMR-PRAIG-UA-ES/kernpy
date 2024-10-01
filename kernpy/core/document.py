@@ -1,6 +1,7 @@
 from copy import copy
 from collections import deque, defaultdict
 from abc import ABC, abstractmethod
+from enum import Enum
 from typing import List, Optional
 from collections.abc import Sequence
 from queue import Queue
@@ -158,6 +159,22 @@ class Node:
         for child in self.children:
             child.dfs(tree_traversal)
 
+    def dfs_iterative(self, tree_traversal: TreeTraversalInterface):
+        """
+        Depth-first search (DFS). Iterative version.
+
+        Args:
+            tree_traversal (TreeTraversalInterface): The tree traversal interface. Object used to visit the nodes of the tree.
+
+        Returns: None
+        """
+        stack = [self]
+        while stack:
+            node = stack.pop()
+            tree_traversal.visit(node)
+            stack.extend(reversed(node.children))  # Add children in reverse order to maintain DFS order
+
+
 
 class BoundingBoxMeasures:
     """
@@ -244,6 +261,18 @@ class MultistageTree:
 
         """
         self.root.dfs(visit_method)
+
+    def dfs_iterative(self, visit_method) -> None:
+        """
+        Depth-first search (DFS). Iterative version.
+
+        Args:
+            visit_method (TreeTraversalInterface): The tree traversal interface.
+
+        Returns: None
+
+        """
+        self.root.dfs_iterative(visit_method)
 
 
 class Document:
@@ -375,7 +404,7 @@ class Document:
             []
         """
         traversal = MetacommentsTraversal()
-        self.tree.dfs(traversal)
+        self.tree.dfs_iterative(traversal)
         result = []
         for metacomment in traversal.metacomments:
             if KeyComment is None or metacomment.encoding.startswith(f"!!!{KeyComment}"):
@@ -423,7 +452,7 @@ class Document:
             [<class 'kernpy.core.token.Token'>, <class 'kernpy.core.token.Token'>, <class 'kernpy.core.token.Token'>]
         """
         traversal = TokensTraversal(False, filter_by_categories)
-        self.tree.dfs(traversal)
+        self.tree.dfs_iterative(traversal)
         return traversal.tokens
 
     def get_all_tokens_encodings(
@@ -461,7 +490,7 @@ class Document:
 
         """
         traversal = TokensTraversal(True, filter_by_categories)
-        self.tree.dfs(traversal)
+        self.tree.dfs_iterative(traversal)
         return traversal.tokens
 
     def get_unique_token_encodings(
@@ -653,3 +682,34 @@ class TokensTraversal(TreeTraversalInterface):
             self.tokens.append(node.token)
             if self.non_repeated:
                 self.seen_encodings.append(node.token.encoding)
+
+class TraversalFactory:
+    class Categories(Enum):
+        METACOMMENTS = "metacomments"
+        TOKENS = "tokens"
+
+    @classmethod
+    def create(
+            cls,
+            traversal_type: str,
+            non_repeated: bool,
+            filter_by_categories: Optional[Sequence[TokenCategory]]
+    ) -> TreeTraversalInterface:
+        """
+        Create an instance of `TreeTraversalInterface` based on the `traversal_type`.
+        Args:
+            non_repeated:
+            filter_by_categories:
+            traversal_type: The type of traversal to use. Possible values are:
+                - "metacomments"
+                - "tokens"
+
+        Returns: An instance of `TreeTraversalInterface`.
+        """
+        if traversal_type == cls.Categories.METACOMMENTS.value:
+            return MetacommentsTraversal()
+        elif traversal_type == cls.Categories.TOKENS.value:
+            return TokensTraversal(non_repeated, filter_by_categories)
+
+        raise ValueError(f"Unknown traversal type: {traversal_type}")
+
