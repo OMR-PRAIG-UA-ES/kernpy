@@ -117,7 +117,7 @@ class Importer:
                                         next_stage_parents.append(node) # just one spine each two
                                 else:
                                     raise Exception(f'Unknown spine operator {column}')
-                            else:
+                            else:  # column is not a spine operation
                                 if column.startswith("!"):
                                     token = FieldCommentToken(column)
                                 else:
