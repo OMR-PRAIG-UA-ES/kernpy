@@ -28,3 +28,16 @@ class ImporterTestCase(unittest.TestCase):
         spines_ids = [t.spine_id for t in header_tokens if isinstance(t, kp.core.HeaderToken)]
         self.assertListEqual([0, 1, 2, 3, 4, 5], spines_ids)
 
+    def test_raise_handled_exception_when_can_not_import(self):
+        wrong_headers_kern_score = ('**kekern\n'
+                                    '*mclefF4\n'
+                                    '*M2/2\n'
+                                    '4cc\n'
+                                    '8dd\n'
+                                    '8dd\n'
+                                    '2g\n'
+                                    '==\n'
+                                    '*_')
+        with self.assertRaises(ValueError):
+            doc, err = kp.create(wrong_headers_kern_score)
+

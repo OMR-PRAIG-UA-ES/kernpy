@@ -121,6 +121,11 @@ class Importer:
                                 if column.startswith("!"):
                                     token = FieldCommentToken(column)
                                 else:
+                                    if prev_stage_parents is None:
+                                        raise ValueError(f'The token in column #{icolumn} and row #{row_number - 1}'
+                                                         f' was not created correctly. Error detected in '
+                                                         f'column #{icolumn} in row #{row_number}. '
+                                                         f'Found {column.split(" ")[-1]}. ')
                                     parent = prev_stage_parents[icolumn]
                                     if not parent:
                                         raise Exception(f'Cannot find a parent node for column #{icolumn} in row {row_number}')
