@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.40">
     
     
       
@@ -410,6 +410,15 @@
   <a href="#kernpy.Document.clone" class="md-nav__link">
     <span class="md-ellipsis">
       clone
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.Document.frequencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      frequencies
     </span>
   </a>
   
@@ -1520,6 +1529,15 @@
   <a href="#kernpy.core.Document.clone" class="md-nav__link">
     <span class="md-ellipsis">
       clone
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Document.frequencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      frequencies
     </span>
   </a>
   
@@ -3328,6 +3346,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#kernpy.Document.frequencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      frequencies
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#kernpy.Document.get_all_tokens" class="md-nav__link">
     <span class="md-ellipsis">
       get_all_tokens
@@ -4432,6 +4459,15 @@
   <a href="#kernpy.core.Document.clone" class="md-nav__link">
     <span class="md-ellipsis">
       clone
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Document.frequencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      frequencies
     </span>
   </a>
   
@@ -6290,7 +6326,7 @@ The index of the list is starting from 1. Rows after removing empty lines and li
           <tr class="doc-section-item">
             <td><code><span title="kernpy.Document.page_bounding_boxes">page_bounding_boxes</span></code></td>
             <td>
-                  <code>Dict[int, <a class="autorefs autorefs-internal" title="kernpy.core.document.BoundingBoxMeasures" href="#kernpy.core.BoundingBoxMeasures">BoundingBoxMeasures</a>]</code>
+                  <code><span title="typing.Dict">Dict</span>[int, <a class="autorefs autorefs-internal" title="kernpy.core.document.BoundingBoxMeasures" href="#kernpy.core.BoundingBoxMeasures">BoundingBoxMeasures</a>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -6507,6 +6543,54 @@ The index of the list is starting from 1. Rows after removing empty lines and li
 
         <p>Create a deep copy of the Document instance.</p>
 <p>Returns: A new instance of Document with the tree copied.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="kernpy.Document.frequencies" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">frequencies</span><span class="p">(</span><span class="n">token_categories</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Frequency of tokens in the document.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>token_categories</code></td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="collections.abc.Sequence">Sequence</span>[<a class="autorefs autorefs-internal" title="kernpy.core.TokenCategory" href="#kernpy.core.TokenCategory">TokenCategory</a>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If None, all tokens are considered.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+        <p>Returns (Dict):
+    A dictionary with the frequency of each token.</p>
 
     </div>
 
@@ -12037,7 +12121,7 @@ The index of the list is starting from 1. Rows after removing empty lines and li
           <tr class="doc-section-item">
             <td><code><span title="kernpy.core.Document.page_bounding_boxes">page_bounding_boxes</span></code></td>
             <td>
-                  <code>Dict[int, <a class="autorefs autorefs-internal" title="kernpy.core.document.BoundingBoxMeasures" href="#kernpy.core.BoundingBoxMeasures">BoundingBoxMeasures</a>]</code>
+                  <code><span title="typing.Dict">Dict</span>[int, <a class="autorefs autorefs-internal" title="kernpy.core.document.BoundingBoxMeasures" href="#kernpy.core.BoundingBoxMeasures">BoundingBoxMeasures</a>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -12254,6 +12338,54 @@ The index of the list is starting from 1. Rows after removing empty lines and li
 
         <p>Create a deep copy of the Document instance.</p>
 <p>Returns: A new instance of Document with the tree copied.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="kernpy.core.Document.frequencies" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">frequencies</span><span class="p">(</span><span class="n">token_categories</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Frequency of tokens in the document.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>token_categories</code></td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="collections.abc.Sequence">Sequence</span>[<a class="autorefs autorefs-internal" title="kernpy.core.TokenCategory" href="#kernpy.core.TokenCategory">TokenCategory</a>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If None, all tokens are considered.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+        <p>Returns (Dict):
+    A dictionary with the frequency of each token.</p>
 
     </div>
 
