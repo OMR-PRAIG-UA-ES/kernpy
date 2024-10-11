@@ -1,0 +1,654 @@
+{
+    "!!!COM: Bach, Johann Sebastian": {
+        "occurrences": 1,
+        "category": "LINE_COMMENTS"
+    },
+    "!!!CDT: 1685/3//-1750/7/28/": {
+        "occurrences": 1,
+        "category": "LINE_COMMENTS"
+    },
+    "!!!OTL@@DE: Aus meines Herzens Grunde": {
+        "occurrences": 1,
+        "category": "LINE_COMMENTS"
+    },
+    "!!!OTL@EN:  From the depths of my heart": {
+        "occurrences": 1,
+        "category": "LINE_COMMENTS"
+    },
+    "!!!AGN: 4-Part Chorale": {
+        "occurrences": 1,
+        "category": "LINE_COMMENTS"
+    },
+    "!!!SCT: BH 001": {
+        "occurrences": 1,
+        "category": "LINE_COMMENTS"
+    },
+    "!!!SCT: BWV 269": {
+        "occurrences": 1,
+        "category": "LINE_COMMENTS"
+    },
+    "!!!ONB1: Text by Georg Niege; 16th Century secular melody, first appears": {
+        "occurrences": 1,
+        "category": "LINE_COMMENTS"
+    },
+    "!!!ONB2: in sacred use in Neu Catechismus-Gesangbchlein, Hamburg, 1598.": {
+        "occurrences": 1,
+        "category": "LINE_COMMENTS"
+    },
+    "!!!YEC: Copyright 2001 by Craig Stuart Sapp": {
+        "occurrences": 1,
+        "category": "LINE_COMMENTS"
+    },
+    "!!!license: GNU General Public License (http://www.gnu.org/copyleft/gpl.html)": {
+        "occurrences": 1,
+        "category": "LINE_COMMENTS"
+    },
+    "!!!SMA: 371 Bach Chorales, edited by Ludwig Erk, C.F. Peters": {
+        "occurrences": 1,
+        "category": "LINE_COMMENTS"
+    },
+    "!!!PDT: 1850, 1865": {
+        "occurrences": 1,
+        "category": "LINE_COMMENTS"
+    },
+    "!!!ONB: Harmony and Root analysis done manually by Craig Sapp": {
+        "occurrences": 1,
+        "category": "LINE_COMMENTS"
+    },
+    "!! Beat 2 of measure 1 chord could also be IVb (with root on C)": {
+        "occurrences": 1,
+        "category": "LINE_COMMENTS"
+    },
+    "**kern": {
+        "occurrences": 4,
+        "category": "STRUCTURAL"
+    },
+    "!bass": {
+        "occurrences": 1,
+        "category": "FIELD_COMMENTS"
+    },
+    "*Iorgan": {
+        "occurrences": 5,
+        "category": "OTHER"
+    },
+    "*clefF4": {
+        "occurrences": 2,
+        "category": "SIGNATURES"
+    },
+    "*k[f#]": {
+        "occurrences": 6,
+        "category": "SIGNATURES"
+    },
+    "*G:": {
+        "occurrences": 6,
+        "category": "OTHER_CONTEXTUAL"
+    },
+    "*M3/4": {
+        "occurrences": 6,
+        "category": "SIGNATURES"
+    },
+    "*MM60": {
+        "occurrences": 6,
+        "category": "OTHER_CONTEXTUAL"
+    },
+    "*>[A,A,B]": {
+        "occurrences": 6,
+        "category": "OTHER"
+    },
+    "*>A": {
+        "occurrences": 6,
+        "category": "OTHER"
+    },
+    "4GG": {
+        "occurrences": 28,
+        "category": "CORE"
+    },
+    "=": {
+        "occurrences": 84,
+        "category": "BARLINES"
+    },
+    "4G": {
+        "occurrences": 5,
+        "category": "CORE"
+    },
+    "4E": {
+        "occurrences": 2,
+        "category": "CORE"
+    },
+    ".": {
+        "occurrences": 139,
+        "category": "EMPTY"
+    },
+    "4F#": {
+        "occurrences": 3,
+        "category": "CORE"
+    },
+    "4D": {
+        "occurrences": 6,
+        "category": "CORE"
+    },
+    "4C": {
+        "occurrences": 4,
+        "category": "CORE"
+    },
+    "8BB": {
+        "occurrences": 2,
+        "category": "CORE"
+    },
+    "8AA": {
+        "occurrences": 4,
+        "category": "CORE"
+    },
+    "2D;": {
+        "occurrences": 3,
+        "category": "CORE"
+    },
+    "4FF#": {
+        "occurrences": 4,
+        "category": "CORE"
+    },
+    "4AA": {
+        "occurrences": 7,
+        "category": "CORE"
+    },
+    "4BB": {
+        "occurrences": 5,
+        "category": "CORE"
+    },
+    "2GG;": {
+        "occurrences": 4,
+        "category": "CORE"
+    },
+    "=:|!": {
+        "occurrences": 6,
+        "category": "BARLINES"
+    },
+    "*>B": {
+        "occurrences": 6,
+        "category": "OTHER"
+    },
+    "4.BB": {
+        "occurrences": 2,
+        "category": "CORE"
+    },
+    "[4E": {
+        "occurrences": 2,
+        "category": "CORE"
+    },
+    "4E]": {
+        "occurrences": 1,
+        "category": "CORE"
+    },
+    "8C": {
+        "occurrences": 2,
+        "category": "CORE"
+    },
+    "8GG": {
+        "occurrences": 2,
+        "category": "CORE"
+    },
+    "2C;": {
+        "occurrences": 1,
+        "category": "CORE"
+    },
+    "8E": {
+        "occurrences": 1,
+        "category": "CORE"
+    },
+    "8D": {
+        "occurrences": 2,
+        "category": "CORE"
+    },
+    "[4G": {
+        "occurrences": 1,
+        "category": "CORE"
+    },
+    "4G]": {
+        "occurrences": 1,
+        "category": "CORE"
+    },
+    "8E]": {
+        "occurrences": 1,
+        "category": "CORE"
+    },
+    "==": {
+        "occurrences": 6,
+        "category": "BARLINES"
+    },
+    "*-": {
+        "occurrences": 6,
+        "category": "STRUCTURAL"
+    },
+    "!tenor": {
+        "occurrences": 1,
+        "category": "FIELD_COMMENTS"
+    },
+    "4B": {
+        "occurrences": 8,
+        "category": "CORE"
+    },
+    "8c": {
+        "occurrences": 7,
+        "category": "CORE"
+    },
+    "8B": {
+        "occurrences": 4,
+        "category": "CORE"
+    },
+    "4A": {
+        "occurrences": 2,
+        "category": "CORE"
+    },
+    "4c": {
+        "occurrences": 5,
+        "category": "CORE"
+    },
+    "4d": {
+        "occurrences": 15,
+        "category": "CORE"
+    },
+    "2d;": {
+        "occurrences": 5,
+        "category": "CORE"
+    },
+    "4e": {
+        "occurrences": 7,
+        "category": "CORE"
+    },
+    "8d": {
+        "occurrences": 5,
+        "category": "CORE"
+    },
+    "2B;": {
+        "occurrences": 2,
+        "category": "CORE"
+    },
+    "8A": {
+        "occurrences": 1,
+        "category": "CORE"
+    },
+    "2d": {
+        "occurrences": 4,
+        "category": "CORE"
+    },
+    "2.d": {
+        "occurrences": 1,
+        "category": "CORE"
+    },
+    "2c;": {
+        "occurrences": 1,
+        "category": "CORE"
+    },
+    "2e": {
+        "occurrences": 1,
+        "category": "CORE"
+    },
+    "!alto": {
+        "occurrences": 1,
+        "category": "FIELD_COMMENTS"
+    },
+    "*clefG2": {
+        "occurrences": 2,
+        "category": "SIGNATURES"
+    },
+    "8e": {
+        "occurrences": 5,
+        "category": "CORE"
+    },
+    "8f#": {
+        "occurrences": 8,
+        "category": "CORE"
+    },
+    "4g": {
+        "occurrences": 9,
+        "category": "CORE"
+    },
+    "2f#;": {
+        "occurrences": 3,
+        "category": "CORE"
+    },
+    "4f#": {
+        "occurrences": 4,
+        "category": "CORE"
+    },
+    "2g": {
+        "occurrences": 5,
+        "category": "CORE"
+    },
+    "[4g": {
+        "occurrences": 2,
+        "category": "CORE"
+    },
+    "8g]": {
+        "occurrences": 2,
+        "category": "CORE"
+    },
+    "8a": {
+        "occurrences": 4,
+        "category": "CORE"
+    },
+    "8g": {
+        "occurrences": 4,
+        "category": "CORE"
+    },
+    "4a": {
+        "occurrences": 3,
+        "category": "CORE"
+    },
+    "4.g": {
+        "occurrences": 3,
+        "category": "CORE"
+    },
+    "4fn": {
+        "occurrences": 1,
+        "category": "CORE"
+    },
+    "2e;": {
+        "occurrences": 1,
+        "category": "CORE"
+    },
+    "4.a": {
+        "occurrences": 1,
+        "category": "CORE"
+    },
+    "[4f#": {
+        "occurrences": 1,
+        "category": "CORE"
+    },
+    "8f#]": {
+        "occurrences": 1,
+        "category": "CORE"
+    },
+    "2a": {
+        "occurrences": 3,
+        "category": "CORE"
+    },
+    "!sprno": {
+        "occurrences": 1,
+        "category": "FIELD_COMMENTS"
+    },
+    "4dd": {
+        "occurrences": 2,
+        "category": "CORE"
+    },
+    "4.b": {
+        "occurrences": 1,
+        "category": "CORE"
+    },
+    "4b": {
+        "occurrences": 10,
+        "category": "CORE"
+    },
+    "2a;": {
+        "occurrences": 3,
+        "category": "CORE"
+    },
+    "2dd": {
+        "occurrences": 4,
+        "category": "CORE"
+    },
+    "4cc": {
+        "occurrences": 6,
+        "category": "CORE"
+    },
+    "2g;": {
+        "occurrences": 3,
+        "category": "CORE"
+    },
+    "4.dd": {
+        "occurrences": 1,
+        "category": "CORE"
+    },
+    "8cc": {
+        "occurrences": 1,
+        "category": "CORE"
+    },
+    "2b": {
+        "occurrences": 2,
+        "category": "CORE"
+    },
+    "2.b": {
+        "occurrences": 1,
+        "category": "CORE"
+    },
+    "**root": {
+        "occurrences": 1,
+        "category": "STRUCTURAL"
+    },
+    "!": {
+        "occurrences": 2,
+        "category": "FIELD_COMMENTS"
+    },
+    "*": {
+        "occurrences": 3,
+        "category": "HARMONY"
+    },
+    "=1": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "4EE": {
+        "occurrences": 7,
+        "category": "HARMONY"
+    },
+    "4DD": {
+        "occurrences": 8,
+        "category": "HARMONY"
+    },
+    "=2": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "=3": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "4CC": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "8CC": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "8FF#": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "=4": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "2DD;": {
+        "occurrences": 3,
+        "category": "HARMONY"
+    },
+    "=5": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "=6": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "=7": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "=8": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "=9": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "4.GG": {
+        "occurrences": 1,
+        "category": "HARMONY"
+    },
+    "8DD": {
+        "occurrences": 1,
+        "category": "HARMONY"
+    },
+    "=10": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "=11": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "=12": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "2GG": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "=13": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "=14": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "2CC;": {
+        "occurrences": 1,
+        "category": "HARMONY"
+    },
+    "=15": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "=16": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "=17": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "=18": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "=19": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "2DD": {
+        "occurrences": 1,
+        "category": "HARMONY"
+    },
+    "=20": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "=21": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "**harm": {
+        "occurrences": 1,
+        "category": "STRUCTURAL"
+    },
+    "I": {
+        "occurrences": 14,
+        "category": "HARMONY"
+    },
+    "IVb[vi]": {
+        "occurrences": 1,
+        "category": "HARMONY"
+    },
+    "Vb": {
+        "occurrences": 4,
+        "category": "HARMONY"
+    },
+    "V": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "vi": {
+        "occurrences": 5,
+        "category": "HARMONY"
+    },
+    "IV": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "IV7d": {
+        "occurrences": 1,
+        "category": "HARMONY"
+    },
+    "viiob": {
+        "occurrences": 3,
+        "category": "HARMONY"
+    },
+    "V;": {
+        "occurrences": 3,
+        "category": "HARMONY"
+    },
+    "vi7b": {
+        "occurrences": 1,
+        "category": "HARMONY"
+    },
+    "Ib": {
+        "occurrences": 5,
+        "category": "HARMONY"
+    },
+    "ii7b": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "V7": {
+        "occurrences": 3,
+        "category": "HARMONY"
+    },
+    "I;": {
+        "occurrences": 2,
+        "category": "HARMONY"
+    },
+    "ii": {
+        "occurrences": 1,
+        "category": "HARMONY"
+    },
+    "V7c": {
+        "occurrences": 1,
+        "category": "HARMONY"
+    },
+    "iiib[Ic]": {
+        "occurrences": 1,
+        "category": "HARMONY"
+    },
+    "iib": {
+        "occurrences": 1,
+        "category": "HARMONY"
+    },
+    "V7/IV": {
+        "occurrences": 1,
+        "category": "HARMONY"
+    },
+    "IV;": {
+        "occurrences": 1,
+        "category": "HARMONY"
+    },
+    "viio7d": {
+        "occurrences": 1,
+        "category": "HARMONY"
+    },
+    "IVb": {
+        "occurrences": 1,
+        "category": "HARMONY"
+    },
+    "!!linebreak: 2": {
+        "occurrences": 1,
+        "category": "LINE_COMMENTS"
+    },
+    "!!chor2scor: -l 2 -s 0.6 -o %b.pmx": {
+        "occurrences": 1,
+        "category": "LINE_COMMENTS"
+    }
+}

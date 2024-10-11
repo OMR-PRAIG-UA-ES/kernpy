@@ -3,6 +3,7 @@ import unittest
 import logging
 import sys
 from tempfile import TemporaryDirectory
+import json
 
 import kernpy as kp
 
@@ -68,3 +69,15 @@ class DocumentTestCase(unittest.TestCase):
         # use memoization to speed up the process
         # use queues
         self.assertTrue(len(tokens) > 0)
+
+    def test_frequencies(self):
+        with open('resource_dir/metadata/frequency.json', 'r') as f:
+            expected_frequencies = json.load(f)
+
+        doc, err = kp.read('resource_dir/legacy/chor001.krn')
+        real_frequencies = doc.frequencies(token_categories=None)
+
+        self.assertEqual(expected_frequencies, real_frequencies)
+
+
+

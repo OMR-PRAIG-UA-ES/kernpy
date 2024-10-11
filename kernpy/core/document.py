@@ -2,7 +2,7 @@ from copy import copy
 from collections import deque, defaultdict
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import List, Optional
+from typing import List, Optional, Dict
 from collections.abc import Sequence
 from queue import Queue
 
@@ -597,7 +597,7 @@ class Document:
 
         Returns: List[HeaderToken]: A list with the header nodes of the current document.
         """
-        return [token for token in self.get_all_tokens(None) if isinstance(token, HeaderToken)]
+        return [token for token in self.get_all_tokens(filter_by_categories=None) if isinstance(token, HeaderToken)]
 
     def get_spine_ids(self) -> List[int]:
         """
@@ -611,6 +611,29 @@ class Document:
                 """
         header_nodes = self.get_header_nodes()
         return [node.spine_id for node in header_nodes]
+
+    def frequencies(self, token_categories: Optional[Sequence[TokenCategory]] = None) -> Dict:
+        """
+        Frequency of tokens in the document.
+
+        Args:
+            token_categories (Optional[Sequence[TokenCategory]]): If None, all tokens are considered.
+        Returns (Dict):
+            A dictionary with the frequency of each token.
+
+        """
+        tokens = self.get_all_tokens(filter_by_categories=token_categories)
+        frequencies = {}
+        for t in tokens:
+            if t.encoding in frequencies:
+                frequencies[t.encoding]['occurrences'] += 1
+            else:
+                frequencies[t.encoding] = {
+                    'occurrences': 1,
+                    'category': t.category.name,
+                }
+
+        return frequencies
 
     @classmethod
     def to_concat(cls, first_doc: 'Document', second_doc: 'Document', deep_copy: bool = True) -> 'Document':
