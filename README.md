@@ -62,7 +62,7 @@ kp.store_graph(document, '/tmp/graph.dot')
 # - in the browser here: https://dreampuf.github.io/GraphvizOnline/
 ```
 
-### Create the new score using your owb options:
+### Create the new score using your own options:
 
 Create your options to export the document.
 ```python
@@ -72,7 +72,7 @@ default_options = kp.ExportOptions()
 # Customize the ExportOptions object
 your_options = kp.ExportOptions(
     spine_types=['**kern'],                   # Export only the **kern spines
-    token_categories=kp.BEKERN_CATEGORIES,    # Token catogories to export
+    token_categories=kp.BEKERN_CATEGORIES,    # Token categories to export
     kern_type=kp.KernTypeExporter.eKern,      # Kern encoding
     from_measure=1,                           # First from measure 1
     to_measure=10,                            # Last measure exported
@@ -115,8 +115,8 @@ for i in range(doc.get_first_measure(), doc.measures_count(), 1):  # from 1 to 1
     ...
 ```
 
-When iterating over all the measures is easier using the `for measure in doc:` loop.
-(using the __ iter__ method):
+It is easier to iterate over all the measures using the `for measure in doc`: loop
+(using the `__ iter__` method):
 ```python
 for measure in doc:
     options = kp.ExportOptions(from_measure=measure, to_measure=measure)
@@ -219,7 +219,7 @@ pip install Pillow
 pip install requests
 ```
 
-- If the retrieving from `https` fails, the following version of `urllib` must be installed:
+- If fetching data from `https` fails, install the following version of `urllib`:
 ```shell
 pip install urllib3==1.26.6
 ```
