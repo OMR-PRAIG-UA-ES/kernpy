@@ -79,5 +79,14 @@ class DocumentTestCase(unittest.TestCase):
 
         self.assertEqual(expected_frequencies, real_frequencies)
 
+    def test_document_split(self):
+        doc, err = kp.read('resource_dir/legacy/chor001.krn')
+        docs = doc.split()
+
+        for i, new_doc in enumerate(docs):
+            kp.store_graph(new_doc, f'/tmp/test_{i}.dot')
+            kp.store(new_doc, f'/tmp/test_{i}.krn', kp.ExportOptions())
+        self.assertEqual(4, len(docs))
+
 
 

@@ -1,4 +1,4 @@
-from copy import copy
+from copy import copy, deepcopy
 from collections import deque, defaultdict
 from abc import ABC, abstractmethod
 from enum import Enum
@@ -273,6 +273,21 @@ class MultistageTree:
 
         """
         self.root.dfs_iterative(visit_method)
+
+    def __deepcopy__(self, memo):
+        """
+        Create a deep copy of the MultistageTree object.
+        """
+        # Create a new empty MultistageTree object
+        new_tree = MultistageTree()
+
+        # Deepcopy the root
+        new_tree.root = deepcopy(self.root, memo)
+
+        # Deepcopy the stages list
+        new_tree.stages = deepcopy(self.stages, memo)
+
+        return new_tree
 
 
 class Document:
@@ -634,6 +649,49 @@ class Document:
                 }
 
         return frequencies
+
+    def split(self) -> List['Document']:
+        """
+        Split the current document into a list of documents, one for each **kern spine.
+        Each resulting document will contain one **kern spine along with all non-kern spines.
+
+        Returns:
+            List['Document']: A list of documents, where each document contains one **kern spine
+            and all non-kern spines from the original document.
+
+        Examples:
+            >>> document.split()
+            [<Document: score.krn>, <Document: score.krn>, <Document: score.krn>]
+        """
+        raise NotImplementedError
+        new_documents = []
+        self_document_copy = deepcopy(self)
+        kern_header_nodes = [node for node in self_document_copy.get_header_nodes() if node.encoding == '**kern']
+        other_header_nodes = [node for node in self_document_copy.get_header_nodes() if node.encoding != '**kern']
+        spine_ids = self_document_copy.get_spine_ids()
+
+        for header_node in kern_header_nodes:
+            if header_node.spine_id not in spine_ids:
+                continue
+
+            spine_ids.remove(header_node.spine_id)
+
+            new_tree = deepcopy(self.tree)
+            prev_node = new_tree.root
+            while not isinstance(prev_node, HeaderToken):
+                prev_node = prev_node.children[0]
+
+            if not prev_node or not isinstance(prev_node, HeaderToken):
+                raise Exception(f'Header node not found: {prev_node} in {header_node}')
+
+            new_children = list(filter(lambda x: x.spine_id == header_node.spine_id, prev_node.children))
+            new_tree.root = new_children
+
+            new_document = Document(new_tree)
+
+            new_documents.append(new_document)
+
+        return new_documents
 
     @classmethod
     def to_concat(cls, first_doc: 'Document', second_doc: 'Document', deep_copy: bool = True) -> 'Document':
