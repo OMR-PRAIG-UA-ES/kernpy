@@ -1,9 +1,7 @@
 # Python Humdrum **kern and **mens utilities
 
-Docs [here](https://kernpy.pages.dev/)
-```shell
-https://kernpy.pages.dev/
-```
+Docs: <a target="_blank" href="https://kernpy.pages.dev/">https://kernpy.pages.dev/</a>
+
 
 ## Index:
 - [Code example](#code-example)
