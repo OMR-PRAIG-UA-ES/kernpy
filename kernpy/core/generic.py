@@ -3,8 +3,8 @@ Public API for KernPy.
 
 The main functions for handling the input and output of **kern files are provided here.
 """
-
-from typing import List, Optional, Any
+from pathlib import Path
+from typing import List, Optional, Any, Union
 from collections.abc import Sequence
 
 from kernpy.core import Importer, Document, Exporter, ExportOptions, GraphvizExporter
@@ -23,7 +23,7 @@ class Generic:
     @classmethod
     def read(
             cls,
-            path: str,
+            path: Path,
             strict: Optional[bool] = False
     ) -> (Document, List[str]):
         """
@@ -90,7 +90,7 @@ class Generic:
     def store(
             cls,
             document: Document,
-            path: str,
+            path: Path,
             options: ExportOptions
     ) -> None:
         """
@@ -109,7 +109,7 @@ class Generic:
     def store_graph(
             cls,
             document: Document,
-            path: str
+            path: Path
     ) -> None:
         """
 
@@ -178,14 +178,14 @@ class Generic:
 
 
 def read(
-        path: str,
+        path: Union[str, Path],
         strict: Optional[bool] = False
 ) -> (Document, List[str]):
     """
     Read a Humdrum **kern file.
 
     Args:
-        path (str): File path to read
+        path (Union[str, Path]): File path to read
         strict (Optional[bool]): If True, raise an error if the **kern file has any errors. Otherwise, return a list of errors.
 
     Returns (Document, List[str]): Document object and list of error messages. Empty list if no errors.
@@ -200,7 +200,7 @@ def read(
         ['Error: Invalid **kern spine: 1', 'Error: Invalid **kern spine: 2']
     """
     return Generic.read(
-        path=path,
+        path=Path(path),
         strict=strict
     )
 
@@ -258,7 +258,7 @@ def export(
 
 def store(
         document: Document,
-        path: str,
+        path: Union[str, Path],
         options: ExportOptions
 ) -> None:
     """
@@ -266,7 +266,7 @@ def store(
 
     Args:
         document (Document): Document object to store
-        path (str): File path to store
+        path (Union[str, Path]): File path to store
         options (ExportOptions): Export options
 
     Returns: None
@@ -280,15 +280,14 @@ def store(
     """
     Generic.store(
         document=document,
-        path=path,
+        path=Path(path),
         options=options
     )
 
 
-
 def store_graph(
         document: Document,
-        path: str
+        path: Union[str, Path]
 ) -> None:
     """
     Create a graph representation of a Document object using Graphviz. Save the graph to a file.
@@ -306,7 +305,7 @@ def store_graph(
     """
     return Generic.store_graph(
         document=document,
-        path=path
+        path=Path(path)
     )
 
 

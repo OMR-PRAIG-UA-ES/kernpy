@@ -2,6 +2,7 @@ import os
 import unittest
 import logging
 import sys
+from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
@@ -57,7 +58,7 @@ class GenericTestCase(unittest.TestCase):
         _ = kp.read(file_path)
 
         # Assert
-        mock_importer_run.assert_called_once_with(file_path)
+        mock_importer_run.assert_called_once_with(Path(file_path))
 
     @patch('kernpy.Exporter.export_string')
     def test_export_use_exporter_run(self, mock_exporter_run):

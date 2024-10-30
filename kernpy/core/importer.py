@@ -1,6 +1,7 @@
 import csv
 import io
 from copy import copy
+from pathlib import Path
 
 from kernpy.core.tokens import TokenCategory, SignatureToken, MetacommentToken, HeaderToken, SpineOperationToken, \
     FieldCommentToken, ErrorToken, \
@@ -179,7 +180,7 @@ class Importer:
             last_page_bb.bounding_box.extend(token.bounding_box)
             last_page_bb.to_measure = self.last_measure_number
 
-    def import_file(self, file_path: str) -> Document:
+    def import_file(self, file_path: Path) -> Document:
         """
         Import the content from the importer to the file.
         Args:
@@ -230,7 +231,7 @@ class Importer:
         Examples:
             # Create the importer and read the file
             >>> importer = Importer()
-            >>> importer.import_file('file.krn')
+            >>> importer.import_file(Path('file.krn'))
             >>> print(importer.get_error_messages())
             'Error: Invalid token in row 1'
         """
@@ -249,10 +250,10 @@ class Importer:
         Examples:
             # Create the importer and read the file
             >>> importer = Importer()
-            >>> importer.import_file('file.krn')    # file.krn has an error
+            >>> importer.import_file(Path('file.krn'))    # file.krn has an error
             >>> print(importer.has_errors())
             True
-            >>> importer.import_file('file2.krn')   # file2.krn has no errors
+            >>> importer.import_file(Path('file2.krn'))   # file2.krn has no errors
             >>> print(importer.has_errors())
             False
         """

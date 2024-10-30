@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from kernpy.core import Token, SpineOperationToken
 from kernpy.core.document import MultistageTree, Node
 
@@ -13,7 +15,7 @@ class GraphvizExporter:
     def node_id(node: Node):
         return f"node{id(node)}"
 
-    def export_to_dot(self, tree: MultistageTree, filename):
+    def export_to_dot(self, tree: MultistageTree, filename: Path):
         with open(filename, 'w') as file:
             file.write('digraph G {\n')
             file.write('    node [shape=record];\n')

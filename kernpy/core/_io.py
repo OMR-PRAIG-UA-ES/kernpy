@@ -1,9 +1,9 @@
 import os
-import pathlib
+from pathlib import Path
 from typing import Optional
 
 
-def _write(path, content) -> None:
+def _write(path: Path, content: str) -> None:
     """
     Store content in a file.
 
@@ -22,7 +22,7 @@ def _write(path, content) -> None:
 
 
 def find_all_files(
-        path: str,
+        path: Path,
         extension: Optional[str] = None) -> list:
     """
     Find all files with the given extension in the given directory.
@@ -39,7 +39,7 @@ def find_all_files(
         >>> find_all_files('/files' )
         ...
     """
-    p = pathlib.Path(path)
+    p = Path(path)
     if extension is None:
         return list(p.glob('**/*'))
     else:
