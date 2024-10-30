@@ -84,6 +84,7 @@ class Importer:
                             raise Exception(
                                 f"Several header rows not supported, there is a header row in #{header_row_number} and another in #{row_number} ")
 
+                        # it's a spine header
                         document.header_stage = tree_stage
                         importer = importers.get(column)
                         if not importer:
@@ -139,7 +140,7 @@ class Importer:
                                 try:
                                     token = importer.import_token(column)
                                 except Exception as error:
-                                    token = ErrorToken(column, row_number, error)
+                                    token = ErrorToken(column, row_number, str(error))
                                     self.errors.append(token)
                             if not token:
                                 raise Exception(
