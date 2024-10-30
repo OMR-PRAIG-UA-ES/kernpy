@@ -69,3 +69,18 @@ class ExporterTestCase(unittest.TestCase):
         real_content = kp.export(self.doc_piano, options)  # TODO: Solve export error: error in line 15 of the exported file. No tiene nada que ver con la funcionalidad de exportar por spines. Sino con exportar todo en general.
         # kp.store(self.doc_piano, '/tmp/test_mix_spines_error.krn', options)  # for debug
         self.assertEqual(expected_content, real_content)
+
+    def test_basic_kern_to_ekern(self):
+        input_path = 'resource_dir/legacy/kern2ekern.krn'
+        expected_path = 'resource_dir/legacy/kern2ekern.ekrn'
+
+        with open(expected_path, 'r') as f:
+            expected_content = f.read()
+
+        doc, _ = kp.read(input_path)
+        real_content = kp.export(doc, kp.ExportOptions(
+            kern_type=kp.KernTypeExporter.eKern,
+            token_categories=kp.BEKERN_CATEGORIES
+        ))
+
+        self.assertEqual(expected_content, real_content, f"File content mismatch: \nExpected:\n{expected_content}\n{40 * '='}\nReal\n{real_content}")
