@@ -8754,7 +8754,7 @@ c4
 <p><span class="doc-section-title">Examples:</span></p>
     <h4 id="kernpy.Importer.get_error_messages--create-the-importer-and-read-the-file">Create the importer and read the file</h4>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span> <span class="o">=</span> <span class="n">Importer</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span><span class="o">.</span><span class="n">import_file</span><span class="p">(</span><span class="s1">&#39;file.krn&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span><span class="o">.</span><span class="n">import_file</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;file.krn&#39;</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">importer</span><span class="o">.</span><span class="n">get_error_messages</span><span class="p">())</span>
 <span class="go">&#39;Error: Invalid token in row 1&#39;</span>
 </code></pre></div>
@@ -8781,10 +8781,10 @@ c4
 <p><span class="doc-section-title">Examples:</span></p>
     <h4 id="kernpy.Importer.has_errors--create-the-importer-and-read-the-file">Create the importer and read the file</h4>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span> <span class="o">=</span> <span class="n">Importer</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span><span class="o">.</span><span class="n">import_file</span><span class="p">(</span><span class="s1">&#39;file.krn&#39;</span><span class="p">)</span>    <span class="c1"># file.krn has an error</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span><span class="o">.</span><span class="n">import_file</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;file.krn&#39;</span><span class="p">))</span>    <span class="c1"># file.krn has an error</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">importer</span><span class="o">.</span><span class="n">has_errors</span><span class="p">())</span>
 <span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span><span class="o">.</span><span class="n">import_file</span><span class="p">(</span><span class="s1">&#39;file2.krn&#39;</span><span class="p">)</span>   <span class="c1"># file2.krn has no errors</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span><span class="o">.</span><span class="n">import_file</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;file2.krn&#39;</span><span class="p">))</span>   <span class="c1"># file2.krn has no errors</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">importer</span><span class="o">.</span><span class="n">has_errors</span><span class="p">())</span>
 <span class="go">False</span>
 </code></pre></div>
@@ -10842,7 +10842,7 @@ for krn_file in krn_files:
           <tr class="doc-section-item">
             <td><code>path</code></td>
             <td>
-                  <code>str</code>
+                  <code><span title="typing.Union">Union</span>[str, <span title="pathlib.Path">Path</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -10928,7 +10928,7 @@ for krn_file in krn_files:
           <tr class="doc-section-item">
             <td><code>path</code></td>
             <td>
-                  <code>str</code>
+                  <code><span title="typing.Union">Union</span>[str, <span title="pathlib.Path">Path</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -15024,7 +15024,7 @@ Usually these are comments starting with <code>!!!</code>.</p>
           <tr class="doc-section-item">
             <td><code>path</code></td>
             <td>
-                  <code>str</code>
+                  <code><span title="pathlib.Path">Path</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -15102,7 +15102,7 @@ Usually these are comments starting with <code>!!!</code>.</p>
           <tr class="doc-section-item">
             <td><code>path</code></td>
             <td>
-                  <code>str</code>
+                  <code><span title="pathlib.Path">Path</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -15180,7 +15180,7 @@ Usually these are comments starting with <code>!!!</code>.</p>
           <tr class="doc-section-item">
             <td><code>path</code></td>
             <td>
-                  <code>str</code>
+                  <code><span title="pathlib.Path">Path</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -15393,7 +15393,7 @@ c4
 <p><span class="doc-section-title">Examples:</span></p>
     <h4 id="kernpy.core.Importer.get_error_messages--create-the-importer-and-read-the-file">Create the importer and read the file</h4>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span> <span class="o">=</span> <span class="n">Importer</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span><span class="o">.</span><span class="n">import_file</span><span class="p">(</span><span class="s1">&#39;file.krn&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span><span class="o">.</span><span class="n">import_file</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;file.krn&#39;</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">importer</span><span class="o">.</span><span class="n">get_error_messages</span><span class="p">())</span>
 <span class="go">&#39;Error: Invalid token in row 1&#39;</span>
 </code></pre></div>
@@ -15420,10 +15420,10 @@ c4
 <p><span class="doc-section-title">Examples:</span></p>
     <h4 id="kernpy.core.Importer.has_errors--create-the-importer-and-read-the-file">Create the importer and read the file</h4>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span> <span class="o">=</span> <span class="n">Importer</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span><span class="o">.</span><span class="n">import_file</span><span class="p">(</span><span class="s1">&#39;file.krn&#39;</span><span class="p">)</span>    <span class="c1"># file.krn has an error</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span><span class="o">.</span><span class="n">import_file</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;file.krn&#39;</span><span class="p">))</span>    <span class="c1"># file.krn has an error</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">importer</span><span class="o">.</span><span class="n">has_errors</span><span class="p">())</span>
 <span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span><span class="o">.</span><span class="n">import_file</span><span class="p">(</span><span class="s1">&#39;file2.krn&#39;</span><span class="p">)</span>   <span class="c1"># file2.krn has no errors</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span><span class="o">.</span><span class="n">import_file</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;file2.krn&#39;</span><span class="p">))</span>   <span class="c1"># file2.krn has no errors</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">importer</span><span class="o">.</span><span class="n">has_errors</span><span class="p">())</span>
 <span class="go">False</span>
 </code></pre></div>
@@ -18463,7 +18463,7 @@ for krn_file in krn_files:
           <tr class="doc-section-item">
             <td><code>path</code></td>
             <td>
-                  <code>str</code>
+                  <code><span title="typing.Union">Union</span>[str, <span title="pathlib.Path">Path</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -18549,7 +18549,7 @@ for krn_file in krn_files:
           <tr class="doc-section-item">
             <td><code>path</code></td>
             <td>
-                  <code>str</code>
+                  <code><span title="typing.Union">Union</span>[str, <span title="pathlib.Path">Path</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -19394,7 +19394,7 @@ c4
 <p><span class="doc-section-title">Examples:</span></p>
     <h4 id="kernpy.util.Importer.get_error_messages--create-the-importer-and-read-the-file">Create the importer and read the file</h4>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span> <span class="o">=</span> <span class="n">Importer</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span><span class="o">.</span><span class="n">import_file</span><span class="p">(</span><span class="s1">&#39;file.krn&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span><span class="o">.</span><span class="n">import_file</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;file.krn&#39;</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">importer</span><span class="o">.</span><span class="n">get_error_messages</span><span class="p">())</span>
 <span class="go">&#39;Error: Invalid token in row 1&#39;</span>
 </code></pre></div>
@@ -19421,10 +19421,10 @@ c4
 <p><span class="doc-section-title">Examples:</span></p>
     <h4 id="kernpy.util.Importer.has_errors--create-the-importer-and-read-the-file">Create the importer and read the file</h4>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span> <span class="o">=</span> <span class="n">Importer</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span><span class="o">.</span><span class="n">import_file</span><span class="p">(</span><span class="s1">&#39;file.krn&#39;</span><span class="p">)</span>    <span class="c1"># file.krn has an error</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span><span class="o">.</span><span class="n">import_file</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;file.krn&#39;</span><span class="p">))</span>    <span class="c1"># file.krn has an error</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">importer</span><span class="o">.</span><span class="n">has_errors</span><span class="p">())</span>
 <span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span><span class="o">.</span><span class="n">import_file</span><span class="p">(</span><span class="s1">&#39;file2.krn&#39;</span><span class="p">)</span>   <span class="c1"># file2.krn has no errors</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">importer</span><span class="o">.</span><span class="n">import_file</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;file2.krn&#39;</span><span class="p">))</span>   <span class="c1"># file2.krn has no errors</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">importer</span><span class="o">.</span><span class="n">has_errors</span><span class="p">())</span>
 <span class="go">False</span>
 </code></pre></div>
@@ -20029,7 +20029,7 @@ Args:
           <tr class="doc-section-item">
             <td><code>path</code></td>
             <td>
-                  <code>str</code>
+                  <code><span title="typing.Union">Union</span>[str, <span title="pathlib.Path">Path</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -20115,7 +20115,7 @@ Args:
           <tr class="doc-section-item">
             <td><code>path</code></td>
             <td>
-                  <code>str</code>
+                  <code><span title="typing.Union">Union</span>[str, <span title="pathlib.Path">Path</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
