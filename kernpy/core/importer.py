@@ -59,7 +59,6 @@ class Importer:
             if len(row) > 0:  # usually the last one
                 tree_stage = tree_stage + 1
                 is_barline = False
-                icolumn = -1
                 if next_stage_parents:
                     prev_stage_parents = copy(next_stage_parents)
                 next_stage_parents = []
@@ -67,6 +66,7 @@ class Importer:
                 if row[0].startswith("!!"):
                     token = MetacommentToken(row[0].strip())
                     if header_row_number is None:
+                        # it has no header, so it creates the header
                         node = tree.add_node(tree_stage, last_node_previous_to_header, token, None, None, None)
                         last_node_previous_to_header = node
                     else:
@@ -74,8 +74,7 @@ class Importer:
                             node = tree.add_node(tree_stage, parent, token, self.get_last_spine_operator(parent), parent.last_signature_nodes, parent.header_node) # the same reference for all spines - TODO Recordar documentarlo
                             next_stage_parents.append(node)
                 else:
-                    for column in row:
-                        icolumn = icolumn + 1
+                    for icolumn, column in enumerate(row):
                         if column in HEADERS:
                             if header_row_number is not None and header_row_number != row_number:
                                 raise Exception(
