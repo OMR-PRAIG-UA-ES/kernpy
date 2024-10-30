@@ -6,6 +6,7 @@ from kernpy.core.tokens import TokenCategory, SignatureToken, MetacommentToken, 
     FieldCommentToken, ErrorToken, \
     BoundingBoxToken, SPINE_OPERATIONS, HEADERS
 from kernpy.core.document import Document, MultistageTree, BoundingBoxMeasures
+from kernpy.core.importer_factory import createImporter
 
 
 class Importer:
@@ -86,7 +87,6 @@ class Importer:
                         document.header_stage = tree_stage
                         importer = importers.get(column)
                         if not importer:
-                            from kernpy.core.importer_factory import createImporter
                             importer = createImporter(column)
                             importers[column] = importer
 
