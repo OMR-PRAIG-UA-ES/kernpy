@@ -74,22 +74,7 @@ class Importer:
             else:
                 for icolumn, column in enumerate(row):
                     if column in HEADERS:
-                        if self._header_row_number is not None and self._header_row_number != self._row_number:
-                            raise Exception(
-                                f"Several header rows not supported, there is a header row in #{self._header_row_number} and another in #{self._row_number} ")
-
-                        # it's a spine header
-                        self._document.header_stage = self._tree_stage
-                        importer = self._importers.get(column)
-                        if not importer:
-                            importer = createImporter(column)
-                            self._importers[column] = importer
-
-                        token = HeaderToken(column, spine_id=icolumn)
-                        node = self._tree.add_node(self._tree_stage, self._last_node_previous_to_header, token, None, None)
-                        node.header_node = node # this value will be propagated
-                        self._next_stage_parents.append(node)
-
+                        self._compute_header(icolumn, column)
                         # go to next row
                         continue
 
@@ -264,4 +249,21 @@ class Importer:
             for parent in self._prev_stage_parents:
                 node = self._tree.add_node(self._tree_stage, parent, token, self.get_last_spine_operator(parent), parent.last_signature_nodes, parent.header_node) # the same reference for all spines - TODO Recordar documentarlo
                 self._next_stage_parents.append(node)
+
+    def _compute_header(self, column_index: int, column_content: str):
+        if self._header_row_number is not None and self._header_row_number != self._row_number:
+            raise Exception(
+                f"Several header rows not supported, there is a header row in #{self._header_row_number} and another in #{self._row_number} ")
+
+            # it's a spine header
+        self._document.header_stage = self._tree_stage
+        importer = self._importers.get(column_content)
+        if not importer:
+            importer = createImporter(column_content)
+            self._importers[column_content] = importer
+
+        token = HeaderToken(column_content, spine_id=column_index)
+        node = self._tree.add_node(self._tree_stage, self._last_node_previous_to_header, token, None, None)
+        node.header_node = node # this value will be propagated
+        self._next_stage_parents.append(node)
 
