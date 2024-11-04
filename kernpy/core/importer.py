@@ -96,68 +96,71 @@ class Importer:
                         node = tree.add_node(tree_stage, last_node_previous_to_header, token, None, None)
                         node.header_node = node # this value will be propagated
                         next_stage_parents.append(node)
-                    else:
-                        if column in SPINE_OPERATIONS:
-                            token = SpineOperationToken(column)
 
-                            if icolumn >= len(prev_stage_parents):
-                                raise Exception(f'Expected at least {icolumn+1} parents in row {row_number}, but found {len(prev_stage_parents)}: {row}')
+                        # go to next row
+                        continue
 
-                            parent = prev_stage_parents[icolumn]
-                            node = tree.add_node(tree_stage, parent, token, self.get_last_spine_operator(parent), parent.last_signature_nodes, parent.header_node)
+                    if column in SPINE_OPERATIONS:
+                        token = SpineOperationToken(column)
 
-                            if column == '*-':
-                                if node.last_spine_operator_node is not None:
-                                    node.last_spine_operator_node.token.cancelled_at_stage = tree_stage
-                                pass # it's terminated, no continuation
-                            elif column == "*+" or column == "*^":
-                                next_stage_parents.append(node)
-                                next_stage_parents.append(node) # twice, the next stage two children will have this one as parent
-                            elif column == "*v":
-                                if node.last_spine_operator_node is not None:
-                                    node.last_spine_operator_node.token.cancelled_at_stage = tree_stage
+                        if icolumn >= len(prev_stage_parents):
+                            raise Exception(f'Expected at least {icolumn+1} parents in row {row_number}, but found {len(prev_stage_parents)}: {row}')
 
-                                if icolumn == 0 or row[icolumn-1] != '*v' or prev_stage_parents[icolumn-1].header_node != prev_stage_parents[icolumn].header_node: # don't collapse two different spines
-                                    next_stage_parents.append(node) # just one spine each two
-                            else:
-                                raise Exception(f'Unknown spine operator {column}')
-                        else:  # column is not a spine operation
-                            if column.startswith("!"):
-                                token = FieldCommentToken(column)
-                            else:
-                                if prev_stage_parents is None:
-                                    raise ValueError(f'The token in column #{icolumn} and row #{row_number - 1}'
-                                                     f' was not created correctly. Error detected in '
-                                                     f'column #{icolumn} in row #{row_number}. '
-                                                     f'Found {column.split(" ")[-1]}. ')
-                                parent = prev_stage_parents[icolumn]
-                                if not parent:
-                                    raise Exception(f'Cannot find a parent node for column #{icolumn} in row {row_number}')
-                                if not parent.header_node:
-                                    raise Exception(f'Cannot find a header node for column #{icolumn} in row {row_number}')
-                                importer = importers.get(parent.header_node.token.encoding)
-                                if not importer:
-                                    raise Exception(f'Cannot find an importer for header {parent.header_node.token.encoding}')
-                                try:
-                                    token = importer.import_token(column)
-                                except Exception as error:
-                                    token = ErrorToken(column, row_number, str(error))
-                                    self.errors.append(token)
-                            if not token:
-                                raise Exception(
-                                    f'No token generated for input {column} in row number #{row_number} using importer {importer}')
+                        parent = prev_stage_parents[icolumn]
+                        node = tree.add_node(tree_stage, parent, token, self.get_last_spine_operator(parent), parent.last_signature_nodes, parent.header_node)
 
-                            parent = prev_stage_parents[icolumn]
-                            node = tree.add_node(tree_stage, parent, token, self.get_last_spine_operator(parent), parent.last_signature_nodes, parent.header_node)
+                        if column == '*-':
+                            if node.last_spine_operator_node is not None:
+                                node.last_spine_operator_node.token.cancelled_at_stage = tree_stage
+                            pass # it's terminated, no continuation
+                        elif column == "*+" or column == "*^":
                             next_stage_parents.append(node)
+                            next_stage_parents.append(node) # twice, the next stage two children will have this one as parent
+                        elif column == "*v":
+                            if node.last_spine_operator_node is not None:
+                                node.last_spine_operator_node.token.cancelled_at_stage = tree_stage
 
-                            if token.category == TokenCategory.BARLINES or token.category == TokenCategory.CORE and len(
-                                    document.measure_start_tree_stages) == 0:
-                                is_barline = True
-                            elif isinstance(token, BoundingBoxToken):
-                                self.handle_bounding_box(document, token)
-                            elif isinstance(token, SignatureToken):
-                                node.last_signature_nodes.update(node)
+                            if icolumn == 0 or row[icolumn-1] != '*v' or prev_stage_parents[icolumn-1].header_node != prev_stage_parents[icolumn].header_node: # don't collapse two different spines
+                                next_stage_parents.append(node) # just one spine each two
+                        else:
+                            raise Exception(f'Unknown spine operator {column}')
+                    else:  # column is not a spine operation
+                        if column.startswith("!"):
+                            token = FieldCommentToken(column)
+                        else:
+                            if prev_stage_parents is None:
+                                raise ValueError(f'The token in column #{icolumn} and row #{row_number - 1}'
+                                                 f' was not created correctly. Error detected in '
+                                                 f'column #{icolumn} in row #{row_number}. '
+                                                 f'Found {column.split(" ")[-1]}. ')
+                            parent = prev_stage_parents[icolumn]
+                            if not parent:
+                                raise Exception(f'Cannot find a parent node for column #{icolumn} in row {row_number}')
+                            if not parent.header_node:
+                                raise Exception(f'Cannot find a header node for column #{icolumn} in row {row_number}')
+                            importer = importers.get(parent.header_node.token.encoding)
+                            if not importer:
+                                raise Exception(f'Cannot find an importer for header {parent.header_node.token.encoding}')
+                            try:
+                                token = importer.import_token(column)
+                            except Exception as error:
+                                token = ErrorToken(column, row_number, str(error))
+                                self.errors.append(token)
+                        if not token:
+                            raise Exception(
+                                f'No token generated for input {column} in row number #{row_number} using importer {importer}')
+
+                        parent = prev_stage_parents[icolumn]
+                        node = tree.add_node(tree_stage, parent, token, self.get_last_spine_operator(parent), parent.last_signature_nodes, parent.header_node)
+                        next_stage_parents.append(node)
+
+                        if token.category == TokenCategory.BARLINES or token.category == TokenCategory.CORE and len(
+                                document.measure_start_tree_stages) == 0:
+                            is_barline = True
+                        elif isinstance(token, BoundingBoxToken):
+                            self.handle_bounding_box(document, token)
+                        elif isinstance(token, SignatureToken):
+                            node.last_signature_nodes.update(node)
 
                 if is_barline:
                     document.measure_start_tree_stages.append(tree_stage)
