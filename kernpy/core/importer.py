@@ -123,7 +123,7 @@ class Importer:
                             if icolumn == 0 or row[icolumn-1] != '*v' or prev_stage_parents[icolumn-1].header_node != prev_stage_parents[icolumn].header_node: # don't collapse two different spines
                                 next_stage_parents.append(node) # just one spine each two
                         else:
-                            raise Exception(f'Unknown spine operator {column}')
+                            raise Exception(f'Unknown spine operation in column #{column} and row #{row_number}')
                     else:  # column is not a spine operation
                         if column.startswith("!"):
                             token = FieldCommentToken(column)
