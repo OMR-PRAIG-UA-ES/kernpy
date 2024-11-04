@@ -2,6 +2,7 @@ import csv
 import io
 from copy import copy
 from pathlib import Path
+from typing import List
 
 from kernpy.core.tokens import TokenCategory, SignatureToken, MetacommentToken, HeaderToken, SpineOperationToken, \
     FieldCommentToken, ErrorToken, \
@@ -79,29 +80,7 @@ class Importer:
                         continue
 
                     if column in SPINE_OPERATIONS:
-                        token = SpineOperationToken(column)
-
-                        if icolumn >= len(self._prev_stage_parents):
-                            raise Exception(f'Expected at least {icolumn+1} parents in row {self._row_number}, but found {len(self._prev_stage_parents)}: {row}')
-
-                        parent = self._prev_stage_parents[icolumn]
-                        node = self._tree.add_node(self._tree_stage, parent, token, self.get_last_spine_operator(parent), parent.last_signature_nodes, parent.header_node)
-
-                        if column == '*-':
-                            if node.last_spine_operator_node is not None:
-                                node.last_spine_operator_node.token.cancelled_at_stage = self._tree_stage
-                            pass # it's terminated, no continuation
-                        elif column == "*+" or column == "*^":
-                            self._next_stage_parents.append(node)
-                            self._next_stage_parents.append(node) # twice, the next stage two children will have this one as parent
-                        elif column == "*v":
-                            if node.last_spine_operator_node is not None:
-                                node.last_spine_operator_node.token.cancelled_at_stage = self._tree_stage
-
-                            if icolumn == 0 or row[icolumn-1] != '*v' or self._prev_stage_parents[icolumn-1].header_node != self._prev_stage_parents[icolumn].header_node: # don't collapse two different spines
-                                self._next_stage_parents.append(node) # just one spine each two
-                        else:
-                            raise Exception(f'Unknown spine operation in column #{column} and row #{self._row_number}')
+                        self._compute_spine_operator(icolumn, column, row)
                     else:  # column is not a spine operation
                         if column.startswith("!"):
                             token = FieldCommentToken(column)
@@ -267,3 +246,27 @@ class Importer:
         node.header_node = node # this value will be propagated
         self._next_stage_parents.append(node)
 
+    def _compute_spine_operator(self, column_index: int, column_content: str, row: List[str]):
+        token = SpineOperationToken(column_content)
+
+        if column_index >= len(self._prev_stage_parents):
+            raise Exception(f'Expected at least {column_index+1} parents in row {self._row_number}, but found {len(self._prev_stage_parents)}: {row}')
+
+        parent = self._prev_stage_parents[column_index]
+        node = self._tree.add_node(self._tree_stage, parent, token, self.get_last_spine_operator(parent), parent.last_signature_nodes, parent.header_node)
+
+        if column_content == '*-':
+            if node.last_spine_operator_node is not None:
+                node.last_spine_operator_node.token.cancelled_at_stage = self._tree_stage
+            pass # it's terminated, no continuation
+        elif column_content == "*+" or column_content == "*^":
+            self._next_stage_parents.append(node)
+            self._next_stage_parents.append(node) # twice, the next stage two children will have this one as parent
+        elif column_content == "*v":
+            if node.last_spine_operator_node is not None:
+                node.last_spine_operator_node.token.cancelled_at_stage = self._tree_stage
+
+            if column_index == 0 or row[column_index-1] != '*v' or self._prev_stage_parents[column_index-1].header_node != self._prev_stage_parents[column_index].header_node: # don't collapse two different spines
+                self._next_stage_parents.append(node) # just one spine each two
+        else:
+            raise Exception(f'Unknown spine operation in column #{column_content} and row #{self._row_number}')
