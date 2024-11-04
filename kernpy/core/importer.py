@@ -71,16 +71,16 @@ class Importer:
             self._next_stage_parents = []
 
             if row[0].startswith("!!"):
-                self._compute_metacomment(row[0].strip())
+                self._compute_metacomment_token(row[0].strip())
             else:
                 for icolumn, column in enumerate(row):
                     if column in HEADERS:
-                        self._compute_header(icolumn, column)
+                        self._compute_header_token(icolumn, column)
                         # go to next row
                         continue
 
                     if column in SPINE_OPERATIONS:
-                        self._compute_spine_operator(icolumn, column, row)
+                        self._compute_spine_operator_token(icolumn, column, row)
                     else:  # column is not a spine operation
                         if column.startswith("!"):
                             token = FieldCommentToken(column)
@@ -219,7 +219,7 @@ class Importer:
         """
         return len(self.errors) > 0
 
-    def _compute_metacomment(self, raw_token: str):
+    def _compute_metacomment_token(self, raw_token: str):
         token = MetacommentToken(raw_token)
         if self._header_row_number is None:
             node = self._tree.add_node(self._tree_stage, self._last_node_previous_to_header, token, None, None, None)
@@ -229,7 +229,7 @@ class Importer:
                 node = self._tree.add_node(self._tree_stage, parent, token, self.get_last_spine_operator(parent), parent.last_signature_nodes, parent.header_node) # the same reference for all spines - TODO Recordar documentarlo
                 self._next_stage_parents.append(node)
 
-    def _compute_header(self, column_index: int, column_content: str):
+    def _compute_header_token(self, column_index: int, column_content: str):
         if self._header_row_number is not None and self._header_row_number != self._row_number:
             raise Exception(
                 f"Several header rows not supported, there is a header row in #{self._header_row_number} and another in #{self._row_number} ")
@@ -246,7 +246,7 @@ class Importer:
         node.header_node = node # this value will be propagated
         self._next_stage_parents.append(node)
 
-    def _compute_spine_operator(self, column_index: int, column_content: str, row: List[str]):
+    def _compute_spine_operator_token(self, column_index: int, column_content: str, row: List[str]):
         token = SpineOperationToken(column_content)
 
         if column_index >= len(self._prev_stage_parents):
