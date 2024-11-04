@@ -70,15 +70,7 @@ class Importer:
             self._next_stage_parents = []
 
             if row[0].startswith("!!"):
-                token = MetacommentToken(row[0].strip())
-                if self._header_row_number is None:
-                    # it has no header, so it creates the header
-                    node = self._tree.add_node(self._tree_stage, self._last_node_previous_to_header, token, None, None, None)
-                    self._last_node_previous_to_header = node
-                else:
-                    for parent in self._prev_stage_parents:
-                        node = self._tree.add_node(self._tree_stage, parent, token, self.get_last_spine_operator(parent), parent.last_signature_nodes, parent.header_node) # the same reference for all spines - TODO Recordar documentarlo
-                        self._next_stage_parents.append(node)
+                self._compute_metacomment(row[0].strip())
             else:
                 for icolumn, column in enumerate(row):
                     if column in HEADERS:
@@ -262,3 +254,14 @@ class Importer:
             False
         """
         return len(self.errors) > 0
+
+    def _compute_metacomment(self, raw_token: str):
+        token = MetacommentToken(raw_token)
+        if self._header_row_number is None:
+            node = self._tree.add_node(self._tree_stage, self._last_node_previous_to_header, token, None, None, None)
+            self._last_node_previous_to_header = node
+        else:
+            for parent in self._prev_stage_parents:
+                node = self._tree.add_node(self._tree_stage, parent, token, self.get_last_spine_operator(parent), parent.last_signature_nodes, parent.header_node) # the same reference for all spines - TODO Recordar documentarlo
+                self._next_stage_parents.append(node)
+
