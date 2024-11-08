@@ -2,7 +2,7 @@ from copy import copy, deepcopy
 from collections import deque, defaultdict
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Union
 from collections.abc import Sequence
 from queue import Queue
 
@@ -322,11 +322,11 @@ class Document:
 
     FIRST_MEASURE = 1
 
-    def get_header_stage(self) -> list[Node] | list[list[Node]]:
+    def get_header_stage(self) -> Union[List[Node], List[List[Node]]]:
         """
         Get the Node list of the header stage.
 
-        Returns: (List[Node] | List[List[Node]]) The Node list of the header stage.
+        Returns: (Union[List[Node], List[List[Node]]]) The Node list of the header stage.
 
         Raises: Exception - If the document has no header stage.
         """
