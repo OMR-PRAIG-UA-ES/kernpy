@@ -41,3 +41,7 @@ class ImporterTestCase(unittest.TestCase):
         with self.assertRaises(ValueError):
             doc, err = kp.create(wrong_headers_kern_score)
 
+    def test_raise_wrong_number_of_columns(self):
+        input_kern_file = 'resource_dir/samples/wrong_number_of_columns.krn'
+        with self.assertRaises(ValueError):
+            doc, err = kp.read(input_kern_file)
