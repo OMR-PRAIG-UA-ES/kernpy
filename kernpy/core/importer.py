@@ -86,12 +86,16 @@ class Importer:
                             token = FieldCommentToken(column)
                         else:
                             if self._prev_stage_parents is None:
-                                raise ValueError(f'The token in column #{icolumn} and row #{self._row_number - 1}'
+                                raise ValueError(f'Expected a previous line with valid content. '
+                                                 f'The token in column #{icolumn} and row #{self._row_number - 1}'
                                                  f' was not created correctly. Error detected in '
                                                  f'column #{icolumn} in row #{self._row_number}. '
-                                                 f'Found {column.split(" ")[-1]}. ')
+                                                 f'Found {column}. ')
                             if icolumn >= len(self._prev_stage_parents):
-                                raise ValueError(f'The token in column #{icolumn} and row #{self._row_number - 1}'
+                                # TODO: Try to fix the kern in runtime. Add options to public API
+                                # continue ignore the column
+                                raise ValueError(f'Wrong columns number in row {self._row_number}. '
+                                                 f'The token in column #{icolumn} and row #{self._row_number}'
                                                  f' has more columns than expected in its row. '
                                                  f'Expected {len(self._prev_stage_parents)} columns '
                                                  f'but found {len(row)}.')
