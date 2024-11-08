@@ -29,17 +29,9 @@ class ImporterTestCase(unittest.TestCase):
         self.assertListEqual([0, 1, 2, 3, 4, 5], spines_ids)
 
     def test_raise_handled_exception_when_can_not_import(self):
-        wrong_headers_kern_score = ('**kekern\n'
-                                    '*mclefF4\n'
-                                    '*M2/2\n'
-                                    '4cc\n'
-                                    '8dd\n'
-                                    '8dd\n'
-                                    '2g\n'
-                                    '==\n'
-                                    '*_')
+        input_kern_file = 'resource_dir/samples/wrong_header.krn'
         with self.assertRaises(ValueError):
-            doc, err = kp.create(wrong_headers_kern_score)
+            doc, err = kp.read(input_kern_file)
 
     def test_raise_wrong_number_of_columns(self):
         input_kern_file = 'resource_dir/samples/wrong_number_of_columns.krn'
