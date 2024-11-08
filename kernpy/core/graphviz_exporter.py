@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pathlib import Path
 
 from kernpy.core import Token, SpineOperationToken

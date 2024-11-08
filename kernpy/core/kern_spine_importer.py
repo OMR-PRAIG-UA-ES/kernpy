@@ -1,4 +1,4 @@
-import string
+from __future__ import annotations
 
 from antlr4 import InputStream, CommonTokenStream, ParseTreeWalker, BailErrorStrategy, \
     PredictionMode
@@ -254,7 +254,7 @@ class ErrorListener(ConsoleErrorListener):
 
 
 class KernSpineImporter(SpineImporter):
-    def import_token(self, token: string):
+    def import_token(self, token: str):
         if not token:
             raise Exception('Input token is empty')
         # self.listenerImporter = KernListenerImporter(token) # TODO ¿Por qué no va esto?

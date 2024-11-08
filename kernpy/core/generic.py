@@ -3,6 +3,8 @@ Public API for KernPy.
 
 The main functions for handling the input and output of **kern files are provided here.
 """
+from __future__ import annotations
+
 from pathlib import Path
 from typing import List, Optional, Any, Union
 from collections.abc import Sequence

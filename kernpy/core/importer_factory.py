@@ -1,4 +1,4 @@
-import string
+from __future__ import annotations
 
 from .dyn_importer import DynSpineImporter
 from .dynam_spine_importer import DynamSpineImporter
@@ -12,7 +12,7 @@ from .spine_importer import SpineImporter
 from .text_spine_importer import TextSpineImporter
 
 
-def createImporter(spine_type: string) -> SpineImporter:
+def createImporter(spine_type: str) -> SpineImporter:
     if spine_type == '**mens':
         return MensSpineImporter()
     elif spine_type == '**kern':
