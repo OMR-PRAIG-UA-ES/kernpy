@@ -90,6 +90,11 @@ class Importer:
                                                  f' was not created correctly. Error detected in '
                                                  f'column #{icolumn} in row #{self._row_number}. '
                                                  f'Found {column.split(" ")[-1]}. ')
+                            if icolumn >= len(self._prev_stage_parents):
+                                raise ValueError(f'The token in column #{icolumn} and row #{self._row_number - 1}'
+                                                 f' has more columns than expected in its row. '
+                                                 f'Expected {len(self._prev_stage_parents)} columns '
+                                                 f'but found {len(row)}.')
                             parent = self._prev_stage_parents[icolumn]
                             if not parent:
                                 raise Exception(f'Cannot find a parent node for column #{icolumn} in row {self._row_number}')
