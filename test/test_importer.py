@@ -1,5 +1,6 @@
 import unittest
 import os
+from pathlib import Path
 
 import kernpy as kp
 
@@ -37,3 +38,18 @@ class ImporterTestCase(unittest.TestCase):
         input_kern_file = 'resource_dir/samples/wrong_number_of_columns.krn'
         with self.assertRaises(ValueError):
             doc, err = kp.read(input_kern_file)
+
+    def test_fix_error_wrong_number_of_columns(self):
+        # Arrange
+        input_kern_file = 'resource_dir/samples/wrong_number_of_columns.krn'
+        output_kern_file = 'resource_dir/samples/wrong_number_of_columns_fixed.krn'
+        with open(output_kern_file, 'r') as f:
+            expected_content = f.read()
+
+        # Act
+        doc, err = kp.read(input_kern_file)
+        real_content = kp.export(doc, kp.ExportOptions())
+
+        # Assert
+        self.assertEqual(expected_content, real_content)
+

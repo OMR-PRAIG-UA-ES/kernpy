@@ -2,7 +2,7 @@ import csv
 import io
 from copy import copy
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 from kernpy.core.tokens import TokenCategory, SignatureToken, MetacommentToken, HeaderToken, SpineOperationToken, \
     FieldCommentToken, ErrorToken, \
@@ -93,7 +93,7 @@ class Importer:
                                                  f'Found {column}. ')
                             if icolumn >= len(self._prev_stage_parents):
                                 # TODO: Try to fix the kern in runtime. Add options to public API
-                                # continue ignore the column
+                                # continue  # ignore the column
                                 raise ValueError(f'Wrong columns number in row {self._row_number}. '
                                                  f'The token in column #{icolumn} and row #{self._row_number}'
                                                  f' has more columns than expected in its row. '
