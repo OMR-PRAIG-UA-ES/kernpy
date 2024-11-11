@@ -54,3 +54,7 @@ class ImporterTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(expected_content, real_content)
 
+    def test_has_instrument_tokens(self):
+        input_kern_file = 'resource_dir/legacy/chor001.krn'
+        doc, err = kp.read(input_kern_file)
+        self.assertTrue(len(doc.get_all_tokens(filter_by_categories=[kp.TokenCategory.INSTRUMENTS])) > 0)
