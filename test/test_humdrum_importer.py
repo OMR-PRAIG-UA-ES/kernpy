@@ -740,6 +740,21 @@ class ImporterTestCase(unittest.TestCase):
                     for token in tokens:
                         self.assertEqual(measure, token)
 
+    def test_kern_with_first_measure_is_exported_without_the_measure_number_in_all_spines(self):
+        # Arrange
+        input_kern_file = 'resource_dir/samples/haydn-sonate-15_1-original.krn'
+        output_kern_file = 'resource_dir/samples/haydn-sonate-15_1-output.krn'
+        with open(output_kern_file, 'r') as f:
+            expected_output = f.read()
+
+        # Act
+        doc, err = kp.read(input_kern_file)
+        real_output = kp.export(doc, kp.ExportOptions())
+        kp.store_graph(doc, '/tmp/graph.dot')
+
+        # Assert
+        self.assertEqual(expected_output, real_output)
+
 
 if __name__ == '__main__':
     unittest.main()
