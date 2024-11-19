@@ -1,0 +1,49 @@
+!!!COM: Chopin, Frederic
+!!!CDT: 1810///-1849///
+!!!OTL: Mazurka in B Minor, Op. 30, No. 2
+!!!OPS: Op. 30
+!!!ONM: No. 2
+!!!ODT: 1837///
+!!!ODE: Princess Maria Czartoryska W&uuml;rttemberg
+!!!AIN: piano
+!!!OMD: Allegretto.
+**kern	**kern	**dynam
+*staff2	*staff1	*staff1
+*Ipiano	*Ipiano	*Ipiano
+*clefF4	*clefG2	*clefG2
+*k[f#c#]	*k[f#c#]	*k[f#c#]
+*b:	*b:	*b:
+*M3/4	*M3/4	*M3/4
+*MM208	*MM208	*MM208
+4r	(4dd	.
+=1	=1	=1
+*ped	*	*
+4BB	12ddL	p
+.	12ee	.
+.	12ddJ	.
+4F# 4d	4cc#	.
+4F# 4d	4b	.
+*Xped	*	*
+=2	=2	=2
+*ped	*	*
+4FF#	8a#L	.
+.	8g 8ggJ	.
+4F# 4A# 4e	2f# 2ff#)	.
+4F# 4A# 4e	.	.
+*Xped	*	*
+=3	=3	=3
+*ped	*	*
+.	8ddq/	.
+4BB	(12ddL	f
+.	12ee	.
+.	12ddJ	.
+4F# 4d	4cc#	.
+4F# 4d	4b	.
+*Xped	*	*
+=4	=4	=4
+*ped	*	*
+4FF#	8a^L	.
+.	8g#^J	.
+4F# 4A 4c#	4f#^)	.
+4F# 4A 4c#	4r	.
+*Xped	*	*
