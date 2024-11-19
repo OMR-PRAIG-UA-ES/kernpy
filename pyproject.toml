@@ -4,14 +4,14 @@ build-backend = "hatchling.build"
 
 [project]
 name = "kernpy"
-version = "0.2.1"
+version = "0.3.0"
 authors = [
     { name = "David Rizo Valero", email = "drizo@ua.es"},
     { name = "Joan Cerveto Serrano", email = "joan.cerveto@ua.es"}
 ]
 description = "Python Humdrum **kern and **mens utilities"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
