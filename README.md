@@ -152,6 +152,7 @@ for page_label, bounding_box_measure in doc.page_bounding_boxes.items():
 
 ```python
 # NOT AVAILABLE YET!!!
+# Pay attention to `kp.merge`.
 # Concat two documents
 score_a = '**kern\n*clefG2\n=1\n4c\n4d\n4e\n4f\n*-\n'
 score_b = '**kern\n*clefG2\n=1\n4a\n4c\n4d\n4c\n*-\n'
@@ -159,6 +160,22 @@ concatenated = kp.concat(
     contents=[score_a, score_b],
     options=kp.ExportOptions(kern_type=kp.KernTypeExporter.eKern),
 )
+```
+
+# Merge sorted fragments of the same score
+```python
+fragment_a = '**kern\n*clefG2\n=1\n4c\n4d\n4e\n4f\n*-\n'
+fragment_b = '=2\n4a\n4c\n4d\n4c\n*-\n=3\n4a\n4c\n4d\n4c\n*-\n'
+fragment_c = '=4\n4a\n4c\n4d\n4c\n*-\n=5\n4a\n4c\n4d\n4c\n*-\n'
+fragment_d = '=6\n4a\n4c\n4d\n4c\n*-\n=7\n4a\n4c\n4d\n4c\n*-\n==*-'
+fragments = [fragment_a, fragment_b, fragment_c, fragment_d]
+
+doc_merged, indexes = kp.merge(fragments)
+for index_pair in indexes:
+    from_measure, to_measure = index_pair
+    options = kp.ExportOptions(from_measure=from_measure, to_measure=to_measure)
+    print(f'From measure: {from_measure}, To measure: {to_measure}')
+    print(kp.export(doc_merged, options))
 ```
 
 
