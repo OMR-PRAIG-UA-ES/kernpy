@@ -84,3 +84,22 @@ class GenericTestCase(unittest.TestCase):
         # Assert
         self.assertIsInstance(doc, kp.Document)
 
+    def test_merge_1(self):
+        # Arrange
+        path_names = ['0_0.krn', '0_1.krn', '0_2.krn', '0_3.krn', '0_4.krn', '0_5.krn', '0_6.krn',
+                      '0_7.krn', '0_8.krn', '0_9.krn', '0_10.krn', '0_11.krn']
+        paths = [os.path.join('resource_dir', 'merge', p) for p in path_names]
+        contents = [open(p, 'r').read() for p in paths]
+        expected_indexes = [(0, 4), (4, 10), (10, 15), (15, 20), (20, 25), (25, 30), (30, 36), (36, 42), (42, 48),
+                            (48, 53), (53, 58), (58, 65)]
+
+        # Act
+        doc, real_indexes = kp.merge(contents)
+
+        # Assert
+        self.assertIsInstance(doc, kp.Document)
+        self.assertListEqual(expected_indexes, real_indexes)
+        kp.store_graph(doc, '/tmp/test_merge_1.dot')
+        kp.store(doc, '/tmp/test_merge_1.krn', kp.ExportOptions())
+
+
