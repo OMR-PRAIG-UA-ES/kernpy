@@ -1219,6 +1219,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#kernpy.merge" class="md-nav__link">
+    <span class="md-ellipsis">
+      merge
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#kernpy.read" class="md-nav__link">
     <span class="md-ellipsis">
       read
@@ -1982,6 +1991,15 @@
   <a href="#kernpy.core.Generic.get_spine_types" class="md-nav__link">
     <span class="md-ellipsis">
       get_spine_types
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Generic.merge" class="md-nav__link">
+    <span class="md-ellipsis">
+      merge
     </span>
   </a>
   
@@ -2826,6 +2844,15 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kernpy.core.merge" class="md-nav__link">
+    <span class="md-ellipsis">
+      merge
+    </span>
+  </a>
   
 </li>
       
@@ -4176,6 +4203,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#kernpy.merge" class="md-nav__link">
+    <span class="md-ellipsis">
+      merge
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#kernpy.read" class="md-nav__link">
     <span class="md-ellipsis">
       read
@@ -4939,6 +4975,15 @@
   <a href="#kernpy.core.Generic.get_spine_types" class="md-nav__link">
     <span class="md-ellipsis">
       get_spine_types
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Generic.merge" class="md-nav__link">
+    <span class="md-ellipsis">
+      merge
     </span>
   </a>
   
@@ -5783,6 +5828,15 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kernpy.core.merge" class="md-nav__link">
+    <span class="md-ellipsis">
+      merge
+    </span>
+  </a>
   
 </li>
       
@@ -10817,6 +10871,50 @@ for krn_file in krn_files:
 <div class="doc doc-object doc-function">
 
 
+<h2 id="kernpy.merge" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">merge</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <pre><code>Merge multiple **kern fragments into a single Document object.
+
+Args:
+    contents (Sequence[str]): List of **kern strings
+
+Returns (Tuple[Document, List[Tuple[int, int]]]): Document object and       and a List of Pairs (Tuple[int, int]) representing the measure fragment indexes of the merged document.
+
+Examples:
+    &gt;&gt;&gt; import kernpy as kp
+    &gt;&gt;&gt; contents = ['**kern
+</code></pre>
+<p>4e
+4f
+4g
+<em>-
+', '4a
+4b
+4c
+</em>-
+=
+', '4d
+4e
+4f
+*-
+']
+        &gt;&gt;&gt; document, indexes = kp.merge(contents)
+        &gt;&gt;&gt; indexes
+        [(0, 3), (3, 6), (6, 9)]</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h2 id="kernpy.read" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
@@ -14996,6 +15094,56 @@ Usually these are comments starting with <code>!!!</code>.</p>
 <div class="doc doc-object doc-function">
 
 
+<h3 id="kernpy.core.Generic.merge" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">merge</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>contents</code></td>
+            <td>
+                  <code><span title="collections.abc.Sequence">Sequence</span>[str]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+        <p>Returns:</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h3 id="kernpy.core.Generic.read" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
@@ -18431,6 +18579,50 @@ for krn_file in krn_files:
     kern_to_ekern_wrapper(krn_file, output_file)
 </code></pre>
 </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="kernpy.core.merge" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">merge</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <pre><code>Merge multiple **kern fragments into a single Document object.
+
+Args:
+    contents (Sequence[str]): List of **kern strings
+
+Returns (Tuple[Document, List[Tuple[int, int]]]): Document object and       and a List of Pairs (Tuple[int, int]) representing the measure fragment indexes of the merged document.
+
+Examples:
+    &gt;&gt;&gt; import kernpy as kp
+    &gt;&gt;&gt; contents = ['**kern
+</code></pre>
+<p>4e
+4f
+4g
+<em>-
+', '4a
+4b
+4c
+</em>-
+=
+', '4d
+4e
+4f
+*-
+']
+        &gt;&gt;&gt; document, indexes = kp.merge(contents)
+        &gt;&gt;&gt; indexes
+        [(0, 3), (3, 6), (6, 9)]</p>
+
     </div>
 
 </div>
