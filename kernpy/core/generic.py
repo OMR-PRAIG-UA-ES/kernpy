@@ -6,7 +6,7 @@ The main functions for handling the input and output of **kern files are provide
 from __future__ import annotations
 
 from pathlib import Path
-from typing import List, Optional, Any, Union
+from typing import List, Optional, Any, Union, Tuple
 from collections.abc import Sequence
 
 from kernpy.core import Importer, Document, Exporter, ExportOptions, GraphvizExporter
@@ -177,6 +177,41 @@ class Generic:
             document=doc_a,
             options=options
         )
+
+    @classmethod
+    def merge(
+            cls,
+            contents: Sequence[str]
+    ) -> Tuple[Document, List[Tuple[int, int]]]:
+        """
+
+        Args:
+            contents:
+
+        Returns:
+
+        """
+        # Raw kern content
+        raw_kern = ''
+        document = None
+        first_fragment_document, _ = cls.create(contents[0])
+        indexes = []
+        low_index = 0
+        high_index = 0
+
+        # Merge all fragments
+        for content in contents:
+            raw_kern += '\n' + content
+            document, _ = cls.create(raw_kern)
+            high_index = document.measures_count()
+            indexes.append((low_index, high_index))
+
+            low_index = high_index
+
+        return document, indexes
+
+
+
 
 
 def read(
@@ -371,4 +406,28 @@ def concat(
         contents=contents,
         options=options,
         strict=strict
+    )
+
+
+def merge(
+        contents: Sequence[str],
+) -> Tuple[Document, List[Tuple[int, int]]]:
+    """
+    Merge multiple **kern fragments into a single Document object.
+
+    Args:
+        contents (Sequence[str]): List of **kern strings
+
+    Returns (Tuple[Document, List[Tuple[int, int]]]): Document object and \
+      and a List of Pairs (Tuple[int, int]) representing the measure fragment indexes of the merged document.
+
+    Examples:
+        >>> import kernpy as kp
+        >>> contents = ['**kern\n4e\n4f\n4g\n*-\n', '4a\n4b\n4c\n*-\n=\n', '4d\n4e\n4f\n*-\n']
+        >>> document, indexes = kp.merge(contents)
+        >>> indexes
+        [(0, 3), (3, 6), (6, 9)]
+    """
+    return Generic.merge(
+        contents=contents
     )

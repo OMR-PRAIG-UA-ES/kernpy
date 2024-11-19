@@ -58,6 +58,7 @@ __all__ = [
     'get_spine_types',
     'concat',
     'createImporter',
+    'merge'
 ]
 
 
