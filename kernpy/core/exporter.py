@@ -160,7 +160,7 @@ def empty_row(row):
 
 class Exporter:
     def export_string(self, document: Document, options: ExportOptions) -> str:
-        Exporter.export_options_validator(document, options)
+        self.export_options_validator(document, options)
 
         rows = []
 
@@ -349,8 +349,8 @@ class Exporter:
         only_spine_types = rows[0] if len(rows) > 0 else []  # **kern, **mens, etc... are always in the first row
         return only_spine_types
 
-    @staticmethod
-    def export_options_validator(document: Document, options: ExportOptions) -> None:
+    @classmethod
+    def export_options_validator(cls, document: Document, options: ExportOptions) -> None:
         """
         Validate the export options. Raise an exception if the options are invalid.
 
