@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.44">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.45">
     
     
       
@@ -10872,7 +10872,7 @@ for krn_file in krn_files:
 
 
 <h2 id="kernpy.merge" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">merge</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">merge</span><span class="p">(</span><span class="n">contents</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></code>
 
 </h2>
 
@@ -10883,8 +10883,10 @@ for krn_file in krn_files:
 
 Args:
     contents (Sequence[str]): List of **kern strings
-
-Returns (Tuple[Document, List[Tuple[int, int]]]): Document object and       and a List of Pairs (Tuple[int, int]) representing the measure fragment indexes of the merged document.
+    separator (Optional[str]): Separator string to separate the **kern fragments. Default is '
+</code></pre>
+<p>' (newline).</p>
+<pre><code>Returns (Tuple[Document, List[Tuple[int, int]]]): Document object and       and a List of Pairs (Tuple[int, int]) representing the measure fragment indexes of the merged document.
 
 Examples:
     &gt;&gt;&gt; import kernpy as kp
@@ -10905,6 +10907,13 @@ Examples:
 *-
 ']
         &gt;&gt;&gt; document, indexes = kp.merge(contents)
+        &gt;&gt;&gt; indexes
+        [(0, 3), (3, 6), (6, 9)]
+        &gt;&gt;&gt; document, indexes = kp.merge(contents, separator='
+')
+        &gt;&gt;&gt; indexes
+        [(0, 3), (3, 6), (6, 9)]
+        &gt;&gt;&gt; document, indexes = kp.merge(contents, separator='')
         &gt;&gt;&gt; indexes
         [(0, 3), (3, 6), (6, 9)]</p>
 
@@ -15095,7 +15104,7 @@ Usually these are comments starting with <code>!!!</code>.</p>
 
 
 <h3 id="kernpy.core.Generic.merge" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">merge</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">merge</span><span class="p">(</span><span class="n">contents</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
@@ -15131,6 +15140,20 @@ Usually these are comments starting with <code>!!!</code>.</p>
             </td>
             <td>
                 <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>separator</code></td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[str]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
             </td>
           </tr>
       </tbody>
@@ -18587,7 +18610,7 @@ for krn_file in krn_files:
 
 
 <h2 id="kernpy.core.merge" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">merge</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">merge</span><span class="p">(</span><span class="n">contents</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></code>
 
 </h2>
 
@@ -18598,8 +18621,10 @@ for krn_file in krn_files:
 
 Args:
     contents (Sequence[str]): List of **kern strings
-
-Returns (Tuple[Document, List[Tuple[int, int]]]): Document object and       and a List of Pairs (Tuple[int, int]) representing the measure fragment indexes of the merged document.
+    separator (Optional[str]): Separator string to separate the **kern fragments. Default is '
+</code></pre>
+<p>' (newline).</p>
+<pre><code>Returns (Tuple[Document, List[Tuple[int, int]]]): Document object and       and a List of Pairs (Tuple[int, int]) representing the measure fragment indexes of the merged document.
 
 Examples:
     &gt;&gt;&gt; import kernpy as kp
@@ -18620,6 +18645,13 @@ Examples:
 *-
 ']
         &gt;&gt;&gt; document, indexes = kp.merge(contents)
+        &gt;&gt;&gt; indexes
+        [(0, 3), (3, 6), (6, 9)]
+        &gt;&gt;&gt; document, indexes = kp.merge(contents, separator='
+')
+        &gt;&gt;&gt; indexes
+        [(0, 3), (3, 6), (6, 9)]
+        &gt;&gt;&gt; document, indexes = kp.merge(contents, separator='')
         &gt;&gt;&gt; indexes
         [(0, 3), (3, 6), (6, 9)]</p>
 
