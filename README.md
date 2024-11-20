@@ -150,9 +150,10 @@ for page_label, bounding_box_measure in doc.page_bounding_boxes.items():
 
 ```
 
+### Concatenate different full kern scores
 ```python
 # NOT AVAILABLE YET!!!
-# Pay attention to `kp.merge`.
+# Pay attention to `kp.merge` too.
 # Concat two documents
 score_a = '**kern\n*clefG2\n=1\n4c\n4d\n4e\n4f\n*-\n'
 score_b = '**kern\n*clefG2\n=1\n4a\n4c\n4d\n4c\n*-\n'
@@ -176,6 +177,11 @@ for index_pair in indexes:
     options = kp.ExportOptions(from_measure=from_measure, to_measure=to_measure)
     print(f'From measure: {from_measure}, To measure: {to_measure}')
     print(kp.export(doc_merged, options))
+
+# Sometimes is useful having a different separator between the fragments rather than the default one (newline)...
+...
+fragments = [fragment_a, fragment_b, fragment_c, fragment_d]
+doc_merged, indexes = kp.merge(fragments, separator='')
 ```
 
 

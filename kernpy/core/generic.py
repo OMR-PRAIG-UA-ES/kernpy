@@ -181,12 +181,14 @@ class Generic:
     @classmethod
     def merge(
             cls,
-            contents: Sequence[str]
+            contents: Sequence[str],
+            separator: Optional[str] = None
     ) -> Tuple[Document, List[Tuple[int, int]]]:
         """
 
         Args:
             contents:
+            separator:
 
         Returns:
 
@@ -201,7 +203,7 @@ class Generic:
 
         # Merge all fragments
         for content in contents:
-            raw_kern += '\n' + content
+            raw_kern += separator + content
             document, _ = cls.create(raw_kern)
             high_index = document.measures_count()
             indexes.append((low_index, high_index))
@@ -411,12 +413,14 @@ def concat(
 
 def merge(
         contents: Sequence[str],
+        separator: Optional[str] = '\n'
 ) -> Tuple[Document, List[Tuple[int, int]]]:
     """
     Merge multiple **kern fragments into a single Document object.
 
     Args:
         contents (Sequence[str]): List of **kern strings
+        separator (Optional[str]): Separator string to separate the **kern fragments. Default is '\n' (newline).
 
     Returns (Tuple[Document, List[Tuple[int, int]]]): Document object and \
       and a List of Pairs (Tuple[int, int]) representing the measure fragment indexes of the merged document.
@@ -427,7 +431,14 @@ def merge(
         >>> document, indexes = kp.merge(contents)
         >>> indexes
         [(0, 3), (3, 6), (6, 9)]
+        >>> document, indexes = kp.merge(contents, separator='\n')
+        >>> indexes
+        [(0, 3), (3, 6), (6, 9)]
+        >>> document, indexes = kp.merge(contents, separator='')
+        >>> indexes
+        [(0, 3), (3, 6), (6, 9)]
     """
     return Generic.merge(
-        contents=contents
+        contents=contents,
+        separator=separator
     )

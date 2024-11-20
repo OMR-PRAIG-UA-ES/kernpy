@@ -102,4 +102,16 @@ class GenericTestCase(unittest.TestCase):
         kp.store_graph(doc, '/tmp/test_merge_1.dot')
         kp.store(doc, '/tmp/test_merge_1.krn', kp.ExportOptions())
 
+    def test_merge_with_separators(self):
+        # Arrange
+        path_names = ['0_0.krn', '0_1.krn', '0_2.krn', '0_3.krn', '0_4.krn', '0_5.krn', '0_6.krn',
+                      '0_7.krn', '0_8.krn', '0_9.krn', '0_10.krn', '0_11.krn']
+        paths = [os.path.join('resource_dir', 'merge', p) for p in path_names]
+        contents = [open(p, 'r').read() for p in paths]
+
+        # Act
+        # Should fail when not using a separator \n between content
+        with self.assertRaises(ValueError):
+            doc, real_indexes = kp.merge(contents, separator='')
+
 
