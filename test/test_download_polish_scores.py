@@ -37,6 +37,7 @@ class DownloadPolishScoresTestCase(unittest.TestCase):
             content2 = file2.read()
             self.assertEqual(content1, content2)
 
+    @unittest.skip("This test is too slow. Maybe we should mock the download. Comment this line to run the test")
     def test_convert_and_download_file(self):
         temp_dir = tempfile.mkdtemp()
         input_folder = 'resource_dir/polish/test1'
