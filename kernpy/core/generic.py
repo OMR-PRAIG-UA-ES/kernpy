@@ -194,9 +194,14 @@ class Generic:
 
         """
         # Raw kern content
+        if separator is None:
+            separator = '\n'
+
+        if len(contents) == 0:
+            raise ValueError("No contents to merge. At least one content is required.")
+
         raw_kern = ''
         document = None
-        first_fragment_document, _ = cls.create(contents[0])
         indexes = []
         low_index = 0
         high_index = 0
@@ -204,11 +209,14 @@ class Generic:
         # Merge all fragments
         for content in contents:
             raw_kern += separator + content
-            document, _ = cls.create(raw_kern)
+            document, _ = create(raw_kern)
             high_index = document.measures_count()
             indexes.append((low_index, high_index))
 
             low_index = high_index
+
+        if document is None:
+            raise Exception("Failed to merge the contents. The document is None.")
 
         return document, indexes
 
