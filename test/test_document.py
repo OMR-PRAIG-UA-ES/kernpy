@@ -9,6 +9,17 @@ import kernpy as kp
 
 
 class DocumentTestCase(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        # Read the basic score document once before all tests
+        cls.doc_organ_4_voices, _ = kp.read('resource_dir/legacy/chor048.krn')
+        cls.doc_piano, _ = kp.read('resource_dir/mozart/concerto-piano-12-allegro.krn')
+
+    def all_tokens_have_the_correct_category(self, doc: kp.Document, category: kp.TokenCategory):
+        tokens = doc.get_all_tokens(filter_by_categories=[category])
+        for token in tokens:
+            self.assertEqual(category, token.category)
+
     @unittest.skip
     def test_document_self_concat(self):
         # Arrange
@@ -88,5 +99,48 @@ class DocumentTestCase(unittest.TestCase):
             kp.store(new_doc, f'/tmp/test_{i}.krn', kp.ExportOptions())
         self.assertEqual(4, len(docs))
 
+    def test_has_categories_when_export(self):
+        data: dict = self.doc_piano.frequencies({t for t in kp.TokenCategory} - {kp.TokenCategory.BARLINES})
+        for k, v in data.items():
+            if '=' in k:
+                print(f"{k}: {v}")
 
+    def test_should_not_detect_barlines_tokens_with_non_barlines_category_0(self):
+        frequencies = self.doc_organ_4_voices.frequencies()
+        self.assertEqual(kp.TokenCategory.BARLINES.name, frequencies['=']['category'])
+
+    def test_should_not_detect_barlines_tokens_with_non_barlines_category_1(self):
+        frequencies = self.doc_organ_4_voices.frequencies()
+        self.assertEqual(kp.TokenCategory.BARLINES.name, frequencies['=1-']['category'])
+        self.assertEqual(kp.TokenCategory.BARLINES.name, frequencies['=2']['category'])
+        self.assertEqual(kp.TokenCategory.BARLINES.name, frequencies['=3']['category'])
+        self.assertEqual(kp.TokenCategory.BARLINES.name, frequencies['=4']['category'])
+        ...
+
+    def test_should_not_detect_barlines_tokens_with_non_barlines_category_2(self):
+        frequencies = self.doc_organ_4_voices.frequencies()
+        self.assertEqual(kp.TokenCategory.BARLINES.name, frequencies['====']['category'])
+
+    def test_should_not_detect_barlines_tokens_with_non_barlines_category_3(self):
+        frequencies = self.doc_piano.frequencies()
+        self.assertEqual(kp.TokenCategory.BARLINES.name, frequencies['==:|!']['category'])
+
+    def test_should_not_detect_barlines_tokens_with_non_barlines_category_4(self):
+        frequencies = self.doc_piano.frequencies()
+        self.assertEqual(kp.TokenCategory.BARLINES.name, frequencies['=94:|!|:']['category'])
+
+    def test_all_tokens_have_correct_category_get_all_tokens_core(self):
+        self.all_tokens_have_the_correct_category(self.doc_organ_4_voices, kp.TokenCategory.CORE)
+
+    def test_all_tokens_have_correct_category_get_all_tokens_barlines(self):
+        self.all_tokens_have_the_correct_category(self.doc_organ_4_voices, kp.TokenCategory.BARLINES)
+
+    def test_all_tokens_have_correct_category_get_all_tokens_dynamics(self):
+        self.all_tokens_have_the_correct_category(self.doc_organ_4_voices, kp.TokenCategory.DYNAMICS)
+
+    def test_all_tokens_have_correct_category_get_all_tokens_signatures(self):
+        self.all_tokens_have_the_correct_category(self.doc_organ_4_voices, kp.TokenCategory.SIGNATURES)
+
+    def test_all_tokens_have_correct_category_get_all_tokens_fingering(self):
+        self.all_tokens_have_the_correct_category(self.doc_organ_4_voices, kp.TokenCategory.FINGERING)
 
