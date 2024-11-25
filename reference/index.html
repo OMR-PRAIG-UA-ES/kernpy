@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.45">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.46">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.0253249f.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.6f8fc17f.min.css">
       
       
 
@@ -8565,7 +8565,7 @@ Args:
             <code class="highlight language-python"><span class="n">export_options_validator</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span></code>
 
   <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
   </span>
 
 </h3>
@@ -10881,6 +10881,9 @@ for krn_file in krn_files:
 
         <pre><code>Merge multiple **kern fragments into a single Document object.
 
+Warnings:
+    Processing a large number of files in a row may take some time.
+     This method performs as many `kp.read` operations as there are fragments to merge.
 Args:
     contents (Sequence[str]): List of **kern strings
     separator (Optional[str]): Separator string to separate the **kern fragments. Default is '
@@ -14601,7 +14604,7 @@ Args:
             <code class="highlight language-python"><span class="n">export_options_validator</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span></code>
 
   <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
   </span>
 
 </h3>
@@ -18619,6 +18622,9 @@ for krn_file in krn_files:
 
         <pre><code>Merge multiple **kern fragments into a single Document object.
 
+Warnings:
+    Processing a large number of files in a row may take some time.
+     This method performs as many `kp.read` operations as there are fragments to merge.
 Args:
     contents (Sequence[str]): List of **kern strings
     separator (Optional[str]): Separator string to separate the **kern fragments. Default is '
@@ -19375,7 +19381,7 @@ Args:
             <code class="highlight language-python"><span class="n">export_options_validator</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span></code>
 
   <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
   </span>
 
 </h3>
