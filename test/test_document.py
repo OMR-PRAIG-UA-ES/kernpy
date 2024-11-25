@@ -102,8 +102,7 @@ class DocumentTestCase(unittest.TestCase):
     def test_has_categories_when_export(self):
         data: dict = self.doc_piano.frequencies({t for t in kp.TokenCategory} - {kp.TokenCategory.BARLINES})
         for k, v in data.items():
-            if '=' in k:
-                print(f"{k}: {v}")
+            print(f"{k}: {v}")
 
     def test_should_not_detect_barlines_tokens_with_non_barlines_category_0(self):
         frequencies = self.doc_organ_4_voices.frequencies()
@@ -143,4 +142,13 @@ class DocumentTestCase(unittest.TestCase):
 
     def test_all_tokens_have_correct_category_get_all_tokens_fingering(self):
         self.all_tokens_have_the_correct_category(self.doc_organ_4_voices, kp.TokenCategory.FINGERING)
+
+    def test_all_tokens_have_correct_category_get_all_tokens_lyrics(self):
+        self.all_tokens_have_the_correct_category(self.doc_organ_4_voices, kp.TokenCategory.LYRICS)
+
+    def test_all_tokens_have_correct_category_get_all_tokens_lines_comments(self):
+        self.all_tokens_have_the_correct_category(self.doc_organ_4_voices, kp.TokenCategory.LINE_COMMENTS)
+
+    def test_all_tokens_have_correct_category_get_all_tokens_field_comments(self):
+        self.all_tokens_have_the_correct_category(self.doc_organ_4_voices, kp.TokenCategory.FIELD_COMMENTS)
 
