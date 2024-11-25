@@ -66,7 +66,8 @@ class ExporterTestCase(unittest.TestCase):
 
         with open('resource_dir/mozart/concerto-piano-12-allegro-right-hand-and-dyn.krn', 'r') as f:
             expected_content = f.read()
-        real_content = kp.export(self.doc_piano, options)  # TODO: Solve export error: error in line 15 of the exported file. No tiene nada que ver con la funcionalidad de exportar por spines. Sino con exportar todo en general.
+        real_content = kp.export(self.doc_piano,
+                                 options)  # TODO: Solve export error: error in line 15 of the exported file. No tiene nada que ver con la funcionalidad de exportar por spines. Sino con exportar todo en general.
         # kp.store(self.doc_piano, '/tmp/test_mix_spines_error.krn', options)  # for debug
         self.assertEqual(expected_content, real_content)
 
@@ -83,4 +84,6 @@ class ExporterTestCase(unittest.TestCase):
             token_categories=kp.BEKERN_CATEGORIES
         ))
 
-        self.assertEqual(expected_content, real_content, f"File content mismatch: \nExpected:\n{expected_content}\n{40 * '='}\nReal\n{real_content}")
+        self.assertEqual(expected_content, real_content,
+                         f"File content mismatch: \nExpected:\n{expected_content}\n{40 * '='}\nReal\n{real_content}")
+
