@@ -213,7 +213,7 @@ class Generic:
             high_index = document.measures_count()
             indexes.append((low_index, high_index))
 
-            low_index = high_index
+            low_index = high_index + 1  # Next fragment start is the previous fragment end + 1
 
         if document is None:
             raise Exception("Failed to merge the contents. The document is None.")
