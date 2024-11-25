@@ -29,8 +29,8 @@ class GenericTestCase(unittest.TestCase):
 
     @classmethod
     def load_expected_indexes_of_input_merged_load_files(cls):
-        return [(0, 4), (4, 10), (10, 15), (15, 20), (20, 25), (25, 30), (30, 36), (36, 42), (42, 48),
-                (48, 53), (53, 58), (58, 65)]
+        return [(0, 5), (6, 11), (12, 16), (17, 21), (22, 26), (27, 31), (32, 37), (38, 43), (44, 49), (50, 54),
+                (55, 59), (60, 66)]
 
 
 
