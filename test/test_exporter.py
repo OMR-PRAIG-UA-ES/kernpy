@@ -11,6 +11,20 @@ class ExporterTestCase(unittest.TestCase):
         cls.doc_organ_4_voices, _ = kp.read('resource_dir/legacy/chor048.krn')
         cls.doc_piano, _ = kp.read('resource_dir/mozart/concerto-piano-12-allegro.krn')
 
+    def exported_filtering_by_category(self, doc, categories, expected_path):
+        # Arrange
+        with open(expected_path, 'r') as f:
+            expected_content = f.read()
+
+        # Act
+        real_content = kp.export(doc, kp.ExportOptions(
+            token_categories=categories
+        ))
+
+        # Assert
+        self.assertEqual(expected_content, real_content)
+
+
     def test_get_spine_types_1(self):
         spine_types = kp.get_spine_types(self.doc_organ_4_voices)
         self.assertEqual(['**kern', '**kern', '**kern', '**kern', '**root', '**harm'], spine_types)
@@ -86,4 +100,42 @@ class ExporterTestCase(unittest.TestCase):
 
         self.assertEqual(expected_content, real_content,
                          f"File content mismatch: \nExpected:\n{expected_content}\n{40 * '='}\nReal\n{real_content}")
+
+    def test_check_categories_are_exported(self):
+        data = self.doc_organ_4_voices.frequencies([kp.TokenCategory.CORE])
+        for k, v in data.items():
+            print(f"{k}: {v}")
+
+    def test_should_export_with_all(self):
+        self.exported_filtering_by_category(
+            doc=self.doc_piano,
+            categories={t for t in kp.TokenCategory},
+            expected_path='resource_dir/catogories/concerto-piano-12-allegro_with_all.krn'
+        )
+
+    def test_should_export_without_barlines(self):
+        self.exported_filtering_by_category(
+            doc=self.doc_piano,
+            categories={t for t in kp.TokenCategory} - {kp.TokenCategory.BARLINES},
+            expected_path='resource_dir/catogories/concerto-piano-12-allegro_without_barlines.krn'
+        )
+
+    def test_should_export_without_only_signatures(self):
+        self.exported_filtering_by_category(
+            doc=self.doc_piano,
+            categories={kp.TokenCategory.SIGNATURES},
+            expected_path='resource_dir/catogories/concerto-piano-12-allegro_without_only_signatures.krn'
+        )
+
+    def test_should_export_without_harmony(self):
+        kp.store(self.doc_piano, 'resource_dir/catogories/concerto-piano-12-allegro_without_harmony.krn', kp.ExportOptions(
+            token_categories={t for t in kp.TokenCategory} - {kp.TokenCategory.HARMONY}
+        ))
+        self.exported_filtering_by_category(
+            doc=self.doc_piano,
+            categories={t for t in kp.TokenCategory} - {kp.TokenCategory.HARMONY},
+            expected_path='resource_dir/catogories/concerto-piano-12-allegro_without_harmony.krn'
+        )
+
+
 
