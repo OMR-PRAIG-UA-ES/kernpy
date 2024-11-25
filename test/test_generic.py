@@ -10,6 +10,30 @@ import kernpy as kp
 
 
 class GenericTestCase(unittest.TestCase):
+
+    @classmethod
+    def load_contents_of_input_merged_load_files(cls):
+        path_names = ['0_0.krn', '0_1.krn', '0_2.krn', '0_3.krn', '0_4.krn', '0_5.krn', '0_6.krn',
+                      '0_7.krn', '0_8.krn', '0_9.krn', '0_10.krn', '0_11.krn']
+        paths = [os.path.join('resource_dir', 'merge', p) for p in path_names if 'merged' not in p]
+        contents = [open(p, 'r').read() for p in paths]
+        return contents
+
+    @classmethod
+    def load_expected_contents_of_input_merged_load_files(cls):
+        path_names = ['0_0.krn', '0_1.krn', '0_2.krn', '0_3.krn', '0_4.krn', '0_5.krn', '0_6.krn',
+                      '0_7.krn', '0_8.krn', '0_9.krn', '0_10.krn', '0_11.krn']
+        paths = [os.path.join('resource_dir', 'merge', p) for p in path_names if 'merged' in p]
+        contents = [open(p, 'r').read() for p in paths]
+        return contents
+
+    @classmethod
+    def load_expected_indexes_of_input_merged_load_files(cls):
+        return [(0, 4), (4, 10), (10, 15), (15, 20), (20, 25), (25, 30), (30, 36), (36, 42), (42, 48),
+                (48, 53), (53, 58), (58, 65)]
+
+
+
     def test_read_export_easy(self):
         # Arrange
         expected_ekrn = 'resource_dir/legacy/base_tuplet.ekrn'
@@ -86,32 +110,46 @@ class GenericTestCase(unittest.TestCase):
 
     def test_merge_1(self):
         # Arrange
-        path_names = ['0_0.krn', '0_1.krn', '0_2.krn', '0_3.krn', '0_4.krn', '0_5.krn', '0_6.krn',
-                      '0_7.krn', '0_8.krn', '0_9.krn', '0_10.krn', '0_11.krn']
-        paths = [os.path.join('resource_dir', 'merge', p) for p in path_names]
-        contents = [open(p, 'r').read() for p in paths]
-        expected_indexes = [(0, 4), (4, 10), (10, 15), (15, 20), (20, 25), (25, 30), (30, 36), (36, 42), (42, 48),
-                            (48, 53), (53, 58), (58, 65)]
+        contents = self.load_contents_of_input_merged_load_files()
+        expected_indexes = self.load_expected_indexes_of_input_merged_load_files()
 
         # Act
         doc, real_indexes = kp.merge(contents)
 
         # Assert
         self.assertIsInstance(doc, kp.Document)
+        self.assertTrue(len(real_indexes) == len(expected_indexes))
         self.assertListEqual(expected_indexes, real_indexes)
-        kp.store_graph(doc, '/tmp/test_merge_1.dot')
-        kp.store(doc, '/tmp/test_merge_1.krn', kp.ExportOptions())
 
     def test_merge_with_separators(self):
         # Arrange
-        path_names = ['0_0.krn', '0_1.krn', '0_2.krn', '0_3.krn', '0_4.krn', '0_5.krn', '0_6.krn',
-                      '0_7.krn', '0_8.krn', '0_9.krn', '0_10.krn', '0_11.krn']
-        paths = [os.path.join('resource_dir', 'merge', p) for p in path_names]
-        contents = [open(p, 'r').read() for p in paths]
+        contents = self.load_contents_of_input_merged_load_files()
 
         # Act
         # Should fail when not using a separator \n between content
         with self.assertRaises(ValueError):
             doc, real_indexes = kp.merge(contents, separator='')
 
+    def test_merge_and_read_exported_content_1(self):
+        # Arrange
+        contents = self.load_contents_of_input_merged_load_files()
+        expected_indexes = self.load_expected_indexes_of_input_merged_load_files()
+        expected_contents = self.load_expected_contents_of_input_merged_load_files()
+
+        # Act
+        doc, real_indexes = kp.merge(contents)
+
+        # Assert
+        self.assertIsInstance(doc, kp.Document)
+        self.assertTrue(len(real_indexes) == len(expected_indexes))
+        self.assertListEqual(expected_indexes, real_indexes)
+
+        content = None
+        for expected_content, (start, end) in zip(expected_contents, real_indexes):
+            options = kp.ExportOptions(from_measure=start, to_measure=end)
+            try:
+                content = kp.export(doc, options)
+                self.assertEqual(expected_content, content)
+            except Exception as e:
+                logging.error(f"Error found : {e}. When comparing {expected_content} with {content}")
 
