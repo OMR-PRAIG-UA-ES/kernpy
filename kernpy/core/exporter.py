@@ -221,7 +221,7 @@ class Exporter:
                         node_signatures = []  # an array for each spine
                     else:
                         if len(node_signatures[0]) != len(node_signature_rows):
-                            raise Exception('Node signature mismatch')  # TODO better message
+                            raise Exception(f'Node signature mismatch: multiple spines with signatures at measure {len(rows)}')  # TODO better message
                     node_signatures.append(node_signature_rows)
 
             if node_signatures:
