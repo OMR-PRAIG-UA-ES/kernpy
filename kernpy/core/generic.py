@@ -426,6 +426,9 @@ def merge(
     """
     Merge multiple **kern fragments into a single Document object.
 
+    Warnings:
+        Processing a large number of files in a row may take some time.
+         This method performs as many `kp.read` operations as there are fragments to merge.
     Args:
         contents (Sequence[str]): List of **kern strings
         separator (Optional[str]): Separator string to separate the **kern fragments. Default is '\n' (newline).
