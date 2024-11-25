@@ -128,13 +128,23 @@ class ExporterTestCase(unittest.TestCase):
         )
 
     def test_should_export_without_harmony(self):
-        kp.store(self.doc_piano, 'resource_dir/catogories/concerto-piano-12-allegro_without_harmony.krn', kp.ExportOptions(
+        kp.store(self.doc_organ_4_voices, 'resource_dir/catogories/concerto-piano-12-allegro_without_harmony.krn', kp.ExportOptions(
             token_categories={t for t in kp.TokenCategory} - {kp.TokenCategory.HARMONY}
         ))
         self.exported_filtering_by_category(
-            doc=self.doc_piano,
+            doc=self.doc_organ_4_voices,
             categories={t for t in kp.TokenCategory} - {kp.TokenCategory.HARMONY},
             expected_path='resource_dir/catogories/concerto-piano-12-allegro_without_harmony.krn'
+        )
+
+    def test_only_export_kern_and_harm_spines(self):
+        kp.store(self.doc_organ_4_voices, 'resource_dir/spines/concerto-piano-12-allegro_only_kern_and_harm.krn', kp.ExportOptions(
+            spine_types=['**kern', '**harm']
+        ))
+        self.exported_filtering_by_category(
+            doc=self.doc_organ_4_voices,
+            categories={t for t in kp.TokenCategory},
+            expected_path='resource_dir/spines/concerto-piano-12-allegro_only_kern_and_harm.krn'
         )
 
 
