@@ -390,7 +390,7 @@ class Document:
         if len(self.measure_start_tree_stages) == 0:
             raise Exception('No measures found')
 
-        return len(self.measure_start_tree_stages) - 1  # starting from 1 (remove the root)
+        return len(self.measure_start_tree_stages)
 
     def get_metacomments(self, KeyComment: Optional[str] = None, clear: bool = False) -> List[str]:
         """
