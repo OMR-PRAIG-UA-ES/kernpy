@@ -633,10 +633,11 @@ class Document:
         """
         Frequency of tokens in the document.
 
+
         Args:
             token_categories (Optional[Sequence[TokenCategory]]): If None, all tokens are considered.
         Returns (Dict):
-            A dictionary with the frequency of each token.
+            A dictionary with the category and the number of occurrences of each token.
 
         """
         tokens = self.get_all_tokens(filter_by_categories=token_categories)
