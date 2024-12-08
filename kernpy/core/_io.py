@@ -16,7 +16,7 @@ def _write(path: Path, content: str) -> None:
     Returns: None
 
     """
-    if not os.path.exists(os.path.dirname(path)):
+    if not os.path.exists(os.path.dirname(path.absolute())):
         os.makedirs(os.path.dirname(path), exist_ok=True)
 
     with open(path, 'w') as f:
