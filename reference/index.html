@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.47">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.50">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.6f8fc17f.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.a40c8224.min.css">
       
       
 
@@ -6872,7 +6872,7 @@ The index of the list is starting from 1. Rows after removing empty lines and li
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">kernpy</span> <span class="k">as</span> <span class="nn">kp</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;score.krn&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="o">.</span><span class="n">get_first_measure</span><span class="p">()</span>
 <span class="go">1</span>
@@ -10606,7 +10606,7 @@ for ekern_file in ekrn_files:
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">kernpy</span> <span class="k">as</span> <span class="nn">kp</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;path/to/file.krn&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">options</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">ExportOptions</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">content</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
@@ -10738,7 +10738,7 @@ with open('path/to/file.krn', 'w') as file:
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">kernpy</span> <span class="k">as</span> <span class="nn">kp</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;path/to/file.krn&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kp</span><span class="o">.</span><span class="n">get_spine_types</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
 <span class="go">[&#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;, &#39;**root&#39;, &#39;**harm&#39;]</span>
@@ -10983,7 +10983,7 @@ Examples:
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">kernpy</span> <span class="k">as</span> <span class="nn">kp</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;path/to/file.krn&#39;</span><span class="p">)</span>
 </code></pre></div>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;path/to/file.krn&#39;</span><span class="p">)</span>
@@ -11069,7 +11069,7 @@ Examples:
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">kernpy</span> <span class="k">as</span> <span class="nn">kp</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;path/to/file.krn&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">options</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">ExportOptions</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kp</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="s1">&#39;path/to/store.krn&#39;</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
@@ -11138,7 +11138,7 @@ Examples:
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">kernpy</span> <span class="k">as</span> <span class="nn">kp</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;path/to/file.krn&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kp</span><span class="o">.</span><span class="n">store_graph</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="s1">&#39;path/to/graph.dot&#39;</span><span class="p">)</span>
 </code></pre></div>
@@ -12780,7 +12780,7 @@ The index of the list is starting from 1. Rows after removing empty lines and li
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">kernpy</span> <span class="k">as</span> <span class="nn">kp</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;score.krn&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="o">.</span><span class="n">get_first_measure</span><span class="p">()</span>
 <span class="go">1</span>
@@ -18347,7 +18347,7 @@ for ekern_file in ekrn_files:
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">kernpy</span> <span class="k">as</span> <span class="nn">kp</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;path/to/file.krn&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">options</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">ExportOptions</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">content</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
@@ -18479,7 +18479,7 @@ with open('path/to/file.krn', 'w') as file:
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">kernpy</span> <span class="k">as</span> <span class="nn">kp</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;path/to/file.krn&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kp</span><span class="o">.</span><span class="n">get_spine_types</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
 <span class="go">[&#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;, &#39;**root&#39;, &#39;**harm&#39;]</span>
@@ -18724,7 +18724,7 @@ Examples:
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">kernpy</span> <span class="k">as</span> <span class="nn">kp</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;path/to/file.krn&#39;</span><span class="p">)</span>
 </code></pre></div>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;path/to/file.krn&#39;</span><span class="p">)</span>
@@ -18810,7 +18810,7 @@ Examples:
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">kernpy</span> <span class="k">as</span> <span class="nn">kp</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;path/to/file.krn&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">options</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">ExportOptions</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kp</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="s1">&#39;path/to/store.krn&#39;</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
@@ -18879,7 +18879,7 @@ Examples:
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">kernpy</span> <span class="k">as</span> <span class="nn">kp</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;path/to/file.krn&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kp</span><span class="o">.</span><span class="n">store_graph</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="s1">&#39;path/to/graph.dot&#39;</span><span class="p">)</span>
 </code></pre></div>
@@ -20290,7 +20290,7 @@ Args:
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">kernpy</span> <span class="k">as</span> <span class="nn">kp</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;path/to/file.krn&#39;</span><span class="p">)</span>
 </code></pre></div>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;path/to/file.krn&#39;</span><span class="p">)</span>
@@ -20376,7 +20376,7 @@ Args:
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">kernpy</span> <span class="k">as</span> <span class="nn">kp</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;path/to/file.krn&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">options</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">ExportOptions</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kp</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="s1">&#39;path/to/store.krn&#39;</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
@@ -20431,10 +20431,10 @@ Args:
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
+      <script src="../assets/javascripts/bundle.60a45f97.min.js"></script>
       
     
   </body>
