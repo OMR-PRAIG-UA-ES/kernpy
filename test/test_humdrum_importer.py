@@ -4,6 +4,7 @@ import os
 import unittest
 import logging
 import sys
+from pathlib import Path
 
 from _pytest.mark.expression import TokenType
 
@@ -708,8 +709,8 @@ class ImporterTestCase(unittest.TestCase):
     def test_never_export_measure_numbers(self):
         # Arrange
         importer = kp.Importer()
-        document = importer.import_file('resource_dir/legacy/chor009.krn')
-        options = kp.ExportOptions(spine_types=None,  # TODO: David. Así se exportan todos los spines
+        document = importer.import_file(Path('resource_dir/legacy/chor009.krn'))
+        options = kp.ExportOptions(spine_types=None,
                                    kern_type=kp.KernTypeExporter.eKern,
                                    show_measure_numbers=False)
         exporter = kp.Exporter()
@@ -724,7 +725,7 @@ class ImporterTestCase(unittest.TestCase):
     def test_always_export_measure_numbers(self):
         # Arrange
         importer = kp.Importer()
-        document = importer.import_file('resource_dir/legacy/chor009.krn')
+        document = importer.import_file(Path('resource_dir/legacy/chor009.krn'))
         options = kp.ExportOptions(spine_types=None,
                                    kern_type=kp.KernTypeExporter.eKern,
                                    show_measure_numbers=True)
