@@ -28,7 +28,7 @@ Use `kernpy` utilities.
 | kern     | 2.bb-_L      | Traditional Humdrum **kern encoding    |
 | ekern    | 2@.@bb@-·_·L | Extended Humdrum **kern encoding       |
 | bkern    | 2.bb-        | Basic Humdrum **kern encoding          |
-| bekern   | 2@.@bb@}-·   | Basic Extended Humdrum **kern encoding |
+| bekern   | 2@.@bb@-     | Basic Extended Humdrum **kern encoding |
 
 
 
