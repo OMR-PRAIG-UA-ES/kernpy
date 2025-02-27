@@ -4,34 +4,15 @@ from copy import deepcopy
 from enum import Enum
 from typing import Optional
 from collections.abc import Sequence
+from abc import ABC, abstractmethod
 
 from kernpy.core import Document, SpineOperationToken, HeaderToken, Importer, TokenCategory, InstrumentToken, \
     TOKEN_SEPARATOR, DECORATION_SEPARATOR, Token, NoteRestToken, HEADERS
+from kernpy.core.tokenizers import KernTypeExporter, TokenizerFactory, Tokenizer
 
 BEKERN_CATEGORIES = [TokenCategory.STRUCTURAL, TokenCategory.CORE, TokenCategory.EMPTY, TokenCategory.SIGNATURES,
                      TokenCategory.BARLINES, TokenCategory.ENGRAVED_SYMBOLS]
 
-
-class KernTypeExporter(Enum):  # TODO: Eventually, polymorphism will be used to export different types of kern files
-    """
-    Options for exporting a kern file.
-
-    Example:
-        # Create the importer
-        >>> hi = Importer()
-
-        # Read the file
-        >>> document = hi.import_file('file.krn')
-
-        # Export the file
-        >>> options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kernType=KernTypeExporter.normalizedKern)
-        >>> exporter = Exporter()
-        >>> exported = exporter.export_string(options)
-
-    """
-    unprocessed = 0
-    eKern = 1
-    normalizedKern = 2
 
 
 class ExportOptions:
@@ -278,10 +259,7 @@ class Exporter:
         return header_type
 
     def export_token(self, token: Token, options: ExportOptions):
-        if options and options.kern_type == KernTypeExporter.eKern:
-            return token.export()
-        else:
-            return token.encoding
+        return TokenizerFactory.create(options.kern_type).tokenize(token)
 
     def append_row(self, document: Document, node, options: ExportOptions, row: list) -> bool:
         """

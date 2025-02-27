@@ -21,6 +21,7 @@ from .mens_spine_importer import *
 from .root_importer import *
 from .text_spine_importer import *
 from .generic import *
+from .tokenizers import *
 
 
 __all__ = [
@@ -35,6 +36,14 @@ __all__ = [
     'kern_to_ekern',
     'get_kern_from_ekern',
     'KernTypeExporter',
+    'Tokenizer',
+    'KernTokenizer',
+    'EkernTokenizer',
+    'BekernTokenizer',
+    'BkernTokenizer',
+    'TokenizerFactory',
+    'Token',
+    'KernTokenizer',
     'BEKERN_CATEGORIES',
     'DynSpineImporter',
     'DynamSpineImporter',
@@ -58,7 +67,7 @@ __all__ = [
     'get_spine_types',
     'concat',
     'createImporter',
-    'merge'
+    'merge',
 ]
 
 
