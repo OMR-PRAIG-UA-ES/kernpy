@@ -65,9 +65,7 @@ __all__ = [
     'store_graph',
     'transposer',
     'get_spine_types',
-    'concat',
     'createImporter',
-    'merge',
 ]
 
 

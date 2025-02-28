@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 from kernpy.core import Token, SpineOperationToken
@@ -17,16 +18,25 @@ class GraphvizExporter:
     def node_id(node: Node):
         return f"node{id(node)}"
 
-    def export_to_dot(self, tree: MultistageTree, filename: Path):
-        with open(filename, 'w') as file:
+    def export_to_dot(self, tree: MultistageTree, filename: Path = None):
+        """
+        Export the given MultistageTree to DOT format.
+
+        Args:
+            tree (MultistageTree): The tree to export.
+            filename (Path or None): The output file path. If None, prints to stdout.
+        """
+        file = sys.stdout if filename is None else open(filename, 'w')
+
+        try:
             file.write('digraph G {\n')
             file.write('    node [shape=record];\n')
-            file.write('    rankdir=TB;\n')  # Ensure the overall layout is top to bottom
+            file.write('    rankdir=TB;\n')  # Ensure top-to-bottom layout
 
             # Create subgraphs for each stage
             for stage_index, stage in enumerate(tree.stages):
                 if stage:
-                    file.write(f'  {{rank=same; ')
+                    file.write('  {rank=same; ')
                     for node in stage:
                         file.write(f'"{self.node_id(node)}"; ')
                     file.write('}\n')
@@ -36,6 +46,10 @@ class GraphvizExporter:
             self._write_edges_iterative(tree.root, file)
 
             file.write('}\n')
+
+        finally:
+            if filename is not None:
+                file.close()  # Close only if we explicitly opened a file
 
     def _write_nodes_iterative(self, root, file):
         stack = [root]

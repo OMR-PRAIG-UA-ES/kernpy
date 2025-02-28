@@ -203,6 +203,8 @@ create_fragments_from_directory('/my/path/to/input_dir/', '/to/my/output_dir/',
 
 from .core import *
 
+from .io import *
+
 from .util import *
 
 from .polish_scores import *

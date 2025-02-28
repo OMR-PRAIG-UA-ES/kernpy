@@ -12,23 +12,23 @@ import kernpy as kp
 class GenericTestCase(unittest.TestCase):
 
     @classmethod
-    def load_contents_of_input_merged_load_files(cls):
+    def load_contents_of_input_concatenated_load_files(cls):
         path_names = ['0_0.krn', '0_1.krn', '0_2.krn', '0_3.krn', '0_4.krn', '0_5.krn', '0_6.krn',
                       '0_7.krn', '0_8.krn', '0_9.krn', '0_10.krn', '0_11.krn']
-        paths = [os.path.join('resource_dir', 'merge', p) for p in path_names if 'merged' not in p]
+        paths = [os.path.join('resource_dir', 'concat', p) for p in path_names if 'concat' not in p]
         contents = [open(p, 'r').read() for p in paths]
         return contents
 
     @classmethod
-    def load_expected_contents_of_input_merged_load_files(cls):
+    def load_expected_contents_of_input_concatenated_load_files(cls):
         path_names = ['0_0.krn', '0_1.krn', '0_2.krn', '0_3.krn', '0_4.krn', '0_5.krn', '0_6.krn',
                       '0_7.krn', '0_8.krn', '0_9.krn', '0_10.krn', '0_11.krn']
-        paths = [os.path.join('resource_dir', 'merge', p) for p in path_names if 'merged' in p]
+        paths = [os.path.join('resource_dir', 'concat', p) for p in path_names if 'concat' in p]
         contents = [open(p, 'r').read() for p in paths]
         return contents
 
     @classmethod
-    def load_expected_indexes_of_input_merged_load_files(cls):
+    def load_expected_indexes_of_input_concatenated_load_files(cls):
         return [(0, 5), (6, 11), (12, 16), (17, 21), (22, 26), (27, 31), (32, 37), (38, 43), (44, 49), (50, 54),
                 (55, 59), (60, 66)]
 
@@ -108,36 +108,36 @@ class GenericTestCase(unittest.TestCase):
         # Assert
         self.assertIsInstance(doc, kp.Document)
 
-    def test_merge_1(self):
+    def test_concat_1(self):
         # Arrange
-        contents = self.load_contents_of_input_merged_load_files()
-        expected_indexes = self.load_expected_indexes_of_input_merged_load_files()
+        contents = self.load_contents_of_input_concatenated_load_files()
+        expected_indexes = self.load_expected_indexes_of_input_concatenated_load_files()
 
         # Act
-        doc, real_indexes = kp.merge(contents)
+        doc, real_indexes = kp.concat(contents)
 
         # Assert
         self.assertIsInstance(doc, kp.Document)
         self.assertTrue(len(real_indexes) == len(expected_indexes))
         self.assertListEqual(expected_indexes, real_indexes)
 
-    def test_merge_with_separators(self):
+    def test_concat_with_separators(self):
         # Arrange
-        contents = self.load_contents_of_input_merged_load_files()
+        contents = self.load_contents_of_input_concatenated_load_files()
 
         # Act
         # Should fail when not using a separator \n between content
         with self.assertRaises(ValueError):
-            doc, real_indexes = kp.merge(contents, separator='')
+            doc, real_indexes = kp.concat(contents, separator='')
 
-    def test_merge_and_read_exported_content_1(self):
+    def test_concat_and_read_exported_content_1(self):
         # Arrange
-        contents = self.load_contents_of_input_merged_load_files()
-        expected_indexes = self.load_expected_indexes_of_input_merged_load_files()
-        expected_contents = self.load_expected_contents_of_input_merged_load_files()
+        contents = self.load_contents_of_input_concatenated_load_files()
+        expected_indexes = self.load_expected_indexes_of_input_concatenated_load_files()
+        expected_contents = self.load_expected_contents_of_input_concatenated_load_files()
 
         # Act
-        doc, real_indexes = kp.merge(contents)
+        doc, real_indexes = kp.concat(contents)
 
         # Assert
         self.assertIsInstance(doc, kp.Document)

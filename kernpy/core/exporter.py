@@ -131,6 +131,19 @@ class ExportOptions:
         """
         return not self.__eq__(other)
 
+    @classmethod
+    def default(cls):
+        return cls(
+            spine_types=deepcopy(HEADERS),
+            token_categories=[c for c in TokenCategory],
+            from_measure=None,
+            to_measure=None,
+            kern_type=KernTypeExporter.normalizedKern,
+            instruments=None,
+            show_measure_numbers=False,
+            spine_ids=None
+        )
+
 
 def empty_row(row):
     for col in row:
@@ -259,7 +272,7 @@ class Exporter:
         return header_type
 
     def export_token(self, token: Token, options: ExportOptions):
-        return TokenizerFactory.create(options.kern_type).tokenize(token)
+        return TokenizerFactory.create(options.kern_type.value).tokenize(token)
 
     def append_row(self, document: Document, node, options: ExportOptions, row: list) -> bool:
         """

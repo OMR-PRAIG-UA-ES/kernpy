@@ -11,6 +11,7 @@ from collections.abc import Sequence
 
 from kernpy.core import Importer, Document, Exporter, ExportOptions, GraphvizExporter
 from kernpy.core._io import _write
+from kernpy.util.helpers import deprecated
 
 
 class Generic:
@@ -143,17 +144,15 @@ class Generic:
         return exporter.get_spine_types(document, spine_types)
 
     @classmethod
-    def concat(
+    def merge(
             cls,
             contents: Sequence[str],
-            options: Optional[ExportOptions] = None,
             strict: Optional[bool] = False
-    ) -> str:
+    ) -> Tuple[Document, List[Tuple[int, int]]]:
         """
 
         Args:
             contents:
-            options:
             strict:
 
         Returns:
@@ -162,6 +161,8 @@ class Generic:
         if len(contents) < 2:
             raise ValueError(f"Concatenation action requires at least two documents to concatenate."
                              f"But {len(contents)} was given.")
+
+        raise NotImplementedError("The merge function is not implemented yet.")
 
         doc_a, err_a = cls.create(contents[0], strict=strict)
         for i, content in enumerate(contents[1:]):
@@ -179,7 +180,7 @@ class Generic:
         )
 
     @classmethod
-    def merge(
+    def concat(
             cls,
             contents: Sequence[str],
             separator: Optional[str] = None
@@ -220,10 +221,29 @@ class Generic:
 
         return document, indexes
 
+    @classmethod
+    def parse_options_to_ExportOptions(
+            cls,
+            **kwargs: Any
+    ) -> ExportOptions:
+        """
+
+        Args:
+            **kwargs:
+
+        Returns:
+
+        """
+        options = ExportOptions.default()
+
+        for key, value in kwargs.items():
+            if value is not None:
+                setattr(options, key, value)
+
+        return options
 
 
-
-
+@deprecated("Use 'load' instead.")
 def read(
         path: Union[str, Path],
         strict: Optional[bool] = False
@@ -252,6 +272,7 @@ def read(
     )
 
 
+@deprecated("Use 'loads' instead.")
 def create(
         content: str,
         strict=False
@@ -278,6 +299,7 @@ def create(
     )
 
 
+@deprecated("Use 'dumps' instead.")
 def export(
         document: Document,
         options: ExportOptions
@@ -303,6 +325,7 @@ def export(
     )
 
 
+@deprecated("Use 'dump' instead.")
 def store(
         document: Document,
         path: Union[str, Path],
@@ -332,6 +355,7 @@ def store(
     )
 
 
+@deprecated("Use 'graph' instead.")
 def store_graph(
         document: Document,
         path: Union[str, Path]
@@ -343,7 +367,7 @@ def store_graph(
         document (Document): Document object to create graph from
         path (str): File path to save the graph
 
-    Returns: None
+    Returns (None): None
 
     Examples:
         >>> import kernpy as kp
@@ -356,6 +380,7 @@ def store_graph(
     )
 
 
+@deprecated("Use 'spine_types' instead.")
 def get_spine_types(
         document: Document,
         spine_types: Optional[Sequence[str]] = None
@@ -388,68 +413,4 @@ def get_spine_types(
     return Generic.get_spine_types(
         document=document,
         spine_types=spine_types
-    )
-
-
-def concat(
-        contents: Sequence[str],
-        options: ExportOptions,
-        strict: Optional[bool] = False
-) -> str:
-    """
-    Concatenate multiple **kern strings.
-
-    Args:
-        contents (Sequence[str]): List of **kern strings
-        options (ExportOptions): Export options for the concatenated string
-        strict (Optional[bool]): If True, raise an error if the concatenated string exceeds the maximum length. If False, truncate the concatenated string to the maximum length.
-
-    Returns: Concatenated **kern string
-
-    Examples:
-        >>> import kernpy as kp
-        >>> contents = ['**kern\n4e\n4f\n4g\n*-\n', '**kern\n4a\n4b\n4c\n*-\n']
-        >>> kp.concat(contents)
-        '**kern\n4e\n4f\n4g\n*-\n**kern\n4a\n4b\n4c\n*-'
-    """
-    return Generic.concat(
-        contents=contents,
-        options=options,
-        strict=strict
-    )
-
-
-def merge(
-        contents: Sequence[str],
-        separator: Optional[str] = '\n'
-) -> Tuple[Document, List[Tuple[int, int]]]:
-    """
-    Merge multiple **kern fragments into a single Document object.
-
-    Warnings:
-        Processing a large number of files in a row may take some time.
-         This method performs as many `kp.read` operations as there are fragments to merge.
-    Args:
-        contents (Sequence[str]): List of **kern strings
-        separator (Optional[str]): Separator string to separate the **kern fragments. Default is '\n' (newline).
-
-    Returns (Tuple[Document, List[Tuple[int, int]]]): Document object and \
-      and a List of Pairs (Tuple[int, int]) representing the measure fragment indexes of the merged document.
-
-    Examples:
-        >>> import kernpy as kp
-        >>> contents = ['**kern\n4e\n4f\n4g\n*-\n', '4a\n4b\n4c\n*-\n=\n', '4d\n4e\n4f\n*-\n']
-        >>> document, indexes = kp.merge(contents)
-        >>> indexes
-        [(0, 3), (3, 6), (6, 9)]
-        >>> document, indexes = kp.merge(contents, separator='\n')
-        >>> indexes
-        [(0, 3), (3, 6), (6, 9)]
-        >>> document, indexes = kp.merge(contents, separator='')
-        >>> indexes
-        [(0, 3), (3, 6), (6, 9)]
-    """
-    return Generic.merge(
-        contents=contents,
-        separator=separator
     )
