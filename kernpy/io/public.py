@@ -12,7 +12,7 @@ from kernpy import KernTypeExporter
 from kernpy.core import Document, Importer, Exporter, ExportOptions, GraphvizExporter, generic
 
 
-def load(fp: Union[str, Path], *, raise_on_errors: Optional[bool] = False, **kwargs) -> List[str]:
+def load(fp: Union[str, Path], *, raise_on_errors: Optional[bool] = False, **kwargs) -> (Document, List[str]):
     """
     Load a Document object from a Humdrum **kern file-like object.
 
@@ -21,7 +21,8 @@ def load(fp: Union[str, Path], *, raise_on_errors: Optional[bool] = False, **kwa
         raise_on_errors (Optional[bool], optional): If True, raise an exception if any grammar error is detected\
             during parsing.
 
-    Returns (List[str]): A list of messages representing grammar errors detected during parsing. If the list is empty,\
+    Returns ((Document, List[str])): A tuple containing the Document object and a list of messages representing \
+        grammar errors detected during parsing. If the list is empty,\
         the parsing did not detect any errors.
 
     Raises:
@@ -45,7 +46,7 @@ def load(fp: Union[str, Path], *, raise_on_errors: Optional[bool] = False, **kwa
     )
 
 
-def loads(s, *, raise_on_errors: Optional[bool] = False, **kwargs) -> List[str]:
+def loads(s, *, raise_on_errors: Optional[bool] = False, **kwargs) -> (Document, List[str]):
     """
     Load a Document object from a string encoded in Humdrum **kern.
 
@@ -54,7 +55,8 @@ def loads(s, *, raise_on_errors: Optional[bool] = False, **kwargs) -> List[str]:
         raise_on_errors (Optional[bool], optional): If True, raise an exception if any grammar error is detected\
             during parsing.
 
-    Returns (List[str]): A list of messages representing grammar errors detected during parsing. If the list is empty,\
+    Returns ((Document, List[str])): A tuple containing the Document object and a list of messages representing \
+        grammar errors detected during parsing. If the list is empty,\
         the parsing did not detect any errors.
 
     Raises:

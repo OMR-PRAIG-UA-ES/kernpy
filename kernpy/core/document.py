@@ -8,7 +8,7 @@ from typing import List, Optional, Dict, Union
 from collections.abc import Sequence
 from queue import Queue
 
-from kernpy.core import TokenCategory
+from kernpy.core import TokenCategory, CORE_HEADERS
 from kernpy.core import MetacommentToken, AbstractToken, HeaderToken
 
 
@@ -590,23 +590,46 @@ class Document:
         for spine in spines:
             return
 
-    def add_document(self, other: 'Document'):
+    def add(self, other: 'Document', *, check_core_spines_only: Optional[bool] = False) -> 'Document':
         """
-        Concatenate one document to the current document: Mutates the current object!
+        Concatenate one document to the current document: Modify the current object!
 
         Args:
             other: The document to concatenate.
+            check_core_spines_only: If True, only the core spines (**kern and **mens) are checked. If False, all spines are checked.
 
-        Returns: None
+        Returns ('Document'): The current document (self) with the other document concatenated.
         """
+        if not Document.match(self, other, check_core_spines_only=check_core_spines_only):
+            raise Exception(f'Documents are not compatible for addition. '
+                            f'Headers do not match with check_core_spines_only={check_core_spines_only}. '
+                            f'self: {self.get_header_nodes()}, other: {other.get_header_nodes()}. ')
+
         current_header_nodes = self.get_header_stage()
         other_header_nodes = other.get_header_stage()
 
-        if len(current_header_nodes) != len(other_header_nodes):
-            raise Exception(f"Header nodes count mismatch: {len(current_header_nodes)} != {len(other_header_nodes)}")
+        current_leaf_nodes = self.get_leaves()
+        other_first_level_children = other.tree.stages[1]  # avoid header stage
 
-        for current_node, other_node in zip(current_header_nodes, other_header_nodes):
-            current_node.children.extend(other_node.children)
+        for current_leaf, other_first_level_child in zip(current_leaf_nodes, other_first_level_children, strict=False):
+            # Ignore extra spines from other document.
+            # But if there are extra spines in the current document, it will raise an exception.
+            if current_leaf.token.category == TokenCategory.TERMINATOR:
+                # remove the '*-' token from the current document
+                current_leaf_index = current_leaf.parent.children.index(current_leaf)
+                current_leaf.parent.children.pop(current_leaf_index)
+                current_leaf.parent.children.insert(current_leaf_index, other_first_level_child)
+
+            self.tree.add_node(
+                stage=len(self.tree.stages) - 1,  # TODO: check offset 0, +1, -1 ????
+                parent=current_leaf,
+                token=other_first_level_child.token,
+                last_spine_operator_node=other_first_level_child.last_spine_operator_node,
+                previous_signature_nodes=other_first_level_child.last_signature_nodes,
+                header_node=other_first_level_child.header_node
+            )
+
+        return self
 
     def get_header_nodes(self) -> List[HeaderToken]:
         """
@@ -710,9 +733,31 @@ class Document:
         """
         first_doc = first_doc.clone() if deep_copy else first_doc
         second_doc = second_doc.clone() if deep_copy else second_doc
-        first_doc.add_document(second_doc)
+        first_doc.add(second_doc)
 
         return first_doc
+
+    @classmethod
+    def match(cls, a: 'Document', b: 'Document', *, check_core_spines_only: Optional[bool] = False) -> bool:
+        """
+        Match two documents. Two documents match if they have the same spine structure.
+
+        Args:
+            a (Document): The first document.
+            b (Document): The second document.
+            check_core_spines_only (Optional[bool]): If True, only the core spines (**kern and **mens) are checked. If False, all spines are checked.
+
+        Returns: True if the documents match, False otherwise.
+
+        Examples:
+
+        """
+        if check_core_spines_only:
+            return [token.encoding for token in a.get_header_nodes() if token.encoding in CORE_HEADERS] \
+                == [token.encoding for token in b.get_header_nodes() if token.encoding in CORE_HEADERS]
+        else:
+            return [token.encoding for token in a.get_header_nodes()] \
+                == [token.encoding for token in b.get_header_nodes()]
 
     def __iter__(self):
         """
@@ -766,6 +811,7 @@ class TokensTraversal(TreeTraversalInterface):
             self.tokens.append(node.token)
             if self.non_repeated:
                 self.seen_encodings.append(node.token.encoding)
+
 
 class TraversalFactory:
     class Categories(Enum):

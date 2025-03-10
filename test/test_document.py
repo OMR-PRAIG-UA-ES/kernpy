@@ -152,3 +152,48 @@ class DocumentTestCase(unittest.TestCase):
     def test_all_tokens_have_correct_category_get_all_tokens_field_comments(self):
         self.all_tokens_have_the_correct_category(self.doc_organ_4_voices, kp.TokenCategory.FIELD_COMMENTS)
 
+    def test_match_same_document_reference(self):
+        self.assertTrue(self.doc_organ_4_voices.match(self.doc_organ_4_voices, self.doc_organ_4_voices))
+
+    def test_match_different_document_reference(self):
+        self.assertFalse(self.doc_organ_4_voices.match(self.doc_organ_4_voices, self.doc_piano))
+
+    def test_match_different_references_same_content(self):
+        doc_1, _ = kp.loads('**kern\n=1\n=2\n=3\n=4\n*-\n')
+        doc_2, _ = kp.loads('**kern\n=1\n=2\n=3\n=4\n*-\n')
+
+        self.assertTrue(kp.Document.match(doc_1, doc_2))
+
+    def test_match_different_references_different_content(self):
+        doc_1, _ = kp.loads('**kern\n=1\n=2\n=3\n=4\n*-\n')
+        doc_2, _ = kp.loads('**kern\t**kern\n=1\t=1\n=2\t=2\n=3\t=3\n=4\t=4\n*-\t*-\n')
+
+        self.assertFalse(kp.Document.match(doc_1, doc_2))
+
+    def test_match_same_kern_different_others_default_option(self):
+        doc_1, _ = kp.loads('**kern\n=1\n=2\n=3\n=4\n*-\n')
+        doc_2, _ = kp.loads('**kern\t**dynam\n=1\tpp\n=2\tpp\n=3\tpp\n=4\tpp\n*-\t*-\n')
+
+        self.assertFalse(kp.Document.match(doc_1, doc_2))
+
+    def test_match_same_kern_different_others_default_only_core(self):
+        doc_1, _ = kp.loads('**kern\n=1\n=2\n=3\n=4\n*-\n')
+        doc_2, _ = kp.loads('**kern\t**dynam\n=1\tpp\n=2\tpp\n=3\tpp\n=4\tpp\n*-\t*-\n')
+
+        self.assertFalse(kp.Document.match(doc_1, doc_2, check_core_spines_only=False))
+
+    def test_match_same_kern_different_others_default_check_all_core(self):
+        doc_1, _ = kp.loads('**kern\n=1\n=2\n=3\n=4\n*-\n')
+        doc_2, _ = kp.loads('**kern\t**dynam\n=1\tpp\n=2\tpp\n=3\tpp\n=4\tpp\n*-\t*-\n')
+
+        self.assertTrue(kp.Document.match(doc_1, doc_2, check_core_spines_only=True))
+
+    def test_add_document(self):
+        doc_1, _ = kp.loads('**kern\n=1\n=2\n=3\n=4\n*-\n')
+        doc_2, _ = kp.loads('**kern\n=5\n=6\n=7\n=8\n*-\n')
+
+        expected_result = '**kern\n=1\n=2\n=3\n=4\n=5\n=6\n=7\n=8\n*-\n'
+
+        doc_1.add(doc_2)
+        real_result = kp.dumps(doc_1)
+        self.assertEqual(expected_result, real_result)

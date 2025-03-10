@@ -173,7 +173,7 @@ class Generic:
                                 f"while using the strict=True option. "
                                 f"Description: concatenating: {err_a if len(err_a) > 0 else err_b}")
 
-            doc_a.add_document(doc_b)
+            doc_a.add(doc_b)
         return cls.export(
             document=doc_a,
             options=options
