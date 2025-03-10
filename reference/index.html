@@ -442,9 +442,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#kernpy.Document.add_document" class="md-nav__link">
+  <a href="#kernpy.Document.add" class="md-nav__link">
     <span class="md-ellipsis">
-      add_document
+      add
     </span>
   </a>
   
@@ -580,6 +580,15 @@
   <a href="#kernpy.Document.get_voices" class="md-nav__link">
     <span class="md-ellipsis">
       get_voices
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.Document.match" class="md-nav__link">
+    <span class="md-ellipsis">
+      match
     </span>
   </a>
   
@@ -1735,9 +1744,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#kernpy.core.Document.add_document" class="md-nav__link">
+  <a href="#kernpy.core.Document.add" class="md-nav__link">
     <span class="md-ellipsis">
-      add_document
+      add
     </span>
   </a>
   
@@ -1873,6 +1882,15 @@
   <a href="#kernpy.core.Document.get_voices" class="md-nav__link">
     <span class="md-ellipsis">
       get_voices
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Document.match" class="md-nav__link">
+    <span class="md-ellipsis">
+      match
     </span>
   </a>
   
@@ -3410,9 +3428,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#kernpy.Document.add_document" class="md-nav__link">
+  <a href="#kernpy.Document.add" class="md-nav__link">
     <span class="md-ellipsis">
-      add_document
+      add
     </span>
   </a>
   
@@ -3548,6 +3566,15 @@
   <a href="#kernpy.Document.get_voices" class="md-nav__link">
     <span class="md-ellipsis">
       get_voices
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.Document.match" class="md-nav__link">
+    <span class="md-ellipsis">
+      match
     </span>
   </a>
   
@@ -4703,9 +4730,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#kernpy.core.Document.add_document" class="md-nav__link">
+  <a href="#kernpy.core.Document.add" class="md-nav__link">
     <span class="md-ellipsis">
-      add_document
+      add
     </span>
   </a>
   
@@ -4841,6 +4868,15 @@
   <a href="#kernpy.core.Document.get_voices" class="md-nav__link">
     <span class="md-ellipsis">
       get_voices
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Document.match" class="md-nav__link">
+    <span class="md-ellipsis">
+      match
     </span>
   </a>
   
@@ -6662,15 +6698,15 @@ The index of the list is starting from 1. Rows after removing empty lines and li
 <div class="doc doc-object doc-function">
 
 
-<h3 id="kernpy.Document.add_document" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">add_document</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></code>
+<h3 id="kernpy.Document.add" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">add</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">check_core_spines_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h3>
 
 
     <div class="doc doc-contents ">
 
-        <p>Concatenate one document to the current document: Mutates the current object!</p>
+        <p>Concatenate one document to the current document: Modify the current object!</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -6698,9 +6734,23 @@ The index of the list is starting from 1. Rows after removing empty lines and li
                 <em>required</em>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td><code>check_core_spines_only</code></td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[bool]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, only the core spines (<strong>kern and </strong>mens) are checked. If False, all spines are checked.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
       </tbody>
     </table>
-        <p>Returns: None</p>
+        <p>Returns ('Document'): The current document (self) with the other document concatenated.</p>
 
     </div>
 
@@ -7304,6 +7354,86 @@ clean_comment = comment.replace(f&quot;!!!{KeyComment}: &quot;, &quot;&quot;)
 <span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="o">.</span><span class="n">get_voices</span><span class="p">(</span><span class="n">clean</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="go">[&#39;!sax&#39;, &#39;!piano&#39;, &#39;!bass&#39;]</span>
 </code></pre></div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="kernpy.Document.match" class="doc doc-heading">
+            <code class="highlight language-python"><span class="k">match</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">check_core_spines_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Match two documents. Two documents match if they have the same spine structure.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>a</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="kernpy.core.document.Document" href="#kernpy.core.Document">Document</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The first document.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>b</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="kernpy.core.document.Document" href="#kernpy.core.Document">Document</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The second document.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>check_core_spines_only</code></td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[bool]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, only the core spines (<strong>kern and </strong>mens) are checked. If False, all spines are checked.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+        <p>Returns: True if the documents match, False otherwise.</p>
+<p>Examples:</p>
 
     </div>
 
@@ -11377,7 +11507,7 @@ for krn_file in krn_files:
           </tr>
       </tbody>
     </table>
-        <p>Returns (List[str]): A list of messages representing grammar errors detected during parsing. If the list is empty,        the parsing did not detect any errors.</p>
+        <p>Returns ((Document, List[str])): A tuple containing the Document object and a list of messages representing         grammar errors detected during parsing. If the list is empty,        the parsing did not detect any errors.</p>
 
 
 <p><span class="doc-section-title">Raises:</span></p>
@@ -11437,7 +11567,7 @@ Args:
     s (str): A string containing a **kern file.
     raise_on_errors (Optional[bool], optional): If True, raise an exception if any grammar error is detected            during parsing.
 
-Returns (List[str]): A list of messages representing grammar errors detected during parsing. If the list is empty,        the parsing did not detect any errors.
+Returns ((Document, List[str])): A tuple containing the Document object and a list of messages representing         grammar errors detected during parsing. If the list is empty,        the parsing did not detect any errors.
 
 Raises:
     ValueError: If the Humdrum **kern representation could not be parsed.
@@ -13279,15 +13409,15 @@ The index of the list is starting from 1. Rows after removing empty lines and li
 <div class="doc doc-object doc-function">
 
 
-<h3 id="kernpy.core.Document.add_document" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">add_document</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></code>
+<h3 id="kernpy.core.Document.add" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">add</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">check_core_spines_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h3>
 
 
     <div class="doc doc-contents ">
 
-        <p>Concatenate one document to the current document: Mutates the current object!</p>
+        <p>Concatenate one document to the current document: Modify the current object!</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -13315,9 +13445,23 @@ The index of the list is starting from 1. Rows after removing empty lines and li
                 <em>required</em>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td><code>check_core_spines_only</code></td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[bool]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, only the core spines (<strong>kern and </strong>mens) are checked. If False, all spines are checked.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
       </tbody>
     </table>
-        <p>Returns: None</p>
+        <p>Returns ('Document'): The current document (self) with the other document concatenated.</p>
 
     </div>
 
@@ -13921,6 +14065,86 @@ clean_comment = comment.replace(f&quot;!!!{KeyComment}: &quot;, &quot;&quot;)
 <span class="gp">&gt;&gt;&gt; </span><span class="n">document</span><span class="o">.</span><span class="n">get_voices</span><span class="p">(</span><span class="n">clean</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="go">[&#39;!sax&#39;, &#39;!piano&#39;, &#39;!bass&#39;]</span>
 </code></pre></div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="kernpy.core.Document.match" class="doc doc-heading">
+            <code class="highlight language-python"><span class="k">match</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">check_core_spines_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Match two documents. Two documents match if they have the same spine structure.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>a</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="kernpy.core.document.Document" href="#kernpy.core.Document">Document</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The first document.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>b</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="kernpy.core.document.Document" href="#kernpy.core.Document">Document</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The second document.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>check_core_spines_only</code></td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[bool]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, only the core spines (<strong>kern and </strong>mens) are checked. If False, all spines are checked.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+        <p>Returns: True if the documents match, False otherwise.</p>
+<p>Examples:</p>
 
     </div>
 
