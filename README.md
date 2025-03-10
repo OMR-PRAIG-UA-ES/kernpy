@@ -8,6 +8,7 @@ Docs: <a target="_blank" href="https://kernpy.pages.dev/">https://kernpy.pages.d
 - [Installation](#installation)
 - [Documentation](#documentation)
 - [Run tests](#run-tests)
+- [Citation](#citation)
 
 
 ## Code example
@@ -351,3 +352,15 @@ python -m kernpy <command> <options>
 ```shell
 cd tests && python -m pytest
 ```
+
+## Citation:
+```bibtex
+@inproceedings{kernpy_mec_2025,
+  title={{kernpy: a Humdrum **Kern Oriented Python Package for Optical Music Recognition Tasks}},
+  author={Cerveto-Serrano, Joan and Rizo, David and Calvo-Zaragoza, Jorge},
+  booktitle={{Proceedings of the Music Encoding Conference (MEC2025)}},
+  address={London, United Kingdom},
+  year={2025}
+}
+```
+
