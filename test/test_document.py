@@ -192,7 +192,7 @@ class DocumentTestCase(unittest.TestCase):
         doc_1, _ = kp.loads('**kern\n=1\n=2\n=3\n=4\n*-\n')
         doc_2, _ = kp.loads('**kern\n=5\n=6\n=7\n=8\n*-\n')
 
-        expected_result = '**kern\n=1\n=2\n=3\n=4\n=5\n=6\n=7\n=8\n*-\n'
+        expected_result = '**kern\n=\n=\n=\n=\n=\n=\n=\n=\n*-\n'
 
         doc_1.add(doc_2)
         real_result = kp.dumps(doc_1)

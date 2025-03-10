@@ -12,6 +12,7 @@ DECORATION_SEPARATOR = '·'
 HEADERS = {"**mens", "**kern", "**text", "**harm", "**mxhm", "**root", "**dyn", "**dynam", "**fing"}
 CORE_HEADERS = {"**kern", "**mens"}
 SPINE_OPERATIONS = {"*-", "*+", "*^", "*v", "*x"}
+TERMINATOR = "*-"
 
 
 # We don't use inheritance here for all elements but enum, because we don't need any polymorphism mechanism, just a grouping one
@@ -834,6 +835,14 @@ class AbstractToken(ABC):
             '*clefF4'
         """
         pass
+
+    def __str__(self):
+        """
+        Returns the string representation of the token.
+
+        Returns (str): The string representation of the token.
+        """
+        return self.export()
 
 
 class ErrorToken(AbstractToken):

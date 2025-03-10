@@ -8,7 +8,7 @@ from typing import List, Optional, Dict, Union
 from collections.abc import Sequence
 from queue import Queue
 
-from kernpy.core import TokenCategory, CORE_HEADERS
+from kernpy.core import TokenCategory, CORE_HEADERS, TERMINATOR
 from kernpy.core import MetacommentToken, AbstractToken, HeaderToken
 
 
@@ -176,6 +176,46 @@ class Node:
             tree_traversal.visit(node)
             stack.extend(reversed(node.children))  # Add children in reverse order to maintain DFS order
 
+    def __eq__(self, other):
+        """
+        Compare two nodes.
+
+        Args:
+            other: The other node to compare.
+
+        Returns: True if the nodes are equal, False otherwise.
+        """
+        if other is None or not isinstance(other, Node):
+            return False
+
+        return self.id == other.id
+
+    def __ne__(self, other):
+        """
+        Compare two nodes.
+
+        Args:
+            other: The other node to compare.
+
+        Returns: True if the nodes are not equal, False otherwise.
+        """
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        """
+        Get the hash of the node.
+
+        Returns: The hash of the node.
+        """
+        return hash(self.id)
+
+    def __str__(self):
+        """
+        Get the string representation of the node.
+
+        Returns: The string representation of the node.
+        """
+        return f"{{{self.stage}: {self.token}}}"
 
 
 class BoundingBoxMeasures:
@@ -216,7 +256,7 @@ class MultistageTree:
 
         """
         self.root = Node(0, None, None, None, None, None)
-        self.stages = []
+        self.stages = []  # First stage (0-index) is the root (Node with None token and header_node). The core header is in stage 1.
         self.stages.append([self.root])
 
     def add_node(
@@ -609,12 +649,13 @@ class Document:
         other_header_nodes = other.get_header_stage()
 
         current_leaf_nodes = self.get_leaves()
-        other_first_level_children = other.tree.stages[1]  # avoid header stage
+        flatten = lambda lst: [item for sublist in lst for item in sublist]
+        other_first_level_children = [flatten(c.children) for c in other_header_nodes]  # avoid header stage
 
         for current_leaf, other_first_level_child in zip(current_leaf_nodes, other_first_level_children, strict=False):
             # Ignore extra spines from other document.
             # But if there are extra spines in the current document, it will raise an exception.
-            if current_leaf.token.category == TokenCategory.TERMINATOR:
+            if current_leaf.token.encoding == TERMINATOR:
                 # remove the '*-' token from the current document
                 current_leaf_index = current_leaf.parent.children.index(current_leaf)
                 current_leaf.parent.children.pop(current_leaf_index)
