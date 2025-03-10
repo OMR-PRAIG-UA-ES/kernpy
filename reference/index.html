@@ -1462,6 +1462,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#kernpy.core.AbstractToken.__str__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __str__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#kernpy.core.AbstractToken.export" class="md-nav__link">
     <span class="md-ellipsis">
       export
@@ -2641,9 +2650,45 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#kernpy.core.Node.__eq__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __eq__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Node.__hash__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __hash__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#kernpy.core.Node.__init__" class="md-nav__link">
     <span class="md-ellipsis">
       __init__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Node.__ne__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __ne__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Node.__str__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __str__
     </span>
   </a>
   
@@ -4448,6 +4493,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#kernpy.core.AbstractToken.__str__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __str__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#kernpy.core.AbstractToken.export" class="md-nav__link">
     <span class="md-ellipsis">
       export
@@ -5627,9 +5681,45 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#kernpy.core.Node.__eq__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __eq__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Node.__hash__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __hash__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#kernpy.core.Node.__init__" class="md-nav__link">
     <span class="md-ellipsis">
       __init__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Node.__ne__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __ne__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernpy.core.Node.__str__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __str__
     </span>
   </a>
   
@@ -12132,6 +12222,24 @@ categorized based on their TokenCategory.</p>
 <div class="doc doc-object doc-function">
 
 
+<h3 id="kernpy.core.AbstractToken.__str__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__str__</span><span class="p">()</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Returns the string representation of the token.</p>
+<p>Returns (str): The string representation of the token.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h3 id="kernpy.core.AbstractToken.export" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">export</span><span class="p">()</span></code>
 
@@ -17660,6 +17768,70 @@ The <code>Node</code> class is responsible for storing the main information of t
 <div class="doc doc-object doc-function">
 
 
+<h3 id="kernpy.core.Node.__eq__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Compare two nodes.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>other</code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The other node to compare.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+        <p>Returns: True if the nodes are equal, False otherwise.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="kernpy.core.Node.__hash__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__hash__</span><span class="p">()</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Get the hash of the node.</p>
+<p>Returns: The hash of the node.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h3 id="kernpy.core.Node.__init__" class="doc doc-heading">
             <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">stage</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">last_spine_operator_node</span><span class="p">,</span> <span class="n">last_signature_nodes</span><span class="p">,</span> <span class="n">header_node</span><span class="p">)</span></code>
 
@@ -17768,6 +17940,70 @@ The <code>Node</code> class is responsible for storing the main information of t
           </tr>
       </tbody>
     </table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="kernpy.core.Node.__ne__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__ne__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Compare two nodes.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>other</code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The other node to compare.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+        <p>Returns: True if the nodes are not equal, False otherwise.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="kernpy.core.Node.__str__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__str__</span><span class="p">()</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Get the string representation of the node.</p>
+<p>Returns: The string representation of the node.</p>
 
     </div>
 
