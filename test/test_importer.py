@@ -24,7 +24,7 @@ class ImporterTestCase(unittest.TestCase):
     def test_spine_ids(self):
         input_kern_file = 'resource_dir/legacy/chor001.krn'
 
-        doc, err = kp.read(input_kern_file)
+        doc, err = kp.load(input_kern_file)
         header_tokens = doc.get_all_tokens()
         spines_ids = [t.spine_id for t in header_tokens if isinstance(t, kp.core.HeaderToken)]
         self.assertListEqual([0, 1, 2, 3, 4, 5], spines_ids)
@@ -32,12 +32,12 @@ class ImporterTestCase(unittest.TestCase):
     def test_raise_handled_exception_when_can_not_import(self):
         input_kern_file = 'resource_dir/samples/wrong_header.krn'
         with self.assertRaises(ValueError):
-            doc, err = kp.read(input_kern_file)
+            doc, err = kp.load(input_kern_file)
 
     def test_raise_wrong_number_of_columns(self):
         input_kern_file = 'resource_dir/samples/wrong_number_of_columns.krn'
         with self.assertRaises(ValueError):
-            doc, err = kp.read(input_kern_file)
+            doc, err = kp.load(input_kern_file)
 
     @unittest.skip
     def test_fix_error_wrong_number_of_columns(self):
@@ -48,7 +48,7 @@ class ImporterTestCase(unittest.TestCase):
             expected_content = f.read()
 
         # Act
-        doc, err = kp.read(input_kern_file)
+        doc, err = kp.load(input_kern_file)
         real_content = kp.export(doc, kp.ExportOptions())
 
         # Assert
@@ -56,5 +56,11 @@ class ImporterTestCase(unittest.TestCase):
 
     def test_has_instrument_tokens(self):
         input_kern_file = 'resource_dir/legacy/chor001.krn'
-        doc, err = kp.read(input_kern_file)
+        doc, err = kp.load(input_kern_file)
         self.assertTrue(len(doc.get_all_tokens(filter_by_categories=[kp.TokenCategory.INSTRUMENTS])) > 0)
+
+    def test_raise_error_when_content_after_terminator(self):
+        input_kern_file = Path('resource_dir/samples/content_after_terminator.krn')
+
+        with self.assertRaises(ValueError):
+            doc, err = kp.load(input_kern_file)
