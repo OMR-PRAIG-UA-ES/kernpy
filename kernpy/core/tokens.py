@@ -1312,6 +1312,8 @@ class MHXMToken(AbstractToken):
     """
     MHXMToken class.
     """
+    def __init__(self, encoding):
+        super().__init__(encoding, TokenCategory.OTHER)
 
     # TODO: Implement constructor
     def export(self) -> str:
