@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+from unicodedata import category
 
 from kernpy.core import Token, SpineOperationToken
 from kernpy.core.document import MultistageTree, Node
@@ -58,8 +59,10 @@ class GraphvizExporter:
             node = stack.pop()
             header_label = f'header #{node.header_node.id}' if node.header_node else ''
             last_spine_operator_label = f'last spine op. #{node.last_spine_operator_node.id}' if node.last_spine_operator_node else ''
+            category_name = getattr(getattr(getattr(node, "token", None), "category", None), "_name_", "Non defined category")
 
-            top_record_label = f'{{ #{node.id}| stage {node.stage} | {header_label} | {last_spine_operator_label}}}'
+
+            top_record_label = f'{{ #{node.id}| stage {node.stage} | {header_label} | {last_spine_operator_label} | {category_name} }}'
             signatures_label = ''
             if node.last_signature_nodes and node.last_signature_nodes.nodes:
                 for k, v in node.last_signature_nodes.nodes.items():
