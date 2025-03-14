@@ -84,19 +84,19 @@ class TestTranscription(unittest.TestCase):
 
     def test_transposer_american_pitch_importer(self):
         importer = kp.transposer.AmericanPitchImporter()
-        pitch1 = importer.import_pitch('G5')
+        pitch1 = importer._import_pitch('G5')
 
         importer = kp.transposer.AmericanPitchImporter()
-        pitch11 = importer.import_pitch('g5')
+        pitch11 = importer._import_pitch('g5')
 
         importer = kp.transposer.AmericanPitchImporter()
-        pitch2 = importer.import_pitch('A4')
+        pitch2 = importer._import_pitch('A4')
 
         importer = kp.transposer.AmericanPitchImporter()
-        pitch3 = importer.import_pitch('B12')
+        pitch3 = importer._import_pitch('B12')
 
         importer = kp.transposer.AmericanPitchImporter()
-        pitch4 = importer.import_pitch('c2')
+        pitch4 = importer._import_pitch('c2')
 
         self.assertEqual(pitch1.octave, 5)
         self.assertEqual(pitch1.name, 'G')
@@ -110,115 +110,115 @@ class TestTranscription(unittest.TestCase):
 
         importer = kp.transposer.AmericanPitchImporter()
         with self.assertRaises(ValueError):
-            pitch5 = importer.import_pitch('zzz')
+            pitch5 = importer._import_pitch('zzz')
 
     def test_transposer_american_pitch_exporter(self):
         exporter = kp.transposer.AmericanPitchExporter()
         pitch1 = kp.transposer.AgnosticPitch('g', 4)
-        self.assertEqual(exporter.export_pitch(pitch1), 'G4')
+        self.assertEqual(exporter._export_pitch(pitch1), 'G4')
 
         exporter = kp.transposer.AmericanPitchExporter()
         pitch2 = kp.transposer.AgnosticPitch('a', 5)
-        self.assertEqual(exporter.export_pitch(pitch2), 'A5')
+        self.assertEqual(exporter._export_pitch(pitch2), 'A5')
 
         exporter = kp.transposer.AmericanPitchExporter()
         pitch3 = kp.transposer.AgnosticPitch('b', 60)
-        self.assertEqual(exporter.export_pitch(pitch3), 'B60')
+        self.assertEqual(exporter._export_pitch(pitch3), 'B60')
 
         exporter = kp.transposer.AmericanPitchExporter()
         pitch4 = kp.transposer.AgnosticPitch('C-', 7)
-        self.assertEqual(exporter.export_pitch(pitch4), 'Cb7')
+        self.assertEqual(exporter._export_pitch(pitch4), 'Cb7')
 
         exporter = kp.transposer.AmericanPitchExporter()
         with self.assertRaises(ValueError):
-            pitch5 = exporter.export_pitch(kp.transposer.AgnosticPitch('zzz', -1))
+            pitch5 = exporter._export_pitch(kp.transposer.AgnosticPitch('zzz', -1))
 
     def test_transposer_humdrum_pitch_importer(self):
         importer = kp.transposer.HumdrumPitchImporter()
-        pitch = importer.import_pitch('c')
+        pitch = importer._import_pitch('c')
         self.assertEqual('C', pitch.name)
         self.assertEqual(4, pitch.octave)
 
-        pitch = importer.import_pitch('C')
+        pitch = importer._import_pitch('C')
         self.assertEqual('C', pitch.name)
         self.assertEqual(3, pitch.octave)
 
-        pitch = importer.import_pitch('cccc')
+        pitch = importer._import_pitch('cccc')
         self.assertEqual('C', pitch.name)
         self.assertEqual(7, pitch.octave)
 
-        pitch = importer.import_pitch('CCCC')
+        pitch = importer._import_pitch('CCCC')
         self.assertEqual('C', pitch.name)
         self.assertEqual(0, pitch.octave)
 
-        pitch = importer.import_pitch('c#')
+        pitch = importer._import_pitch('c#')
         self.assertEqual('C+', pitch.name)
         self.assertEqual(4, pitch.octave)
 
-        pitch = importer.import_pitch('c###')
+        pitch = importer._import_pitch('c###')
         self.assertEqual('C+++', pitch.name)
         self.assertEqual(4, pitch.octave)
 
-        pitch = importer.import_pitch('c-')
+        pitch = importer._import_pitch('c-')
         self.assertEqual('C-', pitch.name)
         self.assertEqual(4, pitch.octave)
 
-        pitch = importer.import_pitch('c---')
+        pitch = importer._import_pitch('c---')
         self.assertEqual('C---', pitch.name)
         self.assertEqual(4, pitch.octave)
 
-        pitch = importer.import_pitch('b')
+        pitch = importer._import_pitch('b')
         self.assertEqual('B', pitch.name)
         self.assertEqual(4, pitch.octave)
 
-        pitch = importer.import_pitch('bb--')
+        pitch = importer._import_pitch('bb--')
         self.assertEqual('B--', pitch.name)
         self.assertEqual(5, pitch.octave)
 
     def test_transposer_humdrum_pitch_exporter(self):
         exporter = kp.transposer.HumdrumPitchExporter()
         pitch = kp.transposer.AgnosticPitch('c', 4)
-        self.assertEqual('c', exporter.export_pitch(pitch))
+        self.assertEqual('c', exporter._export_pitch(pitch))
 
         exporter = kp.transposer.HumdrumPitchExporter()
         pitch = kp.transposer.AgnosticPitch('c', 3)
-        self.assertEqual('C', exporter.export_pitch(pitch))
+        self.assertEqual('C', exporter._export_pitch(pitch))
 
         exporter = kp.transposer.HumdrumPitchExporter()
         pitch = kp.transposer.AgnosticPitch('c', 7)
-        self.assertEqual('cccc', exporter.export_pitch(pitch))
+        self.assertEqual('cccc', exporter._export_pitch(pitch))
 
         exporter = kp.transposer.HumdrumPitchExporter()
         pitch = kp.transposer.AgnosticPitch('c', 2)
-        self.assertEqual('CC', exporter.export_pitch(pitch))
+        self.assertEqual('CC', exporter._export_pitch(pitch))
 
         exporter = kp.transposer.HumdrumPitchExporter()
         pitch = kp.transposer.AgnosticPitch('c', 0)
-        self.assertEqual('CCCC', exporter.export_pitch(pitch))
+        self.assertEqual('CCCC', exporter._export_pitch(pitch))
 
         exporter = kp.transposer.HumdrumPitchExporter()
         pitch = kp.transposer.AgnosticPitch('c+', 4)
-        self.assertEqual('c#', exporter.export_pitch(pitch))
+        self.assertEqual('c#', exporter._export_pitch(pitch))
 
         exporter = kp.transposer.HumdrumPitchExporter()
         pitch = kp.transposer.AgnosticPitch('c+', 6)
-        self.assertEqual('ccc#', exporter.export_pitch(pitch))
+        self.assertEqual('ccc#', exporter._export_pitch(pitch))
 
         exporter = kp.transposer.HumdrumPitchExporter()
         pitch = kp.transposer.AgnosticPitch('c++', 4)
-        self.assertEqual('c##', exporter.export_pitch(pitch))
+        self.assertEqual('c##', exporter._export_pitch(pitch))
 
         exporter = kp.transposer.HumdrumPitchExporter()
         pitch = kp.transposer.AgnosticPitch('c---', 4)
-        self.assertEqual('c---', exporter.export_pitch(pitch))
+        self.assertEqual('c---', exporter._export_pitch(pitch))
 
         exporter = kp.transposer.HumdrumPitchExporter()
         pitch = kp.transposer.AgnosticPitch('c-', 6)
-        self.assertEqual('ccc-', exporter.export_pitch(pitch))
+        self.assertEqual('ccc-', exporter._export_pitch(pitch))
 
         exporter = kp.transposer.HumdrumPitchExporter()
         pitch = kp.transposer.AgnosticPitch('c---', 6)
-        self.assertEqual('ccc---', exporter.export_pitch(pitch))
+        self.assertEqual('ccc---', exporter._export_pitch(pitch))
 
     def test_transposer_get_chroma(self):
         pitch = kp.transposer.AgnosticPitch('d', 4)
@@ -352,6 +352,51 @@ class TestTranscription(unittest.TestCase):
                                           input_format=kp.transposer.NotationEncoding.HUMDRUM.value,
                                           output_format=kp.transposer.NotationEncoding.AMERICAN.value)
         self.assertEqual('D#5', content)
+
+    def test_retrieve_octave_from_kern_pitch(self):
+        content = kp.transposer.octave('C', encoding=kp.transposer.NotationEncoding.HUMDRUM.value)
+        self.assertEqual(3, content)
+        content = kp.transposer.octave('CCC', encoding=kp.transposer.NotationEncoding.HUMDRUM.value)
+        self.assertEqual(1, content)
+        content = kp.transposer.octave('c', encoding=kp.transposer.NotationEncoding.HUMDRUM.value)
+        self.assertEqual(4, content)
+        content = kp.transposer.octave('cccc', encoding=kp.transposer.NotationEncoding.HUMDRUM.value)
+        self.assertEqual(7, content)
+
+    def test_retrieve_octave_from_american_pitch(self):
+        content = kp.transposer.octave('C4', encoding=kp.transposer.NotationEncoding.AMERICAN.value)
+        self.assertEqual(4, content)
+        content = kp.transposer.octave('C4', encoding=kp.transposer.NotationEncoding.AMERICAN.value)
+        self.assertEqual(4, content)
+        content = kp.transposer.octave('C#5', encoding=kp.transposer.NotationEncoding.AMERICAN.value)
+        self.assertEqual(5, content)
+        content = kp.transposer.octave('c#5', encoding=kp.transposer.NotationEncoding.AMERICAN.value)
+        self.assertEqual(5, content)
+        content = kp.transposer.octave('C-8', encoding=kp.transposer.NotationEncoding.AMERICAN.value)
+        self.assertEqual(8, content)
+        content = kp.transposer.octave('C--8', encoding=kp.transposer.NotationEncoding.AMERICAN.value)
+        self.assertEqual(8, content)
+
+    def test_retrieve_name_from_kern_pitch(self):
+        content = kp.transposer.name('C', encoding=kp.transposer.NotationEncoding.HUMDRUM.value)
+        self.assertEqual('C', content)
+        content = kp.transposer.name('CCC', encoding=kp.transposer.NotationEncoding.HUMDRUM.value)
+        self.assertEqual('C', content)
+        content = kp.transposer.name('c', encoding=kp.transposer.NotationEncoding.HUMDRUM.value)
+        self.assertEqual('C', content)
+        content = kp.transposer.name('cccc', encoding=kp.transposer.NotationEncoding.HUMDRUM.value)
+        self.assertEqual('C', content)
+        content = kp.transposer.name('c#', encoding=kp.transposer.NotationEncoding.HUMDRUM.value)
+        self.assertEqual('C+', content)
+        content = kp.transposer.name('c##', encoding=kp.transposer.NotationEncoding.HUMDRUM.value)
+        self.assertEqual('C++', content)
+        content = kp.transposer.name('c-', encoding=kp.transposer.NotationEncoding.HUMDRUM.value)
+        self.assertEqual('C-', content)
+        content = kp.transposer.name('c---', encoding=kp.transposer.NotationEncoding.HUMDRUM.value)
+        self.assertEqual('C---', content)
+
+
+
 
 
 

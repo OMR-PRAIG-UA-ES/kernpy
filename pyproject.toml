@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "kernpy"
-version = "0.5.0"
+version = "0.5.1"
 authors = [
     { name = "David Rizo Valero", email = "drizo@ua.es"},
     { name = "Joan Cerveto Serrano", email = "joan.cerveto@ua.es"}

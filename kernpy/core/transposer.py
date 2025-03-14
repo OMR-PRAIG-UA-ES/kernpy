@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from enum import Enum
 
 
-pitches = [
+pitches = {
     'A',
     'B',
     'C',
@@ -12,7 +12,7 @@ pitches = [
     'E',
     'F',
     'G'
-]
+}
 
 Chromas = {
     'C--': 0,
@@ -118,6 +118,9 @@ class Direction(Enum):
     UP = 'up'
     DOWN = 'down'
 
+class PitchImporterError(Exception):
+    pass
+
 
 class AgnosticPitch:
     def __init__(self, name: str, octave: int):
@@ -171,8 +174,14 @@ class PitchImporter(ABC):
         self.octave = None
         self.name = None
 
-    @abstractmethod
     def import_pitch(self, encoding: str) -> AgnosticPitch:
+        try:
+            return self._import_pitch(encoding)
+        except Exception as e:
+            raise PitchImporterError(f"Error parsing pitch in {str(self.__class__.__name__)}. Details: {e}")
+
+    @abstractmethod
+    def _import_pitch(self, encoding: str) -> AgnosticPitch:
         pass
 
     @abstractmethod
@@ -220,7 +229,7 @@ class HumdrumPitchImporter(PitchImporter):
     def __init__(self):
         super().__init__()
 
-    def import_pitch(self, encoding: str) -> AgnosticPitch:
+    def _import_pitch(self, encoding: str) -> AgnosticPitch:
         self.name, self.octave = self._parse_pitch(encoding)
         return AgnosticPitch(self.name, self.octave)
 
@@ -244,7 +253,7 @@ class AmericanPitchImporter(PitchImporter):
     def __init__(self):
         super().__init__()
 
-    def import_pitch(self, encoding: str) -> AgnosticPitch:
+    def _import_pitch(self, encoding: str) -> AgnosticPitch:
         self.name, self.octave = self._parse_pitch(encoding)
         return AgnosticPitch(self.name, self.octave)
 
@@ -266,12 +275,22 @@ class PitchImporterFactory:
             raise ValueError(f"Invalid encoding: {encoding}. \nUse one of {NotationEncoding.__members__.values()}")
 
 
+class PitchExporterError(Exception):
+    pass
+
 class PitchExporter(ABC):
     def __init__(self):
         self.pitch = None
 
-    @abstractmethod
     def export_pitch(self, pitch: AgnosticPitch) -> str:
+        try:
+            return self._export_pitch(pitch)
+        except Exception as e:
+            raise PitchExporterError(f"Error exporting pitch in {str(self.__class__.__name__)}. Details: {e}")
+
+
+    @abstractmethod
+    def _export_pitch(self, pitch: AgnosticPitch) -> str:
         pass
 
     def _is_valid_pitch(self):
@@ -291,7 +310,7 @@ class HumdrumPitchExporter(PitchExporter):
     def __init__(self):
         super().__init__()
 
-    def export_pitch(self, pitch: AgnosticPitch) -> str:
+    def _export_pitch(self, pitch: AgnosticPitch) -> str:
         accidentals = ''.join([c for c in pitch.name if c in ['-', '+']])
         accidentals = accidentals.replace('+', '#')
         accidentals_output = len(accidentals) * accidentals[0] if len(accidentals) > 0 else ''
@@ -307,7 +326,7 @@ class AmericanPitchExporter(PitchExporter):
     def __init__(self):
         super().__init__()
 
-    def export_pitch(self, pitch: AgnosticPitch) -> str:
+    def _export_pitch(self, pitch: AgnosticPitch) -> str:
         self.pitch = pitch
 
         if not self._is_valid_pitch():
@@ -382,8 +401,73 @@ def transpose(
     transposed_pitch = AgnosticPitch.to_transposed(pitch, interval, direction)
 
     exporter = PitchExporterFactory.create(output_format)
-    content = exporter.export_pitch(transposed_pitch)
+    content = exporter._export_pitch(transposed_pitch)
 
     return content
 
+def octave(pitch: str, *, encoding: str = NotationEncoding.HUMDRUM.value) -> int:
+    """
+    Get the octave of a pitch.
+
+    Args:
+        pitch (str): The pitch to get the octave.
+        encoding (str): The encoding format of the pitch. Default is HUMDRUM.
+
+    Returns:
+        int: The octave of the pitch.
+
+    Examples:
+        >>> octave('ccc')
+        6
+        >>> octave('ccc', encoding=NotationEncoding.HUMDRUM.value)
+        6
+        >>> octave('ccc', encoding='kern')
+        6
+        >>> octave('ccc#')
+        6
+        >>> octave('ccc#', encoding='kern')
+        6
+        >>> octave('G4', encoding='american')
+        4
+        >>> octave('G4', encoding=NotationEncoding.AMERICAN.value)
+        4
+        >>> octave('C3', encoding='american')
+        3
+    """
+    importer = PitchImporterFactory.create(encoding)
+    pitch: AgnosticPitch = importer.import_pitch(pitch)
+    return pitch.octave
+
+def name(pitch: str, *, encoding: str = NotationEncoding.HUMDRUM.value) -> str:
+    """
+    Get the name of a pitch.
+
+    Args:
+        pitch (str): The pitch to get the name.
+        encoding (str): The encoding format of the pitch. Default is HUMDRUM.
+
+    Returns:
+        str: The name of the pitch.
+
+    Examples:
+        >>> name('ccc')
+        'C'
+        >>> name('ccc', encoding=NotationEncoding.HUMDRUM.value)
+        'C'
+        >>> name('ccc', encoding='kern')
+        'C'
+        >>> name('ccc#')
+        'C'
+        >>> name('ccc#', encoding='kern')
+        'C'
+        >>> name('G4', encoding='american')
+        'G'
+        >>> name('G4', encoding=NotationEncoding.AMERICAN.value)
+        'G'
+        >>> name('C3', encoding='american')
+        'C'
+    """
+    importer = PitchImporterFactory.create(encoding)
+    pitch: AgnosticPitch = importer.import_pitch(pitch)
+    return pitch.name
 
