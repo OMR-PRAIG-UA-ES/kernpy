@@ -39,6 +39,12 @@ class TestTokenizer(unittest.TestCase):
         self.assertEqual('2@.@bb@-', token_str)
         self.token_1.export.assert_called()
 
+    def test_gkrn_tokenizer_1(self):
+        tokenizer = kp.GkernTokenizer()
+        token_str = tokenizer.tokenize(self.token_1)
+        self.assertEqual('?', token_str)
+        self.token_1.export.assert_called()
+
     def test_tokenizer_factory_kern(self):
         tokenizer = kp.TokenizerFactory.create(kp.KernTypeExporter.normalizedKern.value)
         self.assertIsInstance(tokenizer, kp.KernTokenizer)
@@ -50,6 +56,10 @@ class TestTokenizer(unittest.TestCase):
     def test_tokenizer_factory_bkern(self):
         tokenizer = kp.TokenizerFactory.create(kp.KernTypeExporter.bKern.value)
         self.assertIsInstance(tokenizer, kp.BekernTokenizer)
+
+    def test_tokenizer_factory_gkrn(self):
+        tokenizer = kp.TokenizerFactory.create(kp.KernTypeExporter.gKern.value)
+        self.assertIsInstance(tokenizer, kp.GkernTokenizer)
 
     def test_tokenizer_factory_raise_error_if_none(self):
         with self.assertRaises(ValueError):

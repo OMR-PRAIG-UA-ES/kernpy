@@ -8,23 +8,25 @@ class KernTypeExporter(Enum):  # TODO: Eventually, polymorphism will be used to 
     """
     Options for exporting a kern file.
 
-    Example:
-        # Create the importer
-        >>> hi = Importer()
+    Examples:
+        >>> import kernpy as kp
+        >>> doc, err = kp.load('path/to/file.krn')
+        >>> kp.dump(doc, 'path/to/file.krn', tokenizer=kp.KernTypeExporter.eKern)
+        ...
+        >>> kp.dump(doc, 'path/to/file.krn', tokenizer=kp.KernTypeExporter.normalizedKern)
+        ...
 
-        # Read the file
-        >>> document = hi.import_file('file.krn')
-
-        # Export the file
-        >>> options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kernType=KernTypeExporter.normalizedKern)
-        >>> exporter = Exporter()
-        >>> exported = exporter.export_string(options)
+        >>> KernTypeExporter.eKern.value
+        'ekern'
+        >>> KernTypeExporter.normalizedKern.value
+        'kern'
 
     """
     eKern = 'ekern'
     normalizedKern = 'kern'
     bKern = 'bkern'
     bEkern = 'bekern'
+    gKern = 'gkern'
 
 
 class Tokenizer(ABC):
@@ -151,6 +153,29 @@ class BkernTokenizer(Tokenizer):
         """
         return BekernTokenizer().tokenize(token).replace(TOKEN_SEPARATOR, '')
 
+class GkernTokenizer(Tokenizer):
+    """
+    GkernTokenizer converts a Token into a gkern (Graphic **kern) string representation. \
+        This format use a non-semantic approach to represent the pitch in a **kern-based format. \
+        The pitches are represented by a number depending on the line in the staff. \
+    """
+
+    def tokenize(self, token: Token) -> str:
+        """
+        Tokenize a token into a gkern string representation.
+        Args:
+            token (Token): Token to be tokenized.
+
+        Returns (str): gkern string representation.
+
+        Examples:
+            >>> token.encoding
+            '2@.@bb@-·_·L'
+            >>> GkernTokenizer().tokenize(token)
+            '2@.@4@-·_·L'
+        """
+        raise NotImplementedError('GkernTokenizer is not implemented yet.')
+
 
 class TokenizerFactory:
     @classmethod
@@ -166,6 +191,8 @@ class TokenizerFactory:
             return BekernTokenizer()
         elif type == KernTypeExporter.bEkern.value:
             return BkernTokenizer()
+        elif type == KernTypeExporter.gKern.value:
+            return GkernTokenizer()
 
         raise ValueError(f"Unknown kern type: {type}. "
                          f"Supported types are: "

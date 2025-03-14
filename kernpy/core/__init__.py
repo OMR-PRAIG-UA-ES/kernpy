@@ -41,6 +41,7 @@ __all__ = [
     'EkernTokenizer',
     'BekernTokenizer',
     'BkernTokenizer',
+    'GkernTokenizer',
     'TokenizerFactory',
     'Token',
     'KernTokenizer',
