@@ -239,8 +239,9 @@ class Exporter:
                 rows.append(row)
 
         # now, add the spine terminate row
-        if options.to_measure is not None and len(rows) > 0 and rows[len(rows) - 1][
-            0] != '*-':  # if the terminate is not added yet
+        if (options.to_measure is not None
+                and len(rows) > 0
+                and rows[len(rows) - 1][0] != '*-'):  # if the terminate is not added yet
             spine_count = len(rows[len(rows) - 1])
             row = []
             for i in range(spine_count):

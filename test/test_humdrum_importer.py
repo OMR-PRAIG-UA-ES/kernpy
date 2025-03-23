@@ -170,7 +170,7 @@ class ImporterTestCase(unittest.TestCase):
             importer = kp.createImporter(node.token.encoding)
             self.assertTrue(isinstance(importer, expected_importer))
 
-    def doTestCountSpines(self, kern_file, expected_stage_count, expected_spine_counts):
+    def doTestCountStagesAndSpines(self, kern_file, expected_stage_count, expected_spine_counts):
         logging.info(f'Importing {kern_file}')
         importer = kp.Importer()
         document = importer.import_file(kern_file)
@@ -189,32 +189,32 @@ class ImporterTestCase(unittest.TestCase):
 
     def testSpines(self):
         # Tests extracted from the discussion in  https://github.com/humdrum-tools/vhv-documentation/issues/7#event-3236429526
-        self.doTestCountSpines('resource_dir/spines/non_stacked_ends.krn', 12,
-                               [[1, 1, 2, 2, 3, 3, 4, 4, 2, 2, 1, 1]])  # in this test, three spines merge into one
-        self.doTestCountSpines('resource_dir/spines/non_stacked_ends_2.krn', 10,
-                               [[1, 1, 1, 1, 1, 1, 2, 2, 1, 1], [1, 1, 2, 2, 3, 3, 6, 6, 1, 1],
+        self.doTestCountStagesAndSpines('resource_dir/spines/non_stacked_ends.krn', 12,
+                                        [[1, 1, 2, 2, 3, 3, 4, 4, 2, 2, 1, 1]])  # in this test, three spines merge into one
+        self.doTestCountStagesAndSpines('resource_dir/spines/non_stacked_ends_2.krn', 10,
+                                        [[1, 1, 1, 1, 1, 1, 2, 2, 1, 1], [1, 1, 2, 2, 3, 3, 6, 6, 1, 1],
                                 [1, 1, 1, 1, 1, 1, 2, 2, 1,
                                  1]])  # the last join in VHV leads to just one main spine - we've added an issue
 
-        self.doTestCountSpines('resource_dir/spines/1.krn', 18,
-                               [[1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1]])
-        self.doTestCountSpines('resource_dir/spines/2.krn', 18, [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                                                                 [1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1,
+        self.doTestCountStagesAndSpines('resource_dir/spines/1.krn', 18,
+                                        [[1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1]])
+        self.doTestCountStagesAndSpines('resource_dir/spines/2.krn', 18, [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                                                                          [1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1,
                                                                   1]])
-        self.doTestCountSpines('resource_dir/spines/3.krn', 16, [[1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1],
-                                                                 [1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1]])
-        self.doTestCountSpines('resource_dir/spines/4.krn', 17, [[1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1],
-                                                                 [1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1]])
-        self.doTestCountSpines('resource_dir/spines/5.krn', 24,
-                               [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1],
+        self.doTestCountStagesAndSpines('resource_dir/spines/3.krn', 16, [[1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1],
+                                                                          [1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1]])
+        self.doTestCountStagesAndSpines('resource_dir/spines/4.krn', 17, [[1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1],
+                                                                          [1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1]])
+        self.doTestCountStagesAndSpines('resource_dir/spines/5.krn', 24,
+                                        [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1],
                                 [1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 1, 1, 2, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1]])
 
-        self.doTestCountSpines('resource_dir/spines/spines-from-piano-joplin-bethena-start.krn', 23,
-                               [[1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
+        self.doTestCountStagesAndSpines('resource_dir/spines/spines-from-piano-joplin-bethena-start.krn', 23,
+                                        [[1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
                                 [1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 2, 2, 1, 1],
                                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
-        self.doTestCountSpines('resource_dir/spines/spines-piano-hummel-prelude67-15.krn', 19,
-                               [[1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 3, 3, 3, 1, 1, 2, 2, 1, 1],
+        self.doTestCountStagesAndSpines('resource_dir/spines/spines-piano-hummel-prelude67-15.krn', 19,
+                                        [[1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 3, 3, 3, 1, 1, 2, 2, 1, 1],
                                 [1, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
                                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
 
