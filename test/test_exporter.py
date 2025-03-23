@@ -1,5 +1,6 @@
 import os
 import unittest
+from pathlib import Path
 
 import kernpy as kp
 
@@ -146,6 +147,17 @@ class ExporterTestCase(unittest.TestCase):
             categories={t for t in kp.TokenCategory},
             expected_path='resource_dir/spines/concerto-piano-12-allegro_only_kern_and_harm.krn'
         )
+
+    def test_export_when_merge_spine_is_not_closed(self):
+        path = Path('resource_dir/spines/merge-spines-fragment.krn')
+        with open(path, 'r') as f:
+            input_content = f.read()
+        expected_content = input_content
+
+        doc, _ = kp.loads(input_content)
+        real_content = kp.dumps(doc)
+
+        self.assertEqual(expected_content, real_content)
 
 
 
