@@ -4,8 +4,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Sequence
 from enum import Enum, auto
 import copy
-from typing import List
-
+from typing import List, Dict, Set, Union, Optional
 
 TOKEN_SEPARATOR = '@'
 DECORATION_SEPARATOR = '·'
@@ -22,14 +21,28 @@ class TokenCategory(Enum):
     Options for the category of a token.
 
     This is used to determine what kind of token should be exported.
+
+    The categories are not sorted in any particular order. Hierarchical order must be defined in other data structures.
     """
     STRUCTURAL = auto()  # header, spine operations
-    CORE = auto()  # notes, rests, chords
+    CORE = auto() # notes, rests, chords, etc.
+    NOTE_REST = auto()
+    NOTE = auto()
+    PITCH = auto()
+    DURATION = auto()
+    DECORATION = auto()
+    REST = auto()
+    CHORD = auto()
     EMPTY = auto()  # placeholders, null interpretation
     SIGNATURES = auto()
+    CLEF = auto()
+    TIME_SIGNATURE = auto()
+    METER_SYMBOL = auto()
+    KEY_SIGNATURE = auto()
     ENGRAVED_SYMBOLS = auto()
     OTHER_CONTEXTUAL = auto()
     BARLINES = auto()
+    COMMENTS = auto()
     FIELD_COMMENTS = auto()
     LINE_COMMENTS = auto()
     DYNAMICS = auto()
@@ -46,6 +59,304 @@ class SubTokenCategory(Enum):
     PITCH = auto()
     DURATION = auto()
     DECORATION = auto()  # todo, tipos...
+
+class TokenCategoryHierarchyMapper:
+    """
+    Mapping of the TokenCategory hierarchy.
+
+    This class is used to define the hierarchy of the TokenCategory. Useful related methods are provided.
+    """
+    """
+    The hierarchy of the TokenCategory is a recursive dictionary that defines the parent-child relationships \
+        between the categories. It's a tree.
+    """
+    _hierarchy_typing = Dict[TokenCategory, '_hierarchy_typing']
+    hierarchy: _hierarchy_typing = {
+        TokenCategory.STRUCTURAL: {},  # each leave must be an empty dictionary
+        TokenCategory.CORE: {
+            TokenCategory.NOTE_REST: {
+                TokenCategory.DURATION: {},
+                TokenCategory.NOTE: {
+                    TokenCategory.PITCH: {},
+                    TokenCategory.DECORATION: {}},
+                TokenCategory.REST: {},
+            },
+            TokenCategory.CHORD: {},
+            TokenCategory.EMPTY: {},
+        },
+        TokenCategory.SIGNATURES: {
+            TokenCategory.CLEF: {},
+            TokenCategory.TIME_SIGNATURE: {},
+            TokenCategory.METER_SYMBOL: {},
+            TokenCategory.KEY_SIGNATURE: {},
+        },
+        TokenCategory.ENGRAVED_SYMBOLS: {},
+        TokenCategory.OTHER_CONTEXTUAL: {},
+        TokenCategory.BARLINES: {},
+        TokenCategory.COMMENTS: {
+            TokenCategory.FIELD_COMMENTS: {},
+            TokenCategory.LINE_COMMENTS: {},
+        },
+        TokenCategory.DYNAMICS: {},
+        TokenCategory.HARMONY: {},
+        TokenCategory.FINGERING: {},
+        TokenCategory.LYRICS: {},
+        TokenCategory.INSTRUMENTS: {},
+        TokenCategory.BOUNDING_BOXES: {},
+        TokenCategory.OTHER: {},
+    }
+
+    @classmethod
+    def _is_child(cls, parent: TokenCategory, child: TokenCategory, *, tree: '_hierarchy_typing') -> bool:
+        """
+        Recursively check if `child` is in the subtree of `parent`.
+
+        Args:
+            parent (TokenCategory): The parent category.
+            child (TokenCategory): The category to check.
+            tree (_hierarchy_typing): The subtree to check.
+
+        Returns:
+            bool: True if `child` is a descendant of `parent`, False otherwise.
+        """
+        # Base case: the parent is empty.
+        if len(tree.keys()) == 0:
+            return False
+
+        # Recursive case: explore the direct children of the parent.
+        return any(
+            direct_child == child or cls._is_child(direct_child, child, tree=tree[parent])
+            for direct_child in tree.get(parent, {})
+        )
+        # Vectorized version of the following code:
+        #direct_children = tree.get(parent, dict())
+        #for direct_child in direct_children.keys():
+        #    if direct_child == child or cls._is_child(direct_child, child, tree=tree[parent]):
+        #        return True
+
+    @classmethod
+    def is_child(cls, parent: TokenCategory, child: TokenCategory) -> bool:
+        """
+        Recursively check if `child` is in the subtree of `parent`.
+
+        Args:
+            parent (TokenCategory): The parent category.
+            child (TokenCategory): The category to check.
+
+        Returns:
+            bool: True if `child` is a descendant of `parent`, False otherwise.
+        """
+        return cls._is_child(parent, child, tree=cls.hierarchy)
+
+    @classmethod
+    def children(cls, parent: TokenCategory) -> Set[TokenCategory]:
+        """
+        Get the direct children of the parent category.
+
+        Args:
+            parent (TokenCategory): The parent category.
+
+        Returns:
+            Set[TokenCategory]: The list of children categories of the parent category.
+        """
+        return set(cls.hierarchy.get(parent, {}).keys())
+
+    @classmethod
+    def _nodes(cls, tree: _hierarchy_typing) -> Set[TokenCategory]:
+        """
+        Recursively get all nodes in the given hierarchy tree.
+        """
+        nodes = set(tree.keys())
+        for child in tree.values():
+            nodes.update(cls._nodes(child))
+        return nodes
+
+    @classmethod
+    def _find_subtree(cls, tree: '_hierarchy_typing', parent: TokenCategory) -> Optional['_hierarchy_typing']:
+        """
+        Recursively find the subtree for the given parent category.
+        """
+        if parent in tree:
+            return tree[parent]  # Return subtree if parent is found at this level
+        for child, sub_tree in tree.items():
+            result = cls._find_subtree(sub_tree, parent)
+            if result is not None:
+                return result
+        return None  # Return None if parent is not found. It won't happer never
+
+
+    @classmethod
+    def nodes(cls, parent: TokenCategory) -> Set[TokenCategory]:
+        """
+        Get the all nodes of the subtree of the parent category.
+
+        Args:
+            parent (TokenCategory): The parent category.
+
+        Returns:
+            List[TokenCategory]: The list of nodes of the subtree of the parent category.
+        """
+        subtree = cls._find_subtree(cls.hierarchy, parent)
+        return cls._nodes(subtree) if subtree is not None else set()
+
+    @classmethod
+    def _leaves(cls, tree: '_hierarchy_typing') -> Set[TokenCategory]:
+        """
+        Recursively get all leaves (nodes without children) in the hierarchy tree.
+        """
+        if not tree:
+            return set()
+        leaves = {node for node, children in tree.items() if not children}
+        for node, children in tree.items():
+            leaves.update(cls._leaves(children))
+        return leaves
+
+    @classmethod
+    def leaves(cls, target: TokenCategory) -> Set[TokenCategory]:
+        """
+        Get the leaves of the subtree of the target category.
+
+        Args:
+            target (TokenCategory): The target category.
+
+        Returns (List[TokenCategory]): The list of leaf categories of the target category.
+        """
+        tree = cls._find_subtree(cls.hierarchy, target)
+        return cls._leaves(tree)
+
+
+    @classmethod
+    def _match(cls, category: TokenCategory, *,
+               include: Set[TokenCategory],
+               exclude: Set[TokenCategory]) -> bool:
+        """
+        Check if a category matches include/exclude criteria.
+        """
+        # Include the category itself along with its descendants.
+        target_nodes = cls.nodes(category) | {category}
+
+        # Build the union of each include/exclude category and its descendants. O(n**2) but n is small.
+        included_nodes = set.union(*[(cls.nodes(cat) | {cat}) for cat in include]) if len(include) > 0 else include
+        excluded_nodes = set.union(*[(cls.nodes(cat) | {cat}) for cat in exclude]) if len(exclude) > 0 else exclude
+
+        # Valid categories are those in the include set that are not excluded.
+        valid_categories = included_nodes - excluded_nodes
+
+        # Check if any node in the target set is in the valid categories.
+        return len(target_nodes & valid_categories) > 0
+
+
+    @classmethod
+    def match(cls, category: TokenCategory, *,
+              include: Optional[Set[TokenCategory]] = None,
+              exclude: Optional[Set[TokenCategory]] = None) -> bool:
+        """
+        Check if the category matches the include and exclude sets.
+            If include is None, all categories are included. \
+            If exclude is None, no categories are excluded.
+
+        Args:
+            category (TokenCategory): The category to check.
+            include (Optional[Set[TokenCategory]]): The set of categories to include. Defaults to None. \
+                If None, all categories are included.
+            exclude (Optional[Set[TokenCategory]]): The set of categories to exclude. Defaults to None. \
+                If None, no categories are excluded.
+
+        Returns (bool): True if the category matches the include and exclude sets, False otherwise.
+
+        Examples:
+            >>> TokenCategoryHierarchyMapper.match(TokenCategory.NOTE, include={TokenCategory.NOTE_REST})
+            True
+            >>> TokenCategoryHierarchyMapper.match(TokenCategory.NOTE, include={TokenCategory.NOTE_REST}, exclude={TokenCategory.REST})
+            True
+            >>> TokenCategoryHierarchyMapper.match(TokenCategory.NOTE, include={TokenCategory.NOTE_REST}, exclude={TokenCategory.NOTE})
+            False
+            >>> TokenCategoryHierarchyMapper.match(TokenCategory.NOTE, include={TokenCategory.CORE}, exclude={TokenCategory.DURATION})
+            True
+            >>> TokenCategoryHierarchyMapper.match(TokenCategory.DURATION, include={TokenCategory.CORE}, exclude={TokenCategory.DURATION})
+            False
+        """
+        # Check include
+        if include is None:
+            include = cls.all()
+        else:
+            if isinstance(include, (list, tuple)):
+                include = set(include)
+            elif not isinstance(include, set):
+                include = {include}
+            if not all(isinstance(cat, TokenCategory) for cat in include):
+                raise ValueError('Invalid category: include and exclude must be a set of TokenCategory.')
+
+        # Check exclude
+        if exclude is None:
+            exclude = set()
+        else:
+            if isinstance(exclude, (list, tuple)):
+                exclude = set(exclude)
+            elif not isinstance(exclude, set):
+                exclude = {exclude}
+            if not all(isinstance(cat, TokenCategory) for cat in exclude):
+                raise ValueError('Invalid category: category must be a TokenCategory.')
+
+        return cls._match(category, include=include, exclude=exclude)
+
+    @classmethod
+    def all(cls) -> Set[TokenCategory]:
+        """
+        Get all categories in the hierarchy.
+
+        Returns:
+            Set[TokenCategory]: The set of all categories in the hierarchy.
+        """
+        return cls._nodes(cls.hierarchy)
+
+    @classmethod
+    def tree(cls) -> str:
+        """
+        Return a string representation of the category hierarchy,
+        formatted similar to the output of the Unix 'tree' command.
+
+        Example output:
+            .
+            ├── STRUCTURAL
+            ├── CORE
+            │   ├── NOTE_REST
+            │   │   ├── DURATION
+            │   │   ├── NOTE
+            │   │   │   ├── PITCH
+            │   │   │   └── DECORATION
+            │   │   └── REST
+            │   ├── CHORD
+            │   └── EMPTY
+            ├── SIGNATURES
+            │   ├── CLEF
+            │   ├── TIME_SIGNATURE
+            │   ├── METER_SYMBOL
+            │   └── KEY_SIGNATURE
+            ├── ENGRAVED_SYMBOLS
+            ├── OTHER_CONTEXTUAL
+            ├── BARLINES
+            ├── COMMENTS
+            │   ├── FIELD_COMMENTS
+            │   └── LINE_COMMENTS
+            ├── DYNAMICS
+            ├── HARMONY
+            ...
+        """
+        def build_tree(tree: Dict[TokenCategory, '_hierarchy_typing'], prefix: str = "") -> [str]:
+            lines_buffer = []
+            items = list(tree.items())
+            count = len(items)
+            for index, (category, subtree) in enumerate(items):
+                connector = "└── " if index == count - 1 else "├── "
+                lines_buffer.append(prefix + connector + str(category))
+                extension = "    " if index == count - 1 else "│   "
+                lines_buffer.extend(build_tree(subtree, prefix + extension))
+            return lines_buffer
+
+        lines = ["."]
+        lines.extend(build_tree(cls.hierarchy))
+        return "\n".join(lines)
 
 
 class PitchRest:
@@ -783,13 +1094,14 @@ class Subtoken:
     """
     DECORATION = None
 
-    def __init__(self, encoding, category):
+    def __init__(self, encoding: str, category: TokenCategory):
         """
         Subtoken constructor
 
         Args:
-            encoding: The complete unprocessed encoding
-            category: The subtoken category, one of SubTokenCategory
+            encoding (str): The complete unprocessed encoding
+            category (TokenCategory): The subtoken category. \
+                It should be a child of the main 'TokenCategory' in the hierarchy.
 
         """
         self.encoding = encoding
@@ -1070,11 +1382,13 @@ class KeyToken(SignatureToken):
 
 
 class CompoundToken(Token):
-    def __init__(self, encoding, category, subtokens):
+    def __init__(self, encoding: str, category: TokenCategory, subtokens: List[Subtoken]):
         """
-        :param encoding: The complete unprocessed encoding
-        :param category: The token category, one of TokenCategory
-        :param subtokens: The individual elements of the token, of type Subtoken
+        Args:
+            encoding (str): The complete unprocessed encoding
+            category (TokenCategory): The token category, one of 'TokenCategory'
+            subtokens (List[Subtoken]): The individual elements of the token. Also of type 'TokenCategory' but \
+                in the hierarchy they must be children of the current token.
         """
         super().__init__(encoding, category)
         self.subtokens = subtokens

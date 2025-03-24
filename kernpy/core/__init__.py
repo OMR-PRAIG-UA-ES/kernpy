@@ -66,6 +66,7 @@ __all__ = [
     'transposer',
     'get_spine_types',
     'createImporter',
+    'TokenCategoryHierarchyMapper'
 ]
 
 
