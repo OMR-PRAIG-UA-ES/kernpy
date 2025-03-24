@@ -9,7 +9,7 @@ from .generated.kernSpineLexer import kernSpineLexer
 from .generated.kernSpineParser import kernSpineParser
 from .generated.kernSpineParserListener import kernSpineParserListener
 from .spine_importer import SpineImporter
-from .tokens import SimpleToken, TokenCategory, Subtoken, SubTokenCategory, ChordToken, BoundingBox, \
+from .tokens import SimpleToken, TokenCategory, Subtoken, ChordToken, BoundingBox, \
     BoundingBoxToken, ClefToken, KeySignatureToken, TimeSignatureToken, MeterSymbolToken, BarToken, NoteRestToken, \
     KeyToken, InstrumentToken
 
@@ -56,22 +56,22 @@ class KernSpineListener(kernSpineParserListener):
     #                 f'The decoration {decoration_type} is duplicated')  # TODO Dar información de línea, columna - ¿lanzamos excepción? - hay algunas que sí pueden estar duplicadas? Barrados?
     #         decorations[decoration_type] = child.getText()
     #     for key in sorted(decorations.keys()):
-    #         subtoken = Subtoken(decorations[key], SubTokenCategory.DECORATION)
+    #         subtoken = Subtoken(decorations[key], TokenCategory.DECORATION)
     #         self.duration_subtoken.append(subtoken)
 
     def exitDuration(self, ctx: kernSpineParser.DurationContext):
-        self.duration_subtokens = [Subtoken(ctx.modernDuration().getText(), SubTokenCategory.DURATION)]
+        self.duration_subtokens = [Subtoken(ctx.modernDuration().getText(), TokenCategory.DURATION)]
         for i in range(len(ctx.augmentationDot())):
-            self.duration_subtokens.append(Subtoken(".", SubTokenCategory.DURATION))
+            self.duration_subtokens.append(Subtoken(".", TokenCategory.DURATION))
 
         if ctx.graceNote():
-            self.duration_subtokens.append(Subtoken(ctx.graceNote().getText(), SubTokenCategory.DURATION))
+            self.duration_subtokens.append(Subtoken(ctx.graceNote().getText(), TokenCategory.DURATION))
 
         if ctx.appoggiatura():
-            self.duration_subtokens.append(Subtoken(ctx.appoggiatura().getText(), SubTokenCategory.DURATION))
+            self.duration_subtokens.append(Subtoken(ctx.appoggiatura().getText(), TokenCategory.DURATION))
 
     def exitDiatonicPitchAndOctave(self, ctx: kernSpineParser.DiatonicPitchAndOctaveContext):
-        self.diatonic_pitch_and_octave_subtoken = Subtoken(ctx.getText(), SubTokenCategory.PITCH)
+        self.diatonic_pitch_and_octave_subtoken = Subtoken(ctx.getText(), TokenCategory.PITCH)
 
     def exitNoteDecoration(self, ctx: kernSpineParser.NoteDecorationContext):
         # clazz = type(ctx.getChild(0))
@@ -98,7 +98,7 @@ class KernSpineListener(kernSpineParserListener):
             self.decorations.append(ctx.getText())
 
     def addNoteRest(self, ctx, pitchduration_subtokens):
-        # subtoken = Subtoken(self.decorations[key], SubTokenCategory.DECORATION)
+        # subtoken = Subtoken(self.decorations[key], TokenCategory.DECORATION)
         token = NoteRestToken(ctx.getText(), pitchduration_subtokens, self.decorations)
         if self.in_chord:
             self.chord_tokens.append(token)
@@ -111,7 +111,7 @@ class KernSpineListener(kernSpineParserListener):
             pitch_duration_tokens.append(duration_subtoken)
         pitch_duration_tokens.append(self.diatonic_pitch_and_octave_subtoken)
         if ctx.alteration():
-            pitch_duration_tokens.append(Subtoken(ctx.alteration().getText(), SubTokenCategory.PITCH))
+            pitch_duration_tokens.append(Subtoken(ctx.alteration().getText(), TokenCategory.PITCH))
 
         self.addNoteRest(ctx, pitch_duration_tokens)
 
@@ -119,7 +119,7 @@ class KernSpineListener(kernSpineParserListener):
         pitch_duration_tokens = []
         for duration_subtoken in self.duration_subtokens:
             pitch_duration_tokens.append(duration_subtoken)
-        pitch_duration_tokens.append(Subtoken('r', SubTokenCategory.PITCH))
+        pitch_duration_tokens.append(Subtoken('r', TokenCategory.PITCH))
         self.addNoteRest(ctx, pitch_duration_tokens)
 
     def enterChord(self, ctx: kernSpineParser.ChordContext):

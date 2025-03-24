@@ -54,12 +54,6 @@ class TokenCategory(Enum):
     OTHER = auto()
 
 
-# TODO - de momento no lo usamos para filtrar
-class SubTokenCategory(Enum):
-    PITCH = auto()
-    DURATION = auto()
-    DECORATION = auto()  # todo, tipos...
-
 class TokenCategoryHierarchyMapper:
     """
     Mapping of the TokenCategory hierarchy.
