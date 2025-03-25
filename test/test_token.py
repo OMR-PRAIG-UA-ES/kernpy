@@ -12,6 +12,11 @@ class TokenCategoryHierarchyTestCase(unittest.TestCase):
     def _is_not_child(cls, parent, child):
         cls.assertFalse(kp.TokenCategoryHierarchyMapper.is_child(parent=parent, child=child))
 
+    def _is_valid_category(cls, include, exclude, expected_categories):
+        cls.assertSetEqual(
+            expected_categories,
+            kp.TokenCategoryHierarchyMapper.valid(include=include, exclude=exclude)
+        )
 
     def test_is_child_of_CORE(self):
         self._is_child(kp.TokenCategory.CORE, kp.TokenCategory.NOTE_REST)
@@ -202,7 +207,49 @@ class TokenCategoryHierarchyTestCase(unittest.TestCase):
 
         self.assertEqual(expected_tree, real_output)
 
+    def test_hierarchy_valid_categories_CORE(self):
+        self._is_valid_category(
+            include={kp.TokenCategory.CORE},
+            exclude=set(),
+            expected_categories={
+                kp.TokenCategory.CORE,
+                kp.TokenCategory.NOTE_REST,
+                kp.TokenCategory.NOTE,
+                kp.TokenCategory.REST,
+                kp.TokenCategory.DURATION,
+                kp.TokenCategory.CHORD,
+                kp.TokenCategory.EMPTY,
+                kp.TokenCategory.DECORATION,
+                kp.TokenCategory.PITCH
+            }
+        )
 
+    def test_hierarchy_valid_categories_SIGNATURES(self):
+        self._is_valid_category(
+            include={kp.TokenCategory.SIGNATURES},
+            exclude=set(),
+            expected_categories={
+                kp.TokenCategory.SIGNATURES,
+                kp.TokenCategory.CLEF,
+                kp.TokenCategory.TIME_SIGNATURE,
+                kp.TokenCategory.METER_SYMBOL,
+                kp.TokenCategory.KEY_SIGNATURE
+            }
+        )
+
+    def test_hierarchy_valid_categories_NOTE_REST(self):
+        self._is_valid_category(
+            include={kp.TokenCategory.NOTE_REST},
+            exclude=set(),
+            expected_categories={
+                kp.TokenCategory.NOTE_REST,
+                kp.TokenCategory.NOTE,
+                kp.TokenCategory.REST,
+                kp.TokenCategory.DURATION,
+                kp.TokenCategory.PITCH,
+                kp.TokenCategory.DECORATION
+            }
+        )
 
 class PitchRestTestCase(unittest.TestCase):
     def test_PitchRest_creation_generic(self):

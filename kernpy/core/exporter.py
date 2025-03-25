@@ -7,11 +7,8 @@ from collections.abc import Sequence
 from abc import ABC, abstractmethod
 
 from kernpy.core import Document, SpineOperationToken, HeaderToken, Importer, TokenCategory, InstrumentToken, \
-    TOKEN_SEPARATOR, DECORATION_SEPARATOR, Token, NoteRestToken, HEADERS
+    TOKEN_SEPARATOR, DECORATION_SEPARATOR, Token, NoteRestToken, HEADERS, BEKERN_CATEGORIES
 from kernpy.core.tokenizers import KernTypeExporter, TokenizerFactory, Tokenizer
-
-BEKERN_CATEGORIES = [TokenCategory.STRUCTURAL, TokenCategory.CORE, TokenCategory.EMPTY, TokenCategory.SIGNATURES,
-                     TokenCategory.BARLINES, TokenCategory.ENGRAVED_SYMBOLS]
 
 
 

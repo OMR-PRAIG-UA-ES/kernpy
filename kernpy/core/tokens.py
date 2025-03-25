@@ -53,6 +53,9 @@ class TokenCategory(Enum):
     BOUNDING_BOXES = auto()
     OTHER = auto()
 
+BEKERN_CATEGORIES = [TokenCategory.STRUCTURAL, TokenCategory.CORE, TokenCategory.EMPTY, TokenCategory.SIGNATURES,
+                     TokenCategory.BARLINES, TokenCategory.ENGRAVED_SYMBOLS]
+
 
 class TokenCategoryHierarchyMapper:
     """
@@ -156,7 +159,9 @@ class TokenCategoryHierarchyMapper:
         return set(cls.hierarchy.get(parent, {}).keys())
 
     @classmethod
-    def _nodes(cls, tree: _hierarchy_typing) -> Set[TokenCategory]:
+    def _nodes(cls, tree: _hierarchy_typing, *,
+                include: Optional[Set[TokenCategory]] = None,
+                exclude: Optional[Set[TokenCategory]] = None) -> Set[TokenCategory]:
         """
         Recursively get all nodes in the given hierarchy tree.
         """
@@ -180,18 +185,46 @@ class TokenCategoryHierarchyMapper:
 
 
     @classmethod
-    def nodes(cls, parent: TokenCategory) -> Set[TokenCategory]:
+    def nodes(cls, parent: TokenCategory, *,
+              include: Optional[Set[TokenCategory]] = None,
+                exclude: Optional[Set[TokenCategory]] = None) -> Set[TokenCategory]:
         """
         Get the all nodes of the subtree of the parent category.
 
         Args:
             parent (TokenCategory): The parent category.
+            include (Optional[Set[TokenCategory]]): The set of categories to include. Defaults to None. \
+                If None, all categories are included.
+            exclude (Optional[Set[TokenCategory]]): The set of categories to exclude. Defaults to None. \
+                If None, no categories are excluded.
 
         Returns:
             List[TokenCategory]: The list of nodes of the subtree of the parent category.
         """
         subtree = cls._find_subtree(cls.hierarchy, parent)
-        return cls._nodes(subtree) if subtree is not None else set()
+        return cls._nodes(subtree, include=include, exclude=exclude) if subtree is not None else set()
+
+    @classmethod
+    def valid(cls,
+              include: Optional[Set[TokenCategory]] = None,
+              exclude: Optional[Set[TokenCategory]] = None) -> Set[TokenCategory]:
+        """
+        Get the valid categories based on the include and exclude sets.
+
+        Args:
+            include (Optional[Set[TokenCategory]]): The set of categories to include. Defaults to None. \
+                If None, all categories are included.
+            exclude (Optional[Set[TokenCategory]]): The set of categories to exclude. Defaults to None. \
+                If None, no categories are excluded.
+
+        Returns (Set[TokenCategory]): The list of valid categories based on the include and exclude sets.
+        """
+        include = cls._validate_include(include)
+        exclude = cls._validate_exclude(exclude)
+
+        included_nodes = set.union(*[(cls.nodes(cat) | {cat}) for cat in include]) if len(include) > 0 else include
+        excluded_nodes = set.union(*[(cls.nodes(cat) | {cat}) for cat in exclude]) if len(exclude) > 0 else exclude
+        return included_nodes - excluded_nodes
 
     @classmethod
     def _leaves(cls, tree: '_hierarchy_typing') -> Set[TokenCategory]:
@@ -239,6 +272,36 @@ class TokenCategoryHierarchyMapper:
         # Check if any node in the target set is in the valid categories.
         return len(target_nodes & valid_categories) > 0
 
+    @classmethod
+    def _validate_include(cls, include: Optional[Set[TokenCategory]]) -> Set[TokenCategory]:
+        """
+        Validate the include set.
+        """
+        if include is None:
+            return cls.all()
+        if isinstance(include, (list, tuple)):
+            include = set(include)
+        elif not isinstance(include, set):
+            include = {include}
+        if not all(isinstance(cat, TokenCategory) for cat in include):
+            raise ValueError('Invalid category: include and exclude must be a set of TokenCategory.')
+        return include
+
+    @classmethod
+    def _validate_exclude(cls, exclude: Optional[Set[TokenCategory]]) -> Set[TokenCategory]:
+        """
+        Validate the exclude set.
+        """
+        if exclude is None:
+            return set()
+        if isinstance(exclude, (list, tuple)):
+            exclude = set(exclude)
+        elif not isinstance(exclude, set):
+            exclude = {exclude}
+        if not all(isinstance(cat, TokenCategory) for cat in exclude):
+            raise ValueError('Invalid category: category must be a TokenCategory.')
+        return exclude
+
 
     @classmethod
     def match(cls, category: TokenCategory, *,
@@ -270,27 +333,8 @@ class TokenCategoryHierarchyMapper:
             >>> TokenCategoryHierarchyMapper.match(TokenCategory.DURATION, include={TokenCategory.CORE}, exclude={TokenCategory.DURATION})
             False
         """
-        # Check include
-        if include is None:
-            include = cls.all()
-        else:
-            if isinstance(include, (list, tuple)):
-                include = set(include)
-            elif not isinstance(include, set):
-                include = {include}
-            if not all(isinstance(cat, TokenCategory) for cat in include):
-                raise ValueError('Invalid category: include and exclude must be a set of TokenCategory.')
-
-        # Check exclude
-        if exclude is None:
-            exclude = set()
-        else:
-            if isinstance(exclude, (list, tuple)):
-                exclude = set(exclude)
-            elif not isinstance(exclude, set):
-                exclude = {exclude}
-            if not all(isinstance(cat, TokenCategory) for cat in exclude):
-                raise ValueError('Invalid category: category must be a TokenCategory.')
+        include = cls._validate_include(include)
+        exclude = cls._validate_exclude(exclude)
 
         return cls._match(category, include=include, exclude=exclude)
 
