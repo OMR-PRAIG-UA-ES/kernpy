@@ -106,8 +106,6 @@ content = kp.dumps(document,
 |----------|--------------|----------------------------------------|
 | kern     | 2.bb-_L      | Traditional Humdrum **kern encoding    |
 | ekern    | 2@.@bb@-·_·L | Extended Humdrum **kern encoding       |
-| bkern    | 2.bb-        | Basic Humdrum **kern encoding          |
-| bekern   | 2@.@bb@-     | Basic Extended Humdrum **kern encoding |
 
 Use the `KernTypeExporter` enum class to select the tokenizer:
 ```python
@@ -117,8 +115,6 @@ doc, _ = kp.load('resource_dir/legacy/chor048.krn')
 
 kern_content = kp.dumps(doc, tokenizer=kp.KernTypeExporter.normalizedKern)
 ekern_content = kp.dumps(doc, tokenizer=kp.KernTypeExporter.eKern)
-bkern_content = kp.dumps(doc, tokenizer=kp.KernTypeExporter.bKern)
-bekern_content = kp.dumps(doc, tokenizer=kp.KernTypeExporter.bEkern)
 ```
 
 
