@@ -5,6 +5,7 @@ from collections.abc import Sequence
 from enum import Enum, auto
 import copy
 from typing import List, Dict, Set, Union, Optional
+from unittest import result
 
 TOKEN_SEPARATOR = '@'
 DECORATION_SEPARATOR = '·'
@@ -12,6 +13,7 @@ HEADERS = {"**mens", "**kern", "**text", "**harm", "**mxhm", "**root", "**dyn", 
 CORE_HEADERS = {"**kern", "**mens"}
 SPINE_OPERATIONS = {"*-", "*+", "*^", "*v", "*x"}
 TERMINATOR = "*-"
+EMPTY_TOKEN = "*"
 
 
 # We don't use inheritance here for all elements but enum, because we don't need any polymorphism mechanism, just a grouping one
@@ -22,14 +24,14 @@ class TokenCategory(Enum):
 
     This is used to determine what kind of token should be exported.
 
-    The categories are not sorted in any particular order. Hierarchical order must be defined in other data structures.
+    The categories are sorted the specific order they are compared to sorthem. But hierarchical order must be defined in other data structures.
     """
     STRUCTURAL = auto()  # header, spine operations
     CORE = auto() # notes, rests, chords, etc.
     NOTE_REST = auto()
     NOTE = auto()
-    PITCH = auto()
     DURATION = auto()
+    PITCH = auto()
     DECORATION = auto()
     REST = auto()
     CHORD = auto()
@@ -52,6 +54,85 @@ class TokenCategory(Enum):
     INSTRUMENTS = auto()
     BOUNDING_BOXES = auto()
     OTHER = auto()
+    MHXM = auto()
+
+    def __lt__(self, other):
+        """
+        Compare two TokenCategory.
+        Args:
+            other (TokenCategory): The other category to compare.
+
+        Returns (bool): True if this category is lower than the other, False otherwise.
+
+        Examples:
+            >>> TokenCategory.STRUCTURAL < TokenCategory.CORE
+            True
+            >>> TokenCategory.STRUCTURAL < TokenCategory.STRUCTURAL
+            False
+            >>> TokenCategory.CORE < TokenCategory.STRUCTURAL
+            False
+            >>> sorted([TokenCategory.STRUCTURAL, TokenCategory.CORE])
+            [TokenCategory.STRUCTURAL, TokenCategory.CORE]
+        """
+        if isinstance(other, TokenCategory):
+            return self.value < other.value
+        return NotImplemented
+
+    @classmethod
+    def all(cls) -> Set[TokenCategory]:
+        f"""
+        Get all categories in the hierarchy.
+
+        Returns:
+            Set[TokenCategory]: The set of all categories in the hierarchy.
+            
+        Examples:
+            >>> import kernpy as kp
+            >>> kp.TokenCategory.all()
+            set([<TokenCategory.MHXM: 29>, <TokenCategory.COMMENTS: 19>, <TokenCategory.BARLINES: 18>, <TokenCategory.CORE: 2>, <TokenCategory.BOUNDING_BOXES: 27>, <TokenCategory.NOTE_REST: 3>, <TokenCategory.NOTE: 4>, <TokenCategory.ENGRAVED_SYMBOLS: 16>, <TokenCategory.SIGNATURES: 11>, <TokenCategory.REST: 8>, <TokenCategory.METER_SYMBOL: 14>, <TokenCategory.HARMONY: 23>, <TokenCategory.KEY_SIGNATURE: 15>, <TokenCategory.EMPTY: 10>, <TokenCategory.PITCH: 6>, <TokenCategory.LINE_COMMENTS: 21>, <TokenCategory.FINGERING: 24>, <TokenCategory.DECORATION: 7>, <TokenCategory.OTHER: 28>, <TokenCategory.INSTRUMENTS: 26>, <TokenCategory.STRUCTURAL: 1>, <TokenCategory.FIELD_COMMENTS: 20>, <TokenCategory.LYRICS: 25>, <TokenCategory.CLEF: 12>, <TokenCategory.DURATION: 5>, <TokenCategory.DYNAMICS: 22>, <TokenCategory.CHORD: 9>, <TokenCategory.TIME_SIGNATURE: 13>, <TokenCategory.OTHER_CONTEXTUAL: 17>])
+        """
+        return set([t for t in TokenCategory])
+
+    @classmethod
+    def tree(cls):
+        """
+        Return a string representation of the category hierarchy
+        Returns (str): The string representation of the category hierarchy
+
+        Examples:
+            >>> import kernpy as kp
+            >>> print(kp.TokenCategory.tree())
+            .
+            ├── TokenCategory.STRUCTURAL
+            ├── TokenCategory.CORE
+            │   ├── TokenCategory.NOTE_REST
+            │   │   ├── TokenCategory.DURATION
+            │   │   ├── TokenCategory.NOTE
+            │   │   │   ├── TokenCategory.PITCH
+            │   │   │   └── TokenCategory.DECORATION
+            │   │   └── TokenCategory.REST
+            │   ├── TokenCategory.CHORD
+            │   └── TokenCategory.EMPTY
+            ├── TokenCategory.SIGNATURES
+            │   ├── TokenCategory.CLEF
+            │   ├── TokenCategory.TIME_SIGNATURE
+            │   ├── TokenCategory.METER_SYMBOL
+            │   └── TokenCategory.KEY_SIGNATURE
+            ├── TokenCategory.ENGRAVED_SYMBOLS
+            ├── TokenCategory.OTHER_CONTEXTUAL
+            ├── TokenCategory.BARLINES
+            ├── TokenCategory.COMMENTS
+            │   ├── TokenCategory.FIELD_COMMENTS
+            │   └── TokenCategory.LINE_COMMENTS
+            ├── TokenCategory.DYNAMICS
+            ├── TokenCategory.HARMONY
+            ├── TokenCategory.FINGERING
+            ├── TokenCategory.LYRICS
+            ├── TokenCategory.INSTRUMENTS
+            ├── TokenCategory.BOUNDING_BOXES
+            └── TokenCategory.OTHER
+        """
+        pass
 
 BEKERN_CATEGORIES = [TokenCategory.STRUCTURAL, TokenCategory.CORE, TokenCategory.EMPTY, TokenCategory.SIGNATURES,
                      TokenCategory.BARLINES, TokenCategory.ENGRAVED_SYMBOLS]
@@ -101,6 +182,7 @@ class TokenCategoryHierarchyMapper:
         TokenCategory.INSTRUMENTS: {},
         TokenCategory.BOUNDING_BOXES: {},
         TokenCategory.OTHER: {},
+        TokenCategory.MHXM: {},
     }
 
     @classmethod
@@ -262,12 +344,7 @@ class TokenCategoryHierarchyMapper:
         # Include the category itself along with its descendants.
         target_nodes = cls.nodes(category) | {category}
 
-        # Build the union of each include/exclude category and its descendants. O(n**2) but n is small.
-        included_nodes = set.union(*[(cls.nodes(cat) | {cat}) for cat in include]) if len(include) > 0 else include
-        excluded_nodes = set.union(*[(cls.nodes(cat) | {cat}) for cat in exclude]) if len(exclude) > 0 else exclude
-
-        # Valid categories are those in the include set that are not excluded.
-        valid_categories = included_nodes - excluded_nodes
+        valid_categories = cls.valid(include=include, exclude=exclude)
 
         # Check if any node in the target set is in the valid categories.
         return len(target_nodes & valid_categories) > 0
@@ -299,7 +376,7 @@ class TokenCategoryHierarchyMapper:
         elif not isinstance(exclude, set):
             exclude = {exclude}
         if not all(isinstance(cat, TokenCategory) for cat in exclude):
-            raise ValueError('Invalid category: category must be a TokenCategory.')
+            raise ValueError(f'Invalid category: category must be a {TokenCategory.__name__}.')
         return exclude
 
 
@@ -1124,7 +1201,7 @@ class DurationClassical(Duration):
 
 class Subtoken:
     """
-    Subtoken class
+    Subtoken class. Thhe subtokens are the smallest units of categories. ComplexToken objects are composed of subtokens.
 
     Attributes:
         encoding: The complete unprocessed encoding
@@ -1172,30 +1249,67 @@ class AbstractToken(ABC):
         self.hidden = False
 
     @abstractmethod
-    def export(self) -> str:
+    def export(self, **kwargs) -> str:
         """
         Exports the token.
 
+        Keyword Arguments:
+            filter_categories (Optional[Callable[[TokenCategory], bool]]): A function that takes a TokenCategory and returns a boolean
+                indicating whether the token should be included in the export. If provided, only tokens for which the
+                function returns True will be exported. Defaults to None. If None, all tokens will be exported.
+
         Returns:
-            str: The encoding of the token.
+            str: The encoded token representation, potentially filtered if a filter_categories function is provided.
 
         Examples:
             >>> token = AbstractToken('*clefF4', TokenCategory.SIGNATURES)
             >>> token.export()
             '*clefF4'
+            >>> token.export(filter_categories=lambda cat: cat in {TokenCategory.SIGNATURES, TokenCategory.SIGNATURES.DURATION})
+            '*clefF4'
         """
         pass
+
 
     def __str__(self):
         """
         Returns the string representation of the token.
 
-        Returns (str): The string representation of the token.
+        Returns (str): The string representation of the token without processing.
         """
         return self.export()
 
 
-class ErrorToken(AbstractToken):
+class Token(AbstractToken, ABC):
+    """
+    Abstract Token class.
+    """
+
+    def __init__(self, encoding, category):
+        super().__init__(encoding, category)
+
+
+class SimpleToken(Token):
+    """
+    SimpleToken class.
+    """
+
+    def __init__(self, encoding, category):
+        super().__init__(encoding, category)
+
+    def export(self, **kwargs) -> str:
+        """
+        Exports the token.
+
+        Args:
+            **kwargs: 'filter_categories' (Optional[Callable[[TokenCategory], bool]]): It is ignored in this class.
+
+        Returns (str): The encoded token representation.
+        """
+        return self.encoding
+
+
+class ErrorToken(SimpleToken):
     """
     Used to wrap tokens that have not been parsed.
     """
@@ -1218,7 +1332,12 @@ class ErrorToken(AbstractToken):
         self.error = error
         self.line = line
 
-    def export(self) -> str:
+    def export(self, **kwargs) -> str:
+        """
+        Exports the error token.
+
+        Returns (str): A string representation of the error token.
+        """
         return ''  # TODO Qué exportamos?
 
     def __str__(self):
@@ -1230,35 +1349,41 @@ class ErrorToken(AbstractToken):
         return f'Error token found at line {self.line} with encoding "{self.encoding}". Description: {self.error}'
 
 
-class MetacommentToken(AbstractToken):
+class MetacommentToken(SimpleToken):
     """
     MetacommentToken class stores the metacomments of the score.
     Usually these are comments starting with `!!`.
 
     """
 
-    def __init__(self, encoding):
+    def __init__(self, encoding: str):
+        """
+        Constructor for the MetacommentToken class.
+
+        Args:
+            encoding (str): The original representation of the token.
+        """
         super().__init__(encoding, TokenCategory.LINE_COMMENTS)
 
-    def export(self) -> str:
-        return self.encoding
 
-
-class InstrumentToken(AbstractToken):
+class InstrumentToken(SimpleToken):
     """
     InstrumentToken class stores the instruments of the score.
 
     These tokens usually look like `*I"Organo`.
     """
 
-    def __init__(self, encoding):
+    def __init__(self, encoding: str):
+        """
+        Constructor for the InstrumentToken
+
+        Args:
+            encoding:
+        """
         super().__init__(encoding, TokenCategory.INSTRUMENTS)
 
-    def export(self) -> str:
-        return self.encoding
 
-
-class FieldCommentToken(AbstractToken):
+class FieldCommentToken(SimpleToken):
     """
     FieldCommentToken class stores the metacomments of the score.
     Usually these are comments starting with `!!!`.
@@ -1268,11 +1393,8 @@ class FieldCommentToken(AbstractToken):
     def __init__(self, encoding):
         super().__init__(encoding, TokenCategory.FIELD_COMMENTS)
 
-    def export(self) -> str:
-        return self.encoding
 
-
-class HeaderToken(AbstractToken):
+class HeaderToken(SimpleToken):
     """
     HeaderTokens class.
     """
@@ -1291,12 +1413,11 @@ class HeaderToken(AbstractToken):
         super().__init__(encoding, TokenCategory.STRUCTURAL)
         self.spine_id = spine_id
 
-    def export(self) -> str:
-        extended_header = '**e' + self.encoding[2:]  # remove the **, and append the e
-        return extended_header
+    def export(self, **kwargs) -> str:
+        return self.encoding
 
 
-class SpineOperationToken(AbstractToken):
+class SpineOperationToken(SimpleToken):
     """
     SpineOperationToken class.
 
@@ -1316,9 +1437,6 @@ class SpineOperationToken(AbstractToken):
         super().__init__(encoding, TokenCategory.STRUCTURAL)
         self.cancelled_at_stage = None
 
-    def export(self) -> str:
-        return self.encoding
-
     def is_cancelled_at(self, stage) -> bool:
         """
         Checks if the operation was cancelled at the given stage.
@@ -1335,27 +1453,6 @@ class SpineOperationToken(AbstractToken):
             return self.cancelled_at_stage < stage
 
 
-class Token(AbstractToken, ABC):
-    """
-    Abstract Token class.
-    """
-
-    def __init__(self, encoding, category):
-        super().__init__(encoding, category)
-
-
-class SimpleToken(Token):
-    """
-    SimpleToken class.
-    """
-
-    def __init__(self, encoding, category):
-        super().__init__(encoding, category)
-
-    def export(self) -> str:
-        return self.encoding
-
-
 class BarToken(SimpleToken):
     """
     BarToken class.
@@ -1370,8 +1467,8 @@ class SignatureToken(SimpleToken):
     SignatureToken class for all signature tokens. It will be overridden by more specific classes.
     """
 
-    def __init__(self, encoding):
-        super().__init__(encoding, TokenCategory.SIGNATURES)
+    def __init__(self, encoding, category=TokenCategory.SIGNATURES):
+        super().__init__(encoding, category)
 
 
 class ClefToken(SignatureToken):
@@ -1380,7 +1477,7 @@ class ClefToken(SignatureToken):
     """
 
     def __init__(self, encoding):
-        super().__init__(encoding)
+        super().__init__(encoding, TokenCategory.CLEF)
 
 
 class TimeSignatureToken(SignatureToken):
@@ -1389,7 +1486,7 @@ class TimeSignatureToken(SignatureToken):
     """
 
     def __init__(self, encoding):
-        super().__init__(encoding)
+        super().__init__(encoding, TokenCategory.TIME_SIGNATURE)
 
 
 class MeterSymbolToken(SignatureToken):
@@ -1398,7 +1495,7 @@ class MeterSymbolToken(SignatureToken):
     """
 
     def __init__(self, encoding):
-        super().__init__(encoding)
+        super().__init__(encoding, TokenCategory.METER_SYMBOL)
 
 
 class KeySignatureToken(SignatureToken):
@@ -1407,7 +1504,7 @@ class KeySignatureToken(SignatureToken):
     """
 
     def __init__(self, encoding):
-        super().__init__(encoding)
+        super().__init__(encoding, TokenCategory.KEY_SIGNATURE)
 
 
 class KeyToken(SignatureToken):
@@ -1419,7 +1516,41 @@ class KeyToken(SignatureToken):
         super().__init__(encoding)
 
 
-class CompoundToken(Token):
+class ComplexToken(Token, ABC):
+    """
+    Abstract ComplexToken class. This abstract class ensures that the subclasses implement the export method using\
+     the 'filter_categories' parameter to filter the subtokens.
+
+     Passing the argument 'filter_categories' by **kwargs don't break the compatibility with parent classes.
+
+     Here we're trying to get the Liskov substitution principle done...
+    """
+    def __init__(self, encoding: str, category: TokenCategory):
+        """
+        Constructor for the ComplexToken
+
+        Args:
+            encoding (str): The original representation of the token.
+            category (TokenCategory) : The category of the token.
+        """
+        super().__init__(encoding, category)
+
+    @abstractmethod
+    def export(self, **kwargs) -> str:
+        """
+        Exports the token.
+
+        Keyword Arguments:
+            filter_categories (Optional[Callable[[TokenCategory], bool]]): A function that takes a TokenCategory and returns a boolean
+                indicating whether the token should be included in the export. If provided, only tokens for which the
+                function returns True will be exported. Defaults to None. If None, all tokens will be exported.
+
+        Returns (str): The exported token.
+        """
+        pass
+
+
+class CompoundToken(ComplexToken):
     def __init__(self, encoding: str, category: TokenCategory, subtokens: List[Subtoken]):
         """
         Args:
@@ -1431,17 +1562,28 @@ class CompoundToken(Token):
         super().__init__(encoding, category)
         self.subtokens = subtokens
 
-    def export(self) -> str:
-        result = ''
+    def export(self, **kwargs) -> str:
+        """
+        Exports the token.
+
+        Keyword Arguments:
+            filter_categories (Optional[Callable[[TokenCategory], bool]]): A function that takes a TokenCategory and returns a boolean
+                indicating whether the token should be included in the export. If provided, only tokens for which the
+                function returns True will be exported. Defaults to None. If None, all tokens will be exported.
+
+        Returns (str): The exported token.
+        """
+        filter_categories_fn = kwargs.get('filter_categories', None)
+        parts = []
         for subtoken in self.subtokens:
-            if len(result) > 0:
-                result += TOKEN_SEPARATOR
+            # Only export the subtoken if it passes the filter_categories (if provided)
+            if filter_categories_fn is None or filter_categories_fn(subtoken.category):
+                # parts.append(subtoken.export(**kwargs)) in the future when SubTokens will be Tokens
+                parts.append(subtoken.encoding)
+        return TOKEN_SEPARATOR.join(parts) if len(parts) > 0 else EMPTY_TOKEN
 
-            result += subtoken.encoding
-        return result
 
-
-class NoteRestToken(Token):
+class NoteRestToken(ComplexToken):
     """
     NoteRestToken class.
 
@@ -1468,48 +1610,51 @@ class NoteRestToken(Token):
         if not pitch_duration_subtokens or len(pitch_duration_subtokens) == 0:
             raise ValueError('Empty name-duration subtokens')
 
+        for subtoken in pitch_duration_subtokens:
+            if not isinstance(subtoken, Subtoken):
+                raise ValueError('All pitch-duration subtokens must be instances of Subtoken')
+        for subtoken in decoration_subtokens:
+            if not isinstance(subtoken, Subtoken):
+                raise ValueError('All decoration subtokens must be instances of Subtoken')
+
         self.pitch_duration_subtokens = pitch_duration_subtokens
         self.decoration_subtokens = decoration_subtokens
 
-        try:
-            self.duration = None
-            # TODO: Refactor this
-            #duration_token = ''.join([n for n in self.encoding if n.isnumeric()])
-            #if duration_token is None or len(duration_token) == 0:
-            #    self.duration = None
-            #else:
-            #    self.duration = DurationFactory.create_duration(duration_token)
-        except Exception:
-            self.duration = None
+    def export(self, **kwargs) -> str:
+        """
+        Exports the token.
 
-        try:
-            self.pitch = None
-            # TODO: Refactor this
-            #pitch_rest_token = ''.join([n for n in self.encoding if n in PitchRest.VALID_PITCHES])
-            #if pitch_rest_token is None or len(pitch_rest_token) == 0:
-            #    self.pitch = None
-            #else:
-            #    self.pitch = PitchRest(pitch_rest_token)
-        except Exception:
-            self.pitch = None
-        # TODO: Ahora entran muchos tokens diferentes, filtrar solo los de name
+        Keyword Arguments:
+            filter_categories (Optional[Callable[[TokenCategory], bool]]): A function that takes a TokenCategory and returns a boolean
+                indicating whether the token should be included in the export. If provided, only tokens for which the
+                function returns True will be exported. Defaults to None. If None, all tokens will be exported.
 
-    def export(self) -> str:
-        result = ''
-        for subtoken in self.pitch_duration_subtokens:
-            if len(result) > 0:
-                result += TOKEN_SEPARATOR
+        Returns (str): The exported token.
 
-            result += subtoken.encoding
+        """
+        filter_categories_fn = kwargs.get('filter_categories', None)
 
-        decorations = set()
-        # we order them and avoid repetitions
-        for subtoken in self.decoration_subtokens:
-            decorations.add(subtoken)
-        for decoration in sorted(decorations):
-            result += DECORATION_SEPARATOR
-            result += decoration
-        return result
+        # Filter subcategories
+        pitch_duration_tokens = {
+            subtoken for subtoken in self.pitch_duration_subtokens
+            if filter_categories_fn is None or filter_categories_fn(subtoken.category)
+        }
+        decoration_tokens = {
+            subtoken for subtoken in self.decoration_subtokens
+            if filter_categories_fn is None or filter_categories_fn(subtoken.category)
+        }
+        pitch_duration_tokens_sorted = sorted(pitch_duration_tokens, key=lambda t:  (t.category.value, t.encoding))
+        decoration_tokens_sorted     = sorted(decoration_tokens,     key=lambda t:  (t.category.value, t.encoding))
+
+        # Join the sorted subtokens
+        pitch_duration_part = TOKEN_SEPARATOR.join([subtoken.encoding for subtoken in pitch_duration_tokens_sorted])
+        decoration_part = DECORATION_SEPARATOR.join([subtoken.encoding for subtoken in decoration_tokens_sorted])
+
+        result = pitch_duration_part
+        if len(decoration_part):
+            result += DECORATION_SEPARATOR + decoration_part
+
+        return result if len(result) > 0 else EMPTY_TOKEN
 
 
 class ChordToken(SimpleToken):
@@ -1535,7 +1680,7 @@ class ChordToken(SimpleToken):
         super().__init__(encoding, category)
         self.notes_tokens = notes_tokens
 
-    def export(self) -> str:
+    def export(self, **kwargs) -> str:
         result = ''
         for note_token in self.notes_tokens:
             if len(result) > 0:
@@ -1656,7 +1801,7 @@ class BoundingBoxToken(AbstractToken):
         self.page_number = page_number
         self.bounding_box = bounding_box
 
-    def export(self) -> str:
+    def export(self, **kwargs) -> str:
         return self.encoding
 
 
@@ -1668,5 +1813,5 @@ class MHXMToken(AbstractToken):
         super().__init__(encoding, TokenCategory.OTHER)
 
     # TODO: Implement constructor
-    def export(self) -> str:
+    def export(self, **kwargs) -> str:
         return self.encoding

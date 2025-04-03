@@ -66,7 +66,17 @@ __all__ = [
     'transposer',
     'get_spine_types',
     'createImporter',
-    'TokenCategoryHierarchyMapper'
+    'TokenCategoryHierarchyMapper',
+    'TOKEN_SEPARATOR',
+    'DECORATION_SEPARATOR',
+    'Subtoken',
+    'AbstractToken',
+    'SimpleToken',
+    'ComplexToken',
+    'CompoundToken',
+    'NoteRestToken',
+    'HeaderToken',
+    'HeaderTokenGenerator'
 ]
 
 

@@ -1,5 +1,9 @@
+from __future__ import annotations
+
+from copy import deepcopy
 from enum import Enum
 from abc import ABC, abstractmethod
+from typing import List, Union, Set
 
 from kernpy.core import DECORATION_SEPARATOR, Token, TOKEN_SEPARATOR
 
@@ -9,22 +13,36 @@ class KernTypeExporter(Enum):  # TODO: Eventually, polymorphism will be used to 
     Options for exporting a kern file.
 
     Example:
-        # Create the importer
-        >>> hi = Importer()
-
-        # Read the file
-        >>> document = hi.import_file('file.krn')
-
-        # Export the file
-        >>> options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kernType=KernTypeExporter.normalizedKern)
-        >>> exporter = Exporter()
-        >>> exported = exporter.export_string(options)
-
+        >>> import kernpy as kp
+        >>> # Load a file
+        >>> doc, _ = kp.load('path/to/file.krn')
+        >>>
+        >>> # Save the file using the specified encoding
+        >>> exported_content = kp.dumps(tokenizer=kp.KernTypeExporter.normalizedKern)
     """
     eKern = 'ekern'
     normalizedKern = 'kern'
     bKern = 'bkern'
     bEkern = 'bekern'
+
+    def prefix(self) -> str:
+        """
+        Get the prefix of the kern type.
+
+        Returns (str): Prefix of the kern type.
+        """
+        if self == KernTypeExporter.eKern:
+            return 'e'
+        elif self == KernTypeExporter.normalizedKern:
+            return ''
+        elif self == KernTypeExporter.bKern:
+            return 'b'
+        elif self == KernTypeExporter.bEkern:
+            return 'be'
+        else:
+            raise ValueError(f'Unknown kern type: {self}. '
+                             f'Supported types are: '
+                             f"{'-'.join([kern_type.name for kern_type in KernTypeExporter.__members__.values()])}")
 
 
 class Tokenizer(ABC):
@@ -33,6 +51,19 @@ class Tokenizer(ABC):
 
     Tokenizers are responsible for converting a token into a string representation.
     """
+    def __init__(self, *, token_categories: Set['TokenCategory']):
+        """
+        Create a new Tokenizer.
+
+        Args:
+            token_categories Set[TokenCategory]: List of categories to be tokenized.
+                If None, an exception will be raised.
+        """
+        if token_categories is None:
+            raise ValueError('Categories must be provided. Found None.')
+
+        self.token_categories = token_categories
+
 
     @abstractmethod
     def tokenize(self, token: Token) -> str:
@@ -52,6 +83,14 @@ class KernTokenizer(Tokenizer):
     """
     KernTokenizer converts a Token into a normalized kern string representation.
     """
+    def __init__(self, *, token_categories: Set['TokenCategory']):
+        """
+        Create a new KernTokenizer.
+
+        Args:
+            token_categories (Set[TokenCategory]): List of categories to be tokenized. If None will raise an exception.
+        """
+        super().__init__(token_categories=token_categories)
 
     def tokenize(self, token: Token) -> str:
         """
@@ -69,7 +108,7 @@ class KernTokenizer(Tokenizer):
             >>> KernTokenizer().tokenize(token)
             '2.bb-_L'
         """
-        return token.encoding
+        return EkernTokenizer(token_categories=self.token_categories).tokenize(token).replace(TOKEN_SEPARATOR, '').replace(DECORATION_SEPARATOR, '')
 
 
 class EkernTokenizer(Tokenizer):
@@ -77,6 +116,15 @@ class EkernTokenizer(Tokenizer):
     EkernTokenizer converts a Token into an eKern (Extended **kern) string representation. This format use a '@' separator for the \
     main tokens and a '·' separator for the decorations tokens.
     """
+
+    def __init__(self, *, token_categories: Set['TokenCategory']):
+        """
+        Create a new EkernTokenizer
+
+        Args:
+            token_categories (List[TokenCategory]): List of categories to be tokenized. If None will raise an exception.
+        """
+        super().__init__(token_categories=token_categories)
 
     def tokenize(self, token: Token) -> str:
         """
@@ -93,7 +141,7 @@ class EkernTokenizer(Tokenizer):
             '2@.@bb@-·_·L'
 
         """
-        return token.export()
+        return token.export(filter_categories=lambda cat: cat in self.token_categories)
 
 
 class BekernTokenizer(Tokenizer):
@@ -101,6 +149,15 @@ class BekernTokenizer(Tokenizer):
     BekernTokenizer converts a Token into a bekern (Basic Extended **kern) string representation. This format use a '@' separator for the \
     main tokens but discards all the decorations tokens.
     """
+
+    def __init__(self, *, token_categories: Set['TokenCategory']):
+        """
+        Create a new BekernTokenizer
+
+        Args:
+            token_categories (Set[TokenCategory]): List of categories to be tokenized. If None will raise an exception.
+        """
+        super().__init__(token_categories=token_categories)
 
     def tokenize(self, token: Token) -> str:
         """
@@ -116,7 +173,7 @@ class BekernTokenizer(Tokenizer):
             >>> BekernTokenizer().tokenize(token)
             '2@.@bb@-'
         """
-        ekern_content = token.export()
+        ekern_content = token.export(filter_categories=lambda cat: cat in self.token_categories)
 
         if DECORATION_SEPARATOR not in ekern_content:
             return ekern_content
@@ -135,6 +192,16 @@ class BkernTokenizer(Tokenizer):
     Humdrum **kern format.
     """
 
+    def __init__(self, *, token_categories: Set['TokenCategory']):
+        """
+        Create a new BkernTokenizer
+
+        Args:
+            token_categories (Set[TokenCategory]): List of categories to be tokenized. If None will raise an exception.
+        """
+        super().__init__(token_categories=token_categories)
+
+
     def tokenize(self, token: Token) -> str:
         """
         Tokenize a token into a bkern string representation.
@@ -149,23 +216,23 @@ class BkernTokenizer(Tokenizer):
             >>> BkernTokenizer().tokenize(token)
             '2.bb-'
         """
-        return BekernTokenizer().tokenize(token).replace(TOKEN_SEPARATOR, '')
+        return BekernTokenizer(token_categories=self.token_categories).tokenize(token).replace(TOKEN_SEPARATOR, '')
 
 
 class TokenizerFactory:
     @classmethod
-    def create(cls, type: str) -> Tokenizer:
+    def create(cls, type: str, *, token_categories: List['TokenCategory']) -> Tokenizer:
         if type is None:
             raise ValueError('A tokenization type must be provided. Found None.')
 
         if type == KernTypeExporter.normalizedKern.value:
-            return KernTokenizer()
+            return KernTokenizer(token_categories=token_categories)
         elif type == KernTypeExporter.eKern.value:
-            return EkernTokenizer()
+            return EkernTokenizer(token_categories=token_categories)
         elif type == KernTypeExporter.bKern.value:
-            return BekernTokenizer()
+            return BekernTokenizer(token_categories=token_categories)
         elif type == KernTypeExporter.bEkern.value:
-            return BkernTokenizer()
+            return BkernTokenizer(token_categories=token_categories)
 
         raise ValueError(f"Unknown kern type: {type}. "
                          f"Supported types are: "

@@ -1,0 +1,86 @@
+**ekern	**ekern	**ekern	**ekern	**eroot	**eharm
+!bass	!tenor	!alto	!soprno	!	!
+*Iorgan	*Iorgan	*Iorgan	*Iorgan	*Iorgan	*
+*clefF4	*clefF4	*clefG2	*clefG2	*	*
+*M4/4	*M4/4	*M4/4	*M4/4	*M4/4	*M4/4
+*met(C)	*met(C)	*met(C)	*met(C)	*met(C)	*met(C)
+*MM60	*MM60	*MM60	*MM60	*MM60	*MM60
+*k[]	*k[]	*k[]	*k[]	*k[]	*k[]
+*a:	*a:	*a:	*a:	*a:	*a:
+=1-	=1-
+4	4	4	4	4AA	i
+4	4	4	4	4EE	Vb
+4	4	4	4	4AA	i
+				4AA;	i;
+=	=	=	=	=2	=2
+4	4	4	4	4AA	i
+4	4	4	4	4GG	V/III
+4	4	4	4	4CC	I/III
+				4CC;	I/III;
+=	=	=	=	=3	=3
+8	8	4	4	4CC	I/III
+8	8	.	.	.	.
+8	8		4	4AA	i
+8	8	.	.	.	.
+8	8		4	8DD	V7b/-VII
+8	8	4	.	8GG#	viio
+4	8	.	4	4AA	i
+.	8	8	.	.	.
+=	=	=	=	=4	=4
+4	4	4	.4	4DD	iv7
+4	8	4	.	4EE	V
+.	8	.	8	.	.
+				2AA;	I;
+=	=	=	=	=5	=5
+8	8	4	4	4AA	I
+8	8	.	.	.	.
+8	8	4	4	4AA	Ib
+8	8	.	.	.	.
+8	4	4	4	4DD	iv
+8	.	.	.	.	.
+8	4	4	4	4BB-	-II
+8	.	.	.	.	.
+=	=	=	=	=6	=6
+8	4	4	4	4EE	viiD7/VI
+8	.	.	.	.	.
+4	4	8	4	4AA	V/IV
+.	.	8	.	.	.
+4	4	8	4	4DD	IV
+.	.	8	.	.	.
+				4DD;	IV;
+*C:	*C:	*C:	*C:	*C:	*C:
+=	=	=	=	=7	=7
+8	8	4	4	4GG	V
+8	8	.	.	.	.
+8	8	4	4	4GG	Vb
+8	8	.	.	.	.
+8	4	4	4	4CC	I
+8	.	.	.	.	.
+8	4	4	4	4AA	vi
+8	.	.	.	.	.
+=	=	=	=	=8	=8
+8	4	4	4	4DD	ii7b
+8	.	.	.	.	.
+4	4	8	4	4GG	V
+.	.	8	.	.	.
+4	4	8	4	4CC	I
+.	.	8	.	.	.
+				4CC;	I;
+*a:	*a:	*a:	*a:	*a:	*a:
+=	=	=	=	=9	=9
+4	4	4	4	4FF	VI
+8	4	4	4	4DD	iv
+8	.	.	.	.	.
+8	4	4	4	4EE	Vb
+8	.	.	.	.	.
+4	4	4	8	4AA	I
+.	.	.	8	.	.
+=	=	=	=	=10	=10
+4	4	4	4	4BB	V7b/V
+4	4	8	4	4EE	V
+.	.	8	.	.	.
+4	4	8	4	4AA	I
+.	.	8	.	.	.
+				4AA;	I;
+===	===	===	===	====	====
+*-	*-	*-	*-	*-	*-

@@ -696,13 +696,12 @@ class ImporterTestCase(unittest.TestCase):
     @unittest.skip("TODO: Complete bug. ISSUE #12 test Eliseo")
     def test_export_string_two_different_spines(self):
         # Arrange
-        doc, err = kp.read('resource_dir/legacy/chor048.krn')
+        doc, err = kp.load('resource_dir/legacy/chor048.krn')
 
-        options = kp.ExportOptions(spine_types=['**kern', '**root', '**harm'],
-                                   kern_type=kp.KernTypeExporter.eKern)
-        content = kp.export(doc, options)
-        importer = kp.Importer()
-        document = importer.import_string(content)
+        content = kp.dumps(doc, spine_types=['**kern', '**root', '**harm'],
+                          tokenizer=kp.KernTypeExporter.eKern)
+
+        doc_2, _ = kp.loads(content)  # raise error if the content is not valid
 
         print(content)
 
@@ -749,9 +748,9 @@ class ImporterTestCase(unittest.TestCase):
             expected_output = f.read()
 
         # Act
-        doc, err = kp.read(input_kern_file)
-        real_output = kp.export(doc, kp.ExportOptions())
-        kp.store_graph(doc, '/tmp/graph.dot')
+        doc, err = kp.load(input_kern_file)
+        real_output = kp.dumps(doc)
+        kp.graph(doc, '/tmp/graph.dot')
 
         # Assert
         self.assertEqual(expected_output, real_output)

@@ -251,6 +251,14 @@ class TokenCategoryHierarchyTestCase(unittest.TestCase):
             }
         )
 
+    def test_all_TokenCategory_elements_are_in_hierarchy_map(self):
+        all_token_category_in_enums = kp.TokenCategory.all()
+        all_token_category_in_hierarchy = kp.TokenCategoryHierarchyMapper.all()
+
+        self.assertSetEqual(all_token_category_in_enums, all_token_category_in_hierarchy)
+
+
+
 class PitchRestTestCase(unittest.TestCase):
     def test_PitchRest_creation_generic(self):
         pitch_rest = kp.PitchRest('c')
@@ -541,3 +549,177 @@ class DurationTestCase(unittest.TestCase):
 class DurationMensuralTestCase(unittest.TestCase):
     def test_DurationMensural_creation_generic(self):
         pass
+
+
+class TokenExportTestCase(unittest.TestCase):
+    def test_token_export_simple_tokens(self):
+        t1 = kp.SimpleToken('a', kp.TokenCategory.CLEF)
+        self.assertEqual(t1.export(), 'a')
+
+    def test_token_export_complex_tokens(self):
+        t1 = kp.Subtoken('a', kp.TokenCategory.CLEF)
+        t2 = kp.Subtoken('b', kp.TokenCategory.TIME_SIGNATURE)
+        t3 = kp.Subtoken('c', kp.TokenCategory.INSTRUMENTS)
+        compound = kp.CompoundToken(
+            encoding='abc',
+            category=kp.TokenCategory.STRUCTURAL,
+            subtokens=[t1, t2, t3]
+        )
+
+        self.assertEqual(compound.export(), 'a@b@c')
+
+    def test_token_export_compund_tokens_with_filter_one(self):
+        t1 = kp.Subtoken('a', kp.TokenCategory.PITCH)
+        t2 = kp.Subtoken('b', kp.TokenCategory.DURATION)
+        t3 = kp.Subtoken('c', kp.TokenCategory.DECORATION)
+        compound = kp.CompoundToken(
+            encoding='abc',
+            category=kp.TokenCategory.STRUCTURAL,
+            subtokens=[t1, t2, t3]
+        )
+        filter_fn = lambda x: x in {kp.TokenCategory.DURATION}
+        self.assertEqual('b', compound.export(filter_categories=filter_fn))
+
+    def test_token_export_compund_tokens_with_filter_two(self):
+        t1 = kp.Subtoken('a', kp.TokenCategory.PITCH)
+        t2 = kp.Subtoken('b', kp.TokenCategory.DURATION)
+        t3 = kp.Subtoken('c', kp.TokenCategory.DECORATION)
+        compound = kp.CompoundToken(
+            encoding='abc',
+            category=kp.TokenCategory.STRUCTURAL,
+            subtokens=[t1, t2, t3]
+        )
+        filter_fn = lambda x: x in {kp.TokenCategory.PITCH, kp.TokenCategory.DURATION}
+        self.assertEqual('a@b', compound.export(filter_categories=filter_fn))
+
+    def test_token_export_compund_tokens_with_filter_empty(self):
+        t1 = kp.Subtoken('a', kp.TokenCategory.PITCH)
+        t2 = kp.Subtoken('b', kp.TokenCategory.DURATION)
+        t3 = kp.Subtoken('c', kp.TokenCategory.DECORATION)
+        compound = kp.CompoundToken(
+            encoding='abc',
+            category=kp.TokenCategory.STRUCTURAL,
+            subtokens=[t1, t2, t3]
+        )
+        filter_fn = lambda x: x in []
+        self.assertEqual('*', compound.export(filter_categories=filter_fn))
+
+    def test_export_note_rest_token_when_lambda_comes_from_function_class(self):
+        pitch = kp.Subtoken('c', kp.TokenCategory.PITCH)
+        duration = kp.Subtoken('4', kp.TokenCategory.DURATION)
+
+        note_rest = kp.NoteRestToken(
+            encoding='c4',
+            pitch_duration_subtokens=[pitch, duration],
+            decoration_subtokens=[]
+        )
+
+        static_ref = lambda x: x in {kp.TokenCategory.PITCH }
+        self.assertEqual('c4', note_rest.encoding)
+        self.assertEqual('c', note_rest.export(filter_categories=static_ref))
+
+        class TempFilter():
+            def __init__(self, categories):
+                self.categories = categories
+                self.fn_filter = lambda x: x in self.categories
+
+        self.assertEqual('c', note_rest.export(filter_categories=TempFilter({kp.TokenCategory.PITCH}).fn_filter))
+
+
+    def test_token_export_NoteRestToken(self):
+        pitch = kp.Subtoken('c', kp.TokenCategory.PITCH)
+        duration = kp.Subtoken('4', kp.TokenCategory.DURATION)
+        decoration_1 = kp.Subtoken('!', kp.TokenCategory.DECORATION)
+        decoration_2 = kp.Subtoken('?', kp.TokenCategory.DECORATION)
+
+        note_rest = kp.NoteRestToken(
+            encoding='c4!?',
+            pitch_duration_subtokens=[pitch, duration],
+            decoration_subtokens=[decoration_1, decoration_2]
+        )
+        self.assertEqual('c4!?', note_rest.encoding)
+        self.assertEqual('4@c·!·?', note_rest.export())
+
+    def test_token_export_NoteRestToken_without_decorations(self):
+        pitch = kp.Subtoken('c', kp.TokenCategory.PITCH)
+        duration = kp.Subtoken('4', kp.TokenCategory.DURATION)
+
+        note_rest = kp.NoteRestToken(
+            encoding='c4',
+            pitch_duration_subtokens=[pitch, duration],
+            decoration_subtokens=[]
+        )
+        self.assertEqual('c4', note_rest.encoding)
+        self.assertEqual('4@c', note_rest.export())
+
+    def test_token_export_NoteRestToken_without_pitch_duration_assert_raise(self):
+        with self.assertRaises(ValueError):
+            note_rest = kp.NoteRestToken(
+                encoding='c4',
+                pitch_duration_subtokens=[],
+                decoration_subtokens=[]
+            )
+
+    def test_token_export_NoteRestToken_without_decoration_assert_not_raise(self):
+        pitch = kp.Subtoken('c', kp.TokenCategory.PITCH)
+        duration = kp.Subtoken('4', kp.TokenCategory.DURATION)
+
+        note_rest = kp.NoteRestToken(
+            encoding='c4',
+            pitch_duration_subtokens=[pitch, duration],
+            decoration_subtokens=[]
+        )
+        self.assertEqual('c4', note_rest.encoding)
+        self.assertEqual('4@c', note_rest.export())
+
+    def test_token_export_NoteRestToken_encoding_wrong_order(self):
+        pitch = kp.Subtoken('c', kp.TokenCategory.PITCH)
+        duration = kp.Subtoken('4', kp.TokenCategory.DURATION)
+        decoration_1 = kp.Subtoken('!', kp.TokenCategory.DECORATION)
+        decoration_2 = kp.Subtoken('?', kp.TokenCategory.DECORATION)
+
+        note_rest_1 = kp.NoteRestToken(
+            encoding='4c!?',
+            pitch_duration_subtokens=[pitch, duration],
+            decoration_subtokens=[decoration_1, decoration_2]
+        )
+        note_rest_1_2 = kp.NoteRestToken(
+            encoding='4c!?',
+            pitch_duration_subtokens=[duration, pitch],
+            decoration_subtokens=[decoration_1, decoration_2]
+        )
+        note_rest_2 = kp.NoteRestToken(
+            encoding='c!?4',
+            pitch_duration_subtokens=[pitch, duration],
+            decoration_subtokens=[decoration_1, decoration_2]
+        )
+        note_rest_3 = kp.NoteRestToken(
+            encoding='!?4c',
+            pitch_duration_subtokens=[pitch, duration],
+            decoration_subtokens=[decoration_1, decoration_2]
+        )
+        note_rest_4 = kp.NoteRestToken(
+            encoding='4c!?',
+            pitch_duration_subtokens=[pitch, duration],
+            decoration_subtokens=[decoration_1, decoration_2]
+        )
+        note_rest_5 = kp.NoteRestToken(
+            encoding='c4!?',
+            pitch_duration_subtokens=[pitch, duration],
+            decoration_subtokens=[decoration_1, decoration_2]
+        )
+
+
+        self.assertEqual('4c!?', note_rest_1.encoding)
+        self.assertEqual('4@c·!·?', note_rest_1.export())
+        self.assertEqual('4c!?', note_rest_1_2.encoding)
+        self.assertEqual('4@c·!·?', note_rest_1_2.export())
+        self.assertEqual('c!?4', note_rest_2.encoding)
+        self.assertEqual('4@c·!·?', note_rest_2.export())
+        self.assertEqual('!?4c', note_rest_3.encoding)
+        self.assertEqual('4@c·!·?', note_rest_3.export())
+        self.assertEqual('4c!?', note_rest_4.encoding)
+        self.assertEqual('4@c·!·?', note_rest_4.export())
+        self.assertEqual('c4!?', note_rest_5.encoding)
+        self.assertEqual('4@c·!·?', note_rest_5.export())
+

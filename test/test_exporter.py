@@ -11,15 +11,22 @@ class ExporterTestCase(unittest.TestCase):
         cls.doc_organ_4_voices, _ = kp.read('resource_dir/legacy/chor048.krn')
         cls.doc_piano, _ = kp.read('resource_dir/mozart/concerto-piano-12-allegro.krn')
 
-    def exported_filtering_by_category(self, doc, categories, expected_path):
+    def _run_HeaderTokenGenerator_new_generalized(self, input_token, export_type, expected):
+        """Private helper method to run individual test cases."""
+        token = kp.HeaderToken(input_token, 0)
+        result = kp.HeaderTokenGenerator.new(token=token, type=export_type).encoding
+        self.assertEqual(
+            result, expected,
+            f"Failed for input: {input_token}, export_type: {export_type}, expected: {expected}, got: {result}"
+        )
+
+    def exported_filtering_by_category(self, doc, include, exclude, expected_path):
         # Arrange
         with open(expected_path, 'r') as f:
             expected_content = f.read()
 
         # Act
-        real_content = kp.export(doc, kp.ExportOptions(
-            token_categories=categories
-        ))
+        real_content = kp.dumps(doc, include=include)
 
         # Assert
         self.assertEqual(expected_content, real_content)
@@ -54,35 +61,23 @@ class ExporterTestCase(unittest.TestCase):
         self.assertEqual([], spine_types)
 
     def test_exporter_spine_id_left_hand(self):
-        options = kp.ExportOptions(
-            spine_ids=[0]
-        )
-
         with open('resource_dir/mozart/concerto-piano-12-allegro-left-hand.krn', 'r') as f:
             expected_content = f.read()
-        real_content = kp.export(self.doc_piano, options)
+        real_content = kp.dumps(self.doc_piano, spine_ids=[0])
         self.assertEqual(expected_content, real_content)
 
     def test_exporter_spine_id_right_hand(self):
-        options = kp.ExportOptions(
-            spine_ids=[1]
-        )
-
         with open('resource_dir/mozart/concerto-piano-12-allegro-right-hand.krn', 'r') as f:
             expected_content = f.read()
-        real_content = kp.export(self.doc_piano, options)
+        real_content = kp.dumps(self.doc_piano, spine_ids=[1])
         self.assertEqual(expected_content, real_content)
 
     def test_exporter_spines_id_mix_kern_dyn_spines(self):
-        options = kp.ExportOptions(
-            spine_ids=[0, 2]
-        )
-
         with open('resource_dir/mozart/concerto-piano-12-allegro-right-hand-and-dyn.krn', 'r') as f:
             expected_content = f.read()
-        real_content = kp.export(self.doc_piano,
-                                 options)  # TODO: Solve export error: error in line 15 of the exported file. No tiene nada que ver con la funcionalidad de exportar por spines. Sino con exportar todo en general.
-        # kp.store(self.doc_piano, '/tmp/test_mix_spines_error.krn', options)  # for debug
+        real_content = kp.dumps(self.doc_piano,
+                                 spine_ids=[0, 2])  # TODO: Solve export error: error in line 15 of the exported file. No tiene nada que ver con la funcionalidad de exportar por spines. Sino con exportar todo en general.
+        # kp.dump(self.doc_piano, '/tmp/test_mix_spines_error.krn', spine_ids=[0, 2])  # for debugging
         self.assertEqual(expected_content, real_content)
 
     def test_basic_kern_to_ekern(self):
@@ -93,10 +88,7 @@ class ExporterTestCase(unittest.TestCase):
             expected_content = f.read()
 
         doc, _ = kp.read(input_path)
-        real_content = kp.export(doc, kp.ExportOptions(
-            kern_type=kp.KernTypeExporter.eKern,
-            token_categories=kp.BEKERN_CATEGORIES
-        ))
+        real_content = kp.dumps(doc, tokenizer=kp.KernTypeExporter.eKern, include=kp.BEKERN_CATEGORIES)
 
         self.assertEqual(expected_content, real_content,
                          f"File content mismatch: \nExpected:\n{expected_content}\n{40 * '='}\nReal\n{real_content}")
@@ -109,43 +101,56 @@ class ExporterTestCase(unittest.TestCase):
     def test_should_export_with_all(self):
         self.exported_filtering_by_category(
             doc=self.doc_piano,
-            categories={t for t in kp.TokenCategory},
+            include={t for t in kp.TokenCategory},
+            exclude=None,
             expected_path='resource_dir/catogories/concerto-piano-12-allegro_with_all.krn'
         )
 
     def test_should_export_without_barlines(self):
         self.exported_filtering_by_category(
             doc=self.doc_piano,
-            categories={t for t in kp.TokenCategory} - {kp.TokenCategory.BARLINES},
+            include={t for t in kp.TokenCategory},
+            exclude={kp.TokenCategory.BARLINES},
             expected_path='resource_dir/catogories/concerto-piano-12-allegro_without_barlines.krn'
         )
 
     def test_should_export_without_only_signatures(self):
         self.exported_filtering_by_category(
             doc=self.doc_piano,
-            categories={kp.TokenCategory.SIGNATURES},
+            include={kp.TokenCategory.SIGNATURES},
+            exclude=None,
             expected_path='resource_dir/catogories/concerto-piano-12-allegro_without_only_signatures.krn'
         )
 
     def test_should_export_without_harmony(self):
-        kp.store(self.doc_organ_4_voices, 'resource_dir/catogories/concerto-piano-12-allegro_without_harmony.krn', kp.ExportOptions(
-            token_categories={t for t in kp.TokenCategory} - {kp.TokenCategory.HARMONY}
-        ))
+        kp.dump(self.doc_organ_4_voices, 'resource_dir/catogories/concerto-piano-12-allegro_without_harmony.krn',
+            include={t for t in kp.TokenCategory},
+            exclude={kp.TokenCategory.HARMONY}
+        )
         self.exported_filtering_by_category(
             doc=self.doc_organ_4_voices,
-            categories={t for t in kp.TokenCategory} - {kp.TokenCategory.HARMONY},
+            include={t for t in kp.TokenCategory},
+            exclude={kp.TokenCategory.HARMONY},
             expected_path='resource_dir/catogories/concerto-piano-12-allegro_without_harmony.krn'
         )
 
     def test_only_export_kern_and_harm_spines(self):
-        kp.store(self.doc_organ_4_voices, 'resource_dir/spines/concerto-piano-12-allegro_only_kern_and_harm.krn', kp.ExportOptions(
+        kp.dump(self.doc_organ_4_voices, 'resource_dir/spines/concerto-piano-12-allegro_only_kern_and_harm.krn',
             spine_types=['**kern', '**harm']
-        ))
+        )
         self.exported_filtering_by_category(
             doc=self.doc_organ_4_voices,
-            categories={t for t in kp.TokenCategory},
+            include={t for t in kp.TokenCategory},
+            exclude=None,
             expected_path='resource_dir/spines/concerto-piano-12-allegro_only_kern_and_harm.krn'
         )
+
+    def test_exporter_HeaderTokenGenerator_new(self):
+        self._run_HeaderTokenGenerator_new_generalized("**kern", kp.KernTypeExporter.eKern, "**ekern")
+        self._run_HeaderTokenGenerator_new_generalized("**kern", kp.KernTypeExporter.normalizedKern, "**kern")
+        self._run_HeaderTokenGenerator_new_generalized("**kern", kp.KernTypeExporter.bKern, "**bkern")
+        self._run_HeaderTokenGenerator_new_generalized("**kern", kp.KernTypeExporter.bEkern, "**bekern")
+
 
 
 
