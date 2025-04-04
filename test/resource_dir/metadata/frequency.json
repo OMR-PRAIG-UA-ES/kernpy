@@ -141,7 +141,7 @@
     },
     "2D;": {
         "occurrences": 3,
-        "category": "CORE"
+        "category": "EMPTY"
     },
     "4FF#": {
         "occurrences": 4,
@@ -157,7 +157,7 @@
     },
     "2GG;": {
         "occurrences": 4,
-        "category": "CORE"
+        "category": "EMPTY"
     },
     "=:|!": {
         "occurrences": 6,
@@ -173,11 +173,11 @@
     },
     "[4E": {
         "occurrences": 2,
-        "category": "CORE"
+        "category": "EMPTY"
     },
     "4E]": {
         "occurrences": 1,
-        "category": "CORE"
+        "category": "EMPTY"
     },
     "8C": {
         "occurrences": 2,
@@ -189,7 +189,7 @@
     },
     "2C;": {
         "occurrences": 1,
-        "category": "CORE"
+        "category": "EMPTY"
     },
     "8E": {
         "occurrences": 1,
@@ -201,15 +201,15 @@
     },
     "[4G": {
         "occurrences": 1,
-        "category": "CORE"
+        "category": "EMPTY"
     },
     "4G]": {
         "occurrences": 1,
-        "category": "CORE"
+        "category": "EMPTY"
     },
     "8E]": {
         "occurrences": 1,
-        "category": "CORE"
+        "category": "EMPTY"
     },
     "==": {
         "occurrences": 6,
@@ -249,7 +249,7 @@
     },
     "2d;": {
         "occurrences": 5,
-        "category": "CORE"
+        "category": "EMPTY"
     },
     "4e": {
         "occurrences": 7,
@@ -261,7 +261,7 @@
     },
     "2B;": {
         "occurrences": 2,
-        "category": "CORE"
+        "category": "EMPTY"
     },
     "8A": {
         "occurrences": 1,
@@ -277,7 +277,7 @@
     },
     "2c;": {
         "occurrences": 1,
-        "category": "CORE"
+        "category": "EMPTY"
     },
     "2e": {
         "occurrences": 1,
@@ -305,7 +305,7 @@
     },
     "2f#;": {
         "occurrences": 3,
-        "category": "CORE"
+        "category": "EMPTY"
     },
     "4f#": {
         "occurrences": 4,
@@ -317,11 +317,11 @@
     },
     "[4g": {
         "occurrences": 2,
-        "category": "CORE"
+        "category": "EMPTY"
     },
     "8g]": {
         "occurrences": 2,
-        "category": "CORE"
+        "category": "EMPTY"
     },
     "8a": {
         "occurrences": 4,
@@ -345,7 +345,7 @@
     },
     "2e;": {
         "occurrences": 1,
-        "category": "CORE"
+        "category": "EMPTY"
     },
     "4.a": {
         "occurrences": 1,
@@ -353,11 +353,11 @@
     },
     "[4f#": {
         "occurrences": 1,
-        "category": "CORE"
+        "category": "EMPTY"
     },
     "8f#]": {
         "occurrences": 1,
-        "category": "CORE"
+        "category": "EMPTY"
     },
     "2a": {
         "occurrences": 3,
@@ -381,7 +381,7 @@
     },
     "2a;": {
         "occurrences": 3,
-        "category": "CORE"
+        "category": "EMPTY"
     },
     "2dd": {
         "occurrences": 4,
@@ -393,7 +393,7 @@
     },
     "2g;": {
         "occurrences": 3,
-        "category": "CORE"
+        "category": "EMPTY"
     },
     "4.dd": {
         "occurrences": 1,

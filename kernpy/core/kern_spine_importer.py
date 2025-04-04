@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import List
+
 from antlr4 import InputStream, CommonTokenStream, ParseTreeWalker, BailErrorStrategy, \
     PredictionMode
 from antlr4.error.ErrorListener import ConsoleErrorListener
@@ -25,7 +27,7 @@ class KernSpineListener(kernSpineParserListener):
         self.accidental_subtoken = None
         # self.decorations = {}  # in order to standardize the order of decorators, we map the different properties to their class names
         # We cannot order it using the class name because there are rules with subrules, such as ties, or articulations. We order it using the encoding itself
-        self.decorations = []
+        self.decorations: List[Subtoken] = []
         self.in_chord = False
         # self.page_start_rows = [] # TODO
         self.measure_start_rows = []
@@ -81,8 +83,10 @@ class KernSpineListener(kernSpineParserListener):
         #        f'The decoration {decoration_type} is duplicated after reading {ctx.getText()}')  # TODO Dar información de línea, columna - ¿lanzamos excepción? - hay algunas que sí pueden estar duplicadas? Barrados?
 
         # self.decorations[decoration_type] = ctx.getText()
-        # We cannot order it using the class name because there are rules with subrules, such as ties, or articulations. We order it using the encoding itself
-        self.decorations.append(ctx.getText())
+        # We cannot order it using the class name because there are rules with subrules, such as ties, or articulations. We order it using the encoding itself. NOT YET!
+        decoration_encoding = ctx.getText()
+        decoration_subtoken = Subtoken(decoration_encoding, TokenCategory.DECORATION)
+        self.decorations.append(decoration_subtoken)
 
     def exitRestDecoration(self, ctx: kernSpineParser.NoteDecorationContext):
         # clazz = type(ctx.getChild(0))
@@ -95,7 +99,9 @@ class KernSpineListener(kernSpineParserListener):
         # We cannot order it using the class name because there are rules with subrules, such as ties, or articulations. We order it using the encoding itself
         decoration = ctx.getText();
         if decoration != '/' and decoration != '\\':
-            self.decorations.append(ctx.getText())
+            decoration_encoding = ctx.getText()
+            decoration_subtoken = Subtoken(decoration_encoding, TokenCategory.DECORATION)
+            self.decorations.append(decoration_subtoken)
 
     def addNoteRest(self, ctx, pitchduration_subtokens):
         # subtoken = Subtoken(self.decorations[key], TokenCategory.DECORATION)
@@ -111,7 +117,7 @@ class KernSpineListener(kernSpineParserListener):
             pitch_duration_tokens.append(duration_subtoken)
         pitch_duration_tokens.append(self.diatonic_pitch_and_octave_subtoken)
         if ctx.alteration():
-            pitch_duration_tokens.append(Subtoken(ctx.alteration().getText(), TokenCategory.PITCH))
+            pitch_duration_tokens.append(Subtoken(ctx.alteration().getText(), TokenCategory.ALTERATION))
 
         self.addNoteRest(ctx, pitch_duration_tokens)
 
@@ -128,7 +134,7 @@ class KernSpineListener(kernSpineParserListener):
 
     def exitChord(self, ctx: kernSpineParser.ChordContext):
         self.in_chord = False
-        self.token = ChordToken(ctx.getText(), TokenCategory.CORE, self.chord_tokens)
+        self.token = ChordToken(ctx.getText(), TokenCategory.CHORD, self.chord_tokens)
 
     def exitBarline(self, ctx: kernSpineParser.BarlineContext):
         txt_without_number = ''
@@ -200,7 +206,7 @@ class KernSpineListener(kernSpineParserListener):
 class KernListenerImporter(BaseANTLRListenerImporter):
 
     def createListener(self):
-        return KernSpineListener
+        return KernSpineListener()
 
     def createLexer(self, charStream):
         return kernSpineLexer(charStream)

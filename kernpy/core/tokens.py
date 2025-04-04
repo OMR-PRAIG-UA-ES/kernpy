@@ -14,6 +14,7 @@ CORE_HEADERS = {"**kern", "**mens"}
 SPINE_OPERATIONS = {"*-", "*+", "*^", "*v", "*x"}
 TERMINATOR = "*-"
 EMPTY_TOKEN = "*"
+ERROR_TOKEN = "<ERROR>"
 
 
 # We don't use inheritance here for all elements but enum, because we don't need any polymorphism mechanism, just a grouping one
@@ -27,11 +28,15 @@ class TokenCategory(Enum):
     The categories are sorted the specific order they are compared to sorthem. But hierarchical order must be defined in other data structures.
     """
     STRUCTURAL = auto()  # header, spine operations
+    HEADER = auto()  # **kern, **mens, **text, **harm, **mxhm, **root, **dyn, **dynam, **fing
+    SPINE_OPERATION = auto()
     CORE = auto() # notes, rests, chords, etc.
+    ERROR = auto()
     NOTE_REST = auto()
     NOTE = auto()
     DURATION = auto()
     PITCH = auto()
+    ALTERATION = auto()
     DECORATION = auto()
     REST = auto()
     CHORD = auto()
@@ -41,6 +46,7 @@ class TokenCategory(Enum):
     TIME_SIGNATURE = auto()
     METER_SYMBOL = auto()
     KEY_SIGNATURE = auto()
+    KEY_TOKEN = auto()
     ENGRAVED_SYMBOLS = auto()
     OTHER_CONTEXTUAL = auto()
     BARLINES = auto()
@@ -134,8 +140,8 @@ class TokenCategory(Enum):
         """
         pass
 
-BEKERN_CATEGORIES = [TokenCategory.STRUCTURAL, TokenCategory.CORE, TokenCategory.EMPTY, TokenCategory.SIGNATURES,
-                     TokenCategory.BARLINES, TokenCategory.ENGRAVED_SYMBOLS]
+BEKERN_CATEGORIES = {TokenCategory.STRUCTURAL, TokenCategory.CORE, TokenCategory.EMPTY, TokenCategory.SIGNATURES,
+                     TokenCategory.BARLINES, TokenCategory.ENGRAVED_SYMBOLS}
 
 
 class TokenCategoryHierarchyMapper:
@@ -150,23 +156,30 @@ class TokenCategoryHierarchyMapper:
     """
     _hierarchy_typing = Dict[TokenCategory, '_hierarchy_typing']
     hierarchy: _hierarchy_typing = {
-        TokenCategory.STRUCTURAL: {},  # each leave must be an empty dictionary
+        TokenCategory.STRUCTURAL: {
+            TokenCategory.HEADER: {},  # each leave must be an empty dictionary
+            TokenCategory.SPINE_OPERATION: {},
+        },
         TokenCategory.CORE: {
             TokenCategory.NOTE_REST: {
                 TokenCategory.DURATION: {},
                 TokenCategory.NOTE: {
                     TokenCategory.PITCH: {},
-                    TokenCategory.DECORATION: {}},
+                    TokenCategory.DECORATION: {},
+                    TokenCategory.ALTERATION: {},
+                },
                 TokenCategory.REST: {},
             },
             TokenCategory.CHORD: {},
             TokenCategory.EMPTY: {},
+            TokenCategory.ERROR: {},
         },
         TokenCategory.SIGNATURES: {
             TokenCategory.CLEF: {},
             TokenCategory.TIME_SIGNATURE: {},
             TokenCategory.METER_SYMBOL: {},
             TokenCategory.KEY_SIGNATURE: {},
+            TokenCategory.KEY_TOKEN: {},
         },
         TokenCategory.ENGRAVED_SYMBOLS: {},
         TokenCategory.OTHER_CONTEXTUAL: {},
@@ -241,9 +254,7 @@ class TokenCategoryHierarchyMapper:
         return set(cls.hierarchy.get(parent, {}).keys())
 
     @classmethod
-    def _nodes(cls, tree: _hierarchy_typing, *,
-                include: Optional[Set[TokenCategory]] = None,
-                exclude: Optional[Set[TokenCategory]] = None) -> Set[TokenCategory]:
+    def _nodes(cls, tree: _hierarchy_typing) -> Set[TokenCategory]:
         """
         Recursively get all nodes in the given hierarchy tree.
         """
@@ -267,24 +278,18 @@ class TokenCategoryHierarchyMapper:
 
 
     @classmethod
-    def nodes(cls, parent: TokenCategory, *,
-              include: Optional[Set[TokenCategory]] = None,
-                exclude: Optional[Set[TokenCategory]] = None) -> Set[TokenCategory]:
+    def nodes(cls, parent: TokenCategory) -> Set[TokenCategory]:
         """
         Get the all nodes of the subtree of the parent category.
 
         Args:
             parent (TokenCategory): The parent category.
-            include (Optional[Set[TokenCategory]]): The set of categories to include. Defaults to None. \
-                If None, all categories are included.
-            exclude (Optional[Set[TokenCategory]]): The set of categories to exclude. Defaults to None. \
-                If None, no categories are excluded.
 
         Returns:
             List[TokenCategory]: The list of nodes of the subtree of the parent category.
         """
         subtree = cls._find_subtree(cls.hierarchy, parent)
-        return cls._nodes(subtree, include=include, exclude=exclude) if subtree is not None else set()
+        return cls._nodes(subtree) if subtree is not None else set()
 
     @classmethod
     def valid(cls,
@@ -1222,6 +1227,43 @@ class Subtoken:
         self.encoding = encoding
         self.category = category
 
+    def __str__(self):
+        """
+        Returns the string representation of the subtoken.
+
+        Returns (str): The string representation of the subtoken.
+        """
+        return self.encoding
+
+    def __eq__(self, other):
+        """
+        Compare two subtokens.
+
+        Args:
+            other (Subtoken): The other subtoken to compare.
+        Returns (bool): True if the subtokens are equal, False otherwise.
+        """
+        if not isinstance(other, Subtoken):
+            return False
+        return self.encoding == other.encoding and self.category == other.category
+
+    def __ne__(self, other):
+        """
+        Compare two subtokens.
+
+        Args:
+            other (Subtoken): The other subtoken to compare.
+        Returns (bool): True if the subtokens are different, False otherwise.
+        """
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        """
+        Returns the hash of the subtoken.
+
+        Returns (int): The hash of the subtoken.
+        """
+        return hash((self.encoding, self.category))
 
 class AbstractToken(ABC):
     """
@@ -1279,6 +1321,36 @@ class AbstractToken(ABC):
         """
         return self.export()
 
+    def __eq__(self, other):
+        """
+        Compare two tokens.
+
+        Args:
+            other (AbstractToken): The other token to compare.
+        Returns (bool): True if the tokens are equal, False otherwise.
+        """
+        if not isinstance(other, AbstractToken):
+            return False
+        return self.encoding == other.encoding and self.category == other.category
+
+    def __ne__(self, other):
+        """
+        Compare two tokens.
+
+        Args:
+            other (AbstractToken): The other token to compare.
+        Returns (bool): True if the tokens are different, False otherwise.
+        """
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        """
+        Returns the hash of the token.
+
+        Returns (int): The hash of the token.
+        """
+        return hash((self.export(), self.category))
+
 
 class Token(AbstractToken, ABC):
     """
@@ -1328,7 +1400,7 @@ class ErrorToken(SimpleToken):
             line (int): The line number of the token in the score.
             error (str): The error message thrown by the parser.
         """
-        super().__init__(encoding, TokenCategory.EMPTY)
+        super().__init__(encoding, TokenCategory.ERROR)
         self.error = error
         self.line = line
 
@@ -1338,7 +1410,7 @@ class ErrorToken(SimpleToken):
 
         Returns (str): A string representation of the error token.
         """
-        return ''  # TODO Qué exportamos?
+        return ERROR_TOKEN
 
     def __str__(self):
         """
@@ -1410,7 +1482,7 @@ class HeaderToken(SimpleToken):
                 **kern  **kern  **kern **dyn **text
                 0   1   2   3   4
         """
-        super().__init__(encoding, TokenCategory.STRUCTURAL)
+        super().__init__(encoding, TokenCategory.HEADER)
         self.spine_id = spine_id
 
     def export(self, **kwargs) -> str:
@@ -1434,7 +1506,7 @@ class SpineOperationToken(SimpleToken):
     """
 
     def __init__(self, encoding):
-        super().__init__(encoding, TokenCategory.STRUCTURAL)
+        super().__init__(encoding, TokenCategory.SPINE_OPERATION)
         self.cancelled_at_stage = None
 
     def is_cancelled_at(self, stage) -> bool:
@@ -1513,7 +1585,7 @@ class KeyToken(SignatureToken):
     """
 
     def __init__(self, encoding):
-        super().__init__(encoding)
+        super().__init__(encoding, TokenCategory.KEY_TOKEN)
 
 
 class ComplexToken(Token, ABC):
@@ -1560,6 +1632,11 @@ class CompoundToken(ComplexToken):
                 in the hierarchy they must be children of the current token.
         """
         super().__init__(encoding, category)
+
+        for subtoken in subtokens:
+            if not isinstance(subtoken, Subtoken):
+                raise ValueError(f'All subtokens must be instances of Subtoken. Found {type(subtoken)}')
+
         self.subtokens = subtokens
 
     def export(self, **kwargs) -> str:
@@ -1595,27 +1672,27 @@ class NoteRestToken(ComplexToken):
     def __init__(
             self,
             encoding: str,
-            pitch_duration_subtokens,
-            decoration_subtokens
+            pitch_duration_subtokens: List[Subtoken],
+            decoration_subtokens: List[Subtoken]
     ):
         """
         NoteRestToken constructor.
 
         Args:
             encoding (str): The complete unprocessed encoding
-            pitch_duration_subtokens: The subtokens for the pitch and duration
-            decoration_subtokens: The subtokens for the decorations. Individual elements of the token, of type Subtoken
+            pitch_duration_subtokens (List[Subtoken])y: The subtokens for the pitch and duration
+            decoration_subtokens (List[Subtoken]): The subtokens for the decorations. Individual elements of the token, of type Subtoken
         """
-        super().__init__(encoding, TokenCategory.CORE)
+        super().__init__(encoding, TokenCategory.NOTE_REST)
         if not pitch_duration_subtokens or len(pitch_duration_subtokens) == 0:
             raise ValueError('Empty name-duration subtokens')
 
         for subtoken in pitch_duration_subtokens:
             if not isinstance(subtoken, Subtoken):
-                raise ValueError('All pitch-duration subtokens must be instances of Subtoken')
+                raise ValueError(f'All pitch-duration subtokens must be instances of Subtoken. Found {type(subtoken)}')
         for subtoken in decoration_subtokens:
             if not isinstance(subtoken, Subtoken):
-                raise ValueError('All decoration subtokens must be instances of Subtoken')
+                raise ValueError(f'All decoration subtokens must be instances of Subtoken. Found {type(subtoken)}')
 
         self.pitch_duration_subtokens = pitch_duration_subtokens
         self.decoration_subtokens = decoration_subtokens
@@ -1675,7 +1752,7 @@ class ChordToken(SimpleToken):
         Args:
             encoding (str): The complete unprocessed encoding
             category (TokenCategory): The token category, one of TokenCategory
-            notes_tokens (Sequence[Token]): The subtokens for the notes. Individual elements of the token, of type Subtoken
+            notes_tokens (Sequence[Token]): The subtokens for the notes. Individual elements of the token, of type token
         """
         super().__init__(encoding, category)
         self.notes_tokens = notes_tokens
@@ -1771,7 +1848,7 @@ class BoundingBox:
         return f'{self.from_x},{self.from_y},{self.w()},{self.h()}'
 
 
-class BoundingBoxToken(AbstractToken):
+class BoundingBoxToken(Token):
     """
     BoundingBoxToken class.
 
@@ -1805,12 +1882,12 @@ class BoundingBoxToken(AbstractToken):
         return self.encoding
 
 
-class MHXMToken(AbstractToken):
+class MHXMToken(Token):
     """
     MHXMToken class.
     """
     def __init__(self, encoding):
-        super().__init__(encoding, TokenCategory.OTHER)
+        super().__init__(encoding, TokenCategory.MHXM)
 
     # TODO: Implement constructor
     def export(self, **kwargs) -> str:
