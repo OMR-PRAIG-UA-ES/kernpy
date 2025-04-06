@@ -1,6 +1,7 @@
 import os
 import unittest
 import sys
+from unittest.mock import patch
 
 import kernpy as kp
 
@@ -224,6 +225,9 @@ class TokenCategoryHierarchyTestCase(unittest.TestCase):
             }
         )
 
+        # add mocking tests for TokenCategory calls to TokenCategoryHierarchyMapper here
+        ...
+
     def test_hierarchy_valid_categories_SIGNATURES(self):
         self._is_valid_category(
             include={kp.TokenCategory.SIGNATURES},
@@ -257,6 +261,87 @@ class TokenCategoryHierarchyTestCase(unittest.TestCase):
 
         self.assertSetEqual(all_token_category_in_enums, all_token_category_in_hierarchy)
 
+    @patch('kernpy.TokenCategoryHierarchyMapper.tree')
+    def test_tree_calls_mapper(self, mock_tree):
+        # Setup the mock to return a dummy tree string.
+        dummy_tree = "dummy_tree"
+        mock_tree.return_value = dummy_tree
+
+        # Call the class method on TokenCategory.
+        result = kp.TokenCategory.tree()
+
+        # Assert the mapper’s tree() was called once and with no arguments.
+        mock_tree.assert_called_once_with()
+        self.assertEqual(result, dummy_tree)
+
+    @patch('kernpy.TokenCategoryHierarchyMapper.is_child')
+    def test_is_child_calls_mapper(self, mock_is_child):
+        # Setup the mock return value.
+        mock_is_child.return_value = True
+
+        # Call is_child on TokenCategory.
+        result = kp.TokenCategory.is_child(child=kp.TokenCategory.NOTE,
+                                           parent=kp.TokenCategory.CORE)
+
+        # Assert that TokenCategoryHierarchyMapper.is_child was called with the correct kwargs.
+        mock_is_child.assert_called_once_with(parent=kp.TokenCategory.CORE,
+                                              child=kp.TokenCategory.NOTE)
+        self.assertTrue(result)
+
+    @patch('kernpy.TokenCategoryHierarchyMapper.children')
+    def test_children_calls_mapper(self, mock_children):
+        target = kp.TokenCategory.CORE
+        dummy_children = {kp.TokenCategory.NOTE_REST}
+        mock_children.return_value = dummy_children
+
+        result = kp.TokenCategory.children(target)
+        # Verify that the mapper method was called with the target passed as parent.
+        mock_children.assert_called_once_with(parent=target)
+        self.assertEqual(result, dummy_children)
+
+
+    @patch('kernpy.TokenCategoryHierarchyMapper.valid')
+    def test_valid_calls_mapper(self, mock_valid):
+        include = {kp.TokenCategory.CORE}
+        exclude = {kp.TokenCategory.NOTE}
+        dummy_valid = {kp.TokenCategory.CHORD}
+        mock_valid.return_value = dummy_valid
+
+        result = kp.TokenCategory.valid(include=include, exclude=exclude)
+        mock_valid.assert_called_once_with(include=include, exclude=exclude)
+        self.assertEqual(result, dummy_valid)
+
+    @patch('kernpy.TokenCategoryHierarchyMapper.leaves')
+    def test_leaves_calls_mapper(self, mock_leaves):
+        target = kp.TokenCategory.CORE
+        dummy_leaves = {kp.TokenCategory.EMPTY}
+        mock_leaves.return_value = dummy_leaves
+
+        result = kp.TokenCategory.leaves(target)
+        mock_leaves.assert_called_once_with(target=target)
+        self.assertEqual(result, dummy_leaves)
+
+    @patch('kernpy.TokenCategoryHierarchyMapper.nodes')
+    def test_nodes_calls_mapper(self, mock_nodes):
+        target = kp.TokenCategory.CORE
+        dummy_nodes = {kp.TokenCategory.NOTE, kp.TokenCategory.CHORD}
+        mock_nodes.return_value = dummy_nodes
+
+        result = kp.TokenCategory.nodes(target)
+        mock_nodes.assert_called_once_with(parent=target)
+        self.assertEqual(result, dummy_nodes)
+
+    @patch('kernpy.TokenCategoryHierarchyMapper.match')
+    def test_match_calls_mapper(self, mock_match):
+        target = kp.TokenCategory.NOTE
+        include = {kp.TokenCategory.CORE}
+        exclude = {kp.TokenCategory.NOTE}
+        dummy_match = False
+        mock_match.return_value = dummy_match
+
+        result = kp.TokenCategory.match(target, include=include, exclude=exclude)
+        mock_match.assert_called_once_with(category=target, include=include, exclude=exclude)
+        self.assertEqual(result, dummy_match)
 
 
 class PitchRestTestCase(unittest.TestCase):

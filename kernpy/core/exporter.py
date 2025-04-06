@@ -361,18 +361,16 @@ class Exporter:
         if spine_types is not None and len(spine_types) == 0:
             return []
 
-        options = ExportOptions(spine_types=spine_types, token_categories=[TokenCategory.STRUCTURAL])
-        rows = []
-        for stage in range(len(document.tree.stages)):
-            row = []
-            for node in document.tree.stages[stage]:
-                self.append_row(document=document, node=node, options=options, row=row)
+        options = ExportOptions(spine_types=spine_types, token_categories=[TokenCategory.HEADER])
+        content = self.export_string(document, options)
 
-            if len(row) > 0:
-                rows.append(row)
+        # Remove all after the first line: **kern, **mens, etc... are always in the first row
+        lines = content.split('\n')
+        first_line = lines[0:1]
+        tokens = first_line[0].split('\t')
 
-        only_spine_types = rows[0] if len(rows) > 0 else []  # **kern, **mens, etc... are always in the first row
-        return only_spine_types
+        return tokens if tokens not in [[], ['']] else []
+
 
     @classmethod
     def export_options_validator(cls, document: Document, options: ExportOptions) -> None:

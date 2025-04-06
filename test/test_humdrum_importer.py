@@ -39,12 +39,12 @@ class ImporterTestCase(unittest.TestCase):
         with open(expected_ekern, 'r') as file1:
             expected_content = file1.read()
 
-        export_options = kp.ExportOptions(spine_types=['**kern'], token_categories=kp.BEKERN_CATEGORIES,
-                                          kern_type=kp.KernTypeExporter.eKern)  #TODO Tests de normalized kern
-        export_options.from_measure = from_measure
-        export_options.to_measure = to_measure
-        exporter = kp.Exporter()
-        exported_ekern = exporter.export_string(document, export_options)
+        exported_ekern = kp.dumps(document,
+                                  spine_types=['**kern'],
+                                  from_measure=from_measure,
+                                  to_measure=to_measure,
+                                  include=kp.BEKERN_CATEGORIES,
+                                  tokenizer=kp.KernTypeExporter.eKern)
 
         if exported_ekern != expected_content:
             logging.info('---- Expected content ----')

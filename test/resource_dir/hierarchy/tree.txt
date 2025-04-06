@@ -1,29 +1,35 @@
 .
-├── TokenCategory.STRUCTURAL
-├── TokenCategory.CORE
-│   ├── TokenCategory.NOTE_REST
-│   │   ├── TokenCategory.DURATION
-│   │   ├── TokenCategory.NOTE
-│   │   │   ├── TokenCategory.PITCH
-│   │   │   └── TokenCategory.DECORATION
-│   │   └── TokenCategory.REST
-│   ├── TokenCategory.CHORD
-│   └── TokenCategory.EMPTY
-├── TokenCategory.SIGNATURES
-│   ├── TokenCategory.CLEF
-│   ├── TokenCategory.TIME_SIGNATURE
-│   ├── TokenCategory.METER_SYMBOL
-│   └── TokenCategory.KEY_SIGNATURE
-├── TokenCategory.ENGRAVED_SYMBOLS
-├── TokenCategory.OTHER_CONTEXTUAL
-├── TokenCategory.BARLINES
-├── TokenCategory.COMMENTS
-│   ├── TokenCategory.FIELD_COMMENTS
-│   └── TokenCategory.LINE_COMMENTS
-├── TokenCategory.DYNAMICS
-├── TokenCategory.HARMONY
-├── TokenCategory.FINGERING
-├── TokenCategory.LYRICS
-├── TokenCategory.INSTRUMENTS
-├── TokenCategory.BOUNDING_BOXES
-└── TokenCategory.OTHER
+├── STRUCTURAL
+│   ├── HEADER
+│   └── SPINE_OPERATION
+├── CORE
+│   ├── NOTE_REST
+│   │   ├── DURATION
+│   │   ├── NOTE
+│   │   │   ├── PITCH
+│   │   │   ├── DECORATION
+│   │   │   └── ALTERATION
+│   │   └── REST
+│   ├── CHORD
+│   ├── EMPTY
+│   └── ERROR
+├── SIGNATURES
+│   ├── CLEF
+│   ├── TIME_SIGNATURE
+│   ├── METER_SYMBOL
+│   ├── KEY_SIGNATURE
+│   └── KEY_TOKEN
+├── ENGRAVED_SYMBOLS
+├── OTHER_CONTEXTUAL
+├── BARLINES
+├── COMMENTS
+│   ├── FIELD_COMMENTS
+│   └── LINE_COMMENTS
+├── DYNAMICS
+├── HARMONY
+├── FINGERING
+├── LYRICS
+├── INSTRUMENTS
+├── BOUNDING_BOXES
+├── OTHER
+└── MHXM

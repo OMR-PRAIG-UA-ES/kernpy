@@ -1,34 +1,38 @@
 A	c	e	a
-#G	B	e	b
+G	B	e	b
 A	A	e	cc
+AA	A	e	cc
 A	A	e	cc
 G	B	g	dd
 c	c	g	ee
+C	c	g	ee
 c	c	g	ee
 B	d
-A	c	ee
+A	c	cc	ee
 G	B
-#F	A	dd
-#G	B	b
+F	A	cc	dd
+G	B	b
 A	c	cc
 e	a
 D	f	a	b
-E	e	#g
+E	e	g
 d	a
-A	#c	a	ee
+AA	c	e	a
+A	c	a	ee
 B	d
-#c	e	a	ee
-A	#c
+c	e	a	ee
+A	c
 d	d	a	ff
-cn
--B	d	-b	ff
+c
+B	d	b	ff
 A
-G	d	-b	ee
+G	d	b	ee
 E
-A	#c	a	ee
+A	c	a	ee
 g
 D	d	g	ee
 e
+D	A	f	dd
 G	B	g	dd
 A	c
 B	d	g	dd
@@ -43,15 +47,17 @@ G	B	g	dd
 f
 C	c	f	cc
 d
+C	G	e	cc
 F	A	f	cc
 E	A	f	dd
 D
-#G	B	e	ee
+G	B	e	ee
 E
 A	A	e	dd
 cc
-#D	A	#f	b
-E	#G	e	b
+D	A	f	b
+E	G	e	b
 d
 A	A	d	a
 B
+AA	E	c	a

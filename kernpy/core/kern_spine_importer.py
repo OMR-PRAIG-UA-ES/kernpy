@@ -4,23 +4,24 @@ from typing import List
 
 from antlr4 import InputStream, CommonTokenStream, ParseTreeWalker, BailErrorStrategy, \
     PredictionMode
-from antlr4.error.ErrorListener import ConsoleErrorListener
 
 from .base_antlr_importer import BaseANTLRListenerImporter
+from .base_antlr_spine_parser_listener import BaseANTLRSpineParserListener
+from .error_listener import ErrorListener
 from .generated.kernSpineLexer import kernSpineLexer
 from .generated.kernSpineParser import kernSpineParser
-from .generated.kernSpineParserListener import kernSpineParserListener
 from .spine_importer import SpineImporter
 from .tokens import SimpleToken, TokenCategory, Subtoken, ChordToken, BoundingBox, \
     BoundingBoxToken, ClefToken, KeySignatureToken, TimeSignatureToken, MeterSymbolToken, BarToken, NoteRestToken, \
     KeyToken, InstrumentToken
 
 
-class KernSpineListener(kernSpineParserListener):
+class KernSpineListener(BaseANTLRSpineParserListener):
 
     def __init__(self):
+        super().__init__()
+
         self.first_chord_element = None
-        self.token = None
         self.chord_tokens = None
         self.duration_subtokens = []
         self.diatonic_pitch_and_octave_subtoken = None
@@ -136,26 +137,6 @@ class KernSpineListener(kernSpineParserListener):
         self.in_chord = False
         self.token = ChordToken(ctx.getText(), TokenCategory.CHORD, self.chord_tokens)
 
-    def exitBarline(self, ctx: kernSpineParser.BarlineContext):
-        txt_without_number = ''
-        if ctx.EQUAL(0) and ctx.EQUAL(1):
-            txt_without_number = '=='
-        elif ctx.EQUAL(0):
-            txt_without_number = '='
-        if ctx.barLineType():
-            txt_without_number += ctx.barLineType().getText()
-        if ctx.fermata():
-            txt_without_number += ctx.fermata().getText()
-
-        # correct wrong encodings
-        if txt_without_number == ':!:':
-            txt_without_number = ':|!|:'
-        elif txt_without_number == ':|!|:':
-            txt_without_number = ':|!|:'
-
-        self.token = BarToken(txt_without_number)
-        self.token.hidden = "-" in ctx.getText()  # hidden
-
     def exitEmpty(self, ctx: kernSpineParser.EmptyContext):
         self.token = SimpleToken(ctx.getText(), TokenCategory.EMPTY)
 
@@ -218,51 +199,11 @@ class KernListenerImporter(BaseANTLRListenerImporter):
         return self.parser.start()
 
 
-# TODO - hacerlo común...
-
-class ParseError:
-    def __init__(self, offendingSymbol, charPositionInLine, msg, exception):
-        self.offendingSymbol = offendingSymbol
-        self.charPositionInLine = charPositionInLine
-        self.msg = msg
-        self.exception = exception
-
-    def __str__(self):
-        return f"({self.charPositionInLine}): {self.msg}"
-
-    def getOffendingSymbol(self):
-        return self.offendingSymbol
-
-    def getCharPositionInLine(self):
-        return self.charPositionInLine
-
-    def getMsg(self):
-        return self.msg
-
-
-class ErrorListener(ConsoleErrorListener):
-    def __init__(self):
-        super().__init__()
-        self.errors = []
-
-    def syntaxError(self, recognizer, offendingSymbol, line, charPositionInLine, msg, e):
-        super().syntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
-        self.errors.append(ParseError(offendingSymbol, charPositionInLine, msg, e))
-
-    def getNumberErrorsFound(self):
-        return len(self.errors)
-
-    def __str__(self):
-        sb = ""
-        for error in self.errors:
-            sb += str(error) + "\n"
-        return sb
-
-
 class KernSpineImporter(SpineImporter):
+    def import_listener(self) -> BaseANTLRSpineParserListener:
+        return KernSpineListener()
+
     def import_token(self, token: str):
-        if not token:
-            raise Exception('Input token is empty')
         # self.listenerImporter = KernListenerImporter(token) # TODO ¿Por qué no va esto?
         # self.listenerImporter.start()
         error_listener = ErrorListener()

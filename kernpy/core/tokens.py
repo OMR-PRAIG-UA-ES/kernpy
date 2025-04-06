@@ -138,10 +138,107 @@ class TokenCategory(Enum):
             ├── TokenCategory.BOUNDING_BOXES
             └── TokenCategory.OTHER
         """
-        pass
+        return TokenCategoryHierarchyMapper.tree()
 
-BEKERN_CATEGORIES = {TokenCategory.STRUCTURAL, TokenCategory.CORE, TokenCategory.EMPTY, TokenCategory.SIGNATURES,
-                     TokenCategory.BARLINES, TokenCategory.ENGRAVED_SYMBOLS}
+    @classmethod
+    def is_child(cls, *, child: TokenCategory, parent: TokenCategory) -> bool:
+        """
+        Check if the child category is a child of the parent category.
+
+        Args:
+            child (TokenCategory): The child category.
+            parent (TokenCategory): The parent category.
+
+        Returns (bool): True if the child category is a child of the parent category, False otherwise.
+        """
+        return TokenCategoryHierarchyMapper.is_child(parent=parent, child=child)
+
+    @classmethod
+    def children(cls, target: TokenCategory) -> Set[TokenCategory]:
+        """
+        Get the children of the target category.
+
+        Args:
+            target (TokenCategory): The target category.
+
+        Returns (List[TokenCategory]): The list of child categories of the target category.
+        """
+        return TokenCategoryHierarchyMapper.children(parent=target)
+
+    @classmethod
+    def valid(cls, *, include: Optional[Set[TokenCategory]] = None, exclude: Optional[Set[TokenCategory]] = None) -> Set[TokenCategory]:
+        """
+        Get the valid categories based on the include and exclude sets.
+
+        Args:
+            include (Optional[Set[TokenCategory]]): The set of categories to include. Defaults to None. \
+                If None, all categories are included.
+            exclude (Optional[Set[TokenCategory]]): The set of categories to exclude. Defaults to None. \
+                If None, no categories are excluded.
+
+        Returns (Set[TokenCategory]): The list of valid categories based on the include and exclude sets.
+        """
+        return TokenCategoryHierarchyMapper.valid(include=include, exclude=exclude)
+
+    @classmethod
+    def leaves(cls, target: TokenCategory) -> Set[TokenCategory]:
+        """
+        Get the leaves of the subtree of the target category.
+
+        Args:
+            target (TokenCategory): The target category.
+
+        Returns (List[TokenCategory]): The list of leaf categories of the target category.
+        """
+        return TokenCategoryHierarchyMapper.leaves(target=target)
+
+    @classmethod
+    def nodes(cls, target: TokenCategory) -> Set[TokenCategory]:
+        """
+        Get the nodes of the subtree of the target category.
+
+        Args:
+            target (TokenCategory): The target category.
+
+        Returns (List[TokenCategory]): The list of node categories of the target category.
+        """
+        return TokenCategoryHierarchyMapper.nodes(parent=target)
+
+    @classmethod
+    def match(cls,
+              target: TokenCategory, *,
+              include: Optional[Set[TokenCategory]] = None,
+              exclude: Optional[Set[TokenCategory]] = None) -> bool:
+        """
+        Check if the target category matches the include and exclude sets.
+
+        Args:
+            target (TokenCategory): The target category.
+            include (Optional[Set[TokenCategory]]): The set of categories to include. Defaults to None. \
+                If None, all categories are included.
+            exclude (Optional[Set[TokenCategory]]): The set of categories to exclude. Defaults to None. \
+                If None, no categories are excluded.
+
+        Returns (bool): True if the target category matches the include and exclude sets, False otherwise.
+        """
+        return TokenCategoryHierarchyMapper.match(category=target, include=include, exclude=exclude)
+
+    def __str__(self):
+        """
+        Get the string representation of the category.
+
+        Returns (str): The string representation of the category.
+        """
+        return self.name
+
+
+BEKERN_CATEGORIES = {
+    TokenCategory.STRUCTURAL,
+    TokenCategory.CORE,
+    TokenCategory.SIGNATURES,
+    TokenCategory.BARLINES,
+    TokenCategory.ENGRAVED_SYMBOLS
+}
 
 
 class TokenCategoryHierarchyMapper:

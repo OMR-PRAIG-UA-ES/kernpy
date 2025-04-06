@@ -31,10 +31,22 @@ class KernSpineImporterTest(unittest.TestCase):
         return token
 
     def test_complex(self):
-        self.do_test_token_exported("32qqbb-\LLL", "32@qq@bb@-·L·\\")
+        encoding_input = "32qqbb-\LLL"
+        self.do_test_token_exported(encoding_input, "32@qq@bb@-·L·\\")
+        self.do_test_token_category(encoding_input, kp.TokenCategory.NOTE_REST)
+
+    def test_time_signature(self):
+        self.do_test_token_exported("*M4/4", "*M4/4")
+        self.do_test_token_category("*M4/4", kp.TokenCategory.TIME_SIGNATURE)
+
+    def test_empty(self):
+        self.do_test_token_exported("*", "*")
+        self.do_test_token_category("*", kp.TokenCategory.EMPTY)
 
     def test_measure(self):
-        self.do_test_token_exported("=:|!-", "=:|!")
+        encoding_input = "=:|!-"
+        self.do_test_token_exported(encoding_input, "=:|!")
+        self.do_test_token_category(encoding_input, kp.TokenCategory.BARLINES)
 
     def test_duration_pitch(self):
         self.do_test_token_exported("4a", "4@a")
@@ -105,7 +117,7 @@ class KernSpineImporterTest(unittest.TestCase):
         self.do_test_token_category("=7:|!", kp.TokenCategory.BARLINES)
 
     def test_load_instrument(self):
-        self.do_test_token_category("*ICklav", kp.TokenCategory.INSTRUMENTS)
+        self.do_test_token_category("*I\"Cklav", kp.TokenCategory.INSTRUMENTS)
 
 
 if __name__ == '__main__':
