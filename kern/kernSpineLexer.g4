@@ -160,7 +160,7 @@ SPACE: ' ';
 
 // with pushMode, the lexer uses the rules below FREE_TEXT
 INSTRUMENT_TITLE: '*mI' '"'? RAW_TEXT;
-INSTRUMENT: '*I' '"'? RAW_TEXT;
+INSTRUMENT: '*I' '"'? RAW_TEXT;  // TODO: this only supports <<*Ipiano>> examples. But it should also support custom names using double quotes like <<*I"sax>>. Optional only at the beginning. Probably, do the same for INSTRUMENT_TITLE
 fragment RAW_TEXT: ~([\t\n\r])+;
 fragment RAW_TEXT_UNTIL_EOL: ~([\n\r])+; // !: or !| belong to bar lines
 fragment RAW_TEXT_NOT_BARLINE: (~[!|=:;\t\n\r])~([\t\n\r])*; // !:, !; or !| belong to bar lines

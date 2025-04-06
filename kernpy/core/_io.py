@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 
 
-def _write(path: Path, content: str) -> None:
+def _write(path: Union[str, Path], content: str) -> None:
     """
     Store content in a file.
 
@@ -16,10 +16,10 @@ def _write(path: Path, content: str) -> None:
     Returns: None
 
     """
-    if not os.path.exists(os.path.dirname(path.absolute())):
+    if not os.path.exists(os.path.dirname(Path(path).absolute())):
         os.makedirs(os.path.dirname(path), exist_ok=True)
 
-    with open(path, 'w') as f:
+    with open(path, 'w+') as f:
         f.write(content)
 
 

@@ -1,31 +1,34 @@
 from __future__ import annotations
 
+from typing import List
+
 from antlr4 import InputStream, CommonTokenStream, ParseTreeWalker, BailErrorStrategy, \
     PredictionMode
-from antlr4.error.ErrorListener import ConsoleErrorListener
 
 from .base_antlr_importer import BaseANTLRListenerImporter
+from .base_antlr_spine_parser_listener import BaseANTLRSpineParserListener
+from .error_listener import ErrorListener
 from .generated.kernSpineLexer import kernSpineLexer
 from .generated.kernSpineParser import kernSpineParser
-from .generated.kernSpineParserListener import kernSpineParserListener
 from .spine_importer import SpineImporter
-from .tokens import SimpleToken, TokenCategory, Subtoken, SubTokenCategory, ChordToken, BoundingBox, \
+from .tokens import SimpleToken, TokenCategory, Subtoken, ChordToken, BoundingBox, \
     BoundingBoxToken, ClefToken, KeySignatureToken, TimeSignatureToken, MeterSymbolToken, BarToken, NoteRestToken, \
     KeyToken, InstrumentToken
 
 
-class KernSpineListener(kernSpineParserListener):
+class KernSpineListener(BaseANTLRSpineParserListener):
 
     def __init__(self):
+        super().__init__()
+
         self.first_chord_element = None
-        self.token = None
         self.chord_tokens = None
         self.duration_subtokens = []
         self.diatonic_pitch_and_octave_subtoken = None
         self.accidental_subtoken = None
         # self.decorations = {}  # in order to standardize the order of decorators, we map the different properties to their class names
         # We cannot order it using the class name because there are rules with subrules, such as ties, or articulations. We order it using the encoding itself
-        self.decorations = []
+        self.decorations: List[Subtoken] = []
         self.in_chord = False
         # self.page_start_rows = [] # TODO
         self.measure_start_rows = []
@@ -56,22 +59,22 @@ class KernSpineListener(kernSpineParserListener):
     #                 f'The decoration {decoration_type} is duplicated')  # TODO Dar información de línea, columna - ¿lanzamos excepción? - hay algunas que sí pueden estar duplicadas? Barrados?
     #         decorations[decoration_type] = child.getText()
     #     for key in sorted(decorations.keys()):
-    #         subtoken = Subtoken(decorations[key], SubTokenCategory.DECORATION)
+    #         subtoken = Subtoken(decorations[key], TokenCategory.DECORATION)
     #         self.duration_subtoken.append(subtoken)
 
     def exitDuration(self, ctx: kernSpineParser.DurationContext):
-        self.duration_subtokens = [Subtoken(ctx.modernDuration().getText(), SubTokenCategory.DURATION)]
+        self.duration_subtokens = [Subtoken(ctx.modernDuration().getText(), TokenCategory.DURATION)]
         for i in range(len(ctx.augmentationDot())):
-            self.duration_subtokens.append(Subtoken(".", SubTokenCategory.DURATION))
+            self.duration_subtokens.append(Subtoken(".", TokenCategory.DURATION))
 
         if ctx.graceNote():
-            self.duration_subtokens.append(Subtoken(ctx.graceNote().getText(), SubTokenCategory.DURATION))
+            self.duration_subtokens.append(Subtoken(ctx.graceNote().getText(), TokenCategory.DURATION))
 
         if ctx.appoggiatura():
-            self.duration_subtokens.append(Subtoken(ctx.appoggiatura().getText(), SubTokenCategory.DURATION))
+            self.duration_subtokens.append(Subtoken(ctx.appoggiatura().getText(), TokenCategory.DURATION))
 
     def exitDiatonicPitchAndOctave(self, ctx: kernSpineParser.DiatonicPitchAndOctaveContext):
-        self.diatonic_pitch_and_octave_subtoken = Subtoken(ctx.getText(), SubTokenCategory.PITCH)
+        self.diatonic_pitch_and_octave_subtoken = Subtoken(ctx.getText(), TokenCategory.PITCH)
 
     def exitNoteDecoration(self, ctx: kernSpineParser.NoteDecorationContext):
         # clazz = type(ctx.getChild(0))
@@ -81,8 +84,10 @@ class KernSpineListener(kernSpineParserListener):
         #        f'The decoration {decoration_type} is duplicated after reading {ctx.getText()}')  # TODO Dar información de línea, columna - ¿lanzamos excepción? - hay algunas que sí pueden estar duplicadas? Barrados?
 
         # self.decorations[decoration_type] = ctx.getText()
-        # We cannot order it using the class name because there are rules with subrules, such as ties, or articulations. We order it using the encoding itself
-        self.decorations.append(ctx.getText())
+        # We cannot order it using the class name because there are rules with subrules, such as ties, or articulations. We order it using the encoding itself. NOT YET!
+        decoration_encoding = ctx.getText()
+        decoration_subtoken = Subtoken(decoration_encoding, TokenCategory.DECORATION)
+        self.decorations.append(decoration_subtoken)
 
     def exitRestDecoration(self, ctx: kernSpineParser.NoteDecorationContext):
         # clazz = type(ctx.getChild(0))
@@ -95,10 +100,12 @@ class KernSpineListener(kernSpineParserListener):
         # We cannot order it using the class name because there are rules with subrules, such as ties, or articulations. We order it using the encoding itself
         decoration = ctx.getText();
         if decoration != '/' and decoration != '\\':
-            self.decorations.append(ctx.getText())
+            decoration_encoding = ctx.getText()
+            decoration_subtoken = Subtoken(decoration_encoding, TokenCategory.DECORATION)
+            self.decorations.append(decoration_subtoken)
 
     def addNoteRest(self, ctx, pitchduration_subtokens):
-        # subtoken = Subtoken(self.decorations[key], SubTokenCategory.DECORATION)
+        # subtoken = Subtoken(self.decorations[key], TokenCategory.DECORATION)
         token = NoteRestToken(ctx.getText(), pitchduration_subtokens, self.decorations)
         if self.in_chord:
             self.chord_tokens.append(token)
@@ -111,7 +118,7 @@ class KernSpineListener(kernSpineParserListener):
             pitch_duration_tokens.append(duration_subtoken)
         pitch_duration_tokens.append(self.diatonic_pitch_and_octave_subtoken)
         if ctx.alteration():
-            pitch_duration_tokens.append(Subtoken(ctx.alteration().getText(), SubTokenCategory.PITCH))
+            pitch_duration_tokens.append(Subtoken(ctx.alteration().getText(), TokenCategory.ALTERATION))
 
         self.addNoteRest(ctx, pitch_duration_tokens)
 
@@ -119,7 +126,7 @@ class KernSpineListener(kernSpineParserListener):
         pitch_duration_tokens = []
         for duration_subtoken in self.duration_subtokens:
             pitch_duration_tokens.append(duration_subtoken)
-        pitch_duration_tokens.append(Subtoken('r', SubTokenCategory.PITCH))
+        pitch_duration_tokens.append(Subtoken('r', TokenCategory.PITCH))
         self.addNoteRest(ctx, pitch_duration_tokens)
 
     def enterChord(self, ctx: kernSpineParser.ChordContext):
@@ -128,27 +135,7 @@ class KernSpineListener(kernSpineParserListener):
 
     def exitChord(self, ctx: kernSpineParser.ChordContext):
         self.in_chord = False
-        self.token = ChordToken(ctx.getText(), TokenCategory.CORE, self.chord_tokens)
-
-    def exitBarline(self, ctx: kernSpineParser.BarlineContext):
-        txt_without_number = ''
-        if ctx.EQUAL(0) and ctx.EQUAL(1):
-            txt_without_number = '=='
-        elif ctx.EQUAL(0):
-            txt_without_number = '='
-        if ctx.barLineType():
-            txt_without_number += ctx.barLineType().getText()
-        if ctx.fermata():
-            txt_without_number += ctx.fermata().getText()
-
-        # correct wrong encodings
-        if txt_without_number == ':!:':
-            txt_without_number = ':|!|:'
-        elif txt_without_number == ':|!|:':
-            txt_without_number = ':|!|:'
-
-        self.token = BarToken(txt_without_number)
-        self.token.hidden = "-" in ctx.getText()  # hidden
+        self.token = ChordToken(ctx.getText(), TokenCategory.CHORD, self.chord_tokens)
 
     def exitEmpty(self, ctx: kernSpineParser.EmptyContext):
         self.token = SimpleToken(ctx.getText(), TokenCategory.EMPTY)
@@ -200,7 +187,7 @@ class KernSpineListener(kernSpineParserListener):
 class KernListenerImporter(BaseANTLRListenerImporter):
 
     def createListener(self):
-        return KernSpineListener
+        return KernSpineListener()
 
     def createLexer(self, charStream):
         return kernSpineLexer(charStream)
@@ -212,51 +199,11 @@ class KernListenerImporter(BaseANTLRListenerImporter):
         return self.parser.start()
 
 
-# TODO - hacerlo común...
-
-class ParseError:
-    def __init__(self, offendingSymbol, charPositionInLine, msg, exception):
-        self.offendingSymbol = offendingSymbol
-        self.charPositionInLine = charPositionInLine
-        self.msg = msg
-        self.exception = exception
-
-    def __str__(self):
-        return f"({self.charPositionInLine}): {self.msg}"
-
-    def getOffendingSymbol(self):
-        return self.offendingSymbol
-
-    def getCharPositionInLine(self):
-        return self.charPositionInLine
-
-    def getMsg(self):
-        return self.msg
-
-
-class ErrorListener(ConsoleErrorListener):
-    def __init__(self):
-        super().__init__()
-        self.errors = []
-
-    def syntaxError(self, recognizer, offendingSymbol, line, charPositionInLine, msg, e):
-        super().syntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
-        self.errors.append(ParseError(offendingSymbol, charPositionInLine, msg, e))
-
-    def getNumberErrorsFound(self):
-        return len(self.errors)
-
-    def __str__(self):
-        sb = ""
-        for error in self.errors:
-            sb += str(error) + "\n"
-        return sb
-
-
 class KernSpineImporter(SpineImporter):
+    def import_listener(self) -> BaseANTLRSpineParserListener:
+        return KernSpineListener()
+
     def import_token(self, token: str):
-        if not token:
-            raise Exception('Input token is empty')
         # self.listenerImporter = KernListenerImporter(token) # TODO ¿Por qué no va esto?
         # self.listenerImporter.start()
         error_listener = ErrorListener()

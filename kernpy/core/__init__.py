@@ -18,7 +18,7 @@ from .fing_spine_importer import *
 from .harm_spine_importer import *
 from .kern_spine_importer import *
 from .mens_spine_importer import *
-from .root_importer import *
+from .root_spine_importer import *
 from .text_spine_importer import *
 from .generic import *
 from .tokenizers import *
@@ -66,6 +66,17 @@ __all__ = [
     'transposer',
     'get_spine_types',
     'createImporter',
+    'TokenCategoryHierarchyMapper',
+    'TOKEN_SEPARATOR',
+    'DECORATION_SEPARATOR',
+    'Subtoken',
+    'AbstractToken',
+    'SimpleToken',
+    'ComplexToken',
+    'CompoundToken',
+    'NoteRestToken',
+    'HeaderToken',
+    'HeaderTokenGenerator'
 ]
 
 

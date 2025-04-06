@@ -1,0 +1,35 @@
+.
+├── STRUCTURAL
+│   ├── HEADER
+│   └── SPINE_OPERATION
+├── CORE
+│   ├── NOTE_REST
+│   │   ├── DURATION
+│   │   ├── NOTE
+│   │   │   ├── PITCH
+│   │   │   ├── DECORATION
+│   │   │   └── ALTERATION
+│   │   └── REST
+│   ├── CHORD
+│   ├── EMPTY
+│   └── ERROR
+├── SIGNATURES
+│   ├── CLEF
+│   ├── TIME_SIGNATURE
+│   ├── METER_SYMBOL
+│   ├── KEY_SIGNATURE
+│   └── KEY_TOKEN
+├── ENGRAVED_SYMBOLS
+├── OTHER_CONTEXTUAL
+├── BARLINES
+├── COMMENTS
+│   ├── FIELD_COMMENTS
+│   └── LINE_COMMENTS
+├── DYNAMICS
+├── HARMONY
+├── FINGERING
+├── LYRICS
+├── INSTRUMENTS
+├── BOUNDING_BOXES
+├── OTHER
+└── MHXM

@@ -7,11 +7,8 @@ from collections.abc import Sequence
 from abc import ABC, abstractmethod
 
 from kernpy.core import Document, SpineOperationToken, HeaderToken, Importer, TokenCategory, InstrumentToken, \
-    TOKEN_SEPARATOR, DECORATION_SEPARATOR, Token, NoteRestToken, HEADERS
+    TOKEN_SEPARATOR, DECORATION_SEPARATOR, Token, NoteRestToken, HEADERS, BEKERN_CATEGORIES, ComplexToken
 from kernpy.core.tokenizers import KernTypeExporter, TokenizerFactory, Tokenizer
-
-BEKERN_CATEGORIES = [TokenCategory.STRUCTURAL, TokenCategory.CORE, TokenCategory.EMPTY, TokenCategory.SIGNATURES,
-                     TokenCategory.BARLINES, TokenCategory.ENGRAVED_SYMBOLS]
 
 
 
@@ -152,6 +149,37 @@ def empty_row(row):
     return True
 
 
+class HeaderTokenGenerator:
+    """
+    HeaderTokenGenerator class.
+
+    This class is used to translate the HeaderTokens to the specific tokenizer format.
+    """
+    @classmethod
+    def new(cls, *, token: HeaderToken, type: KernTypeExporter):
+        """
+        Create a new HeaderTokenGenerator object. Only accepts stardized Humdrum **kern encodings. 
+
+        Args:
+            token (HeaderToken): The HeaderToken to be translated.
+            type (KernTypeExporter): The tokenizer to be used.
+
+        Examples:
+            >>> header = HeaderToken('**kern', 0)
+            >>> header.encoding
+            '**kern'
+            >>> new_header = HeaderTokenGenerator.new(token=header, type=KernTypeExporter.eKern)
+            >>> new_header.encoding
+            '**ekern'
+        """
+        new_encoding = f'**{type.prefix()}{token.encoding[2:]}'
+        new_token = HeaderToken(new_encoding, token.spine_id)
+
+        return new_token
+
+
+
+
 class Exporter:
     def export_string(self, document: Document, options: ExportOptions) -> str:
         self.export_options_validator(document, options)
@@ -271,8 +299,14 @@ class Exporter:
             header_type = None
         return header_type
 
-    def export_token(self, token: Token, options: ExportOptions):
-        return TokenizerFactory.create(options.kern_type.value).tokenize(token)
+    def export_token(self, token: Token, options: ExportOptions) -> str:
+        if isinstance(token, HeaderToken):
+            new_token = HeaderTokenGenerator.new(token=token, type=options.kern_type)
+        else:
+            new_token = token
+        return (TokenizerFactory
+                .create(options.kern_type.value, token_categories=options.token_categories)
+                .tokenize(new_token))
 
     def append_row(self, document: Document, node, options: ExportOptions, row: list) -> bool:
         """
@@ -290,7 +324,7 @@ class Exporter:
         if (header_type is not None
                 and header_type.encoding in options.spine_types
                 and not node.token.hidden
-                and node.token.category in options.token_categories
+                and (isinstance(node.token, ComplexToken) or node.token.category in options.token_categories)
                 and (options.spine_ids is None or header_type.spine_id in options.spine_ids)
         # If None, all the spines will be exported. TODO: put all the spines as spine_ids = None
         ):
@@ -327,18 +361,16 @@ class Exporter:
         if spine_types is not None and len(spine_types) == 0:
             return []
 
-        options = ExportOptions(spine_types=spine_types, token_categories=[TokenCategory.STRUCTURAL])
-        rows = []
-        for stage in range(len(document.tree.stages)):
-            row = []
-            for node in document.tree.stages[stage]:
-                self.append_row(document=document, node=node, options=options, row=row)
+        options = ExportOptions(spine_types=spine_types, token_categories=[TokenCategory.HEADER])
+        content = self.export_string(document, options)
 
-            if len(row) > 0:
-                rows.append(row)
+        # Remove all after the first line: **kern, **mens, etc... are always in the first row
+        lines = content.split('\n')
+        first_line = lines[0:1]
+        tokens = first_line[0].split('\t')
 
-        only_spine_types = rows[0] if len(rows) > 0 else []  # **kern, **mens, etc... are always in the first row
-        return only_spine_types
+        return tokens if tokens not in [[], ['']] else []
+
 
     @classmethod
     def export_options_validator(cls, document: Document, options: ExportOptions) -> None:

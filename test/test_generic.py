@@ -32,6 +32,10 @@ class GenericTestCase(unittest.TestCase):
         return [(0, 5), (6, 11), (12, 16), (17, 21), (22, 26), (27, 31), (32, 37), (38, 43), (44, 49), (50, 54),
                 (55, 59), (60, 66)]
 
+    @classmethod
+    def setUpClass(cls):
+        cls.static_complex_doc, _ = kp.load('resource_dir/legacy/chor048.krn')
+
 
 
     def test_read_export_easy(self):
@@ -153,3 +157,79 @@ class GenericTestCase(unittest.TestCase):
             except Exception as e:
                 logging.error(f"Error found : {e}. When comparing {expected_content} with {content}")
 
+
+    def test_generic_dumps_include_empty(self):
+        with open(Path('resource_dir/categories/empty.krn'), 'r') as f:
+            expected = f.read()
+
+        real_output = kp.dumps(self.static_complex_doc, include=[])
+        self.assertEqual(expected, real_output)
+
+    def test_generic_dumps_include_all(self):
+        with open(Path('resource_dir/categories/all.krn'), 'r') as f:
+            expected = f.read()
+
+        real_output = kp.dumps(self.static_complex_doc)
+        self.assertEqual(expected, real_output)
+
+    def test_generic_dumps_include_only_barlines(self):
+        with open(Path('resource_dir/categories/only_barlines.krn'), 'r') as f:
+            expected = f.read()
+
+        real_output = kp.dumps(self.static_complex_doc, include=kp.TokenCategory.BARLINES)
+        self.assertEqual(expected, real_output)
+
+    def test_generic_dumps_include_all_less_note_rest(self):
+        with open(Path('resource_dir/categories/all_less_note_rest.krn'), 'r') as f:
+            expected = f.read()
+        real_output = kp.dumps(self.static_complex_doc, exclude=kp.TokenCategory.NOTE_REST)
+
+        self.assertEqual(expected, real_output)
+
+    def test_generic_dumps_include_all_less_durations(self):
+        with open(Path('resource_dir/categories/all_less_durations.krn'), 'r') as f:
+            expected = f.read()
+
+        real_output = kp.dumps(self.static_complex_doc, exclude=kp.TokenCategory.DURATION)
+
+        self.assertEqual(expected, real_output)
+
+    def test_generic_dumps_include_all_less_pitches(self):
+        with open(Path('resource_dir/categories/all_less_pitches.krn'), 'r') as f:
+            expected = f.read()
+
+        real_output = kp.dumps(self.static_complex_doc, exclude=kp.TokenCategory.PITCH)
+
+        self.assertEqual(expected, real_output)
+
+    def test_generic_dumps_include_all_less_decorators(self):
+        with open(Path('resource_dir/categories/all_less_decorators.krn'), 'r') as f:
+            expected = f.read()
+        real_output = kp.dumps(self.static_complex_doc, exclude=kp.TokenCategory.DECORATION)
+
+        self.assertEqual(expected, real_output)
+
+    def test_generic_dumps_only_durations(self):
+        with open(Path('resource_dir/categories/only_durations.krn'), 'r') as f:
+            expected = f.read()
+
+        real_output = kp.dumps(self.static_complex_doc, include=kp.TokenCategory.DURATION)
+
+        self.assertEqual(expected, real_output)
+
+    def test_generic_dumps_only_pitches(self):
+        with open(Path('resource_dir/categories/only_pitches.krn'), 'r') as f:
+            expected = f.read()
+
+        kp.dump(self.static_complex_doc, Path('resource_dir/categories/only_pitches.krn'), include=kp.TokenCategory.PITCH)
+        real_output = kp.dumps(self.static_complex_doc, include=kp.TokenCategory.PITCH)
+
+        self.assertEqual(expected, real_output)
+
+    def test_generic_dumps_only_decorators(self):
+        with open(Path('resource_dir/categories/only_decorators.krn'), 'r') as f:
+            expected = f.read()
+
+        real_output = kp.dumps(self.static_complex_doc, include=kp.TokenCategory.DECORATION)
+
+        self.assertEqual(expected, real_output)

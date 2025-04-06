@@ -9,7 +9,10 @@ from pathlib import Path
 from typing import List, Optional, Any, Union, Tuple, Sequence
 
 from kernpy import KernTypeExporter
-from kernpy.core import Document, Importer, Exporter, ExportOptions, GraphvizExporter, generic
+from kernpy.core import (
+    Document, Importer, Exporter, ExportOptions, GraphvizExporter,
+    generic,
+    TokenCategoryHierarchyMapper)
 
 
 def load(fp: Union[str, Path], *, raise_on_errors: Optional[bool] = False, **kwargs) -> (Document, List[str]):
@@ -82,7 +85,8 @@ def loads(s, *, raise_on_errors: Optional[bool] = False, **kwargs) -> (Document,
 
 def dump(document: Document, fp: Union[str, Path], *,
          spine_types: [] = None,
-         token_categories: [] = None,
+         include: [] = None,
+         exclude: [] = None,
          from_measure: int = None,
          to_measure: int = None,
          tokenizer: KernTypeExporter = None,
@@ -96,7 +100,8 @@ def dump(document: Document, fp: Union[str, Path], *,
         document (Document): The Document object to write to the file.
         fp (Union[str, Path]): The file path to write the Document object.
         spine_types (Iterable): **kern, **mens, etc...
-        token_categories (Iterable): TokenCategory
+        include (Iterable): The token categories to include in the exported file. When None, all the token categories will be exported.
+        exclude (Iterable): The token categories to exclude from the exported file. When None, no token categories will be excluded.
         from_measure (int): The measure to start exporting. When None, the exporter will start from the beginning of the file. The first measure is 1
         to_measure (int): The measure to end exporting. When None, the exporter will end at the end of the file.
         tokenizer (KernTypeExporter): The type of the **kern file to export.
@@ -121,7 +126,8 @@ def dump(document: Document, fp: Union[str, Path], *,
     # Create an ExportOptions instance with only user-modified arguments
     options = generic.Generic.parse_options_to_ExportOptions(
         spine_types=spine_types,
-        token_categories=token_categories,
+        include=include,
+        exclude=exclude,
         from_measure=from_measure,
         to_measure=to_measure,
         kern_type=tokenizer,
@@ -139,7 +145,8 @@ def dump(document: Document, fp: Union[str, Path], *,
 
 def dumps(document: Document, *,
           spine_types: [] = None,
-          token_categories: [] = None,
+          include: [] = None,
+          exclude: [] = None,
           from_measure: int = None,
           to_measure: int = None,
           tokenizer: KernTypeExporter = None,
@@ -153,7 +160,8 @@ def dumps(document: Document, *,
         document (Document): The Document object to write to the file.
         fp (Union[str, Path]): The file path to write the Document object.
         spine_types (Iterable): **kern, **mens, etc...
-        token_categories (Iterable): TokenCategory
+        include (Iterable): The token categories to include in the exported file. When None, all the token categories will be exported.
+        exclude (Iterable): The token categories to exclude from the exported file. When None, no token categories will be excluded.
         from_measure (int): The measure to start exporting. When None, the exporter will start from the beginning of the file. The first measure is 1
         to_measure (int): The measure to end exporting. When None, the exporter will end at the end of the file.
         tokenizer (KernTypeExporter): The type of the **kern file to export.
@@ -177,7 +185,8 @@ def dumps(document: Document, *,
     # Create an ExportOptions instance with only user-modified arguments
     options = generic.Generic.parse_options_to_ExportOptions(
         spine_types=spine_types,
-        token_categories=token_categories,
+        include=include,
+        exclude=exclude,
         from_measure=from_measure,
         to_measure=to_measure,
         kern_type=tokenizer,

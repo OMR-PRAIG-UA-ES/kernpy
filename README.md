@@ -1,19 +1,22 @@
 # Python Humdrum **kern and **mens utilities
 
-Docs: <a target="_blank" href="https://kernpy.pages.dev/">https://kernpy.pages.dev/</a>
+## Documentation: <a target="_blank" href="https://kernpy.pages.dev/">https://kernpy.pages.dev/</a>
 
+![kernpy logo](https://static.wixstatic.com/media/7a8a67_90be144dbf384480908c3327b93ba97a~mv2.jpg/v1/fill/w_461,h_354,fp_0.46_0.20,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/mending-the-sail-1896_jpg!Large.jpg)
 
 ## Index:
-- [Code example](#code-example)
+- [Code examples](#code-examples)
 - [Installation](#installation)
 - [Documentation](#documentation)
 - [Run tests](#run-tests)
 - [Citation](#citation)
 
 
-## Code example
+## Code examples
 
-Read a `**kern`/`**mens` file.
+### Basic Usage
+
+Load a `**kern`/`**mens` file into a `kp.Document`.
 ```python
 import kernpy as kp
 
@@ -21,84 +24,76 @@ import kernpy as kp
 document, errors = kp.load("path/to/file.krn")
 ```
 
-Or create a new document from a string.
+Load a `**kern`/`**mens` from a string into a `kp.Document`.
 ```python
 import kernpy as kp
 
-# Create a new document from a string
 document, errors = kp.loads("**kern\n*clefC3\n*k[b-e-a-]\n*M3/4\n4e-\n4g\n4c\n=1\n4r\n2cc;\n==\n*-")
 ```
 
-Use `kernpy` utilities.
-
-
-### Spines analysis
-- Get all the spines in the document.
+Create a new standardized file from a `kp.Document`.
 ```python
 import kernpy as kp
 
-kp.spine_types(document)
-# ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
-
-kp.spine_types(document, spine_types=None)
-# ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
-```
-
-- Get specific **kern spines.
-```python
-import kernpy as kp
-
-def how_many_instrumental_spines(document):
-    print(kp.spine_types(document, ['**kern']))
-    return len(kp.spine_types(document, ['**kern']))
-# ['**kern', '**kern', '**kern', '**kern']
-# 4
-
-def has_voice(document):
-    return len(kp.spine_types(document, ['**text'])) > 0
-# True
-```
-
-### Create the new score standardized
-
-Create the new standardized file:
-```python
-import kernpy as kp
-
-# Create the new file using the default options
 kp.dump(document, "newfile.krn")
-
-# Or create the new file using custom options
-kp.dump(document, "newfile.krn",
-        spine_types=['**kern'],                         # Export only the **kern spines
-        token_categories=kp.BEKERN_CATEGORIES,          # Token categories to export
-        tokenizer=kp.KernTypeExporter.normalizedKern,   # Kern encoding
-        from_measure=1,                                 # First from measure 1
-        to_measure=10,                                  # Last measure exported
-        spine_ids=[0, 1],                               # Export only the first and the second spine
-        show_measure_numbers=False,                     # Do not show measure numbers
-        )
 ```
 
-Save the new content in a string:
+Save the document in a string from a `kp.Document`.
 ```python
 import kernpy as kp
 
-# Create the new content using the default options
 content = kp.dumps(document)
+````
 
-content = kp.dumps(document, 
-        spine_types=['**kern'],                         # Export only the **kern spines
-        token_categories=kp.BEKERN_CATEGORIES,          # Token categories to export
-        tokenizer=kp.KernTypeExporter.normalizedKern,   # Kern encoding
-        from_measure=1,                                 # First from measure 1
-        to_measure=10,                                  # Last measure exported
-        spine_ids=[0, 1],                               # Export only the first and the second spine
-        show_measure_numbers=False,                     # Do not show measure numbers
-        )
+### Exploring different options when creating new files
+
+Only use the specified spines in `spine_types`.
+```python
+import kernpy as kp
+
+kp.dump(document, "newfile_core.krn",
+        spine_types=['**kern'])
+kp.dump(document, "newfile_lyrics.krn",
+        spine_types=['**text])
+kp.dump(document, "newfile_core_and_lyrics.krn",
+        spine_types=['*+text'])
 ```
 
-### Select the proper Humdrum **kern tokenizer:
+- Use `include` for selecting the **kern semantic categories **to use**. The output only contains what is passed. By default, all the categories are included.
+```python
+import kernpy as kp
+
+kp.dump(document, "newfile_only_clefs.krn",
+        include={kp.TokenCategory.CLEF})
+kp.dump(document, "newfile_only_durations_and_bounding_boxes.krn",
+        include={kp.TokenCategory.DURATION, kp.TokenCategory.BOUNDING_BOXES})
+```
+- Use `exclude` for selecting the **kern semantic categories **to not use**. The output contains everything except what is passed. By default, any category is excluded.
+```python
+import kernpy as kp
+
+kp.dump(document, "newfile_without_pitches.krn",
+        exclude={kp.TokenCategory.PITCH})
+kp.dump(document, "newfile_without_durations_or_rests.krn",
+        exclude={kp.TokenCategory.BARLINES, kp.TokenCategory.REST})
+```
+- Use `include` and `exclude` together to select the **kern semantic categories **to use**. The output combines both.
+```python
+import kernpy as kp
+
+kp.dump(document, "newfile_custom.krn",
+        include=kp.BEKERN_CATEGORIES,  # Preloaded set of simple categories
+        exclude={kp.TokenCategory.PITCH})
+```
+
+- Use `tokenizer` to select how the categories are split. By default, the `normalizedKern` tokenizer is used.
+```python
+import kernpy as kp
+
+kp.dump(document, "newfile_normalized.krn",
+        tokenizer=kp.KernTypeExporter.normalizedKern)  # Default tokenizer
+```
+Select the proper Humdrum **kern tokenizer:
 
 `kernpy` provides different tokenizers to export the content each symbol in different formats.
 
@@ -115,6 +110,80 @@ doc, _ = kp.load('resource_dir/legacy/chor048.krn')
 
 kern_content = kp.dumps(doc, tokenizer=kp.KernTypeExporter.normalizedKern)
 ekern_content = kp.dumps(doc, tokenizer=kp.KernTypeExporter.eKern)
+```
+
+- Use `from_measure` and `to_measure` to select the measures to export. By default, all the measures are exported.
+```python
+import kernpy as kp
+
+kp.dump(document, "newfile_1_to_10.krn",
+        from_measure=1,  # First from measure 1
+        to_measure=10)   # Last measure exported
+```
+
+- Use `spine_ids` to select the spines to export. By default, all the spines are exported.
+```python
+import kernpy as kp
+
+kp.dump(document, "newfile_1_and_2.krn",
+        spine_ids=[0, 1])  # Export only the first and the second spine
+```
+
+- Use `show_measure_numbers` to select if the measure numbers are shown. By default, the measure numbers are shown.
+```python
+import kernpy as kp
+
+kp.dump(document, "newfile_no_measure_numbers.krn",
+        show_measure_numbers=False)  # Do not show measure numbers
+```
+
+- Use all the options at the same time.
+```python
+import kernpy as kp
+
+kp.dump(document, "newfile.krn",
+        spine_types=['**kern'],                         # Export only the **kern spines
+        include=kp.BEKERN_CATEGORIES,                   # Token categories to include
+        exclude={kp.TokenCategory.PITCH},               # Token categories to exclude
+        tokenizer=kp.KernTypeExporter.eKern,            # Kern encoding
+        from_measure=1,                                 # First from measure 1
+        to_measure=10,                                  # Last measure exported
+        spine_ids=[0, 1],                               # Export only the first and the second spine
+        show_measure_numbers=False,                     # Do not show measure numbers
+        )
+```
+
+## Exploring `kernpy` utilities.
+
+
+- Spines analysis 
+Retrieve all the spine types of the document.
+```python
+import kernpy as kp
+
+kp.spine_types(document)
+# ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
+
+kp.spine_types(document, spine_types=None)
+# ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
+
+kp.spine_types(document, spine_types=['**kern'])
+# ['**kern', '**kern', '**kern', '**kern']
+```
+
+- Get specific **kern spines.
+```python
+import kernpy as kp
+
+def how_many_instrumental_spines(document):
+    print(kp.spine_types(document, ['**kern']))
+    return len(kp.spine_types(document, ['**kern']))
+# ['**kern', '**kern', '**kern', '**kern']
+# 4
+
+def has_voice(document):
+    return len(kp.spine_types(document, ['**text'])) > 0
+# True
 ```
 
 

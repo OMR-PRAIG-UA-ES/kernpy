@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import List, Optional, Any, Union, Tuple
 from collections.abc import Sequence
 
-from kernpy.core import Importer, Document, Exporter, ExportOptions, GraphvizExporter
+from kernpy.core import Importer, Document, Exporter, ExportOptions, GraphvizExporter, TokenCategoryHierarchyMapper
 from kernpy.core._io import _write
 from kernpy.util.helpers import deprecated
 
@@ -236,7 +236,17 @@ class Generic:
         """
         options = ExportOptions.default()
 
+        # Compute the valid token categories
+        options.token_categories = TokenCategoryHierarchyMapper.valid(
+            include=kwargs.get('include', None),
+            exclude=kwargs.get('exclude', None)
+        )
+
+        # Use kwargs to update the ExportOptions object
         for key, value in kwargs.items():
+            if key in ['include', 'exclude', 'token_categories']:  # Skip these keys: generated manually
+                continue
+
             if value is not None:
                 setattr(options, key, value)
 

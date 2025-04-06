@@ -7,7 +7,7 @@ from .harm_spine_importer import HarmSpineImporter
 from .kern_spine_importer import KernSpineImporter
 from .mens_spine_importer import MensSpineImporter
 from .mhxm_spine_importer import MxhmSpineImporter
-from .root_importer import RootSpineImporter
+from .root_spine_importer import RootSpineImporter
 from .spine_importer import SpineImporter
 from .text_spine_importer import TextSpineImporter
 

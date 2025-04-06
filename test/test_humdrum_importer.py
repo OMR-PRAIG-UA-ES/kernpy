@@ -39,12 +39,12 @@ class ImporterTestCase(unittest.TestCase):
         with open(expected_ekern, 'r') as file1:
             expected_content = file1.read()
 
-        export_options = kp.ExportOptions(spine_types=['**kern'], token_categories=kp.BEKERN_CATEGORIES,
-                                          kern_type=kp.KernTypeExporter.eKern)  #TODO Tests de normalized kern
-        export_options.from_measure = from_measure
-        export_options.to_measure = to_measure
-        exporter = kp.Exporter()
-        exported_ekern = exporter.export_string(document, export_options)
+        exported_ekern = kp.dumps(document,
+                                  spine_types=['**kern'],
+                                  from_measure=from_measure,
+                                  to_measure=to_measure,
+                                  include=kp.BEKERN_CATEGORIES,
+                                  tokenizer=kp.KernTypeExporter.eKern)
 
         if exported_ekern != expected_content:
             logging.info('---- Expected content ----')
@@ -696,13 +696,12 @@ class ImporterTestCase(unittest.TestCase):
     @unittest.skip("TODO: Complete bug. ISSUE #12 test Eliseo")
     def test_export_string_two_different_spines(self):
         # Arrange
-        doc, err = kp.read('resource_dir/legacy/chor048.krn')
+        doc, err = kp.load('resource_dir/legacy/chor048.krn')
 
-        options = kp.ExportOptions(spine_types=['**kern', '**root', '**harm'],
-                                   kern_type=kp.KernTypeExporter.eKern)
-        content = kp.export(doc, options)
-        importer = kp.Importer()
-        document = importer.import_string(content)
+        content = kp.dumps(doc, spine_types=['**kern', '**root', '**harm'],
+                          tokenizer=kp.KernTypeExporter.eKern)
+
+        doc_2, _ = kp.loads(content)  # raise error if the content is not valid
 
         print(content)
 
@@ -749,9 +748,9 @@ class ImporterTestCase(unittest.TestCase):
             expected_output = f.read()
 
         # Act
-        doc, err = kp.read(input_kern_file)
-        real_output = kp.export(doc, kp.ExportOptions())
-        kp.store_graph(doc, '/tmp/graph.dot')
+        doc, err = kp.load(input_kern_file)
+        real_output = kp.dumps(doc)
+        kp.graph(doc, '/tmp/graph.dot')
 
         # Assert
         self.assertEqual(expected_output, real_output)
