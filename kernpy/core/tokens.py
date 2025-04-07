@@ -14,7 +14,7 @@ CORE_HEADERS = {"**kern", "**mens"}
 SPINE_OPERATIONS = {"*-", "*+", "*^", "*v", "*x"}
 TERMINATOR = "*-"
 EMPTY_TOKEN = "*"
-ERROR_TOKEN = "<ERROR>"
+ERROR_TOKEN = "Z"
 
 
 # We don't use inheritance here for all elements but enum, because we don't need any polymorphism mechanism, just a grouping one
