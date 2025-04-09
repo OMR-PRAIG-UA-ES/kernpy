@@ -1,14 +1,7 @@
-# Run from the root project (the 'test' parent folder): python3 -m unittest test/test_importer.py
-# or from the IDE
 import unittest
-import logging
 import sys
 
 import kernpy as kp
-
-logger = logging.getLogger()
-logger.level = logging.INFO  # change it DEBUG to trace errors
-logger.addHandler(logging.StreamHandler(sys.stdout))
 
 
 class KernSpineImporterTest(unittest.TestCase):
@@ -117,6 +110,7 @@ class KernSpineImporterTest(unittest.TestCase):
         self.do_test_token_category("=7:|!", kp.TokenCategory.BARLINES)
 
     def test_load_instrument(self):
+        self.do_test_token_category("*IPiano", kp.TokenCategory.INSTRUMENTS)
         self.do_test_token_category("*I\"Cklav", kp.TokenCategory.INSTRUMENTS)
 
 

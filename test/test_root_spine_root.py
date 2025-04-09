@@ -1,12 +1,7 @@
 import unittest
-import logging
 import sys
 
 import kernpy as kp
-
-logger = logging.getLogger()
-logger.level = logging.INFO  # change it DEBUG to trace errors
-logger.addHandler(logging.StreamHandler(sys.stdout))
 
 
 class RootSpineImporterTest(unittest.TestCase):
@@ -21,7 +16,7 @@ class RootSpineImporterTest(unittest.TestCase):
         return token
 
     def do_test_token_category(self, input_encoding, expected_category):
-        importer = kp.KernSpineImporter()
+        importer = kp.RootSpineImporter()
         token = importer.import_token(input_encoding)
         self.assertIsNotNone(token)
         self.assertEqual(expected_category, token.category)
@@ -36,8 +31,28 @@ class RootSpineImporterTest(unittest.TestCase):
         self.do_test_token_exported("*", "*")
         self.do_test_token_category("*", kp.TokenCategory.EMPTY)
 
-    def test_measure(self):
+    def test_measure_0(self):
+        encoding_input = "="
+        self.do_test_token_exported(encoding_input, "=")
+        self.do_test_token_category(encoding_input, kp.TokenCategory.BARLINES)
+
+    def test_measure_1(self):
         encoding_input = "=:|!-"
         self.do_test_token_exported(encoding_input, "=:|!")
         self.do_test_token_category(encoding_input, kp.TokenCategory.BARLINES)
+
+    def test_measure_2(self):
+        encoding_input = "=="
+        self.do_test_token_exported(encoding_input, "==")
+        self.do_test_token_category(encoding_input, kp.TokenCategory.BARLINES)
+
+    def test_measure_3(self):
+        encoding_input = "=10"
+        self.do_test_token_exported(encoding_input, "=")
+        self.do_test_token_category(encoding_input, kp.TokenCategory.BARLINES)
+
+    def test_note_rest_should_be_note_rest(self):
+        encoding_input = "4e"
+        self.do_test_token_exported(encoding_input, "4@e")
+        self.do_test_token_category(encoding_input, kp.TokenCategory.NOTE_REST)
 

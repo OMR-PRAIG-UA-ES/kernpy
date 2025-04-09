@@ -58,9 +58,12 @@ class TokenCategory(Enum):
     FINGERING = auto()
     LYRICS = auto()
     INSTRUMENTS = auto()
+    IMAGE_ANNOTATIONS = auto()
     BOUNDING_BOXES = auto()
+    LINE_BREAK = auto()
     OTHER = auto()
     MHXM = auto()
+    ROOT = auto()
 
     def __lt__(self, other):
         """
@@ -290,9 +293,13 @@ class TokenCategoryHierarchyMapper:
         TokenCategory.FINGERING: {},
         TokenCategory.LYRICS: {},
         TokenCategory.INSTRUMENTS: {},
-        TokenCategory.BOUNDING_BOXES: {},
+        TokenCategory.IMAGE_ANNOTATIONS: {
+            TokenCategory.BOUNDING_BOXES: {},
+            TokenCategory.LINE_BREAK: {},
+        },
         TokenCategory.OTHER: {},
         TokenCategory.MHXM: {},
+        TokenCategory.ROOT: {},
     }
 
     @classmethod
@@ -326,7 +333,7 @@ class TokenCategoryHierarchyMapper:
     @classmethod
     def is_child(cls, parent: TokenCategory, child: TokenCategory) -> bool:
         """
-        Recursively check if `child` is in the subtree of `parent`.
+        Recursively check if `child` is in the subtree of `parent`. If `parent` is the same as `child`, return True.
 
         Args:
             parent (TokenCategory): The parent category.
@@ -335,6 +342,8 @@ class TokenCategoryHierarchyMapper:
         Returns:
             bool: True if `child` is a descendant of `parent`, False otherwise.
         """
+        if parent == child:
+            return True
         return cls._is_child(parent, child, tree=cls.hierarchy)
 
     @classmethod

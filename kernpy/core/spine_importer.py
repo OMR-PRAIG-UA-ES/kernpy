@@ -12,19 +12,16 @@ from .tokens import Token
 
 
 class SpineImporter(ABC):
-    #def __init__(self):
-    #    self.import_listener = self.import_listener()
-     #   self.error_listener = ErrorListener()
+    def __init__(self):
+        self.import_listener = self.import_listener()
+        self.error_listener = ErrorListener()
 
-    #@abstractmethod
-    #def import_listener(self) -> BaseANTLRSpineParserListener:
-    #    pass
+    @abstractmethod
+    def import_listener(self) -> BaseANTLRSpineParserListener:
+        pass
 
     def import_token(self, encoding: str) -> Token:
-        if encoding is None:
-            raise ValueError('Input token is None')
-        if encoding == '':
-            raise ValueError('Input token is empty')
+        self._raise_error_if_wrong_input(encoding)
 
         # Set up lexer
         lexer = kernSpineLexer(InputStream(encoding))
@@ -49,5 +46,14 @@ class SpineImporter(ABC):
             raise Exception(self.error_listener.errors)
 
         return self.import_listener.token
+
+    @classmethod
+    def _raise_error_if_wrong_input(cls, encoding: str):
+        if encoding is None:
+            raise ValueError("Encoding cannot be None")
+        if not isinstance(encoding, str):
+            raise TypeError("Encoding must be a string")
+        if encoding == '':
+            raise ValueError("Encoding cannot be an empty string")
 
 

@@ -20,6 +20,7 @@ from .kern_spine_importer import *
 from .mens_spine_importer import *
 from .root_spine_importer import *
 from .text_spine_importer import *
+from .mhxm_spine_importer import *
 from .generic import *
 from .tokenizers import *
 
@@ -53,6 +54,7 @@ __all__ = [
     'MensSpineImporter',
     'RootSpineImporter',
     'TextSpineImporter',
+    'MxhmSpineImporter',
     'SpineOperationToken',
     'PitchRest',
     'Duration',
