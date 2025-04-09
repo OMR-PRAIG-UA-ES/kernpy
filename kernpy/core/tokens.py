@@ -1516,7 +1516,8 @@ class ErrorToken(SimpleToken):
 
         Returns (str): A string representation of the error token.
         """
-        return ERROR_TOKEN
+        # return ERROR_TOKEN
+        return self.encoding  # TODO: add a constant for the error token
 
     def __str__(self):
         """

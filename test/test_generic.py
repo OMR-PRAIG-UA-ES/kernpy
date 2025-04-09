@@ -170,6 +170,7 @@ class GenericTestCase(unittest.TestCase):
             expected = f.read()
 
         real_output = kp.dumps(self.static_complex_doc)
+
         self.assertEqual(expected, real_output)
 
     def test_generic_dumps_include_only_barlines(self):

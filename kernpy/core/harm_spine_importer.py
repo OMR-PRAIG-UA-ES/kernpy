@@ -26,7 +26,7 @@ class HarmSpineImporter(SpineImporter):
             TokenCategory.COMMENTS,
         }
 
-        if any(TokenCategory.is_child(child=token.category, parent=cat) for cat in ACCEPTED_CATEGORIES):
+        if not any(TokenCategory.is_child(child=token.category, parent=cat) for cat in ACCEPTED_CATEGORIES):
             return SimpleToken(encoding, TokenCategory.HARMONY)
 
         return token

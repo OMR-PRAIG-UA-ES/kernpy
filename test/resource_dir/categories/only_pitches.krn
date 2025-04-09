@@ -1,63 +1,63 @@
-A	c	e	a
-G	B	e	b
-A	A	e	cc
-AA	A	e	cc
-A	A	e	cc
-G	B	g	dd
-c	c	g	ee
-C	c	g	ee
-c	c	g	ee
+A	c	e	a	AA
+G	B	e	b	EE	b
+A	A	e	cc	AA
+AA	A	e	cc	AA
+A	A	e	cc	AA
+G	B	g	dd	GG
+c	c	g	ee	CC
+C	c	g	ee	CC
+c	c	g	ee	CC
 B	d
-A	c	cc	ee
+A	c	cc	ee	AA
 G	B
-F	A	cc	dd
-G	B	b
-A	c	cc
+F	A	cc	dd	DD	b
+G	B	b	GG
+A	c	cc	AA
 e	a
-D	f	a	b
-E	e	g
+D	f	a	b	DD
+E	e	g	EE
 d	a
-AA	c	e	a
-A	c	a	ee
+AA	c	e	a	AA
+A	c	a	ee	AA
 B	d
-c	e	a	ee
+c	e	a	ee	AA
 A	c
-d	d	a	ff
+d	d	a	ff	DD
 c
-B	d	b	ff
+B	d	b	ff	BB
 A
-G	d	b	ee
+G	d	b	ee	EE
 E
-A	c	a	ee
+A	c	a	ee	AA
 g
-D	d	g	ee
+D	d	g	ee	DD
 e
-D	A	f	dd
-G	B	g	dd
+D	A	f	dd	DD
+G	B	g	dd	GG
 A	c
-B	d	g	dd
+B	d	g	dd	GG	b
 G	B
-c	c	g	ee
+c	c	g	ee	CC
 B
-A	c	a	ee
+A	c	a	ee	AA
 G
-F	c	a	dd
+F	c	a	dd	DD	b
 D
-G	B	g	dd
+G	B	g	dd	GG
 f
-C	c	f	cc
+C	c	f	cc	CC
 d
-C	G	e	cc
-F	A	f	cc
-E	A	f	dd
+C	G	e	cc	CC
+F	A	f	cc	FF
+E	A	f	dd	DD
 D
-G	B	e	ee
+G	B	e	ee	EE	b
 E
-A	A	e	dd
+A	A	e	dd	AA
 cc
-D	A	f	b
-E	G	e	b
+D	A	f	b	BB	b
+E	G	e	b	EE
 d
-A	A	d	a
+A	A	d	a	AA
 B
-AA	E	c	a
+AA	E	c	a	AA
