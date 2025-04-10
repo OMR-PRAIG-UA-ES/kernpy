@@ -1,3 +1,5 @@
+from typing import Optional
+
 from antlr4.error.ErrorListener import ConsoleErrorListener
 
 
@@ -22,12 +24,21 @@ class ParseError:
 
 
 class ErrorListener(ConsoleErrorListener):
-    def __init__(self):
+    def __init__(self, *, verbose: Optional[bool] = False):
+        """
+        ErrorListener constructor.
+        Args:
+            verbose (bool): If True, the error messages will be printed to the console using \
+            the `ConsoleErrorListener` interface.
+        """
         super().__init__()
         self.errors = []
+        self.verbose = verbose
 
     def syntaxError(self, recognizer, offendingSymbol, line, charPositionInLine, msg, e):
-        super().syntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
+        if self.verbose:
+            self.syntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e)
+
         self.errors.append(ParseError(offendingSymbol, charPositionInLine, msg, e))
 
     def getNumberErrorsFound(self):

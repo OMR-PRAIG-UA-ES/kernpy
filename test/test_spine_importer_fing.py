@@ -1,15 +1,13 @@
 import unittest
-import logging
-import sys
 
 import kernpy as kp
 
 
-class HarmSpineImporterTest(unittest.TestCase):
+class FingSpineImporterTest(unittest.TestCase):
     """Used to test individual tokens"""
 
     def do_test_token_exported(self, input_encoding, expected):
-        importer = kp.HarmSpineImporter()
+        importer = kp.FingSpineImporter()
         token = importer.import_token(input_encoding)
         self.assertIsNotNone(token)
         self.assertEqual(expected, token.export())
@@ -17,7 +15,7 @@ class HarmSpineImporterTest(unittest.TestCase):
         return token
 
     def do_test_token_category(self, input_encoding, expected_category):
-        importer = kp.HarmSpineImporter()
+        importer = kp.FingSpineImporter()
         token = importer.import_token(input_encoding)
         self.assertIsNotNone(token)
         self.assertEqual(expected_category, token.category)
@@ -56,10 +54,10 @@ class HarmSpineImporterTest(unittest.TestCase):
     def test_note_rest_should_be_lyrics(self):
         encoding_input = "4e"
         self.do_test_token_exported(encoding_input, "4e")
-        self.do_test_token_category(encoding_input, kp.TokenCategory.HARMONY)
+        self.do_test_token_category(encoding_input, kp.TokenCategory.FINGERING)
 
 
     def test_normal_lyrics(self):
         encoding_input = "random string"
         self.do_test_token_exported(encoding_input, "random string")
-        self.do_test_token_category(encoding_input, kp.TokenCategory.HARMONY)
+        self.do_test_token_category(encoding_input, kp.TokenCategory.FINGERING)

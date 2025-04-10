@@ -4,6 +4,7 @@ from typing import List
 
 from antlr4 import InputStream, CommonTokenStream, ParseTreeWalker, BailErrorStrategy, \
     PredictionMode
+from typing import Optional
 
 from .base_antlr_importer import BaseANTLRListenerImporter
 from .base_antlr_spine_parser_listener import BaseANTLRSpineParserListener
@@ -37,6 +38,15 @@ class KernListenerImporter(BaseANTLRListenerImporter):
 
 
 class KernSpineImporter(SpineImporter):
+    def __init__(self, verbose: Optional[bool] = False):
+        """
+        KernSpineImporter constructor.
+
+        Args:
+            verbose (Optional[bool]): Level of verbosity for error messages.
+        """
+        super().__init__(verbose=verbose)
+
     def import_listener(self) -> BaseANTLRSpineParserListener:
         return KernSpineListener()
 
@@ -45,20 +55,19 @@ class KernSpineImporter(SpineImporter):
 
         # self.listenerImporter = KernListenerImporter(token) # TODO ¿Por qué no va esto?
         # self.listenerImporter.start()
-        error_listener = ErrorListener()
         lexer = kernSpineLexer(InputStream(encoding))
         lexer.removeErrorListeners()
-        lexer.addErrorListener(error_listener)
+        lexer.addErrorListener(self.error_listener)
         stream = CommonTokenStream(lexer)
         parser = kernSpineParser(stream)
         parser._interp.predictionMode = PredictionMode.SLL  # it improves a lot the parsing
         parser.removeErrorListeners()
-        parser.addErrorListener(error_listener)
+        parser.addErrorListener(self.error_listener)
         parser.errHandler = BailErrorStrategy()
         tree = parser.start()
         walker = ParseTreeWalker()
         listener = KernSpineListener()
         walker.walk(listener, tree)
-        if error_listener.getNumberErrorsFound() > 0:
-            raise Exception(error_listener.errors)
+        if self.error_listener.getNumberErrorsFound() > 0:
+            raise Exception(self.error_listener.errors)
         return listener.token

@@ -235,12 +235,21 @@ class TokenCategory(Enum):
         return self.name
 
 
+NON_CORE_CATEGORIES = {
+    TokenCategory.STRUCTURAL,
+    TokenCategory.SIGNATURES,
+    TokenCategory.EMPTY,
+    TokenCategory.IMAGE_ANNOTATIONS,
+    TokenCategory.BARLINES,
+    TokenCategory.COMMENTS,
+}
+
 BEKERN_CATEGORIES = {
     TokenCategory.STRUCTURAL,
     TokenCategory.CORE,
     TokenCategory.SIGNATURES,
     TokenCategory.BARLINES,
-    TokenCategory.ENGRAVED_SYMBOLS
+    TokenCategory.IMAGE_ANNOTATIONS,
 }
 
 

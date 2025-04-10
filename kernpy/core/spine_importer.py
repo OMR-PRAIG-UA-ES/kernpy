@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from typing import Optional
 
 from antlr4 import InputStream, CommonTokenStream, ParseTreeWalker, BailErrorStrategy, \
     PredictionMode
+
 from .generated.kernSpineLexer import kernSpineLexer
 from .generated.kernSpineParser import kernSpineParser
 from .base_antlr_spine_parser_listener import BaseANTLRSpineParserListener
@@ -12,40 +14,24 @@ from .tokens import Token
 
 
 class SpineImporter(ABC):
-    def __init__(self):
+    def __init__(self, verbose: Optional[bool] = False):
+        """
+        SpineImporter constructor.
+        This class is an abstract base class for importing all kinds of spines.
+
+        Args:
+            verbose (Optional[bool]): Level of verbosity for error messages.
+        """
         self.import_listener = self.import_listener()
-        self.error_listener = ErrorListener()
+        self.error_listener = ErrorListener(verbose=verbose)
 
     @abstractmethod
     def import_listener(self) -> BaseANTLRSpineParserListener:
         pass
 
+    @abstractmethod
     def import_token(self, encoding: str) -> Token:
-        self._raise_error_if_wrong_input(encoding)
-
-        # Set up lexer
-        lexer = kernSpineLexer(InputStream(encoding))
-        lexer.removeErrorListeners()
-        lexer.addErrorListener(self.error_listener)
-
-        # Set up parser
-        stream = CommonTokenStream(lexer)
-        parser = kernSpineParser(stream)
-        parser._interp.predictionMode = PredictionMode.SLL
-        parser.removeErrorListeners()
-        parser.addErrorListener(self.error_listener)
-        parser._errHandler = BailErrorStrategy()
-
-        # Parse the input
-        tree = parser.start()
-        walker = ParseTreeWalker()
-        walker.walk(self.import_listener, tree)
-
-        # Return the token from the listener
-        if self.error_listener.getNumberErrorsFound() > 0:
-            raise Exception(self.error_listener.errors)
-
-        return self.import_listener.token
+        pass
 
     @classmethod
     def _raise_error_if_wrong_input(cls, encoding: str):

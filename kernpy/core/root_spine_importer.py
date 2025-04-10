@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Optional
 
 from antlr4 import InputStream, CommonTokenStream, ParseTreeWalker, BailErrorStrategy, \
     PredictionMode
@@ -34,6 +35,15 @@ class RootListenerImporter(BaseANTLRListenerImporter):
 
 
 class RootSpineImporter(SpineImporter):
+    def __init__(self, verbose: Optional[bool] = False):
+        """
+        KernSpineImporter constructor.
+
+        Args:
+            verbose (Optional[bool]): Level of verbosity for error messages.
+        """
+        super().__init__(verbose=verbose)
+
     def import_listener(self) -> BaseANTLRSpineParserListener:
         #return RootSpineListener() # TODO: Create a custom functional listener for RootSpineImporter
         return KernSpineListener()
