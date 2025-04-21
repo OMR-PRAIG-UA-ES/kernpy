@@ -23,6 +23,9 @@ from .text_spine_importer import *
 from .mhxm_spine_importer import *
 from .generic import *
 from .tokenizers import *
+from .transposer import *
+from .pitch_models import *
+from .gkern import *
 
 
 __all__ = [
@@ -78,9 +81,20 @@ __all__ = [
     'CompoundToken',
     'NoteRestToken',
     'HeaderToken',
-    'HeaderTokenGenerator'
+    'HeaderTokenGenerator',
+    'NotationEncoding',
+    'AgnosticPitch',
+    'PitchExporter',
+    'PitchExporterFactory',
+    'HumdrumPitchExporter',
+    'AmericanPitchExporter',
+    'PitchImporter',
+    'PitchImporterFactory',
+    'HumdrumPitchImporter',
+    'AmericanPitchImporter',
+    'Direction',
+    'Intervals',
+    'IntervalsByName',
+    'transpose'
 ]
-
-
-
 
