@@ -69,7 +69,17 @@ class Direction(Enum):
 
 
 class AgnosticPitch:
+    """
+    Represents a pitch in a generic way, independent of the notation system used.
+    """
     def __init__(self, name: str, octave: int):
+        """
+        Initialize the AgnosticPitch object.
+
+        Args:
+            name (str): The name of the pitch (e.g., 'C', 'D#', 'Bb').
+            octave (int): The octave of the pitch (e.g., 4 for middle C).
+        """
         self.name = name
         self.octave = octave
 
@@ -114,6 +124,24 @@ class AgnosticPitch:
     @classmethod
     def get_chroma_from_interval(cls, pitch_a: 'AgnosticPitch', pitch_b: 'AgnosticPitch'):
         return pitch_b.get_chroma() - pitch_a.get_chroma()
+
+    def __str__(self):
+        return f"<{self.name}, {self.octave}>"
+
+    def __eq__(self, other):
+        if not isinstance(other, AgnosticPitch):
+            return False
+        return self.name == other.name and self.octave == other.octave
+
+    def __ne__(self, other):
+        if not isinstance(other, AgnosticPitch):
+            return True
+        return self.name != other.name or self.octave != other.octave
+
+    def __hash__(self):
+        return hash((self.name, self.octave))
+
+
 
 class PitchImporter(ABC):
     def __init__(self):

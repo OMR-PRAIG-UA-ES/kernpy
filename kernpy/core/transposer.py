@@ -59,6 +59,114 @@ Base-40 interval classes (d=diminished, m=minor, M=major, P=perfect, A=augmented
 IntervalsByName = {v: k for k, v in Intervals.items()}  # reverse the key-value pairs
 
 
+def transpose_agnostics(
+        input_pitch: AgnosticPitch,
+        interval: int,
+        direction: str = Direction.UP.value
+) -> AgnosticPitch:
+    """
+    Transpose an AgnosticPitch by a given interval.
+
+    Args:
+        input_pitch (AgnosticPitch): The pitch to transpose.
+        interval (int): The interval to transpose the pitch.
+        direction (str): The direction of the transposition. 'UP' or 'DOWN'. Default is 'UP'.
+
+    Returns :
+        AgnosticPitch: The transposed pitch.
+
+    Examples:
+        >>> transpose_agnostics(AgnosticPitch('C', 4), IntervalsByName['P4'])
+        AgnosticPitch('F', 4)
+        >>> transpose_agnostics(AgnosticPitch('C', 4), IntervalsByName['P4'], direction='down')
+        AgnosticPitch('G', 3)
+        >>> transpose_agnostics(AgnosticPitch('C#', 4), IntervalsByName['P4'])
+        AgnosticPitch('F#', 4)
+        >>> transpose_agnostics(AgnosticPitch('G', 4), IntervalsByName['m3'], direction='down')
+        AgnosticPitch('Bb', 4)
+
+    """
+    return AgnosticPitch.to_transposed(input_pitch, interval, direction)
+
+
+def transpose_encoding_to_agnostic(
+        input_encoding: str,
+        interval: int,
+        input_format: str = NotationEncoding.HUMDRUM.value,
+        direction: str = Direction.UP.value
+) -> AgnosticPitch:
+    """
+    Transpose a pitch by a given interval.
+
+    The pitch must be in the American notation.
+
+    Args:
+        input_encoding (str): The pitch to transpose.
+        interval (int): The interval to transpose the pitch.
+        input_format (str): The encoding format of the pitch. Default is HUMDRUM.
+        direction (str): The direction of the transposition.'UP' or 'DOWN' Default is 'UP'.
+
+    Returns:
+        AgnosticPitch: The transposed pitch.
+
+    Examples:
+        >>> transpose_encoding_to_agnostic('ccc', IntervalsByName['P4'], input_format='kern')
+        AgnosticPitch('fff', 4)
+        >>> transpose_encoding_to_agnostic('ccc', IntervalsByName['P4'], input_format=NotationEncoding.HUMDRUM.value)
+        AgnosticPitch('fff', 4)
+        >>> transpose_encoding_to_agnostic('ccc', IntervalsByName['P4'], input_format='kern', direction='down')
+        AgnosticPitch('gg', 3)
+        >>> transpose_encoding_to_agnostic('ccc#', IntervalsByName['P4'])
+        AgnosticPitch('fff#', 4)
+        >>> transpose_encoding_to_agnostic('G4', IntervalsByName['m3'], input_format='american')
+        AgnosticPitch('Bb4', 4)
+        >>> transpose_encoding_to_agnostic('C3', IntervalsByName['P4'], input_format='american', direction='down')
+        AgnosticPitch('G2', 2)
+
+    """
+    importer = PitchImporterFactory.create(input_format)
+    pitch: AgnosticPitch = importer.import_pitch(input_encoding)
+
+    return transpose_agnostics(pitch, interval, direction=direction)
+
+
+def transpose_agnostic_to_encoding(
+        agnostic_pitch: AgnosticPitch,
+        interval: int,
+        output_format: str = NotationEncoding.HUMDRUM.value,
+        direction: str = Direction.UP.value
+) -> str:
+    """
+    Transpose an AgnosticPitch by a given interval.
+
+    Args:
+        agnostic_pitch (AgnosticPitch): The pitch to transpose.
+        interval (int): The interval to transpose the pitch.
+        output_format (Optional[str]): The encoding format of the transposed pitch. Default is HUMDRUM.
+        direction (Optional[str]): The direction of the transposition.'UP' or 'DOWN' Default is 'UP'.
+
+    Returns (str):
+        str: The transposed pitch.
+
+    Examples:
+        >>> transpose_agnostic_to_encoding(AgnosticPitch('C', 4), IntervalsByName['P4'])
+        'F4'
+        >>> transpose_agnostic_to_encoding(AgnosticPitch('C', 4), IntervalsByName['P4'], direction='down')
+        'G3'
+        >>> transpose_agnostic_to_encoding(AgnosticPitch('C#', 4), IntervalsByName['P4'])
+        'F#4'
+        >>> transpose_agnostic_to_encoding(AgnosticPitch('G', 4), IntervalsByName['m3'], direction='down')
+        'Bb4'
+    """
+    exporter = PitchExporterFactory.create(output_format)
+    transposed_pitch = transpose_agnostics(agnostic_pitch, interval, direction=direction)
+    content = exporter.export_pitch(transposed_pitch)
+
+    return content
+
+
+
+
 
 def transpose(
         input_encoding: str,
@@ -105,7 +213,7 @@ def transpose(
     importer = PitchImporterFactory.create(input_format)
     pitch: AgnosticPitch = importer.import_pitch(input_encoding)
 
-    transposed_pitch = AgnosticPitch.to_transposed(pitch, interval, direction)
+    transposed_pitch = transpose_agnostics(pitch, interval, direction=direction)
 
     exporter = PitchExporterFactory.create(output_format)
     content = exporter.export_pitch(transposed_pitch)

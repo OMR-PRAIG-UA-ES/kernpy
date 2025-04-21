@@ -354,5 +354,50 @@ class TestTranscription(unittest.TestCase):
         self.assertEqual('D#5', content)
 
 
+    def test_transpose_agnostics_up_and_down(self):
+        # basic up a perfect fourth
+        orig = kp.AgnosticPitch('C', 4)
+        up = kp.transpose_agnostics(orig, kp.IntervalsByName['P4'])
+        self.assertEqual(up, kp.AgnosticPitch('F', 4))
+        # basic down a perfect fourth
+        down = kp.transpose_agnostics(orig, kp.IntervalsByName['P4'], direction='down')
+        self.assertEqual(down, kp.AgnosticPitch('G', 3))
+        # accidentals: C# up a P4 → F#
+        sharp = kp.AgnosticPitch('C+', 4)
+        up_sharp = kp.transpose_agnostics(sharp, kp.IntervalsByName['P4'])
+        self.assertEqual(up_sharp, kp.AgnosticPitch('F+', 4))
+        # G down a minor third → Bb
+        g = kp.AgnosticPitch('G', 4)
+        down_m3 = kp.transpose_agnostics(g, kp.IntervalsByName['m3'], direction='down')
+        self.assertEqual(down_m3, kp.AgnosticPitch('E', 4))
+
+    def test_transpose_encoding_to_agnostic_with_formats(self):
+        # HUMDRUM default: 'ccc' (C4) up P4 → F4
+        result = kp.transpose_encoding_to_agnostic('ccc', kp.IntervalsByName['P4'])
+        self.assertEqual(result, kp.AgnosticPitch('F', 6))
+        # explicit kern + down
+        result = kp.transpose_encoding_to_agnostic('ccc', kp.IntervalsByName['P4'], input_format='kern', direction='down')
+        self.assertEqual(result, kp.AgnosticPitch('G', 5))
+        # american format, minor third
+        result = kp.transpose_encoding_to_agnostic('G4', kp.IntervalsByName['m3'], input_format='american')
+        self.assertEqual(result, kp.AgnosticPitch('B-', 4))
+        # american + accidental
+        result = kp.transpose_encoding_to_agnostic('C#4', kp.IntervalsByName['P4'], input_format='american')
+        self.assertEqual(result, kp.AgnosticPitch('F+', 4))
+
+    def test_transpose_agnostic_to_encoding_with_formats(self):
+        # american output: C4 up P4 → 'F4'
+        result = kp.transpose_agnostic_to_encoding(kp.AgnosticPitch('C', 4), kp.IntervalsByName['P4'], output_format='american')
+        self.assertEqual(result, 'F4')
+        # american + down: C4 down P4 → 'G3'
+        result = kp.transpose_agnostic_to_encoding(kp.AgnosticPitch('C', 4), kp.IntervalsByName['P4'], output_format='american', direction='down')
+        self.assertEqual(result, 'G3')
+        # accidentals: C#4 up P4 → 'F#4'
+        result = kp.transpose_agnostic_to_encoding(kp.AgnosticPitch('C+', 4), kp.IntervalsByName['P4'], output_format='american')
+        self.assertEqual(result, 'F#4')
+        # humdrum output: C4 up P4 → 'f'
+        result = kp.transpose_agnostic_to_encoding(kp.AgnosticPitch('C', 4), kp.IntervalsByName['P4'])
+        self.assertEqual(result, 'f')
+
 
 

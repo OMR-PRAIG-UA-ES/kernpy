@@ -95,6 +95,9 @@ __all__ = [
     'Direction',
     'Intervals',
     'IntervalsByName',
-    'transpose'
+    'transpose',
+    'transpose_agnostics',
+    'transpose_encoding_to_agnostic',
+    'transpose_agnostic_to_encoding'
 ]
 
