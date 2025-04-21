@@ -389,23 +389,53 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#lets-use-low-level-functions" class="md-nav__link">
+    <nav class="md-nav" aria-label="Let&#39;s code!">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-usage" class="md-nav__link">
     <span class="md-ellipsis">
-      Let's use low-level functions:
+      Basic Usage
     </span>
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
+  <a href="#exploring-kernpy-utilities" class="md-nav__link">
     <span class="md-ellipsis">
-      Next steps
+      Exploring kernpy utilities.
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Exploring kernpy utilities.">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-many-measures-are-there-in-the-document-which-measures-do-you-want-to-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      How many measures are there in the document? Which measures do you want to export?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge-different-full-kern-scores" class="md-nav__link">
+    <span class="md-ellipsis">
+      Merge different full kern scores
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -477,23 +507,53 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#lets-use-low-level-functions" class="md-nav__link">
+    <nav class="md-nav" aria-label="Let&#39;s code!">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-usage" class="md-nav__link">
     <span class="md-ellipsis">
-      Let's use low-level functions:
+      Basic Usage
     </span>
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
+  <a href="#exploring-kernpy-utilities" class="md-nav__link">
     <span class="md-ellipsis">
-      Next steps
+      Exploring kernpy utilities.
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Exploring kernpy utilities.">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-many-measures-are-there-in-the-document-which-measures-do-you-want-to-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      How many measures are there in the document? Which measures do you want to export?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge-different-full-kern-scores" class="md-nav__link">
+    <span class="md-ellipsis">
+      Merge different full kern scores
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -548,167 +608,291 @@
 </code></pre>
 <p><img alt="Example in **kern" src="../../assets/001.svg" /></p>
 <h2 id="lets-code">Let's code!</h2>
+<h3 id="basic-usage">Basic Usage</h3>
+<p>Load a <code>**kern</code>/<code>**mens</code> file into a <code>kp.Document</code>.</p>
+<pre><code class="language-python">import kernpy as kp
+
+# Read a **kern file
+document, errors = kp.load(&quot;path/to/file.krn&quot;)
+</code></pre>
+<p>Load a <code>**kern</code>/<code>**mens</code> from a string into a <code>kp.Document</code>.</p>
+<pre><code class="language-python">import kernpy as kp
+
+document, errors = kp.loads(&quot;**kern\n*clefC3\n*k[b-e-a-]\n*M3/4\n4e-\n4g\n4c\n=1\n4r\n2cc;\n==\n*-&quot;)
+</code></pre>
+<p>Create a new standardized file from a <code>kp.Document</code>.</p>
+<pre><code class="language-python">import kernpy as kp
+
+kp.dump(document, &quot;newfile.krn&quot;)
+</code></pre>
+<p>Save the document in a string from a <code>kp.Document</code>.</p>
+<pre><code class="language-python">import kernpy as kp
+
+content = kp.dumps(document)
+````
+
+### Exploring different options when creating new files
+
+Only use the specified spines in `spine_types`.
+```python
+import kernpy as kp
+
+kp.dump(document, &quot;newfile_core.krn&quot;,
+        spine_types=['**kern'])
+kp.dump(document, &quot;newfile_lyrics.krn&quot;,
+        spine_types=['**text])
+kp.dump(document, &quot;newfile_core_and_lyrics.krn&quot;,
+        spine_types=['*+text'])
+</code></pre>
 <ul>
-<li>We can do some operations with the score.</li>
+<li>Use <code>include</code> for selecting the <strong>kern semantic categories </strong>to use**. The output only contains what is passed. By default, all the categories are included.</li>
 </ul>
-<p>First of all, let's import the score:</p>
-<pre><code class="language-python">import kernpy as kp
-document, errors = kp.read('/path/to/file.krn')
-</code></pre>
-<p>Let´s see what are the spines of the score:</p>
-<pre><code class="language-python">import kernpy as kp
-document, _ = kp.read('/path/to/file.krn')
-
-# Get the spines
-kp.get_spine_types(document, spine_types=['**kern'])
-print(document.tree)
-# &lt;kernpy.core.document.DocumentTree object at 0x7f8b3b3b3d30&gt;
-</code></pre>
-<p>Let's dive into the different ways to export the <code>Document</code>.</p>
 <pre><code class="language-python">import kernpy as kp
 
-# Select your measures to export
-middle_measures_options = kp.ExportOptions(from_measure=4, to_measure=8)
-
-# Select your voices to export
-saxophone_options = kp.ExportOptions(instruments=['saxophone'])
-
-# Select the token categories to export
-core_options = kp.ExportOptions(token_categories=[kp.TokenCategory.CORE, kp.TokenCategory.BARLINES, kp.TokenCategory.SIGNATURES])
-
-# Select the token categories to export using the predefined categories
-bekern_options = kp.ExportOptions(token_categories=kp.BEKERN_CATEGORIES)
-
-# Select the encoding to export
-normalized_kern_options = kp.ExportOptions(kern_type=kp.KernTypeExporter.normalizedKern)
-
-# Select a list of filters to export
-all_options = kp.ExportOptions(
-    kern_type=kp.KernTypeExporter.eKern,
-    instruments=['saxophone'],
-    from_measure=1,
-    to_measure=2,
-    token_categories=kp.BEKERN_CATEGORIES
-)
+kp.dump(document, &quot;newfile_only_clefs.krn&quot;,
+        include={kp.TokenCategory.CLEF})
+kp.dump(document, &quot;newfile_only_durations_and_bounding_boxes.krn&quot;,
+        include={kp.TokenCategory.DURATION, kp.TokenCategory.BOUNDING_BOXES})
 </code></pre>
-<p>Using the <code>Document</code> object, we can export the score:</p>
+<ul>
+<li>Use <code>exclude</code> for selecting the <strong>kern semantic categories </strong>to not use**. The output contains everything except what is passed. By default, any category is excluded.</li>
+</ul>
 <pre><code class="language-python">import kernpy as kp
-document, errors = kp.read('/path/to/file.krn')
-options = kp.ExportOptions()
-kp.store(document, '/path/to/export/file.krn', options)
+
+kp.dump(document, &quot;newfile_without_pitches.krn&quot;,
+        exclude={kp.TokenCategory.PITCH})
+kp.dump(document, &quot;newfile_without_durations_or_rests.krn&quot;,
+        exclude={kp.TokenCategory.BARLINES, kp.TokenCategory.REST})
 </code></pre>
-<p>Or we can export the score as a string for further processing:</p>
+<ul>
+<li>Use <code>include</code> and <code>exclude</code> together to select the <strong>kern semantic categories </strong>to use**. The output combines both.</li>
+</ul>
 <pre><code class="language-python">import kernpy as kp
-document, errors = kp.read('/path/to/file.krn')
-options = kp.ExportOptions()
-content = kp.export(document, options)
-...  # you can use the content as you want
-print(content)
-</code></pre>
-<p><br></p>
-<h2 id="lets-use-low-level-functions">Let's use low-level functions:</h2>
-<p>Load the file directly using the content of the file:  <br />
-Examples:</p>
-<pre><code class="language-python">import kernpy
 
-importer = kernpy.Importer()
-document = importer.import_string('**kern\n*clefG2\n*M4/4\n*met(c)\n=1\n4c\n4d\n4e\n4f\n=2\n*M3/2\n2g\n2f\n2d\n=\n*-')
-print(document.get_metacomments())
+kp.dump(document, &quot;newfile_custom.krn&quot;,
+        include=kp.BEKERN_CATEGORIES,  # Preloaded set of simple categories
+        exclude={kp.TokenCategory.PITCH})
 </code></pre>
-<p>Or load the file using the path to the file:</p>
-<pre><code class="language-python">import kernpy
+<ul>
+<li>Use <code>tokenizer</code> to select how the categories are split. By default, the <code>normalizedKern</code> tokenizer is used.</li>
+</ul>
+<pre><code class="language-python">import kernpy as kp
 
-importer = kernpy.Importer()
-document = importer.import_file('path/to/file.krn')
-print(document.get_metacomments())
+kp.dump(document, &quot;newfile_normalized.krn&quot;,
+        tokenizer=kp.KernTypeExporter.normalizedKern)  # Default tokenizer
 </code></pre>
-<p>Then you can access to the score attributes:</p>
-<pre><code class="language-python">print(type(document))
-# &lt;class 'kernpy.core.document.Document'&gt;
+<p>Select the proper Humdrum **kern tokenizer:</p>
+<p><code>kernpy</code> provides different tokenizers to export the content each symbol in different formats.</p>
+<table>
+<thead>
+<tr>
+<th>Encoding</th>
+<th>Tokenized</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>kern</td>
+<td>2.bb-_L</td>
+<td>Traditional Humdrum **kern encoding</td>
+</tr>
+<tr>
+<td>ekern</td>
+<td>2@.@bb@-·_·L</td>
+<td>Extended Humdrum **kern encoding</td>
+</tr>
+</tbody>
+</table>
+<p>Use the <code>KernTypeExporter</code> enum class to select the tokenizer:</p>
+<pre><code class="language-python">import kernpy as kp
 
-print(document.tree)
-# &lt;kernpy.core.document.DocumentTree object at 0x7f8b3b3b3d30&gt;
+doc, _ = kp.load('resource_dir/legacy/chor048.krn') 
 
-print(document.voices)
-# ['saxophone', 'clarinet', 'piano']
+kern_content = kp.dumps(doc, tokenizer=kp.KernTypeExporter.normalizedKern)
+ekern_content = kp.dumps(doc, tokenizer=kp.KernTypeExporter.eKern)
 </code></pre>
-<p>Now, you can export the score using the <code>ExportOptions</code> class:</p>
-<pre><code class="language-python">export_options = kernpy.ExportOptions()
-exporter = kernpy.Exporter()
-content = exporter.export_string(document, export_options)
-print(content)
-</code></pre>
-<p>Save the score to a file:</p>
-<pre><code class="language-python">export_options = kernpy.ExportOptions()
-exporter = kernpy.Exporter()
-content = exporter.export_string(document, export_options)
-with open('path/to/file.krn', 'w') as file:
-    file.write(content)
-</code></pre>
-<h4>Let's filter the export options:</h4>
+<ul>
+<li>Use <code>from_measure</code> and <code>to_measure</code> to select the measures to export. By default, all the measures are exported.</li>
+</ul>
+<pre><code class="language-python">import kernpy as kp
 
-<p>Select the voices to export:</p>
-<pre><code class="language-python">export_options = kernpy.ExportOptions(voices=['saxophone'])
-exporter = kernpy.Exporter()
-content = exporter.export_string(document, export_options)
-print(content)
+kp.dump(document, &quot;newfile_1_to_10.krn&quot;,
+        from_measure=1,  # First from measure 1
+        to_measure=10)   # Last measure exported
 </code></pre>
-<p>Select the measures to export:</p>
-<pre><code class="language-python">export_options = kernpy.ExportOptions(from_measure=1, to_measure=2)
-exporter = kernpy.Exporter()
-content = exporter.export_string(document, export_options)
-print(content)
-</code></pre>
-<p>Select the token categories to export:
-Let's see the <code>kernpy.TokenCategory</code> enum class to choose the categories:</p>
-<pre><code class="language-python">export_options = kernpy.ExportOptions(token_categories=[
-    kernpy.TokenCategory.STRUCTURAL, 
-    kernpy.TokenCategory.CORE, 
-    kernpy.TokenCategory.EMPTY, 
-    kernpy.TokenCategory.SIGNATURES,
-    kernpy.TokenCategory.BARLINES,
-])
-exporter = kernpy.Exporter()
-content = exporter.export_string(document, export_options)
-print(content)
-</code></pre>
-<p>Actually, you can use the predefined categories:</p>
-<pre><code class="language-python">export_options = kernpy.ExportOptions(token_categories=kernpy.BEKERN_CATEGORIES)
-exporter = kernpy.Exporter()
-content = exporter.export_string(document, export_options)
-print(content)
-</code></pre>
-<p>Select the encoding to export:</p>
-<pre><code class="language-python">export_options = kernpy.ExportOptions(kern_type=kernpy.KernTypeExporter.normalizedKern)
-exporter = kernpy.Exporter()
-content = exporter.export_string(document, export_options)
-print(content)
-</code></pre>
-<p>Select a list of filters to export:</p>
-<pre><code class="language-python">export_options = kernpy.ExportOptions(
-    kern_type=kernpy.KernTypeExporter.eKern,
-    instruments=['saxophone'],
-    from_measure=1,
-    to_measure=2
-    token_categories=kernpy.BEKERN_CATEGORIES
-)
-</code></pre>
-<h3>Let's see the score in a graphical representation:</h3>
+<ul>
+<li>Use <code>spine_ids</code> to select the spines to export. By default, all the spines are exported.</li>
+</ul>
+<pre><code class="language-python">import kernpy as kp
 
-<p>Show the graph representation of the score:
-Use <code>Graphviz</code> to show the score in a graphical representation.</p>
-<pre><code class="language-python">import kernpy
-
-importer = kernpy.Importer()
-document = importer.import_string('**kern\n*clefG2\n*M4/4\n*met(c)\n=1\n4c\n4d\n4e\n4f\n=2\n*M3/2\n2g\n2f\n2d\n=\n*-')
-dot_exporter = kernpy.GraphvizExporter()
-dot_exporter.export_to_dot(document.tree, '/tmp/minimal.dot')
+kp.dump(document, &quot;newfile_1_and_2.krn&quot;,
+        spine_ids=[0, 1])  # Export only the first and the second spine
 </code></pre>
-<p>You can use Graphviz Dot Online editors to see the graphical representation of the score:
-- <a href="https://dreampuf.github.io/GraphvizOnline/" target="_blank">Graphviz Online</a></p>
-<h3> Also, you can run the code as a module by command line interface. </h3>
+<ul>
+<li>Use <code>show_measure_numbers</code> to select if the measure numbers are shown. By default, the measure numbers are shown.</li>
+</ul>
+<pre><code class="language-python">import kernpy as kp
 
-<pre><code class="language-bash">python -m kernpy --help
+kp.dump(document, &quot;newfile_no_measure_numbers.krn&quot;,
+        show_measure_numbers=False)  # Do not show measure numbers
+</code></pre>
+<ul>
+<li>Use all the options at the same time.</li>
+</ul>
+<pre><code class="language-python">import kernpy as kp
+
+kp.dump(document, &quot;newfile.krn&quot;,
+        spine_types=['**kern'],                         # Export only the **kern spines
+        include=kp.BEKERN_CATEGORIES,                   # Token categories to include
+        exclude={kp.TokenCategory.PITCH},               # Token categories to exclude
+        tokenizer=kp.KernTypeExporter.eKern,            # Kern encoding
+        from_measure=1,                                 # First from measure 1
+        to_measure=10,                                  # Last measure exported
+        spine_ids=[0, 1],                               # Export only the first and the second spine
+        show_measure_numbers=False,                     # Do not show measure numbers
+        )
+</code></pre>
+<h2 id="exploring-kernpy-utilities">Exploring <code>kernpy</code> utilities.</h2>
+<ul>
+<li>Spines analysis
+  Retrieve all the spine types of the document.</li>
+</ul>
+<pre><code class="language-python">import kernpy as kp
+
+kp.spine_types(document)
+# ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
+
+kp.spine_types(document, spine_types=None)
+# ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
+
+kp.spine_types(document, spine_types=['**kern'])
+# ['**kern', '**kern', '**kern', '**kern']
+</code></pre>
+<ul>
+<li>Get specific **kern spines.</li>
+</ul>
+<pre><code class="language-python">import kernpy as kp
+
+def how_many_instrumental_spines(document):
+    print(kp.spine_types(document, ['**kern']))
+    return len(kp.spine_types(document, ['**kern']))
+# ['**kern', '**kern', '**kern', '**kern']
+# 4
+
+def has_voice(document):
+    return len(kp.spine_types(document, ['**text'])) &gt; 0
+# True
+</code></pre>
+<h3 id="how-many-measures-are-there-in-the-document-which-measures-do-you-want-to-export">How many measures are there in the document? Which measures do you want to export?</h3>
+<p>After reading the score into the <code>Document</code> object. You can get some useful data:</p>
+<pre><code class="language-python">first_measure: int = document.get_first_measure()
+last_measure: int = document.measures_count()
+</code></pre>
+<p>Iterate over all the measures of the document.</p>
+<pre><code class="language-python">import kernpy as kp
+
+doc, _ = kp.load('resource_dir/legacy/chor048.krn')  # 10 measures score
+for i in range(doc.get_first_measure(), doc.measures_count(), 1):  # from 1 to 11, step 1
+    # Export only the i-th measure (1 long measure scores)
+    content_ith_measure = kp.dumps(doc, from_measure=i, to_measure=i)
+
+    # Export the i-th measure and the next 4 measures (5 long measure scores)
+    if i + 4 &lt;= doc.measures_count():
+        content_longer = kp.dumps(doc, from_measure=i, to_measure=i + 4)
+    ...
+</code></pre>
+<p>It is easier to iterate over all the measures using the <code>for measure in doc</code>: loop
+(using the <code>__ iter__</code> method):</p>
+<pre><code class="language-python">import kernpy as kp
+
+for measure in doc:
+    content = kp.dumps(doc, from_measure=measure, to_measure=measure)
+    ...
+</code></pre>
+<p>Exploring the page bounding boxes.</p>
+<pre><code class="language-python">import kernpy as kp
+
+# Iterate over the pages using the bounding boxes
+doc, _ = kp.load('kern_having_bounding_boxes.krn')
+
+# Inspect the bounding boxes
+print(doc.page_bounding_boxes)
+def are_there_bounding_boxes(doc):
+    return len(doc.get_all_tokens(filter_by_categories=[kp.TokenCategory.BOUNDING_BOXES])) &gt; 0
+# True
+
+# Iterate over the pages
+for page_label, bounding_box_measure in doc.page_bounding_boxes.items():
+    print(f&quot;Page: {page_label}&quot;
+          f&quot;Bounding box: {bounding_box_measure}&quot;
+          f&quot;from_measure: {bounding_box_measure.from_measure}&quot;
+          f&quot;to_measure+1: {bounding_box_measure.to_measure}&quot;)  # TODO: Check bounds
+    kp.dump(doc, f&quot;foo_{page_label}.ekrn&quot;,
+            spine_types=['**kern'],
+            token_categories=kp.BEKERN_CATEGORIES,
+            tokenizer=kp.KernTypeExporter.eKern,
+            from_measure=bounding_box_measure.from_measure,
+            to_measure=bounding_box_measure.to_measure - 1  # TODO: Check bounds            
+            )
+</code></pre>
+<h3 id="merge-different-full-kern-scores">Merge different full kern scores</h3>
+<pre><code class="language-python">import kernpy as kp
+# NOT AVAILABLE YET!!!
+# Pay attention to `kp.merge` too.
+
+# Concat two valid documents
+score_a = '**kern\n*clefG2\n=1\n4c\n4d\n4e\n4f\n*-\n'
+score_b = '**kern\n*clefG2\n=1\n4a\n4c\n4d\n4c\n*-\n'
+concatenated = kp.merge([score_a, score_b])
+</code></pre>
+<h1 id="concatenate-sorted-fragments-of-the-same-score">Concatenate sorted fragments of the same score</h1>
+<pre><code class="language-python">import kernpy as kp
+
+fragment_a = '**kern\n*clefG2\n=1\n4c\n4d\n4e\n4f\n*-\n'
+fragment_b = '=2\n4a\n4c\n4d\n4c\n*-\n=3\n4a\n4c\n4d\n4c\n*-\n'
+fragment_c = '=4\n4a\n4c\n4d\n4c\n*-\n=5\n4a\n4c\n4d\n4c\n*-\n'
+fragment_d = '=6\n4a\n4c\n4d\n4c\n*-\n=7\n4a\n4c\n4d\n4c\n*-\n==*-'
+fragments = [fragment_a, fragment_b, fragment_c, fragment_d]
+
+doc_merged, indexes = kp.concat(fragments)
+for index_pair in indexes:
+    from_measure, to_measure = index_pair
+    print(f'From measure: {from_measure}, To measure: {to_measure}')
+    print(kp.dumps(doc_merged, from_measure=from_measure, to_measure=to_measure))
+
+# Sometimes is useful having a different separator between the fragments rather than the default one (newline)...
+doc_merged, indexes = kp.concat(fragments, separator='')
+</code></pre>
+<h3 id="inspect-the-document-class-functions">Inspect the <code>Document</code> class functions</h3>
+<pre><code class="language-python">import kernpy as kp
+doc, _ = kp.load('resource_dir/legacy/chor048.krn')  # 10 measures score
+
+frequencies = doc.frequencies()  # All the token categories
+filtered_frequencies = doc.frequencies(filter_by_categories=[kp.TokenCategory.SIGNATURES])
+frequencies['*k[f#c#]']
+# {
+#   'occurrences': 4,
+#   'category': SIGNATURES,
+# }
+
+# Get all the tokens in the document
+all_tokens: [kp.Token] = doc.get_all_tokens()
+all_tokens_encodings: [str] = doc.get_all_tokens_encodings()
+
+# Get the unique tokens in the document (vocabulary)
+unique_tokens: [kp.Token] = doc.get_unique_tokens()
+unique_token_encodings: [str] = doc.get_unique_token_encodings()
+
+# Get the line comments in the document
+document.get_metacomments()
+# ['!!!COM: Coltrane', '!!!voices: 1', '!!!OPR: Blue Train']
+document.get_metacomments(KeyComment='COM')
+# ['!!!COM: Coltrane']
+document.get_metacomments(KeyComment='COM', clear=True)
+# ['Coltrane']
+document.get_metacomments(KeyComment='non_existing_key')
+# []
 </code></pre>
 <h2 id="next-steps">Next steps</h2>
 <p>Congratulations! You have learned the basics of <code>kernpy</code>. Now you can start using the package in your projects.</p>
