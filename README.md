@@ -313,9 +313,6 @@ document.get_metacomments(KeyComment='non_existing_key')
 # []
 ```
 
-
-```
-
 ### On your own
 
 - Handle the document if needed.
