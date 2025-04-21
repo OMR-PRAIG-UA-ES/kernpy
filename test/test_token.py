@@ -49,8 +49,8 @@ class TokenCategoryHierarchyTestCase(unittest.TestCase):
         self.assertFalse(kp.TokenCategoryHierarchyMapper.is_child(kp.TokenCategory.CORE, "NOTE"))
 
     def test_child_of_same_category(self):
-        self.assertFalse(kp.TokenCategoryHierarchyMapper.is_child(kp.TokenCategory.CORE, kp.TokenCategory.CORE))
-        self.assertFalse(kp.TokenCategoryHierarchyMapper.is_child(kp.TokenCategory.HARMONY, kp.TokenCategory.HARMONY))
+        self.assertTrue(kp.TokenCategoryHierarchyMapper.is_child(kp.TokenCategory.CORE, kp.TokenCategory.CORE))
+        self.assertTrue(kp.TokenCategoryHierarchyMapper.is_child(kp.TokenCategory.HARMONY, kp.TokenCategory.HARMONY))
 
 
     def test_match_included_category(self):
@@ -136,6 +136,7 @@ class TokenCategoryHierarchyTestCase(unittest.TestCase):
             kp.TokenCategory.NOTE_REST,
             kp.TokenCategory.CHORD,
             kp.TokenCategory.EMPTY,
+            kp.TokenCategory.ERROR
         }
         self.assertSetEqual(expected_children, kp.TokenCategoryHierarchyMapper.children(kp.TokenCategory.CORE))
 
@@ -148,7 +149,9 @@ class TokenCategoryHierarchyTestCase(unittest.TestCase):
             kp.TokenCategory.CHORD,
             kp.TokenCategory.EMPTY,
             kp.TokenCategory.DECORATION,
-            kp.TokenCategory.PITCH
+            kp.TokenCategory.PITCH,
+            kp.TokenCategory.ALTERATION,
+            kp.TokenCategory.ERROR,
         }
         self.assertSetEqual(expected_nodes, kp.TokenCategoryHierarchyMapper.nodes(parent=kp.TokenCategory.CORE))
 
@@ -157,7 +160,8 @@ class TokenCategoryHierarchyTestCase(unittest.TestCase):
             kp.TokenCategory.CLEF,
             kp.TokenCategory.TIME_SIGNATURE,
             kp.TokenCategory.METER_SYMBOL,
-            kp.TokenCategory.KEY_SIGNATURE
+            kp.TokenCategory.KEY_SIGNATURE,
+            kp.TokenCategory.KEY_TOKEN,
         }
         self.assertSetEqual(expected_nodes, kp.TokenCategoryHierarchyMapper.nodes(parent=kp.TokenCategory.SIGNATURES))
 
@@ -168,6 +172,7 @@ class TokenCategoryHierarchyTestCase(unittest.TestCase):
             kp.TokenCategory.DURATION,
             kp.TokenCategory.PITCH,
             kp.TokenCategory.DECORATION,
+            kp.TokenCategory.ALTERATION,
         }
         self.assertSetEqual(expected_nodes, kp.TokenCategoryHierarchyMapper.nodes(parent=kp.TokenCategory.NOTE_REST))
 
@@ -178,7 +183,9 @@ class TokenCategoryHierarchyTestCase(unittest.TestCase):
             kp.TokenCategory.CHORD,
             kp.TokenCategory.EMPTY,
             kp.TokenCategory.DECORATION,
-            kp.TokenCategory.PITCH
+            kp.TokenCategory.PITCH,
+            kp.TokenCategory.ALTERATION,
+            kp.TokenCategory.ERROR,
         }
         self.assertSetEqual(expected_leaves, kp.TokenCategoryHierarchyMapper.leaves(target=kp.TokenCategory.CORE))
 
@@ -187,7 +194,8 @@ class TokenCategoryHierarchyTestCase(unittest.TestCase):
             kp.TokenCategory.CLEF,
             kp.TokenCategory.TIME_SIGNATURE,
             kp.TokenCategory.METER_SYMBOL,
-            kp.TokenCategory.KEY_SIGNATURE
+            kp.TokenCategory.KEY_SIGNATURE,
+            kp.TokenCategory.KEY_TOKEN
         }
         self.assertSetEqual(expected_leaves, kp.TokenCategoryHierarchyMapper.leaves(target=kp.TokenCategory.SIGNATURES))
 
@@ -196,7 +204,8 @@ class TokenCategoryHierarchyTestCase(unittest.TestCase):
             kp.TokenCategory.REST,
             kp.TokenCategory.DURATION,
             kp.TokenCategory.PITCH,
-            kp.TokenCategory.DECORATION
+            kp.TokenCategory.DECORATION,
+            kp.TokenCategory.ALTERATION,
         }
         self.assertSetEqual(expected_leaves, kp.TokenCategoryHierarchyMapper.leaves(target=kp.TokenCategory.NOTE_REST))
 
@@ -221,7 +230,9 @@ class TokenCategoryHierarchyTestCase(unittest.TestCase):
                 kp.TokenCategory.CHORD,
                 kp.TokenCategory.EMPTY,
                 kp.TokenCategory.DECORATION,
-                kp.TokenCategory.PITCH
+                kp.TokenCategory.PITCH,
+                kp.TokenCategory.ALTERATION,
+                kp.TokenCategory.ERROR
             }
         )
 
@@ -237,7 +248,8 @@ class TokenCategoryHierarchyTestCase(unittest.TestCase):
                 kp.TokenCategory.CLEF,
                 kp.TokenCategory.TIME_SIGNATURE,
                 kp.TokenCategory.METER_SYMBOL,
-                kp.TokenCategory.KEY_SIGNATURE
+                kp.TokenCategory.KEY_SIGNATURE,
+                kp.TokenCategory.KEY_TOKEN,
             }
         )
 
@@ -251,7 +263,8 @@ class TokenCategoryHierarchyTestCase(unittest.TestCase):
                 kp.TokenCategory.REST,
                 kp.TokenCategory.DURATION,
                 kp.TokenCategory.PITCH,
-                kp.TokenCategory.DECORATION
+                kp.TokenCategory.DECORATION,
+                kp.TokenCategory.ALTERATION,
             }
         )
 
@@ -703,7 +716,7 @@ class TokenExportTestCase(unittest.TestCase):
         self.assertEqual('c4', note_rest.encoding)
         self.assertEqual('c', note_rest.export(filter_categories=static_ref))
 
-        class TempFilter():
+        class TempFilter:
             def __init__(self, categories):
                 self.categories = categories
                 self.fn_filter = lambda x: x in self.categories

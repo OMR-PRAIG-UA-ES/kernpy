@@ -61,7 +61,7 @@
     },
     "**kern": {
         "occurrences": 4,
-        "category": "STRUCTURAL"
+        "category": "HEADER"
     },
     "!bass": {
         "occurrences": 1,
@@ -101,19 +101,19 @@
     },
     "4GG": {
         "occurrences": 28,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "=": {
-        "occurrences": 84,
+        "occurrences": 126,
         "category": "BARLINES"
     },
     "4G": {
         "occurrences": 5,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "4E": {
         "occurrences": 2,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     ".": {
         "occurrences": 139,
@@ -121,43 +121,43 @@
     },
     "4F#": {
         "occurrences": 3,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "4D": {
         "occurrences": 6,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "4C": {
         "occurrences": 4,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "8BB": {
         "occurrences": 2,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "8AA": {
         "occurrences": 4,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "2D;": {
         "occurrences": 3,
-        "category": "EMPTY"
+        "category": "NOTE_REST"
     },
     "4FF#": {
         "occurrences": 4,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "4AA": {
         "occurrences": 7,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "4BB": {
         "occurrences": 5,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "2GG;": {
         "occurrences": 4,
-        "category": "EMPTY"
+        "category": "NOTE_REST"
     },
     "=:|!": {
         "occurrences": 6,
@@ -169,47 +169,47 @@
     },
     "4.BB": {
         "occurrences": 2,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "[4E": {
         "occurrences": 2,
-        "category": "EMPTY"
+        "category": "NOTE_REST"
     },
     "4E]": {
         "occurrences": 1,
-        "category": "EMPTY"
+        "category": "NOTE_REST"
     },
     "8C": {
         "occurrences": 2,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "8GG": {
         "occurrences": 2,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "2C;": {
         "occurrences": 1,
-        "category": "EMPTY"
+        "category": "NOTE_REST"
     },
     "8E": {
         "occurrences": 1,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "8D": {
         "occurrences": 2,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "[4G": {
         "occurrences": 1,
-        "category": "EMPTY"
+        "category": "NOTE_REST"
     },
     "4G]": {
         "occurrences": 1,
-        "category": "EMPTY"
+        "category": "NOTE_REST"
     },
     "8E]": {
         "occurrences": 1,
-        "category": "EMPTY"
+        "category": "NOTE_REST"
     },
     "==": {
         "occurrences": 6,
@@ -217,7 +217,7 @@
     },
     "*-": {
         "occurrences": 6,
-        "category": "STRUCTURAL"
+        "category": "SPINE_OPERATION"
     },
     "!tenor": {
         "occurrences": 1,
@@ -225,63 +225,63 @@
     },
     "4B": {
         "occurrences": 8,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "8c": {
         "occurrences": 7,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "8B": {
         "occurrences": 4,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "4A": {
         "occurrences": 2,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "4c": {
         "occurrences": 5,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "4d": {
         "occurrences": 15,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "2d;": {
         "occurrences": 5,
-        "category": "EMPTY"
+        "category": "NOTE_REST"
     },
     "4e": {
         "occurrences": 7,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "8d": {
         "occurrences": 5,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "2B;": {
         "occurrences": 2,
-        "category": "EMPTY"
+        "category": "NOTE_REST"
     },
     "8A": {
         "occurrences": 1,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "2d": {
         "occurrences": 4,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "2.d": {
         "occurrences": 1,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "2c;": {
         "occurrences": 1,
-        "category": "EMPTY"
+        "category": "NOTE_REST"
     },
     "2e": {
         "occurrences": 1,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "!alto": {
         "occurrences": 1,
@@ -293,75 +293,75 @@
     },
     "8e": {
         "occurrences": 5,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "8f#": {
         "occurrences": 8,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "4g": {
         "occurrences": 9,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "2f#;": {
         "occurrences": 3,
-        "category": "EMPTY"
+        "category": "NOTE_REST"
     },
     "4f#": {
         "occurrences": 4,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "2g": {
         "occurrences": 5,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "[4g": {
         "occurrences": 2,
-        "category": "EMPTY"
+        "category": "NOTE_REST"
     },
     "8g]": {
         "occurrences": 2,
-        "category": "EMPTY"
+        "category": "NOTE_REST"
     },
     "8a": {
         "occurrences": 4,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "8g": {
         "occurrences": 4,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "4a": {
         "occurrences": 3,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "4.g": {
         "occurrences": 3,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "4fn": {
         "occurrences": 1,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "2e;": {
         "occurrences": 1,
-        "category": "EMPTY"
+        "category": "NOTE_REST"
     },
     "4.a": {
         "occurrences": 1,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "[4f#": {
         "occurrences": 1,
-        "category": "EMPTY"
+        "category": "NOTE_REST"
     },
     "8f#]": {
         "occurrences": 1,
-        "category": "EMPTY"
+        "category": "NOTE_REST"
     },
     "2a": {
         "occurrences": 3,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "!sprno": {
         "occurrences": 1,
@@ -369,51 +369,51 @@
     },
     "4dd": {
         "occurrences": 2,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "4.b": {
         "occurrences": 1,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "4b": {
         "occurrences": 10,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "2a;": {
         "occurrences": 3,
-        "category": "EMPTY"
+        "category": "NOTE_REST"
     },
     "2dd": {
         "occurrences": 4,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "4cc": {
         "occurrences": 6,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "2g;": {
         "occurrences": 3,
-        "category": "EMPTY"
+        "category": "NOTE_REST"
     },
     "4.dd": {
         "occurrences": 1,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "8cc": {
         "occurrences": 1,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "2b": {
         "occurrences": 2,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "2.b": {
         "occurrences": 1,
-        "category": "CORE"
+        "category": "NOTE_REST"
     },
     "**root": {
         "occurrences": 1,
-        "category": "STRUCTURAL"
+        "category": "HEADER"
     },
     "!": {
         "occurrences": 2,
@@ -421,147 +421,63 @@
     },
     "*": {
         "occurrences": 3,
-        "category": "HARMONY"
-    },
-    "=1": {
-        "occurrences": 2,
-        "category": "HARMONY"
+        "category": "EMPTY"
     },
     "4EE": {
         "occurrences": 7,
-        "category": "HARMONY"
+        "category": "NOTE_REST"
     },
     "4DD": {
         "occurrences": 8,
-        "category": "HARMONY"
-    },
-    "=2": {
-        "occurrences": 2,
-        "category": "HARMONY"
-    },
-    "=3": {
-        "occurrences": 2,
-        "category": "HARMONY"
+        "category": "NOTE_REST"
     },
     "4CC": {
         "occurrences": 2,
-        "category": "HARMONY"
+        "category": "NOTE_REST"
     },
     "8CC": {
         "occurrences": 2,
-        "category": "HARMONY"
+        "category": "NOTE_REST"
     },
     "8FF#": {
         "occurrences": 2,
-        "category": "HARMONY"
-    },
-    "=4": {
-        "occurrences": 2,
-        "category": "HARMONY"
+        "category": "NOTE_REST"
     },
     "2DD;": {
         "occurrences": 3,
-        "category": "HARMONY"
-    },
-    "=5": {
-        "occurrences": 2,
-        "category": "HARMONY"
-    },
-    "=6": {
-        "occurrences": 2,
-        "category": "HARMONY"
-    },
-    "=7": {
-        "occurrences": 2,
-        "category": "HARMONY"
-    },
-    "=8": {
-        "occurrences": 2,
-        "category": "HARMONY"
-    },
-    "=9": {
-        "occurrences": 2,
-        "category": "HARMONY"
+        "category": "NOTE_REST"
     },
     "4.GG": {
         "occurrences": 1,
-        "category": "HARMONY"
+        "category": "NOTE_REST"
     },
     "8DD": {
         "occurrences": 1,
-        "category": "HARMONY"
-    },
-    "=10": {
-        "occurrences": 2,
-        "category": "HARMONY"
-    },
-    "=11": {
-        "occurrences": 2,
-        "category": "HARMONY"
-    },
-    "=12": {
-        "occurrences": 2,
-        "category": "HARMONY"
+        "category": "NOTE_REST"
     },
     "2GG": {
         "occurrences": 2,
-        "category": "HARMONY"
-    },
-    "=13": {
-        "occurrences": 2,
-        "category": "HARMONY"
-    },
-    "=14": {
-        "occurrences": 2,
-        "category": "HARMONY"
+        "category": "NOTE_REST"
     },
     "2CC;": {
         "occurrences": 1,
-        "category": "HARMONY"
-    },
-    "=15": {
-        "occurrences": 2,
-        "category": "HARMONY"
-    },
-    "=16": {
-        "occurrences": 2,
-        "category": "HARMONY"
-    },
-    "=17": {
-        "occurrences": 2,
-        "category": "HARMONY"
-    },
-    "=18": {
-        "occurrences": 2,
-        "category": "HARMONY"
-    },
-    "=19": {
-        "occurrences": 2,
-        "category": "HARMONY"
+        "category": "NOTE_REST"
     },
     "2DD": {
         "occurrences": 1,
-        "category": "HARMONY"
-    },
-    "=20": {
-        "occurrences": 2,
-        "category": "HARMONY"
-    },
-    "=21": {
-        "occurrences": 2,
-        "category": "HARMONY"
+        "category": "NOTE_REST"
     },
     "**harm": {
         "occurrences": 1,
-        "category": "STRUCTURAL"
+        "category": "HEADER"
     },
     "I": {
         "occurrences": 14,
-        "category": "HARMONY"
+        "category": "ERROR"
     },
     "IVb[vi]": {
         "occurrences": 1,
-        "category": "HARMONY"
+        "category": "ERROR"
     },
     "Vb": {
         "occurrences": 4,
@@ -569,35 +485,35 @@
     },
     "V": {
         "occurrences": 2,
-        "category": "HARMONY"
+        "category": "ERROR"
     },
     "vi": {
         "occurrences": 5,
-        "category": "HARMONY"
+        "category": "ERROR"
     },
     "IV": {
         "occurrences": 2,
-        "category": "HARMONY"
+        "category": "ERROR"
     },
     "IV7d": {
         "occurrences": 1,
-        "category": "HARMONY"
+        "category": "ERROR"
     },
     "viiob": {
         "occurrences": 3,
-        "category": "HARMONY"
+        "category": "ERROR"
     },
     "V;": {
         "occurrences": 3,
-        "category": "HARMONY"
+        "category": "ERROR"
     },
     "vi7b": {
         "occurrences": 1,
-        "category": "HARMONY"
+        "category": "ERROR"
     },
     "Ib": {
         "occurrences": 5,
-        "category": "HARMONY"
+        "category": "ERROR"
     },
     "ii7b": {
         "occurrences": 2,
@@ -605,15 +521,15 @@
     },
     "V7": {
         "occurrences": 3,
-        "category": "HARMONY"
+        "category": "ERROR"
     },
     "I;": {
         "occurrences": 2,
-        "category": "HARMONY"
+        "category": "ERROR"
     },
     "ii": {
         "occurrences": 1,
-        "category": "HARMONY"
+        "category": "ERROR"
     },
     "V7c": {
         "occurrences": 1,
@@ -629,19 +545,19 @@
     },
     "V7/IV": {
         "occurrences": 1,
-        "category": "HARMONY"
+        "category": "ERROR"
     },
     "IV;": {
         "occurrences": 1,
-        "category": "HARMONY"
+        "category": "ERROR"
     },
     "viio7d": {
         "occurrences": 1,
-        "category": "HARMONY"
+        "category": "ERROR"
     },
     "IVb": {
         "occurrences": 1,
-        "category": "HARMONY"
+        "category": "ERROR"
     },
     "!!linebreak: 2": {
         "occurrences": 1,

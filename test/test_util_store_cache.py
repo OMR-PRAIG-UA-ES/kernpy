@@ -33,7 +33,7 @@ class TestStoreCache(unittest.TestCase):
         callback.assert_not_called()  # The callback should not have been called again.
 
     def test_hierarchy_nodes(self):
-        expected_nodes = {kp.TokenCategory.PITCH, kp.TokenCategory.DECORATION}
+        expected_nodes = {kp.TokenCategory.PITCH, kp.TokenCategory.ALTERATION, kp.TokenCategory.DECORATION}
 
         # 1. Assert that the direct call returns the expected nodes.
         nodes_result = kp.TokenCategoryHierarchyMapper.nodes(kp.TokenCategory.NOTE)

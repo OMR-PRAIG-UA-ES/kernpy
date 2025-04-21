@@ -1,163 +1,142 @@
-8g]
-==
-=19
-4EE
-vi
-Vb
-4G]
-4f#
-4CC
-*clefF4
-=16
-!!linebreak: 2
-[4E
-2c;
-*M3/4
-!!!COM: Bach, Johann Sebastian
-I;
-=:|!
-!!!SMA: 371 Bach Chorales, edited by Ludwig Erk, C.F. Peters
-2e
-ii7b
-4a
-=2
+!
+!! Beat 2 of measure 1 chord could also be IVb (with root on C)
+!!!AGN: 4-Part Chorale
 !!!CDT: 1685/3//-1750/7/28/
-*>[A,A,B]
-*MM60
-!tenor
-V;
-4.b
-2C;
-iiib[Ic]
+!!!COM: Bach, Johann Sebastian
 !!!ONB1: Text by Georg Niege; 16th Century secular melody, first appears
-8E]
-8e
+!!!ONB2: in sacred use in Neu Catechismus-Gesangbchlein, Hamburg, 1598.
+!!!ONB: Harmony and Root analysis done manually by Craig Sapp
+!!!OTL@@DE: Aus meines Herzens Grunde
+!!!OTL@EN:  From the depths of my heart
+!!!PDT: 1850, 1865
 !!!SCT: BH 001
+!!!SCT: BWV 269
+!!!SMA: 371 Bach Chorales, edited by Ludwig Erk, C.F. Peters
+!!!YEC: Copyright 2001 by Craig Stuart Sapp
+!!!license: GNU General Public License (http://www.gnu.org/copyleft/gpl.html)
+!!chor2scor: -l 2 -s 0.6 -o %b.pmx
+!!linebreak: 2
+!alto
+!bass
+!sprno
+!tenor
+*
+**harm
+**kern
+**root
+*-
+*>A
+*>B
+*>[A,A,B]
+*G:
+*Iorgan
+*M3/4
+*MM60
+*clefF4
+*clefG2
+*k[f#]
+.
+2.b
+2.d
+2B;
+2C;
+2CC;
+2D;
+2DD
+2DD;
+2GG
+2GG;
+2a
+2a;
+2b
+2c;
+2d
+2d;
+2dd
+2e
+2e;
+2f#;
+2g
+2g;
+4.BB
+4.GG
+4.a
+4.b
+4.dd
+4.g
+4A
+4AA
+4B
+4BB
+4C
+4CC
+4D
+4DD
+4E
+4EE
+4E]
+4F#
+4FF#
+4G
+4GG
+4G]
+4a
+4b
+4c
+4cc
+4d
+4dd
+4e
+4f#
+4fn
+4g
+8A
+8AA
+8B
+8BB
+8C
+8CC
+8D
+8DD
+8E
+8E]
+8FF#
+8GG
+8a
+8c
+8cc
+8d
+8e
+8f#
+8f#]
 8g
+8g]
+=
+=:|!
+==
+I
+I;
+IV
+IV7d
+IV;
+IVb
+IVb[vi]
+Ib
+V
+V7
+V7/IV
+V7c
+V;
+Vb
+[4E
+[4G
+[4f#
+[4g
+ii
+ii7b
+iib
+iiib[Ic]
+vi
+vi7b
 viio7d
 viiob
-[4f#
-*G:
-2g;
-=11
-I
-=14
-=6
-4cc
-2a
-!!!YEC: Copyright 2001 by Craig Stuart Sapp
-8DD
-2b
-*clefG2
-2.b
-=8
-4C
-=17
-ii
-8GG
-Ib
-!!!OTL@@DE: Aus meines Herzens Grunde
-8c
-2dd
-!
-=4
-8cc
-8A
-!! Beat 2 of measure 1 chord could also be IVb (with root on C)
-2DD;
-4.GG
-=15
-8FF#
-2D;
-!alto
-8D
-2g
-4fn
-[4G
-2f#;
-4g
-8f#]
-4A
-4d
-4E]
-!!!PDT: 1850, 1865
-*
-4FF#
-4c
-8E
-iib
-2GG
-=13
-!!chor2scor: -l 2 -s 0.6 -o %b.pmx
-4GG
-8AA
-4E
-[4g
-8BB
-=1
-=5
-*>A
-!!!SCT: BWV 269
-4DD
-vi7b
-**harm
-!!!ONB2: in sacred use in Neu Catechismus-Gesangbchlein, Hamburg, 1598.
-2d
-8CC
-**root
-=7
-*k[f#]
-!!!ONB: Harmony and Root analysis done manually by Craig Sapp
-4BB
-=12
-=3
-4.g
-8f#
-!!!OTL@EN:  From the depths of my heart
-=9
-.
-4.a
-8B
-=10
-!!!AGN: 4-Part Chorale
-2a;
-2GG;
-2DD
-*>B
-V7
-2B;
-2d;
-=21
-=
-8d
-4dd
-IVb[vi]
-IV;
-4F#
-4e
-4.dd
-IVb
-8a
-4.BB
-=18
-V7/IV
-4B
-!!!license: GNU General Public License (http://www.gnu.org/copyleft/gpl.html)
-*Iorgan
-2.d
-*-
-!sprno
-IV
-V
-IV7d
-4G
-=20
-**kern
-4b
-8C
-4D
-V7c
-2CC;
-4AA
-!bass
-2e;

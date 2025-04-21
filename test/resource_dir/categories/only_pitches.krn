@@ -1,5 +1,5 @@
 A	c	e	a	AA
-G	B	e	b	EE	b
+G	B	e	b	EE
 A	A	e	cc	AA
 AA	A	e	cc	AA
 A	A	e	cc	AA
@@ -10,7 +10,7 @@ c	c	g	ee	CC
 B	d
 A	c	cc	ee	AA
 G	B
-F	A	cc	dd	DD	b
+F	A	cc	dd	DD
 G	B	b	GG
 A	c	cc	AA
 e	a
@@ -35,13 +35,13 @@ e
 D	A	f	dd	DD
 G	B	g	dd	GG
 A	c
-B	d	g	dd	GG	b
+B	d	g	dd	GG
 G	B
 c	c	g	ee	CC
 B
 A	c	a	ee	AA
 G
-F	c	a	dd	DD	b
+F	c	a	dd	DD
 D
 G	B	g	dd	GG
 f
@@ -51,11 +51,11 @@ C	G	e	cc	CC
 F	A	f	cc	FF
 E	A	f	dd	DD
 D
-G	B	e	ee	EE	b
+G	B	e	ee	EE
 E
 A	A	e	dd	AA
 cc
-D	A	f	b	BB	b
+D	A	f	b	BB
 E	G	e	b	EE
 d
 A	A	d	a	AA

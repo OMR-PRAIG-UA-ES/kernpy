@@ -86,9 +86,9 @@ class DocumentTestCase(unittest.TestCase):
             expected_frequencies = json.load(f)
 
         doc, err = kp.read('resource_dir/legacy/chor001.krn')
-        real_frequencies = doc.frequencies(token_categories=None)
+        real_frequencies = doc.frequencies()
 
-        self.assertEqual(expected_frequencies, real_frequencies)
+        self.assertDictEqual(expected_frequencies, real_frequencies)
 
     def test_document_split(self):
         doc, err = kp.read('resource_dir/legacy/chor001.krn')
@@ -110,11 +110,12 @@ class DocumentTestCase(unittest.TestCase):
 
     def test_should_not_detect_barlines_tokens_with_non_barlines_category_1(self):
         frequencies = self.doc_organ_4_voices.frequencies()
-        self.assertEqual(kp.TokenCategory.BARLINES.name, frequencies['=1-']['category'])
-        self.assertEqual(kp.TokenCategory.BARLINES.name, frequencies['=2']['category'])
-        self.assertEqual(kp.TokenCategory.BARLINES.name, frequencies['=3']['category'])
-        self.assertEqual(kp.TokenCategory.BARLINES.name, frequencies['=4']['category'])
-        ...
+        with self.assertRaises(KeyError):
+            self.assertEqual(kp.TokenCategory.BARLINES.name, frequencies['=1-']['category'])
+            self.assertEqual(kp.TokenCategory.BARLINES.name, frequencies['=2']['category'])
+            self.assertEqual(kp.TokenCategory.BARLINES.name, frequencies['=3']['category'])
+            self.assertEqual(kp.TokenCategory.BARLINES.name, frequencies['=4']['category'])
+            ...
 
     def test_should_not_detect_barlines_tokens_with_non_barlines_category_2(self):
         frequencies = self.doc_organ_4_voices.frequencies()
@@ -126,7 +127,8 @@ class DocumentTestCase(unittest.TestCase):
 
     def test_should_not_detect_barlines_tokens_with_non_barlines_category_4(self):
         frequencies = self.doc_piano.frequencies()
-        self.assertEqual(kp.TokenCategory.BARLINES.name, frequencies['=94:|!|:']['category'])
+        with self.assertRaises(KeyError):
+            self.assertEqual(kp.TokenCategory.BARLINES.name, frequencies['=94:|!|:']['category'])
 
     def test_all_tokens_have_correct_category_get_all_tokens_core(self):
         self.all_tokens_have_the_correct_category(self.doc_organ_4_voices, kp.TokenCategory.CORE)

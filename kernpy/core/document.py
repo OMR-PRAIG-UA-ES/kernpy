@@ -508,7 +508,8 @@ class Document:
             >>> [type(t) for t in tokens]
             [<class 'kernpy.core.token.Token'>, <class 'kernpy.core.token.Token'>, <class 'kernpy.core.token.Token'>]
         """
-        traversal = TokensTraversal(False, filter_by_categories)
+        computed_categories = TokenCategory.valid(include=filter_by_categories)
+        traversal = TokensTraversal(False, computed_categories)
         self.tree.dfs_iterative(traversal)
         return traversal.tokens
 
@@ -546,7 +547,8 @@ class Document:
             List[AbstractToken] - A list of unique tokens.
 
         """
-        traversal = TokensTraversal(True, filter_by_categories)
+        computed_categories = TokenCategory.valid(include=filter_by_categories)
+        traversal = TokensTraversal(True, computed_categories)
         self.tree.dfs_iterative(traversal)
         return traversal.tokens
 
