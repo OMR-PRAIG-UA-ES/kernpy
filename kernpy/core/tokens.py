@@ -9,6 +9,7 @@ from unittest import result
 
 TOKEN_SEPARATOR = '@'
 DECORATION_SEPARATOR = '·'
+GRAPHIC_TOKEN_SEPARATOR = ':'
 HEADERS = {"**mens", "**kern", "**text", "**harm", "**mxhm", "**root", "**dyn", "**dynam", "**fing"}
 CORE_HEADERS = {"**kern", "**mens"}
 SPINE_OPERATIONS = {"*-", "*+", "*^", "*v", "*x"}

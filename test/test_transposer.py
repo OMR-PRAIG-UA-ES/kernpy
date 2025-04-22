@@ -400,4 +400,126 @@ class TestTranscription(unittest.TestCase):
         self.assertEqual(result, 'f')
 
 
+    def test_agnostic_distance_positive(self):
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('C', 4), kp.AgnosticPitch('E', 4)),
+            4
+        )
+
+    def test_agnostic_distance_negative(self):
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('C', 4), kp.AgnosticPitch('B', 3)),
+            -1
+        )
+
+    def test_agnostic_distance_zero(self):
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('G', 5), kp.AgnosticPitch('G', 5)),
+            0
+        )
+
+    def test_agnostic_distance_accidental_1(self):
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('C', 4), kp.AgnosticPitch('C+', 4)),
+            1
+        )
+
+    def test_agnostic_distance_accidental_2(self):
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('C', 4), kp.AgnosticPitch('C++', 4)),
+            2
+        )
+
+    def test_agnostic_distance_accidental_3(self):
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('C', 4), kp.AgnosticPitch('C-', 4)),
+            -1
+        )
+
+    def test_agnostic_distance_accidental_4(self):
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('C', 4), kp.AgnosticPitch('C--', 4)),
+            -2
+        )
+
+    def test_agnostic_distance_accidental_5(self):
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('E-', 4), kp.AgnosticPitch('E--', 4)),
+            -1
+        )
+
+    def test_agnostic_distance_accidental_6(self):
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('G-', 4), kp.AgnosticPitch('A+', 4)),
+            4
+        )
+
+    def test_agnostic_distance_diatonic_scale_ascendant(self):
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('C', 4), kp.AgnosticPitch('D', 4)),
+            2
+        )
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('D', 4), kp.AgnosticPitch('E', 4)),
+            2
+        )
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('E', 4), kp.AgnosticPitch('F', 4)),
+            1
+        )
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('F', 4), kp.AgnosticPitch('G', 4)),
+            2
+        )
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('G', 4), kp.AgnosticPitch('A', 4)),
+            2
+        )
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('A', 4), kp.AgnosticPitch('B', 4)),
+            2
+        )
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('B', 4), kp.AgnosticPitch('C', 5)),
+            1
+        )
+
+    def test_agnostic_distance_diatonic_scale_descendant(self):
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('C', 5), kp.AgnosticPitch('B', 4)),
+            -1
+        )
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('B', 4), kp.AgnosticPitch('A', 4)),
+            -2
+        )
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('A', 4), kp.AgnosticPitch('G', 4)),
+            -2
+        )
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('G', 4), kp.AgnosticPitch('F', 4)),
+            -2
+        )
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('F', 4), kp.AgnosticPitch('E', 4)),
+            -1
+        )
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('E', 4), kp.AgnosticPitch('D', 4)),
+            -2
+        )
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('D', 4), kp.AgnosticPitch('C', 4)),
+            -2
+        )
+
+
+    def test_agnostic_distance_octave(self):
+        self.assertEqual(
+            kp.agnostic_distance(kp.AgnosticPitch('C', 4), kp.AgnosticPitch('C', 5)),
+            12
+        )
+
+
 

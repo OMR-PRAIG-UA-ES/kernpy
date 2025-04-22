@@ -98,6 +98,18 @@ __all__ = [
     'transpose',
     'transpose_agnostics',
     'transpose_encoding_to_agnostic',
-    'transpose_agnostic_to_encoding'
+    'transpose_agnostic_to_encoding',
+    'PositionInStaff',
+    'distance',
+    'agnostic_distance',
+    'PitchPositionReferenceSystem',
+    'Clef',
+    'GClef',
+    'F3Clef',
+    'F4Clef',
+    'C1Clef',
+    'C2Clef',
+    'C3Clef',
+    'C4Clef',
 ]
 

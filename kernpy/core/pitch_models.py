@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from enum import Enum
 
 
-pitches = [
+pitches = {
     'A',
     'B',
     'C',
@@ -12,7 +12,8 @@ pitches = [
     'E',
     'F',
     'G'
-]
+}
+
 
 Chromas = {
     'C--': 0,
@@ -72,6 +73,15 @@ class AgnosticPitch:
     """
     Represents a pitch in a generic way, independent of the notation system used.
     """
+
+    ASCENDANT_ACCIDENTAL_ALTERATION = '+'
+    DESCENDENT_ACCIDENTAL_ALTERATION = '-'
+    ACCIDENTAL_ALTERATIONS = {
+        ASCENDANT_ACCIDENTAL_ALTERATION,
+        DESCENDENT_ACCIDENTAL_ALTERATION
+    }
+
+
     def __init__(self, name: str, octave: int):
         """
         Initialize the AgnosticPitch object.
@@ -128,6 +138,9 @@ class AgnosticPitch:
     def __str__(self):
         return f"<{self.name}, {self.octave}>"
 
+    def __repr__(self):
+        return f"{self.__name}(name={self.name}, octave={self.octave})"
+
     def __eq__(self, other):
         if not isinstance(other, AgnosticPitch):
             return False
@@ -140,6 +153,20 @@ class AgnosticPitch:
 
     def __hash__(self):
         return hash((self.name, self.octave))
+
+    def __lt__(self, other):
+        if not isinstance(other, AgnosticPitch):
+            return NotImplemented
+        if self.octave == other.octave:
+            return Chromas[self.name] < Chromas[other.name]
+        return self.octave < other.octave
+
+    def __gt__(self, other):
+        if not isinstance(other, AgnosticPitch):
+            return NotImplemented
+        if self.octave == other.octave:
+            return Chromas[self.name] > Chromas[other.name]
+        return self.octave > other.octave
 
 
 

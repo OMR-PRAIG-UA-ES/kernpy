@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+from copy import deepcopy
+from typing import Optional
+
 from .pitch_models import (
     NotationEncoding,
     AgnosticPitch,
@@ -57,6 +60,16 @@ Base-40 interval classes (d=diminished, m=minor, M=major, P=perfect, A=augmented
 """
 
 IntervalsByName = {v: k for k, v in Intervals.items()}  # reverse the key-value pairs
+
+LETTER_TO_SEMITONES = {
+    'C': 0,
+    'D': 2,
+    'E': 4,
+    'F': 5,
+    'G': 7,
+    'A': 9,
+    'B': 11,
+}
 
 
 def transpose_agnostics(
@@ -221,3 +234,66 @@ def transpose(
     return content
 
 
+def agnostic_distance(
+    first_pitch: AgnosticPitch,
+    second_pitch: AgnosticPitch,
+) -> int:
+    """
+    Calculate the distance in semitones between two pitches.
+
+    Args:
+        first_pitch (AgnosticPitch): The first pitch to compare.
+        second_pitch (AgnosticPitch): The second pitch to compare.
+
+    Returns:
+        int: The distance in semitones between the two pitches.
+
+    Examples:
+        >>> agnostic_distance(AgnosticPitch('C4'), AgnosticPitch('E4'))
+        4
+        >>> agnostic_distance(AgnosticPitch('C4'), AgnosticPitch('B3'))
+        -1
+    """
+    def semitone_index(p: AgnosticPitch) -> int:
+        # base letter:
+        letter = p.name.replace('+', '').replace('-', '')
+        base = LETTER_TO_SEMITONES[letter]
+        # accidentals: '+' is one sharp, '-' one flat
+        alteration = p.name.count('+') - p.name.count('-')
+        return p.octave * 12 + base + alteration
+
+    return semitone_index(second_pitch) - semitone_index(first_pitch)
+
+
+def distance(
+    first_encoding: str,
+    second_encoding: str,
+    *,
+    first_format: str = NotationEncoding.HUMDRUM.value,
+    second_format: str = NotationEncoding.HUMDRUM.value,
+) -> int:
+    """
+    Calculate the distance in semitones between two pitches.
+
+    Args:
+        first_encoding (str): The first pitch to compare.
+        second_encoding (str): The second pitch to compare.
+        first_format (str): The encoding format of the first pitch. Default is HUMDRUM.
+        second_format (str): The encoding format of the second pitch. Default is HUMDRUM.
+
+    Returns:
+        int: The distance in semitones between the two pitches.
+
+    Examples:
+        >>> distance('C4', 'E4')
+        4
+        >>> distance('C4', 'B3')
+        -1
+    """
+    first_importer = PitchImporterFactory.create(first_format)
+    first_pitch: AgnosticPitch = first_importer.import_pitch(first_encoding)
+
+    second_importer = PitchImporterFactory.create(second_format)
+    second_pitch: AgnosticPitch = second_importer.import_pitch(second_encoding)
+
+    return agnostic_distance(first_pitch, second_pitch)
