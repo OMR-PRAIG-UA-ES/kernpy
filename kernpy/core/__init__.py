@@ -111,5 +111,7 @@ __all__ = [
     'C2Clef',
     'C3Clef',
     'C4Clef',
+    'ClefFactory',
+    'AVAILABLE_INTERVALS'
 ]
 

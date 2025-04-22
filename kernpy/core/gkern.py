@@ -14,7 +14,7 @@ from enum import Enum
 from typing import Dict
 
 from .tokens import (
-    GRAPHIC_TOKEN_SEPARATOR
+    GRAPHIC_TOKEN_SEPARATOR, ClefToken, Token, TokenCategory
 )
 
 from .transposer import (
@@ -440,6 +440,58 @@ class C4Clef(Clef):
         Returns the pitch of the bottom line of the staff.
         """
         return AgnosticPitch('D', 2)
+
+
+class ClefFactory:
+    CLEF_NAMES = { 'G', 'F', 'C' }
+    @classmethod
+    def create_clef(cls, encoding: str) -> Clef:
+        """
+        Creates a Clef object based on the given token.
+
+        Clefs are encoded in interpretation tokens that start with a single * followed by the string clef and then the shape and line position of the clef. For example, a treble clef is *clefG2, with G meaning a G-clef, and 2 meaning that the clef is centered on the second line up from the bottom of the staff. The bass clef is *clefF4 since it is an F-clef on the fourth line of the staff.
+        A vocal tenor clef is represented by *clefGv2, where the v means the music should be played an octave lower than the regular clef’s sounding pitches. Try creating a vocal tenor clef in the above interactive example. The v operator also works on the other clefs (but these sorts of clefs are very rare). Another rare clef is *clefG^2 which is the opposite of *clefGv2, where the music is written an octave lower than actually sounding pitch for the normal form of the clef. You can also try to create exotic two-octave clefs by doubling the ^^ and vv markers.
+
+        Args:
+            encoding (str): The encoding of the clef token.
+
+        Returns:
+
+        """
+        encoding = encoding.replace('*clef', '')
+
+        # at this point the encoding is like G2, F4,... or Gv2, F^4,... or G^^2, Fvv4,... or G^^...^^2, Fvvv4,...
+        name = list(filter(lambda x: x in cls.CLEF_NAMES, encoding))[0]
+        line = int(list(filter(lambda x: x.isdigit(), encoding))[0])
+        decorators = ''.join(filter(lambda x: x in ['^', 'v'], encoding))
+
+        if name not in cls.CLEF_NAMES:
+            raise ValueError(f"Invalid clef name: {name}. Expected one of {cls.CLEF_NAMES}.")
+
+        if name == 'G':
+            return GClef()
+        elif name == 'F':
+            if line == 3:
+                return F3Clef()
+            elif line == 4:
+                return F4Clef()
+            else:
+                raise ValueError(f"Invalid F clef line: {line}. Expected 3 or 4.")
+        elif name == 'C':
+            if line == 1:
+                return C1Clef()
+            elif line == 2:
+                return C2Clef()
+            elif line == 3:
+                return C3Clef()
+            elif line == 4:
+                return C4Clef()
+            else:
+                raise ValueError(f"Invalid C clef line: {line}. Expected 1, 2, 3 or 4.")
+        else:
+            raise ValueError(f"Invalid clef name: {name}. Expected one of {cls.CLEF_NAMES}.")
+
+
 
 
 

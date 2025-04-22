@@ -60,6 +60,7 @@ Base-40 interval classes (d=diminished, m=minor, M=major, P=perfect, A=augmented
 """
 
 IntervalsByName = {v: k for k, v in Intervals.items()}  # reverse the key-value pairs
+AVAILABLE_INTERVALS = sorted(IntervalsByName.keys())
 
 LETTER_TO_SEMITONES = {
     'C': 0,

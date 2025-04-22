@@ -353,3 +353,84 @@ class GkernTestCase(unittest.TestCase):
         self.do_test_pitches_to_positions(c4clef.reference_point(), kp.AgnosticPitch('B', 2), kp.PositionInStaff.from_space(3))
         self.do_test_pitches_to_positions(c4clef.reference_point(), kp.AgnosticPitch('C', 3), kp.PositionInStaff.from_line(4))
         self.do_test_pitches_to_positions(c4clef.reference_point(), kp.AgnosticPitch('D', 3), kp.PositionInStaff.from_space(4))
+
+
+class TestClefFactory(unittest.TestCase):
+    def test_G_clef_without_decorators(self):
+        clef = kp.ClefFactory.create_clef('*clefG2')
+        self.assertIsInstance(clef, kp.GClef)
+
+    def test_G_clef_single_v(self):
+        clef = kp.ClefFactory.create_clef('*clefGv2')
+        self.assertIsInstance(clef, kp.GClef)
+
+    def test_G_clef_double_vv(self):
+        clef = kp.ClefFactory.create_clef('*clefGvv2')
+        self.assertIsInstance(clef, kp.GClef)
+
+    def test_G_clef_single_caret(self):
+        clef = kp.ClefFactory.create_clef('*clefG^2')
+        self.assertIsInstance(clef, kp.GClef)
+
+    def test_G_clef_double_caret(self):
+        clef = kp.ClefFactory.create_clef('*clefG^^^^2')
+        self.assertIsInstance(clef, kp.GClef)
+
+    # F‑clef (bass), line 3
+    def test_F3_clef_without_decorators(self):
+        clef = kp.ClefFactory.create_clef('*clefF3')
+        self.assertIsInstance(clef, kp.F3Clef)
+
+    def test_F3_clef_with_v(self):
+        clef = kp.ClefFactory.create_clef('*clefFv3')
+        self.assertIsInstance(clef, kp.F3Clef)
+
+    def test_F4_clef_without_decorators(self):
+        clef = kp.ClefFactory.create_clef('*clefF4')
+        self.assertIsInstance(clef, kp.F4Clef)
+
+    def test_F4_clef_with_caret(self):
+        clef = kp.ClefFactory.create_clef('*clefF^4')
+        self.assertIsInstance(clef, kp.F4Clef)
+
+    # C‑clefs, lines 1–4
+    def test_C1_clef_basic(self):
+        clef = kp.ClefFactory.create_clef('*clefC1')
+        self.assertIsInstance(clef, kp.C1Clef)
+
+    def test_C2_clef_with_vv(self):
+        clef = kp.ClefFactory.create_clef('*clefCvv2')
+        self.assertIsInstance(clef, kp.C2Clef)
+
+    def test_C3_clef_with_caret(self):
+        clef = kp.ClefFactory.create_clef('*clefC^3')
+        self.assertIsInstance(clef, kp.C3Clef)
+
+    def test_C4_clef_with_double_caret(self):
+        clef = kp.ClefFactory.create_clef('*clefC^^4')
+        self.assertIsInstance(clef, kp.C4Clef)
+
+    # invalid name
+    def test_invalid_clef_name(self):
+        with self.assertRaises(ValueError):
+            kp.ClefFactory.create_clef('*clefH2')
+
+    # invalid F‑clef line
+    def test_invalid_F_line(self):
+        with self.assertRaises(ValueError):
+            kp.ClefFactory.create_clef('*clefF2')
+
+    # invalid C‑clef line
+    def test_invalid_C_line(self):
+        with self.assertRaises(ValueError):
+            kp.ClefFactory.create_clef('*clefC5')
+
+    # missing leading *
+    def test_missing_prefix(self):
+        with self.assertRaises(ValueError):
+            kp.ClefFactory.create_clef('clefG2')
+        with self.assertRaises(ValueError):
+            kp.ClefFactory.create_clef('random')
+
+
+

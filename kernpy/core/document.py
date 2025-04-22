@@ -10,6 +10,9 @@ from queue import Queue
 
 from kernpy.core import TokenCategory, CORE_HEADERS, TERMINATOR
 from kernpy.core import MetacommentToken, AbstractToken, HeaderToken
+from .transposer import transpose, Direction, NotationEncoding, AVAILABLE_INTERVALS
+from .tokens import NoteRestToken, Subtoken
+from .transposer import IntervalsByName
 
 
 class SignatureNodes:
@@ -801,6 +804,80 @@ class Document:
         else:
             return [token.encoding for token in a.get_header_nodes()] \
                 == [token.encoding for token in b.get_header_nodes()]
+
+
+    def to_transposed(self, interval: str, direction: str = Direction.UP.value) -> 'Document':
+        """
+        Create a new document with the transposed notes without modifying the original document.
+
+        Args:
+            interval (str): The name of the interval to transpose. It can be 'P4', 'P5', 'M2', etc. Check the \
+             kp.AVAILABLE_INTERVALS for the available intervals.
+            direction (str): The direction to transpose. It can be 'up' or 'down'.
+
+        Returns:
+
+        """
+        if interval not in AVAILABLE_INTERVALS:
+            raise ValueError(
+                f"Interval {interval!r} is not available. "
+                f"Available intervals are: {AVAILABLE_INTERVALS}"
+            )
+
+        if direction not in (Direction.UP.value, Direction.DOWN.value):
+            raise ValueError(
+                f"Direction {direction!r} is not available. "
+                f"Available directions are: "
+                f"{Direction.UP.value!r}, {Direction.DOWN.value!r}"
+            )
+
+        new_document = self.clone()
+
+        # BFS through the tree
+        root = new_document.tree.root
+        queue = Queue()
+        queue.put(root)
+
+        while not queue.empty():
+            node = queue.get()
+
+            if isinstance(node.token, NoteRestToken):
+                orig_token = node.token
+
+                new_subtokens = []
+                transposed_pitch_encoding = None
+
+                # Transpose each pitch subtoken in the pitch–duration list
+                for subtoken in orig_token.pitch_duration_subtokens:
+                    if subtoken.category == TokenCategory.PITCH:
+                        # transpose() returns a new pitch subtoken
+                        tp = transpose(
+                            input_encoding=subtoken.encoding,
+                            interval=IntervalsByName[interval],
+                            direction=direction,
+                            input_format=NotationEncoding.HUMDRUM.value,
+                            output_format=NotationEncoding.HUMDRUM.value,
+                        )
+                        new_subtokens.append(Subtoken(tp, subtoken.category))
+                        transposed_pitch_encoding = tp
+                    else:
+                        # leave duration subtokens untouched
+                        new_subtokens.append(Subtoken(subtoken.encoding, subtoken.category))
+
+                # Replace the node’s token with a new NoteRestToken
+                node.token = NoteRestToken(
+                    encoding=transposed_pitch_encoding,
+                    pitch_duration_subtokens=new_subtokens,
+                    decoration_subtokens=orig_token.decoration_subtokens,
+                )
+
+            # enqueue children
+            for child in node.children:
+                queue.put(child)
+
+        # Return the transposed clone
+        return new_document
+
 
     def __iter__(self):
         """

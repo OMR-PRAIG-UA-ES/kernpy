@@ -2,6 +2,7 @@ import os
 import unittest
 import logging
 import sys
+from pathlib import Path
 from tempfile import TemporaryDirectory
 import json
 
@@ -199,3 +200,16 @@ class DocumentTestCase(unittest.TestCase):
         doc_1.add(doc_2)
         real_result = kp.dumps(doc_1)
         self.assertEqual(expected_result, real_result)
+
+    def test_document_to_transposed_easy(self):
+        doc, err = kp.load('resource_dir/legacy/base_tuplet_longer.krn')
+        with open(Path('resource_dir/legacy/base_tuplet_longer_plus_octave.krn')) as f:
+            expected_content = f.read()
+
+        doc_transposed = doc.to_transposed('octave', 'up')
+
+        real_content = kp.dumps(doc_transposed)
+
+        self.assertEqual(expected_content, real_content)
+
+

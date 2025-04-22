@@ -313,6 +313,24 @@ document.get_metacomments(KeyComment='non_existing_key')
 # []
 ```
 
+## Transpose
+- Inspect what intervals are available for transposing.
+```python
+import kernpy as kp
+
+print(kp.AVAILABLE_INTERVALS)
+```
+
+- Transpose the document to a specific interval.
+```python
+import kernpy as kp
+
+doc, err = kp.load('resource_dir/legacy/chor048.krn')  # 10 measures score
+higher_octave_doc = doc.to_transposed('octave', 'up')
+
+kp.dump(higher_octave_doc, 'higher_octave.krn')
+```
+
 ### On your own
 
 - Handle the document if needed.
