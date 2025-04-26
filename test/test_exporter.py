@@ -26,7 +26,7 @@ class ExporterTestCase(unittest.TestCase):
             expected_content = f.read()
 
         # Act
-        real_content = kp.dumps(doc, include=include)
+        real_content = kp.dumps(doc, include=include, exclude=exclude)
 
         # Assert
         self.assertEqual(expected_content, real_content)
@@ -77,7 +77,6 @@ class ExporterTestCase(unittest.TestCase):
             expected_content = f.read()
         real_content = kp.dumps(self.doc_piano,
                                  spine_ids=[0, 2])  # TODO: Solve export error: error in line 15 of the exported file. No tiene nada que ver con la funcionalidad de exportar por spines. Sino con exportar todo en general.
-        # kp.dump(self.doc_piano, '/tmp/test_mix_spines_error.krn', spine_ids=[0, 2])  # for debugging
         self.assertEqual(expected_content, real_content)
 
     def test_basic_kern_to_ekern(self):
@@ -123,10 +122,6 @@ class ExporterTestCase(unittest.TestCase):
         )
 
     def test_should_export_without_harmony(self):
-        kp.dump(self.doc_organ_4_voices, 'resource_dir/categories/concerto-piano-12-allegro_without_harmony.krn',
-                include={t for t in kp.TokenCategory},
-                exclude={kp.TokenCategory.HARMONY}
-                )
         self.exported_filtering_by_category(
             doc=self.doc_organ_4_voices,
             include={t for t in kp.TokenCategory},
@@ -135,15 +130,13 @@ class ExporterTestCase(unittest.TestCase):
         )
 
     def test_only_export_kern_and_harm_spines(self):
-        kp.dump(self.doc_organ_4_voices, 'resource_dir/spines/concerto-piano-12-allegro_only_kern_and_harm.krn',
-            spine_types=['**kern', '**harm']
-        )
-        self.exported_filtering_by_category(
-            doc=self.doc_organ_4_voices,
-            include={t for t in kp.TokenCategory},
-            exclude=None,
-            expected_path='resource_dir/spines/concerto-piano-12-allegro_only_kern_and_harm.krn'
-        )
+        with open('resource_dir/spines/concerto-piano-12-allegro_only_kern_and_harm.krn', 'r') as f:
+            expected_content = f.read()
+
+        real_content = kp.dumps(self.doc_organ_4_voices, spine_types=['**kern', '**harm'])
+
+        self.assertEqual(expected_content, real_content,
+                         f"File content mismatch: \nExpected:\n{expected_content}\n{40 * '='}\nReal\n{real_content}")
 
     def test_exporter_HeaderTokenGenerator_new(self):
         self._run_HeaderTokenGenerator_new_generalized("**kern", kp.KernTypeExporter.eKern, "**ekern")

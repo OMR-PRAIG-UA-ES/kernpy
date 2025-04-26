@@ -29,8 +29,8 @@ class GenericTestCase(unittest.TestCase):
 
     @classmethod
     def load_expected_indexes_of_input_concatenated_load_files(cls):
-        return [(0, 5), (6, 11), (12, 16), (17, 21), (22, 26), (27, 31), (32, 37), (38, 43), (44, 49), (50, 54),
-                (55, 59), (60, 66)]
+        return [(0, 4), (5, 10), (11, 15), (16, 20), (21, 25), (26, 30), (31, 36), (37, 42), (43, 48), (49, 53),
+                (54, 58), (59, 65)]
 
     @classmethod
     def setUpClass(cls):
@@ -178,6 +178,7 @@ class GenericTestCase(unittest.TestCase):
             expected = f.read()
 
         real_output = kp.dumps(self.static_complex_doc, include=kp.TokenCategory.BARLINES)
+
         self.assertEqual(expected, real_output)
 
     def test_generic_dumps_include_all_less_note_rest(self):
