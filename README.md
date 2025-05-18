@@ -9,6 +9,7 @@
 - [Installation](#installation)
 - [Documentation](#documentation)
 - [Run tests](#run-tests)
+- [Contributing](#contributing)
 - [Citation](#citation)
 
 
@@ -427,6 +428,38 @@ python -m kernpy <command> <options>
 ```shell
 cd tests && python -m pytest
 ```
+
+
+## Contributing
+
+We welcome contributions from the community! If you'd like to contribute to the project, please follow these steps:
+
+1. Fork the Repository from GitHub.
+2. Clone your own fork repository.
+   ```bash
+   git clone ...
+   cd ...
+   ```
+3. Create a Branch:
+4. Create a new branch for your feature or bug fix:
+   ```bash
+   git checkout -b feature/your-feature-name
+    ```
+5. Commit Your Changes:
+Commit your changes with a descriptive message:
+    ```bash
+    git commit -m "feat: add your feature or fix"
+     ```
+
+6. Push to Your Branch:
+Push your changes to your forked repository:
+    ```bash
+    git push origin feature/your-feature-name
+     ```
+
+7. Create a Pull Request:
+Open a pull request to the main repository, describing your changes.
+
 
 ## Citation:
 ```bibtex
