@@ -1,4 +1,5 @@
 from __future__ import annotations
+import sys
 
 from .dyn_importer import DynSpineImporter
 from .dynam_spine_importer import DynamSpineImporter
@@ -10,6 +11,7 @@ from .mhxm_spine_importer import MxhmSpineImporter
 from .root_spine_importer import RootSpineImporter
 from .spine_importer import SpineImporter
 from .text_spine_importer import TextSpineImporter
+from .basic_spine_importer import BasicSpineImporter
 
 
 def createImporter(spine_type: str) -> SpineImporter:
@@ -32,4 +34,10 @@ def createImporter(spine_type: str) -> SpineImporter:
     elif spine_type == '**fing':
         return FingSpineImporter()
     else:
-        raise ValueError(f"Invalid object type: {spine_type}")
+        #print(f'Invalid spine header type found: {spine_type} '
+        #      f'using a basic spine importer instead',
+        #      file=sys.stderr)
+        # TODO: Should we use a logger? Global variable for verbosity?
+
+        return BasicSpineImporter()  # Only parse basic token categories
+

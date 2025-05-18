@@ -21,7 +21,6 @@ dependencies = [
     'Pillow',
     'requests',
     'urllib3>=1.26.6',
-    'tqdm'
 ]
 
 [project.urls]

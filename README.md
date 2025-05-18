@@ -412,11 +412,6 @@ pip install urllib3==1.26.6
 It has been tested with version 4.13.1 of the package.
 
 
-- For visualizing the progress bar executing multiple tasks, the `tqdm` library is required:
-```shell
-pip install tqdm
-```
-
 ## Documentation
 Documentation available at [https://kernpy.pages.dev/](https://kernpy.pages.dev/)
 

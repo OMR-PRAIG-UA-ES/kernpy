@@ -76,7 +76,7 @@ class Importer:
                 self._compute_metacomment_token(row[0].strip())
             else:
                 for icolumn, column in enumerate(row):
-                    if column in HEADERS:
+                    if column.startswith("**"):
                         self._compute_header_token(icolumn, column)
                         # go to next row
                         continue
@@ -88,7 +88,8 @@ class Importer:
                             token = FieldCommentToken(column)
                         else:
                             if self._prev_stage_parents is None:
-                                raise ValueError(f'Expected a previous line with valid content. '
+                                raise ValueError(f'Any spine header found in the column #{icolumn}. '
+                                                 f'Expected a previous line with valid content. '
                                                  f'The token in column #{icolumn} and row #{self._row_number - 1}'
                                                  f' was not created correctly. Error detected in '
                                                  f'column #{icolumn} in row #{self._row_number}. '
@@ -122,8 +123,9 @@ class Importer:
                         node = self._tree.add_node(self._tree_stage, parent, token, self.get_last_spine_operator(parent), parent.last_signature_nodes, parent.header_node)
                         self._next_stage_parents.append(node)
 
-                        if token.category == TokenCategory.BARLINES or token.category == TokenCategory.CORE and len(
-                                self._document.measure_start_tree_stages) == 0:
+                        if (token.category == TokenCategory.BARLINES
+                                or TokenCategory.is_child(child=token.category, parent=TokenCategory.CORE)
+                                    and len(self._document.measure_start_tree_stages) == 0):
                             is_barline = True
                         elif isinstance(token, BoundingBoxToken):
                             self.handle_bounding_box(self._document, token)

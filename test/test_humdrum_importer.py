@@ -378,10 +378,10 @@ class ImporterTestCase(unittest.TestCase):
         input_kern = "**kern\n4c\n4d\n4e\n4f\n*-"
         importer = kp.Importer()
         document = importer.import_string(input_kern)
-        export_options = kp.ExportOptions(spine_types=['**kern'], token_categories=kp.BEKERN_CATEGORIES,
-                                          kern_type=kp.KernTypeExporter.eKern)
-        exporter = kp.Exporter()
-        output_kern = exporter.export_string(document, export_options)
+        output_kern = kp.dumps(document,
+                               spine_types=['**kern'],
+                               include=kp.BEKERN_CATEGORIES,
+                               tokenizer=kp.KernTypeExporter.eKern,)
         expected_ekern = "**ekern\n4@c\n4@d\n4@e\n4@f\n*-\n"
         self.assertEqual(expected_ekern, output_kern)
 
@@ -391,10 +391,18 @@ class ImporterTestCase(unittest.TestCase):
         importer.import_string(input_kern)
         self.assertEqual(1, len(importer.errors))
 
-    def testParserError(self):
+    def testParserError_only_the_last(self):
+        input_kern = "**kern\n*clefF4\n4d\n4e\n4f\nc4\n*-"
+        importer = kp.Importer()
+        importer.import_string(input_kern)
+        self.assertEqual(1, len(importer.errors))
+
+
+    def testParserError_only_the_first_ensure_one_error_is_not_being_propagated(self):
         input_kern = "**kern\n*clefF4\nc4\n4d\n4e\n4f\n*-"
         importer = kp.Importer()
         importer.import_string(input_kern)
+        self.assertNotEqual(4, len(importer.errors))
         self.assertEqual(1, len(importer.errors))
 
     def testLexicalParserError(self):
@@ -603,7 +611,7 @@ class ImporterTestCase(unittest.TestCase):
         importer = kp.Importer()
         document = importer.import_file(input_kern_file)
         measures = document.measures_count()
-        self.assertEqual(10, measures)
+        self.assertEqual(11, measures)
 
     def test_document_get_last_measure_empty(self):
         importer = kp.Importer()

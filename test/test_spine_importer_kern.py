@@ -1,5 +1,6 @@
 import unittest
 import sys
+from pathlib import Path
 
 import kernpy as kp
 
@@ -76,6 +77,33 @@ class KernSpineImporterTest(unittest.TestCase):
         self.do_test_token_exported("4E]#", "4@E@#·]")
         self.do_test_token_exported("4]E#", "4@E@#·]")
         self.do_test_token_exported("]4E#", "4@E@#·]")
+
+    def test_all_permutations(self):
+        expected_exported = '2@.@bb@-@·_'
+        all_permutations_path = Path('resource_dir/samples/permutations_of_2.bb-_ .krn')
+        lines = [L for L in all_permutations_path.read_text(encoding="utf-8").splitlines() if L.strip()]
+
+        for line in lines:
+            with self.subTest(line=line):
+                try:
+                    importer = kp.KernSpineImporter()
+                    token = importer.import_token(line)
+                except Exception as e:
+                    self.fail(f"Importing raised {type(e).__name__} for line {line!r}: {e}")
+
+                # if import_token returns None we treat it as failure
+                self.assertIsNotNone(token, f"import_token returned None for {line!r}")
+
+                exported = token.export()
+                self.assertEqual(
+                    token.category, kp.TokenCategory.NOTE_REST,
+                    f"Category mismatch: {token.category} != {kp.TokenCategory.NOTE_REST} for line {line!r}"
+                )
+                self.assertEqual(
+                    exported, expected_exported,
+                    f"Round-trip mismatch: exported {exported!r} != expected_exported ({expected_exported!r}). original {line!r}"
+                )
+
 
     def test_remove_repeated(self):
         self.do_test_token_exported("8aLL", "8@a·L")

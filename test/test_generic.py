@@ -223,7 +223,6 @@ class GenericTestCase(unittest.TestCase):
         with open(Path('resource_dir/categories/only_pitches.krn'), 'r') as f:
             expected = f.read()
 
-        kp.dump(self.static_complex_doc, Path('resource_dir/categories/only_pitches.krn'), include=kp.TokenCategory.PITCH)
         real_output = kp.dumps(self.static_complex_doc, include=kp.TokenCategory.PITCH)
 
         self.assertEqual(expected, real_output)
@@ -233,5 +232,15 @@ class GenericTestCase(unittest.TestCase):
             expected = f.read()
 
         real_output = kp.dumps(self.static_complex_doc, include=kp.TokenCategory.DECORATION)
+
+        self.assertEqual(expected, real_output)
+
+    def test_generic_dumps_include_note_rest_exclude_decorators(self):
+        with open(Path('resource_dir/categories/note_rest_exclude_decorators.krn'), 'r') as f:
+            expected = f.read()
+
+        real_output = kp.dumps(self.static_complex_doc,
+                               include=kp.TokenCategory.NOTE_REST,
+                               exclude=kp.TokenCategory.DECORATION)
 
         self.assertEqual(expected, real_output)
