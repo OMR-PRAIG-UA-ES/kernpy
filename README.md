@@ -372,55 +372,6 @@ pip3 install git+https://github.com/OMR-PRAIG-UA-ES/kernpy.git
 
 <hr>
 
-### Development version:
-
-> [!IMPORTANT]  
-> - Add the development dependencies to the `requirements.txt` file.
-> - Add the production dependencies to the `pyproject.toml` file.
-> - After every change in the grammar, the next steps are mandatory:
-> - - Run the `antlr4.sh` script (JAVA required).
-> - - Commit & push the changes to the repository.
-
-
-- Generate antrl4 grammar:
-- For generating the Python code required for parsing the **kern files, the shell script `antlr4.sh` inside the `kernpy` package must be run.
-
-```shell
-./antlr4.sh
-```
-
-Install all the dependencies using the `requirements.txt` file:
-```shell
-pip install -r requirements.txt
-```
-
-Otherwise, install the required packages manually:
-
-
-- It requires the `antlr4` package to be installed using:
-```shell
-pip install antlr4-python3-runtime
-```
-
-
-- For visualizing the bounding boxes, the library, the `Pillow` library is required:
-```shell
-pip install Pillow
-```
-
-- To parse a IIIF (International Image Interoperability Framework) manifest in Python, we use the `requests` library to fetch the manifest file:
-```shell
-pip install requests
-```
-
-- If fetching data from `https` fails, install the following version of `urllib`:
-```shell
-pip install urllib3==1.26.6
-```
-
-It has been tested with version 4.13.1 of the package.
-
-
 ## Documentation
 Documentation available at [https://kernpy.pages.dev/](https://kernpy.pages.dev/)
 
