@@ -44,15 +44,15 @@ class TestTokenizer(unittest.TestCase):
         self.token_1.export.assert_called()
 
     def test_tokenizer_factory_kern(self):
-        tokenizer = kp.TokenizerFactory.create(kp.KernTypeExporter.normalizedKern.value, token_categories=self.default_categories)
+        tokenizer = kp.TokenizerFactory.create(kp.Encoding.normalizedKern.value, token_categories=self.default_categories)
         self.assertIsInstance(tokenizer, kp.KernTokenizer)
 
     def test_tokenizer_factory_ekern(self):
-        tokenizer = kp.TokenizerFactory.create(kp.KernTypeExporter.eKern.value, token_categories=self.default_categories)
+        tokenizer = kp.TokenizerFactory.create(kp.Encoding.eKern.value, token_categories=self.default_categories)
         self.assertIsInstance(tokenizer, kp.EkernTokenizer)
 
     def test_tokenizer_factory_bkern(self):
-        tokenizer = kp.TokenizerFactory.create(kp.KernTypeExporter.bKern.value, token_categories=self.default_categories)
+        tokenizer = kp.TokenizerFactory.create(kp.Encoding.bKern.value, token_categories=self.default_categories)
         self.assertIsInstance(tokenizer, kp.BekernTokenizer)
 
     def test_tokenizer_factory_raise_error_if_none(self):

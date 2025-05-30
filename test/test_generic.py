@@ -47,7 +47,7 @@ class GenericTestCase(unittest.TestCase):
 
         # Act
         doc, _ = kp.read(current_krn)
-        options = kp.ExportOptions(kern_type=kp.KernTypeExporter.eKern)
+        options = kp.ExportOptions(kern_type=kp.Encoding.eKern)
         real_content = kp.export(doc, options)
 
         # Assert

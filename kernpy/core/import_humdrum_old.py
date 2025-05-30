@@ -10,7 +10,7 @@ from .tokens import HeaderToken, SpineOperationToken, TokenCategory, BoundingBox
     BEKERN_CATEGORIES, TOKEN_SEPARATOR, DECORATION_SEPARATOR
 
 
-class KernTypeExporter(Enum):  # TODO: Eventually, polymorphism will be used to export different types of kern files
+class Encoding(Enum):  # TODO: Eventually, polymorphism will be used to export different types of kern files
     """
     Options for exporting a kern file.
 
@@ -22,7 +22,7 @@ class KernTypeExporter(Enum):  # TODO: Eventually, polymorphism will be used to 
         >>> hi.import_file('file.krn')
 
         # Export the file
-        >>> options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kernType=KernTypeExporter.normalizedKern)
+        >>> options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kernType=Encoding.normalizedKern)
         >>> exported = hi.doExport(options)
 
     """
@@ -32,7 +32,7 @@ class KernTypeExporter(Enum):  # TODO: Eventually, polymorphism will be used to 
 
 
 class ExportOptions:
-    def __init__(self, spine_types=None, token_categories=None, from_measure: int = None, to_measure: int = None, kern_type: KernTypeExporter = KernTypeExporter.normalizedKern, instruments=None):
+    def __init__(self, spine_types=None, token_categories=None, from_measure: int = None, to_measure: int = None, kern_type: Encoding = Encoding.normalizedKern, instruments=None):
         """
         Create a new ExportOptions object.
 
@@ -41,7 +41,7 @@ class ExportOptions:
             token_categories (Iterable): TokenCategory
             from_measure (int): The measure to start exporting. When None, the exporter will start from the beginning of the file.
             to_measure (int): The measure to end exporting. When None, the exporter will end at the end of the file.
-            kern_type (KernTypeExporter): The type of the kern file to export.
+            kern_type (Encoding): The type of the kern file to export.
             instruments (Iterable): The instruments to export. When None, all the instruments will be exported.
 
 
@@ -65,7 +65,7 @@ class ExportOptions:
             >>> exported_data = hi.doExport(options)
 
             Export using the eKern version
-            >>> options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kern_type=KernTypeExporter.eKern)
+            >>> options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kern_type=Encoding.eKern)
             >>> exported_data = hi.doExport(options)
 
         """
@@ -163,7 +163,7 @@ class Spine:
         if row >= len(self.rows):
             raise Exception(f'Row {row} out of bounds {len(self.rows)}')
 
-    def getRowContent(self, row, kern_type: KernTypeExporter, token_categories: Iterable) -> string:
+    def getRowContent(self, row, kern_type: Encoding, token_categories: Iterable) -> string:
         self.checkRowIndex(row)
 
         result = ''
@@ -171,20 +171,20 @@ class Spine:
             if subspine.category == TokenCategory.STRUCTURAL or subspine.category in token_categories:
                 if len(result) > 0:
                     result += '\t'
-                if kern_type == KernTypeExporter.unprocessed:
+                if kern_type == Encoding.unprocessed:
                     result += subspine.encoding
-                elif kern_type in {KernTypeExporter.eKern, KernTypeExporter.normalizedKern}:
+                elif kern_type in {Encoding.eKern, Encoding.normalizedKern}:
                     if subspine.hidden:
                         exp = '.'
                     else:
                         exp = subspine.export()
-                        if kern_type == KernTypeExporter.normalizedKern:
+                        if kern_type == Encoding.normalizedKern:
                             exp = get_kern_from_ekern(exp)
                     if not exp:
                         raise Exception(f'Subspine {subspine.encoding} is exported as None')
                     result += exp
                 else:
-                    raise ValueError(f'Unknown kern type {kern_type}.\nView {help(KernTypeExporter)} ')
+                    raise ValueError(f'Unknown kern type {kern_type}.\nView {help(Encoding)} ')
 
         return result
 
@@ -390,15 +390,15 @@ class HumdrumImporter:
         return spine
 
     def doExportNormalizedKern(self, options: ExportOptions) -> string:
-        options.kern_type = KernTypeExporter.normalizedKern
+        options.kern_type = Encoding.normalizedKern
         return self.doExport(options)
 
     def doExportEKern(self, options: ExportOptions) -> string:
-        options.kern_type = KernTypeExporter.eKern
+        options.kern_type = Encoding.eKern
         return self.doExport(options)
 
     def doExportUnprocessed(self, options: ExportOptions) -> string:
-        options.kern_type = KernTypeExporter.unprocessed
+        options.kern_type = Encoding.unprocessed
         return self.doExport(options)
 
     def handleBoundingBox(self, token: BoundingBoxToken):
@@ -846,7 +846,7 @@ def kern_to_ekern(input_file, output_file) -> None:
     if len(importer.errors):
         raise Exception(f'ERROR: {input_file} has errors {importer.getErrorMessages()}')
 
-    export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kern_type=KernTypeExporter.eKern)
+    export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kern_type=Encoding.eKern)
     exported_ekern = importer.doExport(export_options)
 
     with open(output_file, 'w') as file:

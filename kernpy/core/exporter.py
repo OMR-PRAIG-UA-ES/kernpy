@@ -8,7 +8,7 @@ from abc import ABC, abstractmethod
 
 from kernpy.core import Document, SpineOperationToken, HeaderToken, Importer, TokenCategory, InstrumentToken, \
     TOKEN_SEPARATOR, DECORATION_SEPARATOR, Token, NoteRestToken, HEADERS, BEKERN_CATEGORIES, ComplexToken
-from kernpy.core.tokenizers import KernTypeExporter, TokenizerFactory, Tokenizer
+from kernpy.core.tokenizers import Encoding, TokenizerFactory, Tokenizer
 
 
 
@@ -25,7 +25,7 @@ class ExportOptions:
             token_categories: [] = None,
             from_measure: int = None,
             to_measure: int = None,
-            kern_type: KernTypeExporter = KernTypeExporter.normalizedKern,
+            kern_type: Encoding = Encoding.normalizedKern,
             instruments: [] = None,
             show_measure_numbers: bool = False,
             spine_ids: [int] = None
@@ -38,7 +38,7 @@ class ExportOptions:
             token_categories (Iterable): TokenCategory
             from_measure (int): The measure to start exporting. When None, the exporter will start from the beginning of the file. The first measure is 1
             to_measure (int): The measure to end exporting. When None, the exporter will end at the end of the file.
-            kern_type (KernTypeExporter): The type of the kern file to export.
+            kern_type (Encoding): The type of the kern file to export.
             instruments (Iterable): The instruments to export. When None, all the instruments will be exported.
             show_measure_numbers (Bool): Show the measure numbers in the exported file.
             spine_ids (Iterable): The ids of the spines to export. When None, all the spines will be exported. Spines ids start from 0 and they are increased by 1.
@@ -64,7 +64,7 @@ class ExportOptions:
             >>> exported_data = exporter.export_string(document, options)
 
             Export using the eKern version
-            >>> options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kern_type=KernTypeExporter.eKern)
+            >>> options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES, kern_type=Encoding.eKern)
             >>> exported_data = exporter.export_string(document, options)
 
         """
@@ -135,7 +135,7 @@ class ExportOptions:
             token_categories=[c for c in TokenCategory],
             from_measure=None,
             to_measure=None,
-            kern_type=KernTypeExporter.normalizedKern,
+            kern_type=Encoding.normalizedKern,
             instruments=None,
             show_measure_numbers=False,
             spine_ids=None
@@ -156,19 +156,19 @@ class HeaderTokenGenerator:
     This class is used to translate the HeaderTokens to the specific tokenizer format.
     """
     @classmethod
-    def new(cls, *, token: HeaderToken, type: KernTypeExporter):
+    def new(cls, *, token: HeaderToken, type: Encoding):
         """
         Create a new HeaderTokenGenerator object. Only accepts stardized Humdrum **kern encodings. 
 
         Args:
             token (HeaderToken): The HeaderToken to be translated.
-            type (KernTypeExporter): The tokenizer to be used.
+            type (Encoding): The tokenizer to be used.
 
         Examples:
             >>> header = HeaderToken('**kern', 0)
             >>> header.encoding
             '**kern'
-            >>> new_header = HeaderTokenGenerator.new(token=header, type=KernTypeExporter.eKern)
+            >>> new_header = HeaderTokenGenerator.new(token=header, type=Encoding.eKern)
             >>> new_header.encoding
             '**ekern'
         """
@@ -527,7 +527,7 @@ def kern_to_ekern(
         raise Exception(f'ERROR: {input_file} has errors {importer.get_error_messages()}')
 
     export_options = ExportOptions(spine_types=['**kern'], token_categories=BEKERN_CATEGORIES,
-                                   kern_type=KernTypeExporter.eKern)
+                                   kern_type=Encoding.eKern)
     exporter = Exporter()
     exported_ekern = exporter.export_string(document, export_options)
 
