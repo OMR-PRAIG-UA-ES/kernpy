@@ -4,10 +4,10 @@
 
 Instructions for installing `kernpy` are provided below.
 
-### Install `kernpy` using `pip`
+### Install the last version of `kernpy` using `pip`
 
 ```bash
-pip install kernpy
+pip3 install kernpy --upgrade
 ```
 
 

@@ -363,8 +363,10 @@ kp.graph(document, '/tmp/graph.dot')
 ### Production version:
 Just install the last version of **kernpy** using pip:
 ```shell
-pip3 uninstall kernpy     # Uninstall the previous version before installing the new one
-pip3 install git+https://github.com/OMR-PRAIG-UA-ES/kernpy.git
+pip3 install kernpy
+
+# ensure you have the latest version
+pip3 install kernpy --upgrade 
 ```
 
 > [!NOTE]
