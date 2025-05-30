@@ -10,20 +10,25 @@ authors = [
     { name = "Joan Cerveto Serrano", email = "joan.cerveto@ua.es"}
 ]
 description = "Python Humdrum **kern and **mens utilities"
-readme = "README.md"
+readme = {file = "README.md", content-type = "text/markdown"}
 requires-python = ">=3.9"
+license = {text = "AGPL-3.0-only"}
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
+    "License :: OSI Approved :: GNU Affero General Public License v3"
 ]
 dependencies = [
-   'antlr4-python3-runtime',
-    'Pillow',
-    'requests',
-    'urllib3>=1.26.6',
+    "antlr4-python3-runtime",
+    "Pillow",
+    "requests",
+    "urllib3>=1.26.6"
 ]
 
 [project.urls]
-Homepage = "https://github.com/OMR-PRAIG-UA-ES/kernpy.git"
-Documentation = "https://github.com/OMR-PRAIG-UA-ES/kernpy.git"
-Issues = "https://github.com/OMR-PRAIG-UA-ES/kernpy.git"
+Homepage = "https://github.com/OMR-PRAIG-UA-ES/kernpy"
+Documentation = "https://github.com/OMR-PRAIG-UA-ES/kernpy#readme"
+Issues = "https://github.com/OMR-PRAIG-UA-ES/kernpy/issues"
+
+[tool.hatch.build.targets.wheel]
+include = ["kernpy/**"]
