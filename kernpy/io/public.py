@@ -8,7 +8,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import List, Optional, Any, Union, Tuple, Sequence
 
-from kernpy import KernTypeExporter
+from kernpy import Encoding
 from kernpy.core import (
     Document, Importer, Exporter, ExportOptions, GraphvizExporter,
     generic,
@@ -89,7 +89,7 @@ def dump(document: Document, fp: Union[str, Path], *,
          exclude: [] = None,
          from_measure: int = None,
          to_measure: int = None,
-         tokenizer: KernTypeExporter = None,
+         tokenizer: Encoding = None,
          instruments: [] = None,
          show_measure_numbers: bool = None,
          spine_ids: [int] = None
@@ -104,7 +104,7 @@ def dump(document: Document, fp: Union[str, Path], *,
         exclude (Iterable): The token categories to exclude from the exported file. When None, no token categories will be excluded.
         from_measure (int): The measure to start exporting. When None, the exporter will start from the beginning of the file. The first measure is 1
         to_measure (int): The measure to end exporting. When None, the exporter will end at the end of the file.
-        tokenizer (KernTypeExporter): The type of the **kern file to export.
+        tokenizer (Encoding): The type of the **kern file to export.
         instruments (Iterable): The instruments to export. If None, all the instruments will be exported.
         show_measure_numbers (Bool): Show the measure numbers in the exported file.
         spine_ids (Iterable): The ids of the spines to export. When None, all the spines will be exported. \
@@ -149,7 +149,7 @@ def dumps(document: Document, *,
           exclude: [] = None,
           from_measure: int = None,
           to_measure: int = None,
-          tokenizer: KernTypeExporter = None,
+          tokenizer: Encoding = None,
           instruments: [] = None,
           show_measure_numbers: bool = None,
           spine_ids: [int] = None
@@ -164,7 +164,7 @@ def dumps(document: Document, *,
         exclude (Iterable): The token categories to exclude from the exported file. When None, no token categories will be excluded.
         from_measure (int): The measure to start exporting. When None, the exporter will start from the beginning of the file. The first measure is 1
         to_measure (int): The measure to end exporting. When None, the exporter will end at the end of the file.
-        tokenizer (KernTypeExporter): The type of the **kern file to export.
+        tokenizer (Encoding): The type of the **kern file to export.
         instruments (Iterable): The instruments to export. If None, all the instruments will be exported.
         show_measure_numbers (Bool): Show the measure numbers in the exported file.
         spine_ids (Iterable): The ids of the spines to export. When None, all the spines will be exported. \

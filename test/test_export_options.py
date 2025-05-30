@@ -10,7 +10,7 @@ class TestExportOptions(unittest.TestCase):
         expected_options.token_categories = [c for c in kp.TokenCategory]
         expected_options.from_measure = None
         expected_options.to_measure = None
-        expected_options.kern_type = kp.KernTypeExporter.normalizedKern
+        expected_options.kern_type = kp.Encoding.normalizedKern
         expected_options.instruments = None
         expected_options.show_measure_numbers = False
         expected_options.spine_ids = None

@@ -87,7 +87,7 @@ class ExporterTestCase(unittest.TestCase):
             expected_content = f.read()
 
         doc, _ = kp.read(input_path)
-        real_content = kp.dumps(doc, tokenizer=kp.KernTypeExporter.eKern, include=kp.BEKERN_CATEGORIES)
+        real_content = kp.dumps(doc, tokenizer=kp.Encoding.eKern, include=kp.BEKERN_CATEGORIES)
 
         self.assertEqual(expected_content, real_content,
                          f"File content mismatch: \nExpected:\n{expected_content}\n{40 * '='}\nReal\n{real_content}")
@@ -139,10 +139,10 @@ class ExporterTestCase(unittest.TestCase):
                          f"File content mismatch: \nExpected:\n{expected_content}\n{40 * '='}\nReal\n{real_content}")
 
     def test_exporter_HeaderTokenGenerator_new(self):
-        self._run_HeaderTokenGenerator_new_generalized("**kern", kp.KernTypeExporter.eKern, "**ekern")
-        self._run_HeaderTokenGenerator_new_generalized("**kern", kp.KernTypeExporter.normalizedKern, "**kern")
-        self._run_HeaderTokenGenerator_new_generalized("**kern", kp.KernTypeExporter.bKern, "**bkern")
-        self._run_HeaderTokenGenerator_new_generalized("**kern", kp.KernTypeExporter.bEkern, "**bekern")
+        self._run_HeaderTokenGenerator_new_generalized("**kern", kp.Encoding.eKern, "**ekern")
+        self._run_HeaderTokenGenerator_new_generalized("**kern", kp.Encoding.normalizedKern, "**kern")
+        self._run_HeaderTokenGenerator_new_generalized("**kern", kp.Encoding.bKern, "**bkern")
+        self._run_HeaderTokenGenerator_new_generalized("**kern", kp.Encoding.bEkern, "**bekern")
 
 
 

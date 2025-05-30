@@ -8,7 +8,7 @@ from typing import List, Union, Set
 from kernpy.core import DECORATION_SEPARATOR, Token, TOKEN_SEPARATOR
 
 
-class KernTypeExporter(Enum):  # TODO: Eventually, polymorphism will be used to export different types of kern files
+class Encoding(Enum):  # TODO: Eventually, polymorphism will be used to export different types of kern files
     """
     Options for exporting a kern file.
 
@@ -18,7 +18,7 @@ class KernTypeExporter(Enum):  # TODO: Eventually, polymorphism will be used to 
         >>> doc, _ = kp.load('path/to/file.krn')
         >>>
         >>> # Save the file using the specified encoding
-        >>> exported_content = kp.dumps(tokenizer=kp.KernTypeExporter.normalizedKern)
+        >>> exported_content = kp.dumps(tokenizer=kp.Encoding.normalizedKern)
     """
     eKern = 'ekern'
     normalizedKern = 'kern'
@@ -31,18 +31,18 @@ class KernTypeExporter(Enum):  # TODO: Eventually, polymorphism will be used to 
 
         Returns (str): Prefix of the kern type.
         """
-        if self == KernTypeExporter.eKern:
+        if self == Encoding.eKern:
             return 'e'
-        elif self == KernTypeExporter.normalizedKern:
+        elif self == Encoding.normalizedKern:
             return ''
-        elif self == KernTypeExporter.bKern:
+        elif self == Encoding.bKern:
             return 'b'
-        elif self == KernTypeExporter.bEkern:
+        elif self == Encoding.bEkern:
             return 'be'
         else:
             raise ValueError(f'Unknown kern type: {self}. '
                              f'Supported types are: '
-                             f"{'-'.join([kern_type.name for kern_type in KernTypeExporter.__members__.values()])}")
+                             f"{'-'.join([kern_type.name for kern_type in Encoding.__members__.values()])}")
 
 
 class Tokenizer(ABC):
@@ -225,15 +225,15 @@ class TokenizerFactory:
         if type is None:
             raise ValueError('A tokenization type must be provided. Found None.')
 
-        if type == KernTypeExporter.normalizedKern.value:
+        if type == Encoding.normalizedKern.value:
             return KernTokenizer(token_categories=token_categories)
-        elif type == KernTypeExporter.eKern.value:
+        elif type == Encoding.eKern.value:
             return EkernTokenizer(token_categories=token_categories)
-        elif type == KernTypeExporter.bKern.value:
+        elif type == Encoding.bKern.value:
             return BekernTokenizer(token_categories=token_categories)
-        elif type == KernTypeExporter.bEkern.value:
+        elif type == Encoding.bEkern.value:
             return BkernTokenizer(token_categories=token_categories)
 
         raise ValueError(f"Unknown kern type: {type}. "
                          f"Supported types are: "
-                         f"{'-'.join([kern_type.name for kern_type in KernTypeExporter.__members__.values()])}")
+                         f"{'-'.join([kern_type.name for kern_type in Encoding.__members__.values()])}")

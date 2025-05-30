@@ -7,7 +7,7 @@ import os
 import json
 from typing import List, Optional
 
-from kernpy import ExportOptions, BEKERN_CATEGORIES, Importer, Exporter, Document, KernTypeExporter, read
+from kernpy import ExportOptions, BEKERN_CATEGORIES, Importer, Exporter, Document, Encoding, read
 
 
 # This script creates the Polish dataset from the kern files.
@@ -65,20 +65,20 @@ def download_and_save_image(url, save_path):
         print(f"An error occurred: {e}")
 
 
-def factory_get_kern_type_exporter(kern_type: str) -> KernTypeExporter:
+def factory_get_kern_type_exporter(kern_type: str) -> Encoding:
     """
-    Factory method to get the KernTypeExporter
+    Factory method to get the Encoding
 
     Args:
         kern_type (str): the type of kern exporter. It can be 'krn' or 'ekrn'
 
     Returns:
-        KernTypeExporter: the KernTypeExporter instance
+        Encoding: the Encoding instance
     """
     if kern_type == 'krn':
-        return KernTypeExporter.normalizedKern
+        return Encoding.normalizedKern
     elif kern_type == 'ekrn':
-        return KernTypeExporter.eKern
+        return Encoding.eKern
     else:
         raise Exception(f'Unknown export kern type: {kern_type}')
 

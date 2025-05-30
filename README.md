@@ -88,11 +88,12 @@ kp.dump(document, "newfile_custom.krn",
 ```
 
 - Use `tokenizer` to select how the categories are split. By default, the `normalizedKern` tokenizer is used.
+
 ```python
 import kernpy as kp
 
 kp.dump(document, "newfile_normalized.krn",
-        tokenizer=kp.KernTypeExporter.normalizedKern)  # Default tokenizer
+        tokenizer=kp.Encoding.normalizedKern)  # Default tokenizer
 ```
 Select the proper Humdrum **kern tokenizer:
 
@@ -103,14 +104,15 @@ Select the proper Humdrum **kern tokenizer:
 | kern     | 2.bb-_L      | Traditional Humdrum **kern encoding    |
 | ekern    | 2@.@bb@-·_·L | Extended Humdrum **kern encoding       |
 
-Use the `KernTypeExporter` enum class to select the tokenizer:
+Use the `Encoding` enum class to select the tokenizer:
+
 ```python
 import kernpy as kp
 
-doc, _ = kp.load('resource_dir/legacy/chor048.krn') 
+doc, _ = kp.load('resource_dir/legacy/chor048.krn')
 
-kern_content = kp.dumps(doc, tokenizer=kp.KernTypeExporter.normalizedKern)
-ekern_content = kp.dumps(doc, tokenizer=kp.KernTypeExporter.eKern)
+kern_content = kp.dumps(doc, tokenizer=kp.Encoding.normalizedKern)
+ekern_content = kp.dumps(doc, tokenizer=kp.Encoding.eKern)
 ```
 
 - Use `from_measure` and `to_measure` to select the measures to export. By default, all the measures are exported.
@@ -139,18 +141,19 @@ kp.dump(document, "newfile_no_measure_numbers.krn",
 ```
 
 - Use all the options at the same time.
+
 ```python
 import kernpy as kp
 
 kp.dump(document, "newfile.krn",
-        spine_types=['**kern'],                         # Export only the **kern spines
-        include=kp.BEKERN_CATEGORIES,                   # Token categories to include
-        exclude={kp.TokenCategory.PITCH},               # Token categories to exclude
-        tokenizer=kp.KernTypeExporter.eKern,            # Kern encoding
-        from_measure=1,                                 # First from measure 1
-        to_measure=10,                                  # Last measure exported
-        spine_ids=[0, 1],                               # Export only the first and the second spine
-        show_measure_numbers=False,                     # Do not show measure numbers
+        spine_types=['**kern'],  # Export only the **kern spines
+        include=kp.BEKERN_CATEGORIES,  # Token categories to include
+        exclude={kp.TokenCategory.PITCH},  # Token categories to exclude
+        tokenizer=kp.Encoding.eKern,  # Kern encoding
+        from_measure=1,  # First from measure 1
+        to_measure=10,  # Last measure exported
+        spine_ids=[0, 1],  # Export only the first and the second spine
+        show_measure_numbers=False,  # Do not show measure numbers
         )
 ```
 
@@ -222,7 +225,8 @@ for measure in doc:
     ...
 ```
 
-Exploring the page bounding boxes. 
+Exploring the page bounding boxes.
+
 ```python
 import kernpy as kp
 
@@ -231,23 +235,27 @@ doc, _ = kp.load('kern_having_bounding_boxes.krn')
 
 # Inspect the bounding boxes
 print(doc.page_bounding_boxes)
+
+
 def are_there_bounding_boxes(doc):
-    return len(doc.get_all_tokens(filter_by_categories=[kp.TokenCategory.BOUNDING_BOXES])) > 0
+   return len(doc.get_all_tokens(filter_by_categories=[kp.TokenCategory.BOUNDING_BOXES])) > 0
+
+
 # True
 
 # Iterate over the pages
 for page_label, bounding_box_measure in doc.page_bounding_boxes.items():
-    print(f"Page: {page_label}"
-          f"Bounding box: {bounding_box_measure}"
-          f"from_measure: {bounding_box_measure.from_measure}"
-          f"to_measure+1: {bounding_box_measure.to_measure}")  # TODO: Check bounds
-    kp.dump(doc, f"foo_{page_label}.ekrn",
-            spine_types=['**kern'],
-            token_categories=kp.BEKERN_CATEGORIES,
-            tokenizer=kp.KernTypeExporter.eKern,
-            from_measure=bounding_box_measure.from_measure,
-            to_measure=bounding_box_measure.to_measure - 1  # TODO: Check bounds            
-            )
+   print(f"Page: {page_label}"
+         f"Bounding box: {bounding_box_measure}"
+         f"from_measure: {bounding_box_measure.from_measure}"
+         f"to_measure+1: {bounding_box_measure.to_measure}")  # TODO: Check bounds
+   kp.dump(doc, f"foo_{page_label}.ekrn",
+           spine_types=['**kern'],
+           token_categories=kp.BEKERN_CATEGORIES,
+           tokenizer=kp.Encoding.eKern,
+           from_measure=bounding_box_measure.from_measure,
+           to_measure=bounding_box_measure.to_measure - 1  # TODO: Check bounds            
+           )
 ```
 
 ### Merge different full kern scores
