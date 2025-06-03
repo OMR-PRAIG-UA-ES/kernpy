@@ -1,9 +1,9 @@
 # Python Humdrum **kern and **mens utilities
 
-![License](https://img.shields.io/github/license/kernpy/kernpy?color=blue&style=for-the-badge)
+![![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/agpl-3.0)
 ![Python Version](https://img.shields.io/badge/Python-3.9+-3776AB?logo=python&logoColor=white&style=for-the-badge)
 [![PyPI](https://img.shields.io/pypi/v/kernpy?color=brightgreen&label=PyPI&style=for-the-badge&logo=pypi)](https://pypi.org/project/kernpy/)
-[![Docs](https://img.shields.io/badge/docs-available-blue?style=for-the-badge&logo=readthedocs)](https://kernpy.pages.dev)
+![![Docs](https://img.shields.io/badge/docs-available-blue?style=for-the-badge&logo=readthedocs)](https://kernpy.pages.dev)
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen?style=for-the-badge&logo=pytest)](https://github.com/kernpy/kernpy/actions)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange?style=for-the-badge&logo=github)](CONTRIBUTING.md)
 
