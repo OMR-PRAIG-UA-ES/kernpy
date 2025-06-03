@@ -52,17 +52,73 @@ Only use the specified spines in `spine_types`.
 ```python
 import kernpy as kp
 
+# only export the **kern spines
 kp.dump(document, "newfile_core.krn",
         spine_types=['**kern'])
+
+# only export the **text spines
 kp.dump(document, "newfile_lyrics.krn",
         spine_types=['**text])
+                     
+# only export **kern and **text spines     
 kp.dump(document, "newfile_core_and_lyrics.krn",
         spine_types=['*+text'])
+```
+
+- The categories are hierarchically defined in the `TokenCategory` class.
+See the hierarchy as a tree
+```python
+import kernpy as kp
+
+
+print(kp.TokenCategory.tree())
+```
+Tree:
+```txt
+.
+├── STRUCTURAL
+│   ├── HEADER
+│   └── SPINE_OPERATION
+├── CORE
+│   ├── NOTE_REST
+│   │   ├── DURATION
+│   │   ├── NOTE
+│   │   │   ├── PITCH
+│   │   │   ├── DECORATION
+│   │   │   └── ALTERATION
+│   │   └── REST
+│   ├── CHORD
+│   ├── EMPTY
+│   └── ERROR
+├── SIGNATURES
+│   ├── CLEF
+│   ├── TIME_SIGNATURE
+│   ├── METER_SYMBOL
+│   ├── KEY_SIGNATURE
+│   └── KEY_TOKEN
+├── ENGRAVED_SYMBOLS
+├── OTHER_CONTEXTUAL
+├── BARLINES
+├── COMMENTS
+│   ├── FIELD_COMMENTS
+│   └── LINE_COMMENTS
+├── DYNAMICS
+├── HARMONY
+├── FINGERING
+├── LYRICS
+├── INSTRUMENTS
+├── IMAGE_ANNOTATIONS
+│   ├── BOUNDING_BOXES
+│   └── LINE_BREAK
+├── OTHER
+├── MHXM
+└── ROOT
 ```
 
 - Use `include` for selecting the **kern semantic categories **to use**. The output only contains what is passed. By default, all the categories are included.
 ```python
 import kernpy as kp
+
 
 kp.dump(document, "newfile_only_clefs.krn",
         include={kp.TokenCategory.CLEF})
@@ -85,6 +141,9 @@ import kernpy as kp
 kp.dump(document, "newfile_custom.krn",
         include=kp.BEKERN_CATEGORIES,  # Preloaded set of simple categories
         exclude={kp.TokenCategory.PITCH})
+
+# Inspect the BEKERN preloaded categories
+print(kp.BEKERN_CATEGORIES)
 ```
 
 - Use `tokenizer` to select how the categories are split. By default, the `normalizedKern` tokenizer is used.
@@ -395,32 +454,7 @@ cd tests && python -m pytest
 
 We welcome contributions from the community! If you'd like to contribute to the project, please follow these steps:
 
-1. Fork the Repository from GitHub.
-2. Clone your own fork repository.
-   ```bash
-   git clone ...
-   cd ...
-   ```
-3. Create a Branch:
-4. Create a new branch for your feature or bug fix:
-   ```bash
-   git checkout -b feature/your-feature-name
-    ```
-5. Commit Your Changes:
-Commit your changes with a descriptive message:
-    ```bash
-    git commit -m "feat: add your feature or fix"
-     ```
-
-6. Push to Your Branch:
-Push your changes to your forked repository:
-    ```bash
-    git push origin feature/your-feature-name
-     ```
-
-7. Create a Pull Request:
-Open a pull request to the main repository, describing your changes.
-
+Go to the file [CONTRIBUTING.md](CONTRIBUTING.md) for more information on how to contribute.
 
 ## Citation:
 ```bibtex
