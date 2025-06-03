@@ -1,7 +1,7 @@
 <h1>
     <b>kernpy documentation</b>
 </h1>
-<b>Date:</b> <script>document.write(new Date().toLocaleDateString("en-US", {year: 'numeric', month: 'short', day: '2-digit'}));</script> &nbsp;|&nbsp; <b>Version:</b> 0.1.2
+<b>Date:</b> <script>document.write(new Date().toLocaleDateString("en-US", {year: 'numeric', month: 'short', day: '2-digit'}));</script> &nbsp;
 
 <b>Download documentation:</b> [Zipped HTML](https://github.com/OMR-PRAIG-UA-ES/kernpy/archive/refs/heads/gh-pages.zip)
 
