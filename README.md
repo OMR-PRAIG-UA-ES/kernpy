@@ -1,8 +1,11 @@
 # Python Humdrum **kern and **mens utilities
 
-![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)
-![Python](https://img.shields.io/badge/Python-3.9+-blue)
-[![PyPI version](https://img.shields.io/pypi/v/kernpy.svg)](https://pypi.org/project/kernpy/)
+![License](https://img.shields.io/github/license/kernpy/kernpy?color=blue&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/Python-3.9+-3776AB?logo=python&logoColor=white&style=for-the-badge)
+[![PyPI](https://img.shields.io/pypi/v/kernpy?color=brightgreen&label=PyPI&style=for-the-badge&logo=pypi)](https://pypi.org/project/kernpy/)
+[![Docs](https://img.shields.io/badge/docs-available-blue?style=for-the-badge&logo=readthedocs)](https://kernpy.pages.dev)
+[![Tests](https://img.shields.io/badge/tests-passing-brightgreen?style=for-the-badge&logo=pytest)](https://github.com/kernpy/kernpy/actions)
+[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange?style=for-the-badge&logo=github)](CONTRIBUTING.md)
 
 
 Python package that provides comprehensive tools for working with symbolic modern and mensural notations in Humdrum format. kernpy is a fully open-source project open to contributions.
