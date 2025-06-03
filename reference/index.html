@@ -329,39 +329,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="kernpy">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#kernpy--kern2ekern-convertir-un-solo-archivo-krn-a-ekern" class="md-nav__link">
-    <span class="md-ellipsis">
-      🎯 kern2ekern: Convertir un solo archivo .krn a .ekern:
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#kernpy--ekern2kern-convertir-un-solo-archivo-ekern-a-krn" class="md-nav__link">
-    <span class="md-ellipsis">
-      🎯 ekern2kern: Convertir un solo archivo .ekern a .krn:
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#kernpy--create-fragments" class="md-nav__link">
-    <span class="md-ellipsis">
-      🎯 create fragments
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -6176,39 +6143,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="kernpy">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#kernpy--kern2ekern-convertir-un-solo-archivo-krn-a-ekern" class="md-nav__link">
-    <span class="md-ellipsis">
-      🎯 kern2ekern: Convertir un solo archivo .krn a .ekern:
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#kernpy--ekern2kern-convertir-un-solo-archivo-ekern-a-krn" class="md-nav__link">
-    <span class="md-ellipsis">
-      🎯 ekern2kern: Convertir un solo archivo .ekern a .krn:
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#kernpy--create-fragments" class="md-nav__link">
-    <span class="md-ellipsis">
-      🎯 create fragments
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -11959,150 +11893,10 @@
 
         <h2 id="kernpy--kernpy">kernpy</h2>
 <p>=====</p>
-<p>Python Humdrum kern and mens utilities package.</p>
+<p>Python Humdrum <strong>kern and </strong>mens utilities package.</p>
 <p>Execute the following command to run <strong>kernpy</strong> as a module:</p>
 <pre><code class="language-shell">python -m kernpy --help
 python -m kernpy &lt;command&gt; &lt;options&gt;
-</code></pre>
-<p>Run <code>kernpy</code> from your script:</p>
-<pre><code class="language-python">import kernpy
-
-help(kernpy)
-</code></pre>
-<p>While the package is not published in <code>pip</code>, the <code>kernpy</code> module must be in the root directory.</p>
-<h3 id="kernpy--kern2ekern-convertir-un-solo-archivo-krn-a-ekern">🎯 <strong>kern2ekern</strong>: Convertir un solo archivo .krn a .ekern:</h3>
-<pre><code class="language-bash">python -m kernpy --kern2ekern --input_path &lt;input_file&gt;  &lt;v | --verbose [0-2]&gt;
-</code></pre>
-<p>The command has the following arguments:
-* <strong>input_path</strong>: Ruta del archivo .krn a convertir.
-* <strong>output_path</strong>: Ruta del archivo .ekern a generar (opcional). Si no se especifica, se generará en la misma ubicación.
-* <strong>-r</strong>: Recursivo (opcional).
-* <strong>--verbose[0-2]</strong>: Nivel de verbosidad (opcional).</p>
-<p>📌 Basic usage running <strong>kernpy</strong> as a module:</p>
-<pre><code class="language-shell">python -m kernpy --input_path /my/path/to/file.krn # New ekern generated in /my/path/to/file.ekern
-</code></pre>
-<p>📌 Generate an <em>ekrn</em> file in specific location running <strong>kernpy</strong> as a module:</p>
-<pre><code class="language-shell">python -m kernpy --input_path /my/path/to/file.krn --output_path /new/output.ekern
-</code></pre>
-<p>📌 Converting all the .krn files in a directory to .ekern files running <strong>kernpy</strong> as a module:
-* Every .krn file in the directory will be converted to .ekern in the same location.
-* Using, at least, one additional directory level is required.</p>
-<pre><code>root
-├─ kern-folder
-│   ├── 1.krn
-│   ├── 2.krn
-│   └── 3.krn
-├── more-kerns
-│   ├── 1.krn
-│   ├── ...
-</code></pre>
-<p>Run:</p>
-<pre><code class="language-shell">python -m kernpy --input_path /my/path/to/directory/ -r
-</code></pre>
-<p>✏️ This function is also available as a python function:</p>
-<pre><code class="language-python"># converter.py
-from kernpy import kern_to_ekern
-
-kern_to_ekern('/my/path/to/input.krn', '/to/my/output.ekrn')
-
-# Many files
-files = ['file1.krn', 'file2.krn', 'file3.krn']
-[kern_to_ekern(f) for f in files]
-
-# This function raises an exception if the conversion fails.
-# Handle the errors using try-except statement if many files are going to be converted in series.
-</code></pre>
-<hr />
-<h3 id="kernpy--ekern2kern-convertir-un-solo-archivo-ekern-a-krn">🎯 <strong>ekern2kern</strong>: Convertir un solo archivo .ekern a .krn:</h3>
-<pre><code class="language-bash">python -m kernpy --ekern2kern --input_path &lt;input_file&gt;  &lt;--verbose [0-2]&gt;
-</code></pre>
-<p>The command has the following arguments:
-* <strong>input_path</strong>: Ruta del archivo .ekern a convertir.
-* <strong>output_path</strong>: Ruta del archivo .krn a generar (opcional). Si no se especifica, se generará en la misma ubicación.
-* <strong>-r</strong>: Recursivo (opcional).
-* <strong>--verbose[0-2]</strong>: Nivel de verbosidad (opcional).</p>
-<ul>
-<li>Basic usage running <strong>kernpy</strong> as a module:</li>
-</ul>
-<pre><code class="language-shell">python -m kernpy --input_path /my/path/to/file.ekern # New krn generated in /my/path/to/file.krn
-</code></pre>
-<p>📌 Generate a <em>krn</em> file in specific location running <strong>kernpy</strong> as a module:</p>
-<pre><code class="language-shell">python -m kernpy --input_path /my/path/to/file.ekern --output_path /new/output.krn
-</code></pre>
-<p>📌 Converting <strong>all</strong> the .ekern files in a directory to .krn files running <strong>kernpy</strong> as a module:</p>
-<ul>
-<li>Every .ekrn file in the directory will be converted to .krn in the same location.</li>
-<li>Using, at least, one additional directory level is required.</li>
-</ul>
-<pre><code>root
-├─ ekern-folder
-│   ├── 1.ekrn
-│   ├── 2.ekrn
-│   └── 3.ekrn
-├── more-ekerns
-│   ├── 1.ekrn
-│   ├── ...
-</code></pre>
-<p>Run:</p>
-<pre><code class="language-shell">python -m kernpy --input_path /my/path/to/directory/ -r
-</code></pre>
-<p>✏️ This function is also available as a python function:</p>
-<pre><code class="language-python"># converter.py
-from kernpy import ekern_to_krn
-
-# Only one file
-ekern_to_krn('/my/path/to/input.ekrn', '/to/my/output.krn')
-
-# Many files
-files = ['file1.ekrn', 'file2.ekrn', 'file3.ekrn']
-[ekern_to_krn(f) for f in files]
-
-# This function raises an exception if the conversion fails.
-# Handle the errors using try-except statement if many files are going to be converted in series.
-</code></pre>
-<hr />
-<h3 id="kernpy--create-fragments">🎯 <strong>create fragments</strong></h3>
-<p>Generate new valid <em>kern</em> files from an original <em>kern</em> file. Every new fragment will be a subset of the original file.</p>
-<p>Explore the documentation website for more information about the parameters.</p>
-<p>Use:
-- <strong>create_fragments_from_kern</strong> to generate using always the same measure length.
-- <strong>create_fragments_from_directory</strong> to generate using a Gaussian distribution for the measure length. Static measure is also available if the standard deviation is set to 0.</p>
-<p>📌 Create new scores from one original <em>kern</em> directory running <strong>kernpy</strong> as a module:</p>
-<pre><code class="language-shell">python -m kernpy --generate_fragments --input_directory /from/my/kerns --output_directory /to/my/fragments --log_file log.csv  --verbose 2 --mean 4.2 --std_dev 1.5 --offset 1 --num_processes 12
-</code></pre>
-<p>✏️ Create new scores from one original <em>kern</em> file:</p>
-<pre><code class="language-python"># generator.py
-from kernpy import create_fragments_from_kern
-
-# View docs:
-help(create_fragments_from_kern)
-
-create_fragments_from_kern('/my/path/to/input.krn', '/to/my/output_dir/',
-                           measure_length=4, offset=1,
-                           log_file='/dev/null')
-</code></pre>
-<p>✏️ Create new scores from one original <em>kern</em> directory:
-- Using, at least, one additional directory level is required.</p>
-<pre><code>root
-├─ kern-folder
-│   ├── 1.krn
-│   ├── 2.krn
-│   └── 3.krn
-├── more-kerns
-│   ├── 1.krn
-│   ├── ...
-</code></pre>
-<p>Run:</p>
-<pre><code class="language-python"># generator.py
-from kernpy import create_fragments_from_directory
-
-# View docs:
-help(create_fragments_from_directory)
-
-create_fragments_from_directory('/my/path/to/input_dir/', '/to/my/output_dir/',
-                                mean=4.1, std_dev=0.2, offset=2,
-                                log_file='/logs/fragments.csv',
-                                num_processes=12)
 </code></pre>
 
 
