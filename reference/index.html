@@ -21111,7 +21111,7 @@ Args:
 <h3 id="kernpy.Encoding--load-a-file">Load a file</h3>
 <p>doc, _ = kp.load('path/to/file.krn')</p>
 <h3 id="kernpy.Encoding--save-the-file-using-the-specified-encoding">Save the file using the specified encoding</h3>
-<p>exported_content = kp.dumps(tokenizer=kp.Encoding.normalizedKern)</p>
+<p>exported_content = kp.dumps(encoding=kp.Encoding.normalizedKern)</p>
 </blockquote>
 </blockquote>
 </blockquote>
@@ -21162,7 +21162,7 @@ Args:
 <span class="sd">        &gt;&gt;&gt; doc, _ = kp.load(&#39;path/to/file.krn&#39;)</span>
 <span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">        &gt;&gt;&gt; # Save the file using the specified encoding</span>
-<span class="sd">        &gt;&gt;&gt; exported_content = kp.dumps(tokenizer=kp.Encoding.normalizedKern)</span>
+<span class="sd">        &gt;&gt;&gt; exported_content = kp.dumps(encoding=kp.Encoding.normalizedKern)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">eKern</span> <span class="o">=</span> <span class="s1">&#39;ekern&#39;</span>
     <span class="n">normalizedKern</span> <span class="o">=</span> <span class="s1">&#39;kern&#39;</span>
@@ -24274,7 +24274,7 @@ None</p>
 
 
         <p>HeaderTokenGenerator class.</p>
-<p>This class is used to translate the HeaderTokens to the specific tokenizer format.</p>
+<p>This class is used to translate the HeaderTokens to the specific encoding format.</p>
 
               <details class="quote">
                 <summary>Source code in <code>kernpy/core/exporter.py</code></summary>
@@ -24308,7 +24308,7 @@ None</p>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    HeaderTokenGenerator class.</span>
 
-<span class="sd">    This class is used to translate the HeaderTokens to the specific tokenizer format.</span>
+<span class="sd">    This class is used to translate the HeaderTokens to the specific encoding format.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">new</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="n">HeaderToken</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="n">Encoding</span><span class="p">):</span>
@@ -24317,7 +24317,7 @@ None</p>
 
 <span class="sd">        Args:</span>
 <span class="sd">            token (HeaderToken): The HeaderToken to be translated.</span>
-<span class="sd">            type (Encoding): The tokenizer to be used.</span>
+<span class="sd">            type (Encoding): The encoding to be used.</span>
 
 <span class="sd">        Examples:</span>
 <span class="sd">            &gt;&gt;&gt; header = HeaderToken(&#39;**kern&#39;, 0)</span>
@@ -24396,7 +24396,7 @@ None</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The tokenizer to be used.</p>
+                <p>The encoding to be used.</p>
               </div>
             </td>
             <td>
@@ -24445,7 +24445,7 @@ None</p>
 
 <span class="sd">    Args:</span>
 <span class="sd">        token (HeaderToken): The HeaderToken to be translated.</span>
-<span class="sd">        type (Encoding): The tokenizer to be used.</span>
+<span class="sd">        type (Encoding): The encoding to be used.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; header = HeaderToken(&#39;**kern&#39;, 0)</span>
@@ -35074,9 +35074,7 @@ Examples:
 
             <details class="quote">
               <summary>Source code in <code>kernpy/io/public.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">235</span>
-<span class="normal">236</span>
-<span class="normal">237</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">237</span>
 <span class="normal">238</span>
 <span class="normal">239</span>
 <span class="normal">240</span>
@@ -35111,7 +35109,9 @@ Examples:
 <span class="normal">269</span>
 <span class="normal">270</span>
 <span class="normal">271</span>
-<span class="normal">272</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">concat</span><span class="p">(</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">concat</span><span class="p">(</span>
         <span class="n">contents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">separator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
@@ -35732,7 +35732,7 @@ http requests are made to download the images.</p>
 
 
 <h2 id="kernpy.dump" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">dump</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">spine_types</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">from_measure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">to_measure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tokenizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">instruments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show_measure_numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">spine_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">dump</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">spine_types</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">from_measure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">to_measure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">instruments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show_measure_numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">spine_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 </h2>
 
@@ -35851,7 +35851,7 @@ http requests are made to download the images.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>tokenizer</code></td>
+            <td><code>encoding</code></td>
             <td>
                   <code><a class="autorefs autorefs-internal" title="kernpy.Encoding" href="#kernpy.Encoding">Encoding</a></code>
             </td>
@@ -35944,9 +35944,7 @@ http requests are made to download the images.</p>
 
             <details class="quote">
               <summary>Source code in <code>kernpy/io/public.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 86</span>
-<span class="normal"> 87</span>
-<span class="normal"> 88</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 88</span>
 <span class="normal"> 89</span>
 <span class="normal"> 90</span>
 <span class="normal"> 91</span>
@@ -36001,14 +35999,16 @@ http requests are made to download the images.</p>
 <span class="normal">140</span>
 <span class="normal">141</span>
 <span class="normal">142</span>
-<span class="normal">143</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dump</span><span class="p">(</span><span class="n">document</span><span class="p">:</span> <span class="n">Document</span><span class="p">,</span> <span class="n">fp</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span>
-         <span class="n">spine_types</span><span class="p">:</span> <span class="p">[]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-         <span class="n">include</span><span class="p">:</span> <span class="p">[]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-         <span class="n">exclude</span><span class="p">:</span> <span class="p">[]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dump</span><span class="p">(</span><span class="n">document</span><span class="p">:</span> <span class="n">Document</span><span class="p">,</span> <span class="n">fp</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span>
+         <span class="n">spine_types</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">include</span><span class="p">:</span> <span class="p">[</span><span class="n">TokenCategory</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">exclude</span><span class="p">:</span> <span class="p">[</span><span class="n">TokenCategory</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
          <span class="n">from_measure</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
          <span class="n">to_measure</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-         <span class="n">tokenizer</span><span class="p">:</span> <span class="n">Encoding</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-         <span class="n">instruments</span><span class="p">:</span> <span class="p">[]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">encoding</span><span class="p">:</span> <span class="n">Encoding</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">instruments</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
          <span class="n">show_measure_numbers</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
          <span class="n">spine_ids</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
          <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -36022,7 +36022,7 @@ http requests are made to download the images.</p>
 <span class="sd">        exclude (Iterable): The token categories to exclude from the exported file. When None, no token categories will be excluded.</span>
 <span class="sd">        from_measure (int): The measure to start exporting. When None, the exporter will start from the beginning of the file. The first measure is 1</span>
 <span class="sd">        to_measure (int): The measure to end exporting. When None, the exporter will end at the end of the file.</span>
-<span class="sd">        tokenizer (Encoding): The type of the **kern file to export.</span>
+<span class="sd">        encoding (Encoding): The type of the **kern file to export.</span>
 <span class="sd">        instruments (Iterable): The instruments to export. If None, all the instruments will be exported.</span>
 <span class="sd">        show_measure_numbers (Bool): Show the measure numbers in the exported file.</span>
 <span class="sd">        spine_ids (Iterable): The ids of the spines to export. When None, all the spines will be exported. \</span>
@@ -36048,7 +36048,7 @@ http requests are made to download the images.</p>
         <span class="n">exclude</span><span class="o">=</span><span class="n">exclude</span><span class="p">,</span>
         <span class="n">from_measure</span><span class="o">=</span><span class="n">from_measure</span><span class="p">,</span>
         <span class="n">to_measure</span><span class="o">=</span><span class="n">to_measure</span><span class="p">,</span>
-        <span class="n">kern_type</span><span class="o">=</span><span class="n">tokenizer</span><span class="p">,</span>
+        <span class="n">kern_type</span><span class="o">=</span><span class="n">encoding</span><span class="p">,</span>
         <span class="n">instruments</span><span class="o">=</span><span class="n">instruments</span><span class="p">,</span>
         <span class="n">show_measure_numbers</span><span class="o">=</span><span class="n">show_measure_numbers</span><span class="p">,</span>
         <span class="n">spine_ids</span><span class="o">=</span><span class="n">spine_ids</span>
@@ -36069,7 +36069,7 @@ http requests are made to download the images.</p>
 
 
 <h2 id="kernpy.dumps" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">dumps</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">spine_types</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">from_measure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">to_measure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tokenizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">instruments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show_measure_numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">spine_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">dumps</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">spine_types</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">from_measure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">to_measure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">instruments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show_measure_numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">spine_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 </h2>
 
@@ -36084,7 +36084,7 @@ http requests are made to download the images.</p>
     exclude (Iterable): The token categories to exclude from the exported file. When None, no token categories will be excluded.
     from_measure (int): The measure to start exporting. When None, the exporter will start from the beginning of the file. The first measure is 1
     to_measure (int): The measure to end exporting. When None, the exporter will end at the end of the file.
-    tokenizer (Encoding): The type of the **kern file to export.
+    encoding (Encoding): The type of the **kern file to export.
     instruments (Iterable): The instruments to export. If None, all the instruments will be exported.
     show_measure_numbers (Bool): Show the measure numbers in the exported file.
     spine_ids (Iterable): The ids of the spines to export. When None, all the spines will be exported.             Spines ids start from 0, and they are increased by 1 for each spine to the right.
@@ -36111,9 +36111,7 @@ Examples:
 
             <details class="quote">
               <summary>Source code in <code>kernpy/io/public.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">148</span>
 <span class="normal">149</span>
 <span class="normal">150</span>
 <span class="normal">151</span>
@@ -36166,14 +36164,16 @@ Examples:
 <span class="normal">198</span>
 <span class="normal">199</span>
 <span class="normal">200</span>
-<span class="normal">201</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dumps</span><span class="p">(</span><span class="n">document</span><span class="p">:</span> <span class="n">Document</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
-          <span class="n">spine_types</span><span class="p">:</span> <span class="p">[]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-          <span class="n">include</span><span class="p">:</span> <span class="p">[]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-          <span class="n">exclude</span><span class="p">:</span> <span class="p">[]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dumps</span><span class="p">(</span><span class="n">document</span><span class="p">:</span> <span class="n">Document</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+          <span class="n">spine_types</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+          <span class="n">include</span><span class="p">:</span> <span class="p">[</span><span class="n">TokenCategory</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+          <span class="n">exclude</span><span class="p">:</span> <span class="p">[</span><span class="n">TokenCategory</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
           <span class="n">from_measure</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
           <span class="n">to_measure</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-          <span class="n">tokenizer</span><span class="p">:</span> <span class="n">Encoding</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-          <span class="n">instruments</span><span class="p">:</span> <span class="p">[]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+          <span class="n">encoding</span><span class="p">:</span> <span class="n">Encoding</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+          <span class="n">instruments</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
           <span class="n">show_measure_numbers</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
           <span class="n">spine_ids</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
           <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -36187,7 +36187,7 @@ Examples:
 <span class="sd">        exclude (Iterable): The token categories to exclude from the exported file. When None, no token categories will be excluded.</span>
 <span class="sd">        from_measure (int): The measure to start exporting. When None, the exporter will start from the beginning of the file. The first measure is 1</span>
 <span class="sd">        to_measure (int): The measure to end exporting. When None, the exporter will end at the end of the file.</span>
-<span class="sd">        tokenizer (Encoding): The type of the **kern file to export.</span>
+<span class="sd">        encoding (Encoding): The type of the **kern file to export.</span>
 <span class="sd">        instruments (Iterable): The instruments to export. If None, all the instruments will be exported.</span>
 <span class="sd">        show_measure_numbers (Bool): Show the measure numbers in the exported file.</span>
 <span class="sd">        spine_ids (Iterable): The ids of the spines to export. When None, all the spines will be exported. \</span>
@@ -36212,7 +36212,7 @@ Examples:
         <span class="n">exclude</span><span class="o">=</span><span class="n">exclude</span><span class="p">,</span>
         <span class="n">from_measure</span><span class="o">=</span><span class="n">from_measure</span><span class="p">,</span>
         <span class="n">to_measure</span><span class="o">=</span><span class="n">to_measure</span><span class="p">,</span>
-        <span class="n">kern_type</span><span class="o">=</span><span class="n">tokenizer</span><span class="p">,</span>
+        <span class="n">kern_type</span><span class="o">=</span><span class="n">encoding</span><span class="p">,</span>
         <span class="n">instruments</span><span class="o">=</span><span class="n">instruments</span><span class="p">,</span>
         <span class="n">show_measure_numbers</span><span class="o">=</span><span class="n">show_measure_numbers</span><span class="p">,</span>
         <span class="n">spine_ids</span><span class="o">=</span><span class="n">spine_ids</span>
@@ -36865,9 +36865,7 @@ with open('path/to/file.krn', 'w') as file:
 
             <details class="quote">
               <summary>Source code in <code>kernpy/io/public.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">204</span>
-<span class="normal">205</span>
-<span class="normal">206</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">206</span>
 <span class="normal">207</span>
 <span class="normal">208</span>
 <span class="normal">209</span>
@@ -36893,7 +36891,9 @@ with open('path/to/file.krn', 'w') as file:
 <span class="normal">229</span>
 <span class="normal">230</span>
 <span class="normal">231</span>
-<span class="normal">232</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">graph</span><span class="p">(</span><span class="n">document</span><span class="p">:</span> <span class="n">Document</span><span class="p">,</span> <span class="n">fp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">graph</span><span class="p">(</span><span class="n">document</span><span class="p">:</span> <span class="n">Document</span><span class="p">,</span> <span class="n">fp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a graph representation of a Document object using Graphviz. Save the graph as a .dot file or indicate the\</span>
 <span class="sd">     output file path or stream. If the output file path is None, the function will return the graphviz content as a\</span>
@@ -37235,9 +37235,7 @@ for krn_file in krn_files:
 
             <details class="quote">
               <summary>Source code in <code>kernpy/io/public.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">20</span>
 <span class="normal">21</span>
 <span class="normal">22</span>
 <span class="normal">23</span>
@@ -37266,7 +37264,9 @@ for krn_file in krn_files:
 <span class="normal">46</span>
 <span class="normal">47</span>
 <span class="normal">48</span>
-<span class="normal">49</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="n">fp</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">raise_on_errors</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">Document</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="n">fp</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">raise_on_errors</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">Document</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load a Document object from a Humdrum **kern file-like object.</span>
 
@@ -37348,9 +37348,7 @@ Examples:
 
             <details class="quote">
               <summary>Source code in <code>kernpy/io/public.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">54</span>
 <span class="normal">55</span>
 <span class="normal">56</span>
 <span class="normal">57</span>
@@ -37379,7 +37377,9 @@ Examples:
 <span class="normal">80</span>
 <span class="normal">81</span>
 <span class="normal">82</span>
-<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">loads</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">raise_on_errors</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">Document</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">loads</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">raise_on_errors</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">Document</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load a Document object from a string encoded in Humdrum **kern.</span>
 
@@ -37473,9 +37473,7 @@ Examples:
 
             <details class="quote">
               <summary>Source code in <code>kernpy/io/public.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">275</span>
-<span class="normal">276</span>
-<span class="normal">277</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">277</span>
 <span class="normal">278</span>
 <span class="normal">279</span>
 <span class="normal">280</span>
@@ -37511,7 +37509,9 @@ Examples:
 <span class="normal">310</span>
 <span class="normal">311</span>
 <span class="normal">312</span>
-<span class="normal">313</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span>
         <span class="n">contents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">raise_on_errors</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -37764,9 +37764,7 @@ Examples:
 
             <details class="quote">
               <summary>Source code in <code>kernpy/io/public.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">316</span>
-<span class="normal">317</span>
-<span class="normal">318</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">318</span>
 <span class="normal">319</span>
 <span class="normal">320</span>
 <span class="normal">321</span>
@@ -37799,7 +37797,9 @@ Examples:
 <span class="normal">348</span>
 <span class="normal">349</span>
 <span class="normal">350</span>
-<span class="normal">351</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">spine_types</span><span class="p">(</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">spine_types</span><span class="p">(</span>
         <span class="n">document</span><span class="p">:</span> <span class="n">Document</span><span class="p">,</span>
         <span class="n">headers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
@@ -49665,7 +49665,7 @@ Args:
 <h3 id="kernpy.core.Encoding--load-a-file">Load a file</h3>
 <p>doc, _ = kp.load('path/to/file.krn')</p>
 <h3 id="kernpy.core.Encoding--save-the-file-using-the-specified-encoding">Save the file using the specified encoding</h3>
-<p>exported_content = kp.dumps(tokenizer=kp.Encoding.normalizedKern)</p>
+<p>exported_content = kp.dumps(encoding=kp.Encoding.normalizedKern)</p>
 </blockquote>
 </blockquote>
 </blockquote>
@@ -49716,7 +49716,7 @@ Args:
 <span class="sd">        &gt;&gt;&gt; doc, _ = kp.load(&#39;path/to/file.krn&#39;)</span>
 <span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">        &gt;&gt;&gt; # Save the file using the specified encoding</span>
-<span class="sd">        &gt;&gt;&gt; exported_content = kp.dumps(tokenizer=kp.Encoding.normalizedKern)</span>
+<span class="sd">        &gt;&gt;&gt; exported_content = kp.dumps(encoding=kp.Encoding.normalizedKern)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">eKern</span> <span class="o">=</span> <span class="s1">&#39;ekern&#39;</span>
     <span class="n">normalizedKern</span> <span class="o">=</span> <span class="s1">&#39;kern&#39;</span>
@@ -55017,7 +55017,7 @@ Usually these are comments starting with <code>!!!</code>.</p>
 
 
         <p>HeaderTokenGenerator class.</p>
-<p>This class is used to translate the HeaderTokens to the specific tokenizer format.</p>
+<p>This class is used to translate the HeaderTokens to the specific encoding format.</p>
 
               <details class="quote">
                 <summary>Source code in <code>kernpy/core/exporter.py</code></summary>
@@ -55051,7 +55051,7 @@ Usually these are comments starting with <code>!!!</code>.</p>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    HeaderTokenGenerator class.</span>
 
-<span class="sd">    This class is used to translate the HeaderTokens to the specific tokenizer format.</span>
+<span class="sd">    This class is used to translate the HeaderTokens to the specific encoding format.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">new</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="n">HeaderToken</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="n">Encoding</span><span class="p">):</span>
@@ -55060,7 +55060,7 @@ Usually these are comments starting with <code>!!!</code>.</p>
 
 <span class="sd">        Args:</span>
 <span class="sd">            token (HeaderToken): The HeaderToken to be translated.</span>
-<span class="sd">            type (Encoding): The tokenizer to be used.</span>
+<span class="sd">            type (Encoding): The encoding to be used.</span>
 
 <span class="sd">        Examples:</span>
 <span class="sd">            &gt;&gt;&gt; header = HeaderToken(&#39;**kern&#39;, 0)</span>
@@ -55139,7 +55139,7 @@ Usually these are comments starting with <code>!!!</code>.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The tokenizer to be used.</p>
+                <p>The encoding to be used.</p>
               </div>
             </td>
             <td>
@@ -55188,7 +55188,7 @@ Usually these are comments starting with <code>!!!</code>.</p>
 
 <span class="sd">    Args:</span>
 <span class="sd">        token (HeaderToken): The HeaderToken to be translated.</span>
-<span class="sd">        type (Encoding): The tokenizer to be used.</span>
+<span class="sd">        type (Encoding): The encoding to be used.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; header = HeaderToken(&#39;**kern&#39;, 0)</span>

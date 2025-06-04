@@ -674,14 +674,14 @@ kp.dump(document, &quot;newfile_custom.krn&quot;,
         exclude={kp.TokenCategory.PITCH})
 </code></pre>
 <ul>
-<li>Use <code>tokenizer</code> to select how the categories are split. By default, the <code>normalizedKern</code> tokenizer is used.</li>
+<li>Use <code>encoding</code> to select how the categories are split. By default, the <code>normalizedKern</code> encoding is used.</li>
 </ul>
 <pre><code class="language-python">import kernpy as kp
 
 kp.dump(document, &quot;newfile_normalized.krn&quot;,
-        tokenizer=kp.Encoding.normalizedKern)  # Default tokenizer
+        encoding=kp.Encoding.normalizedKern)  # Default encoding
 </code></pre>
-<p>Select the proper Humdrum **kern tokenizer:</p>
+<p>Select the proper Humdrum **kern encoding:</p>
 <p><code>kernpy</code> provides different tokenizers to export the content each symbol in different formats.</p>
 <table>
 <thead>
@@ -704,13 +704,13 @@ kp.dump(document, &quot;newfile_normalized.krn&quot;,
 </tr>
 </tbody>
 </table>
-<p>Use the <code>Encoding</code> enum class to select the tokenizer:</p>
+<p>Use the <code>Encoding</code> enum class to select the encoding:</p>
 <pre><code class="language-python">import kernpy as kp
 
 doc, _ = kp.load('resource_dir/legacy/chor048.krn')
 
-kern_content = kp.dumps(doc, tokenizer=kp.Encoding.normalizedKern)
-ekern_content = kp.dumps(doc, tokenizer=kp.Encoding.eKern)
+kern_content = kp.dumps(doc, encoding=kp.Encoding.normalizedKern)
+ekern_content = kp.dumps(doc, encoding=kp.Encoding.eKern)
 </code></pre>
 <ul>
 <li>Use <code>from_measure</code> and <code>to_measure</code> to select the measures to export. By default, all the measures are exported.</li>
@@ -746,7 +746,7 @@ kp.dump(document, &quot;newfile.krn&quot;,
         spine_types=['**kern'],  # Export only the **kern spines
         include=kp.BEKERN_CATEGORIES,  # Token categories to include
         exclude={kp.TokenCategory.PITCH},  # Token categories to exclude
-        tokenizer=kp.Encoding.eKern,  # Kern encoding
+        encoding=kp.Encoding.eKern,  # Kern encoding
         from_measure=1,  # First from measure 1
         to_measure=10,  # Last measure exported
         spine_ids=[0, 1],  # Export only the first and the second spine
@@ -835,7 +835,7 @@ for page_label, bounding_box_measure in doc.page_bounding_boxes.items():
     kp.dump(doc, f&quot;foo_{page_label}.ekrn&quot;,
             spine_types=['**kern'],
             token_categories=kp.BEKERN_CATEGORIES,
-            tokenizer=kp.Encoding.eKern,
+            encoding=kp.Encoding.eKern,
             from_measure=bounding_box_measure.from_measure,
             to_measure=bounding_box_measure.to_measure - 1  # TODO: Check bounds            
             )
