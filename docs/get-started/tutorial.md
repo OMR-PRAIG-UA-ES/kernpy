@@ -117,15 +117,15 @@ kp.dump(document, "newfile_custom.krn",
         exclude={kp.TokenCategory.PITCH})
 ```
 
-- Use `tokenizer` to select how the categories are split. By default, the `normalizedKern` tokenizer is used.
+- Use `encoding` to select how the categories are split. By default, the `normalizedKern` encoding is used.
 
 ```python
 import kernpy as kp
 
 kp.dump(document, "newfile_normalized.krn",
-        tokenizer=kp.Encoding.normalizedKern)  # Default tokenizer
+        encoding=kp.Encoding.normalizedKern)  # Default encoding
 ```
-Select the proper Humdrum **kern tokenizer:
+Select the proper Humdrum **kern encoding:
 
 `kernpy` provides different tokenizers to export the content each symbol in different formats.
 
@@ -134,15 +134,15 @@ Select the proper Humdrum **kern tokenizer:
 | kern     | 2.bb-_L      | Traditional Humdrum **kern encoding    |
 | ekern    | 2@.@bb@-·_·L | Extended Humdrum **kern encoding       |
 
-Use the `Encoding` enum class to select the tokenizer:
+Use the `Encoding` enum class to select the encoding:
 
 ```python
 import kernpy as kp
 
 doc, _ = kp.load('resource_dir/legacy/chor048.krn')
 
-kern_content = kp.dumps(doc, tokenizer=kp.Encoding.normalizedKern)
-ekern_content = kp.dumps(doc, tokenizer=kp.Encoding.eKern)
+kern_content = kp.dumps(doc, encoding=kp.Encoding.normalizedKern)
+ekern_content = kp.dumps(doc, encoding=kp.Encoding.eKern)
 ```
 
 - Use `from_measure` and `to_measure` to select the measures to export. By default, all the measures are exported.
@@ -179,7 +179,7 @@ kp.dump(document, "newfile.krn",
         spine_types=['**kern'],  # Export only the **kern spines
         include=kp.BEKERN_CATEGORIES,  # Token categories to include
         exclude={kp.TokenCategory.PITCH},  # Token categories to exclude
-        tokenizer=kp.Encoding.eKern,  # Kern encoding
+        encoding=kp.Encoding.eKern,  # Kern encoding
         from_measure=1,  # First from measure 1
         to_measure=10,  # Last measure exported
         spine_ids=[0, 1],  # Export only the first and the second spine
@@ -282,7 +282,7 @@ for page_label, bounding_box_measure in doc.page_bounding_boxes.items():
     kp.dump(doc, f"foo_{page_label}.ekrn",
             spine_types=['**kern'],
             token_categories=kp.BEKERN_CATEGORIES,
-            tokenizer=kp.Encoding.eKern,
+            encoding=kp.Encoding.eKern,
             from_measure=bounding_box_measure.from_measure,
             to_measure=bounding_box_measure.to_measure - 1  # TODO: Check bounds            
             )

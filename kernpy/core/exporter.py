@@ -153,7 +153,7 @@ class HeaderTokenGenerator:
     """
     HeaderTokenGenerator class.
 
-    This class is used to translate the HeaderTokens to the specific tokenizer format.
+    This class is used to translate the HeaderTokens to the specific encoding format.
     """
     @classmethod
     def new(cls, *, token: HeaderToken, type: Encoding):
@@ -162,7 +162,7 @@ class HeaderTokenGenerator:
 
         Args:
             token (HeaderToken): The HeaderToken to be translated.
-            type (Encoding): The tokenizer to be used.
+            type (Encoding): The encoding to be used.
 
         Examples:
             >>> header = HeaderToken('**kern', 0)

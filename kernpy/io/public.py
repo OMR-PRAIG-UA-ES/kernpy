@@ -12,7 +12,9 @@ from kernpy import Encoding
 from kernpy.core import (
     Document, Importer, Exporter, ExportOptions, GraphvizExporter,
     generic,
-    TokenCategoryHierarchyMapper)
+    TokenCategoryHierarchyMapper,
+    TokenCategory,
+)
 
 
 def load(fp: Union[str, Path], *, raise_on_errors: Optional[bool] = False, **kwargs) -> (Document, List[str]):
@@ -84,13 +86,13 @@ def loads(s, *, raise_on_errors: Optional[bool] = False, **kwargs) -> (Document,
 
 
 def dump(document: Document, fp: Union[str, Path], *,
-         spine_types: [] = None,
-         include: [] = None,
-         exclude: [] = None,
+         spine_types: [str] = None,
+         include: [TokenCategory] = None,
+         exclude: [TokenCategory] = None,
          from_measure: int = None,
          to_measure: int = None,
-         tokenizer: Encoding = None,
-         instruments: [] = None,
+         encoding: Encoding = None,
+         instruments: [str] = None,
          show_measure_numbers: bool = None,
          spine_ids: [int] = None
          ) -> None:
@@ -104,7 +106,7 @@ def dump(document: Document, fp: Union[str, Path], *,
         exclude (Iterable): The token categories to exclude from the exported file. When None, no token categories will be excluded.
         from_measure (int): The measure to start exporting. When None, the exporter will start from the beginning of the file. The first measure is 1
         to_measure (int): The measure to end exporting. When None, the exporter will end at the end of the file.
-        tokenizer (Encoding): The type of the **kern file to export.
+        encoding (Encoding): The type of the **kern file to export.
         instruments (Iterable): The instruments to export. If None, all the instruments will be exported.
         show_measure_numbers (Bool): Show the measure numbers in the exported file.
         spine_ids (Iterable): The ids of the spines to export. When None, all the spines will be exported. \
@@ -130,7 +132,7 @@ def dump(document: Document, fp: Union[str, Path], *,
         exclude=exclude,
         from_measure=from_measure,
         to_measure=to_measure,
-        kern_type=tokenizer,
+        kern_type=encoding,
         instruments=instruments,
         show_measure_numbers=show_measure_numbers,
         spine_ids=spine_ids
@@ -144,13 +146,13 @@ def dump(document: Document, fp: Union[str, Path], *,
 
 
 def dumps(document: Document, *,
-          spine_types: [] = None,
-          include: [] = None,
-          exclude: [] = None,
+          spine_types: [str] = None,
+          include: [TokenCategory] = None,
+          exclude: [TokenCategory] = None,
           from_measure: int = None,
           to_measure: int = None,
-          tokenizer: Encoding = None,
-          instruments: [] = None,
+          encoding: Encoding = None,
+          instruments: [str] = None,
           show_measure_numbers: bool = None,
           spine_ids: [int] = None
           ) -> str:
@@ -164,7 +166,7 @@ def dumps(document: Document, *,
         exclude (Iterable): The token categories to exclude from the exported file. When None, no token categories will be excluded.
         from_measure (int): The measure to start exporting. When None, the exporter will start from the beginning of the file. The first measure is 1
         to_measure (int): The measure to end exporting. When None, the exporter will end at the end of the file.
-        tokenizer (Encoding): The type of the **kern file to export.
+        encoding (Encoding): The type of the **kern file to export.
         instruments (Iterable): The instruments to export. If None, all the instruments will be exported.
         show_measure_numbers (Bool): Show the measure numbers in the exported file.
         spine_ids (Iterable): The ids of the spines to export. When None, all the spines will be exported. \
@@ -189,7 +191,7 @@ def dumps(document: Document, *,
         exclude=exclude,
         from_measure=from_measure,
         to_measure=to_measure,
-        kern_type=tokenizer,
+        kern_type=encoding,
         instruments=instruments,
         show_measure_numbers=show_measure_numbers,
         spine_ids=spine_ids

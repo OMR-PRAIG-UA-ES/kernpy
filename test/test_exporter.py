@@ -87,7 +87,7 @@ class ExporterTestCase(unittest.TestCase):
             expected_content = f.read()
 
         doc, _ = kp.read(input_path)
-        real_content = kp.dumps(doc, tokenizer=kp.Encoding.eKern, include=kp.BEKERN_CATEGORIES)
+        real_content = kp.dumps(doc, encoding=kp.Encoding.eKern, include=kp.BEKERN_CATEGORIES)
 
         self.assertEqual(expected_content, real_content,
                          f"File content mismatch: \nExpected:\n{expected_content}\n{40 * '='}\nReal\n{real_content}")

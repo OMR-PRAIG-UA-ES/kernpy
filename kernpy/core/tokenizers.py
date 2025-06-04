@@ -18,7 +18,7 @@ class Encoding(Enum):  # TODO: Eventually, polymorphism will be used to export d
         >>> doc, _ = kp.load('path/to/file.krn')
         >>>
         >>> # Save the file using the specified encoding
-        >>> exported_content = kp.dumps(tokenizer=kp.Encoding.normalizedKern)
+        >>> exported_content = kp.dumps(encoding=kp.Encoding.normalizedKern)
     """
     eKern = 'ekern'
     normalizedKern = 'kern'

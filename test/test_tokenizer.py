@@ -20,40 +20,40 @@ class TestTokenizer(unittest.TestCase):
 
 
     def test_ekern_tokenizer_1(self):
-        tokenizer = kp.EkernTokenizer(token_categories=self.default_categories)
-        token_str = tokenizer.tokenize(self.token_1)
+        encoding = kp.EkernTokenizer(token_categories=self.default_categories)
+        token_str = encoding.tokenize(self.token_1)
         self.assertEqual('2@.@bb@-·_·L', token_str)
         self.token_1.export.assert_called()
 
     def test_kern_tokenizer_1(self):
-        tokenizer = kp.KernTokenizer(token_categories=self.default_categories)
-        token_str = tokenizer.tokenize(self.token_1)
+        encoding = kp.KernTokenizer(token_categories=self.default_categories)
+        token_str = encoding.tokenize(self.token_1)
         self.assertEqual('2.bb-_L', token_str)
         self.token_1.export.assert_called()
 
     def test_bkern_tokenizer_1(self):
-        tokenizer = kp.BkernTokenizer(token_categories=self.default_categories)
-        token_str = tokenizer.tokenize(self.token_1)
+        encoding = kp.BkernTokenizer(token_categories=self.default_categories)
+        token_str = encoding.tokenize(self.token_1)
         self.assertEqual('2.bb-', token_str)
         self.token_1.export.assert_called()
 
     def test_bekern_tokenizer_1(self):
-        tokenizer = kp.BekernTokenizer(token_categories=self.default_categories)
-        token_str = tokenizer.tokenize(self.token_1)
+        encoding = kp.BekernTokenizer(token_categories=self.default_categories)
+        token_str = encoding.tokenize(self.token_1)
         self.assertEqual('2@.@bb@-', token_str)
         self.token_1.export.assert_called()
 
     def test_tokenizer_factory_kern(self):
-        tokenizer = kp.TokenizerFactory.create(kp.Encoding.normalizedKern.value, token_categories=self.default_categories)
-        self.assertIsInstance(tokenizer, kp.KernTokenizer)
+        encoding = kp.TokenizerFactory.create(kp.Encoding.normalizedKern.value, token_categories=self.default_categories)
+        self.assertIsInstance(encoding, kp.KernTokenizer)
 
     def test_tokenizer_factory_ekern(self):
-        tokenizer = kp.TokenizerFactory.create(kp.Encoding.eKern.value, token_categories=self.default_categories)
-        self.assertIsInstance(tokenizer, kp.EkernTokenizer)
+        encoding = kp.TokenizerFactory.create(kp.Encoding.eKern.value, token_categories=self.default_categories)
+        self.assertIsInstance(encoding, kp.EkernTokenizer)
 
     def test_tokenizer_factory_bkern(self):
-        tokenizer = kp.TokenizerFactory.create(kp.Encoding.bKern.value, token_categories=self.default_categories)
-        self.assertIsInstance(tokenizer, kp.BekernTokenizer)
+        encoding = kp.TokenizerFactory.create(kp.Encoding.bKern.value, token_categories=self.default_categories)
+        self.assertIsInstance(encoding, kp.BekernTokenizer)
 
     def test_tokenizer_factory_raise_error_if_none(self):
         with self.assertRaises(ValueError):

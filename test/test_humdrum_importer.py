@@ -44,7 +44,7 @@ class ImporterTestCase(unittest.TestCase):
                                   from_measure=from_measure,
                                   to_measure=to_measure,
                                   include=kp.BEKERN_CATEGORIES,
-                                  tokenizer=kp.Encoding.eKern)
+                                  encoding=kp.Encoding.eKern)
 
         if exported_ekern != expected_content:
             logging.info('---- Expected content ----')
@@ -346,7 +346,7 @@ class ImporterTestCase(unittest.TestCase):
         kp.store_graph(doc, '/tmp/x.dot')
         exported_real = kp.dumps(doc,
                                  spine_types=['**kern'],
-                                 tokenizer=kp.Encoding.normalizedKern,
+                                 encoding=kp.Encoding.normalizedKern,
                                  from_measure=9,
                                  to_measure=13)
 
@@ -381,7 +381,7 @@ class ImporterTestCase(unittest.TestCase):
         output_kern = kp.dumps(document,
                                spine_types=['**kern'],
                                include=kp.BEKERN_CATEGORIES,
-                               tokenizer=kp.Encoding.eKern, )
+                               encoding=kp.Encoding.eKern, )
         expected_ekern = "**ekern\n4@c\n4@d\n4@e\n4@f\n*-\n"
         self.assertEqual(expected_ekern, output_kern)
 
@@ -710,7 +710,7 @@ class ImporterTestCase(unittest.TestCase):
         doc, err = kp.load('resource_dir/legacy/chor048.krn')
 
         content = kp.dumps(doc, spine_types=['**kern', '**root', '**harm'],
-                           tokenizer=kp.Encoding.eKern)
+                           encoding=kp.Encoding.eKern)
 
         doc_2, _ = kp.loads(content)  # raise error if the content is not valid
 
