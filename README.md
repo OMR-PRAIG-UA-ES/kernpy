@@ -171,6 +171,8 @@ Select the proper Humdrum **kern encoding:
 |----------|--------------|----------------------------------------|
 | kern     | 2.bb-_L      | Traditional Humdrum **kern encoding    |
 | ekern    | 2@.@bb@-·_·L | Extended Humdrum **kern encoding       |
+| bkern    | 2.bb-        | Basic Humdrum **kern encoding          |
+| bekern   | 2@.@bb@-     | Basic Extended Humdrum **kern encoding |
 
 Use the `Encoding` enum class to select the encoding:
 
@@ -181,6 +183,8 @@ doc, _ = kp.load('resource_dir/legacy/chor048.krn')
 
 kern_content = kp.dumps(doc, encoding=kp.Encoding.normalizedKern)
 ekern_content = kp.dumps(doc, encoding=kp.Encoding.eKern)
+bkern_content = kp.dumps(doc, encoding=kp.KernTypeExporter.bKern)
+bekern_content = kp.dumps(doc, encoding=kp.KernTypeExporter.bEkern)
 ```
 
 - Use `from_measure` and `to_measure` to select the measures to export. By default, all the measures are exported.
