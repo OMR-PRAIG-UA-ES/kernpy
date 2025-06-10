@@ -4,7 +4,7 @@ from typing import Optional
 from .kern_spine_importer import KernSpineListener, KernSpineImporter
 from .base_antlr_spine_parser_listener import BaseANTLRSpineParserListener
 from .spine_importer import SpineImporter
-from .tokens import MHXMToken, Token, TokenCategory
+from .tokens import MHXMToken, Token, TokenCategory, SimpleToken
 
 
 class MxhmSpineImporter(SpineImporter):
@@ -23,8 +23,11 @@ class MxhmSpineImporter(SpineImporter):
     def import_token(self, encoding: str) -> Token:
         self._raise_error_if_wrong_input(encoding)
 
-        kern_spine_importer = KernSpineImporter()
-        token = kern_spine_importer.import_token(encoding)
+        try:
+            kern_spine_importer = KernSpineImporter()
+            token = kern_spine_importer.import_token(encoding)
+        except Exception as e:
+            return SimpleToken(encoding, TokenCategory.HARMONY)
 
         ACCEPTED_CATEGORIES = {
             TokenCategory.STRUCTURAL,
@@ -39,6 +42,3 @@ class MxhmSpineImporter(SpineImporter):
             return SimpleToken(encoding, TokenCategory.HARMONY)
 
         return token
-
-        return MHXMToken(encoding)
-

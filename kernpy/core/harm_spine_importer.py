@@ -23,8 +23,11 @@ class HarmSpineImporter(SpineImporter):
     def import_token(self, encoding: str) -> Token:
         self._raise_error_if_wrong_input(encoding)
 
-        kern_spine_importer = KernSpineImporter()
-        token = kern_spine_importer.import_token(encoding)
+        try:
+            kern_spine_importer = KernSpineImporter()
+            token = kern_spine_importer.import_token(encoding)
+        except Exception as e:
+            return SimpleToken(encoding, TokenCategory.HARMONY)
 
         ACCEPTED_CATEGORIES = {
             TokenCategory.STRUCTURAL,

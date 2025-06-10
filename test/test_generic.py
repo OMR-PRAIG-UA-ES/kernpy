@@ -244,3 +244,20 @@ class GenericTestCase(unittest.TestCase):
                                exclude=kp.TokenCategory.DECORATION)
 
         self.assertEqual(expected, real_output)
+
+    def test_normalize_and_bekern_categories(self):
+        # Arrange
+        input_file = Path('resource_dir/samples/nine-voices-score.krn')
+        expected_file = Path('resource_dir/samples/nine-voices-score_normalized.krn')
+
+        with open(expected_file, 'r') as f:
+            expected = f.read()
+
+        # Act
+        doc, err = kp.load(input_file)
+
+        # Assert
+        self.assertEqual(len(doc.get_all_tokens()), 13095, "Tokens count mismatch")
+        self.assertEqual(len(err), 0, f"Errors found: {err}")
+        real_output = kp.dumps(doc, include=kp.BEKERN_CATEGORIES)
+        self.assertEqual(expected, real_output, f"Expected:\n{expected}\n\nGot:\n{real_output}")
