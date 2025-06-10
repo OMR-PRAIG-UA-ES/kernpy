@@ -12981,7 +12981,10 @@ function returns True will be exported. Defaults to None. If None, all tokens wi
 <span class="normal">40</span>
 <span class="normal">41</span>
 <span class="normal">42</span>
-<span class="normal">43</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BasicSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BasicSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        KernSpineImporter constructor.</span>
@@ -12997,8 +13000,11 @@ function returns True will be exported. Defaults to None. If None, all tokens wi
     <span class="k">def</span><span class="w"> </span><span class="nf">import_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Token</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_raise_error_if_wrong_input</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
 
-        <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SimpleToken</span><span class="p">(</span><span class="n">encoding</span><span class="p">,</span> <span class="n">TokenCategory</span><span class="o">.</span><span class="n">OTHER</span><span class="p">)</span>
 
         <span class="n">ACCEPTED_CATEGORIES</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">TokenCategory</span><span class="o">.</span><span class="n">STRUCTURAL</span><span class="p">,</span>
@@ -20731,7 +20737,10 @@ The duration is a number that represents the number of units of the duration.</p
 <span class="normal">38</span>
 <span class="normal">39</span>
 <span class="normal">40</span>
-<span class="normal">41</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">DynamSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">DynamSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        KernSpineImporter constructor.</span>
@@ -20747,8 +20756,11 @@ The duration is a number that represents the number of units of the duration.</p
     <span class="k">def</span><span class="w"> </span><span class="nf">import_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Token</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_raise_error_if_wrong_input</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
 
-        <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SimpleToken</span><span class="p">(</span><span class="n">encoding</span><span class="p">,</span> <span class="n">TokenCategory</span><span class="o">.</span><span class="n">DYNAMICS</span><span class="p">)</span>
 
         <span class="n">ACCEPTED_CATEGORIES</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">TokenCategory</span><span class="o">.</span><span class="n">STRUCTURAL</span><span class="p">,</span>
@@ -23347,7 +23359,10 @@ None</p>
 <span class="normal">39</span>
 <span class="normal">40</span>
 <span class="normal">41</span>
-<span class="normal">42</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">FingSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">FingSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        KernSpineImporter constructor.</span>
@@ -23364,8 +23379,11 @@ None</p>
     <span class="k">def</span><span class="w"> </span><span class="nf">import_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Token</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_raise_error_if_wrong_input</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
 
-        <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SimpleToken</span><span class="p">(</span><span class="n">encoding</span><span class="p">,</span> <span class="n">TokenCategory</span><span class="o">.</span><span class="n">FINGERING</span><span class="p">)</span>
 
         <span class="n">ACCEPTED_CATEGORIES</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">TokenCategory</span><span class="o">.</span><span class="n">STRUCTURAL</span><span class="p">,</span>
@@ -23964,7 +23982,10 @@ None</p>
 <span class="normal">38</span>
 <span class="normal">39</span>
 <span class="normal">40</span>
-<span class="normal">41</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">HarmSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">HarmSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        KernSpineImporter constructor.</span>
@@ -23980,8 +24001,11 @@ None</p>
     <span class="k">def</span><span class="w"> </span><span class="nf">import_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Token</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_raise_error_if_wrong_input</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
 
-        <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SimpleToken</span><span class="p">(</span><span class="n">encoding</span><span class="p">,</span> <span class="n">TokenCategory</span><span class="o">.</span><span class="n">HARMONY</span><span class="p">)</span>
 
         <span class="n">ACCEPTED_CATEGORIES</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">TokenCategory</span><span class="o">.</span><span class="n">STRUCTURAL</span><span class="p">,</span>
@@ -26263,7 +26287,8 @@ This format is the classic Humdrum **kern representation.</p>
 <span class="normal">40</span>
 <span class="normal">41</span>
 <span class="normal">42</span>
-<span class="normal">43</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MxhmSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
+<span class="normal">43</span>
+<span class="normal">44</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MxhmSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        KernSpineImporter constructor.</span>
@@ -26279,8 +26304,11 @@ This format is the classic Humdrum **kern representation.</p>
     <span class="k">def</span><span class="w"> </span><span class="nf">import_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Token</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_raise_error_if_wrong_input</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
 
-        <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SimpleToken</span><span class="p">(</span><span class="n">encoding</span><span class="p">,</span> <span class="n">TokenCategory</span><span class="o">.</span><span class="n">HARMONY</span><span class="p">)</span>
 
         <span class="n">ACCEPTED_CATEGORIES</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">TokenCategory</span><span class="o">.</span><span class="n">STRUCTURAL</span><span class="p">,</span>
@@ -26295,8 +26323,6 @@ This format is the classic Humdrum **kern representation.</p>
             <span class="k">return</span> <span class="n">SimpleToken</span><span class="p">(</span><span class="n">encoding</span><span class="p">,</span> <span class="n">TokenCategory</span><span class="o">.</span><span class="n">HARMONY</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">token</span>
-
-        <span class="k">return</span> <span class="n">MHXMToken</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -31565,7 +31591,10 @@ Args:
 <span class="normal">40</span>
 <span class="normal">41</span>
 <span class="normal">42</span>
-<span class="normal">43</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TextSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TextSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        KernSpineImporter constructor.</span>
@@ -31581,8 +31610,11 @@ Args:
     <span class="k">def</span><span class="w"> </span><span class="nf">import_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Token</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_raise_error_if_wrong_input</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
 
-        <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SimpleToken</span><span class="p">(</span><span class="n">encoding</span><span class="p">,</span> <span class="n">TokenCategory</span><span class="o">.</span><span class="n">LYRICS</span><span class="p">)</span>
 
         <span class="n">ACCEPTED_CATEGORIES</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">TokenCategory</span><span class="o">.</span><span class="n">STRUCTURAL</span><span class="p">,</span>
@@ -40117,7 +40149,10 @@ function returns True will be exported. Defaults to None. If None, all tokens wi
 <span class="normal">40</span>
 <span class="normal">41</span>
 <span class="normal">42</span>
-<span class="normal">43</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BasicSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BasicSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        KernSpineImporter constructor.</span>
@@ -40133,8 +40168,11 @@ function returns True will be exported. Defaults to None. If None, all tokens wi
     <span class="k">def</span><span class="w"> </span><span class="nf">import_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Token</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_raise_error_if_wrong_input</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
 
-        <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SimpleToken</span><span class="p">(</span><span class="n">encoding</span><span class="p">,</span> <span class="n">TokenCategory</span><span class="o">.</span><span class="n">OTHER</span><span class="p">)</span>
 
         <span class="n">ACCEPTED_CATEGORIES</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">TokenCategory</span><span class="o">.</span><span class="n">STRUCTURAL</span><span class="p">,</span>
@@ -49285,7 +49323,10 @@ The duration is a number that represents the number of units of the duration.</p
 <span class="normal">38</span>
 <span class="normal">39</span>
 <span class="normal">40</span>
-<span class="normal">41</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">DynamSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">DynamSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        KernSpineImporter constructor.</span>
@@ -49301,8 +49342,11 @@ The duration is a number that represents the number of units of the duration.</p
     <span class="k">def</span><span class="w"> </span><span class="nf">import_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Token</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_raise_error_if_wrong_input</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
 
-        <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SimpleToken</span><span class="p">(</span><span class="n">encoding</span><span class="p">,</span> <span class="n">TokenCategory</span><span class="o">.</span><span class="n">DYNAMICS</span><span class="p">)</span>
 
         <span class="n">ACCEPTED_CATEGORIES</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">TokenCategory</span><span class="o">.</span><span class="n">STRUCTURAL</span><span class="p">,</span>
@@ -52399,7 +52443,10 @@ Usually these are comments starting with <code>!!!</code>.</p>
 <span class="normal">39</span>
 <span class="normal">40</span>
 <span class="normal">41</span>
-<span class="normal">42</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">FingSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">FingSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        KernSpineImporter constructor.</span>
@@ -52416,8 +52463,11 @@ Usually these are comments starting with <code>!!!</code>.</p>
     <span class="k">def</span><span class="w"> </span><span class="nf">import_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Token</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_raise_error_if_wrong_input</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
 
-        <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SimpleToken</span><span class="p">(</span><span class="n">encoding</span><span class="p">,</span> <span class="n">TokenCategory</span><span class="o">.</span><span class="n">FINGERING</span><span class="p">)</span>
 
         <span class="n">ACCEPTED_CATEGORIES</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">TokenCategory</span><span class="o">.</span><span class="n">STRUCTURAL</span><span class="p">,</span>
@@ -54707,7 +54757,10 @@ Usually these are comments starting with <code>!!!</code>.</p>
 <span class="normal">38</span>
 <span class="normal">39</span>
 <span class="normal">40</span>
-<span class="normal">41</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">HarmSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">HarmSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        KernSpineImporter constructor.</span>
@@ -54723,8 +54776,11 @@ Usually these are comments starting with <code>!!!</code>.</p>
     <span class="k">def</span><span class="w"> </span><span class="nf">import_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Token</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_raise_error_if_wrong_input</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
 
-        <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SimpleToken</span><span class="p">(</span><span class="n">encoding</span><span class="p">,</span> <span class="n">TokenCategory</span><span class="o">.</span><span class="n">HARMONY</span><span class="p">)</span>
 
         <span class="n">ACCEPTED_CATEGORIES</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">TokenCategory</span><span class="o">.</span><span class="n">STRUCTURAL</span><span class="p">,</span>
@@ -58055,7 +58111,8 @@ Args:
 <span class="normal">40</span>
 <span class="normal">41</span>
 <span class="normal">42</span>
-<span class="normal">43</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MxhmSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
+<span class="normal">43</span>
+<span class="normal">44</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MxhmSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        KernSpineImporter constructor.</span>
@@ -58071,8 +58128,11 @@ Args:
     <span class="k">def</span><span class="w"> </span><span class="nf">import_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Token</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_raise_error_if_wrong_input</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
 
-        <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SimpleToken</span><span class="p">(</span><span class="n">encoding</span><span class="p">,</span> <span class="n">TokenCategory</span><span class="o">.</span><span class="n">HARMONY</span><span class="p">)</span>
 
         <span class="n">ACCEPTED_CATEGORIES</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">TokenCategory</span><span class="o">.</span><span class="n">STRUCTURAL</span><span class="p">,</span>
@@ -58087,8 +58147,6 @@ Args:
             <span class="k">return</span> <span class="n">SimpleToken</span><span class="p">(</span><span class="n">encoding</span><span class="p">,</span> <span class="n">TokenCategory</span><span class="o">.</span><span class="n">HARMONY</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">token</span>
-
-        <span class="k">return</span> <span class="n">MHXMToken</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -64752,7 +64810,10 @@ These are the available operations:
 <span class="normal">40</span>
 <span class="normal">41</span>
 <span class="normal">42</span>
-<span class="normal">43</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TextSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TextSpineImporter</span><span class="p">(</span><span class="n">SpineImporter</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        KernSpineImporter constructor.</span>
@@ -64768,8 +64829,11 @@ These are the available operations:
     <span class="k">def</span><span class="w"> </span><span class="nf">import_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Token</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_raise_error_if_wrong_input</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
 
-        <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">kern_spine_importer</span> <span class="o">=</span> <span class="n">KernSpineImporter</span><span class="p">()</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="n">kern_spine_importer</span><span class="o">.</span><span class="n">import_token</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SimpleToken</span><span class="p">(</span><span class="n">encoding</span><span class="p">,</span> <span class="n">TokenCategory</span><span class="o">.</span><span class="n">LYRICS</span><span class="p">)</span>
 
         <span class="n">ACCEPTED_CATEGORIES</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">TokenCategory</span><span class="o">.</span><span class="n">STRUCTURAL</span><span class="p">,</span>
