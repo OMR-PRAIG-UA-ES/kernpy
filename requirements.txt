@@ -1,5 +1,5 @@
 # Development dependencies for the project. Production dependencies are in th pyproject.toml file.
-antlr4-python3-runtime
+antlr4-python3-runtime>=4.13.2
 Pillow
 requests
 urllib3==1.26.6

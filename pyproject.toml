@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "kernpy"
-version = "1.0.3"
+version = "1.1.0"
 authors = [
     { name = "David Rizo Valero", email = "drizo@ua.es"},
     { name = "Joan Cerveto Serrano", email = "joan.cerveto@ua.es"}
@@ -19,7 +19,7 @@ classifiers = [
     "License :: OSI Approved :: GNU Affero General Public License v3"
 ]
 dependencies = [
-    "antlr4-python3-runtime",
+    "antlr4-python3-runtime>=4.13.2",
     "Pillow",
     "requests",
     "urllib3>=1.26.6"
