@@ -1,3 +1,5 @@
+from kernpy import is_monophonic
+
 # Python Humdrum **kern and **mens utilities
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/agpl-3.0)
@@ -182,9 +184,11 @@ import kernpy as kp
 doc, _ = kp.load('resource_dir/legacy/chor048.krn')
 
 kern_content = kp.dumps(doc, encoding=kp.Encoding.normalizedKern)
-ekern_content = kp.dumps(doc, encoding=kp.Encoding.eKern)
-bkern_content = kp.dumps(doc, encoding=kp.KernTypeExporter.bKern)
-bekern_content = kp.dumps(doc, encoding=kp.KernTypeExporter.bEkern)
+ekern_content = kp.dumps(doc, encoding=kp.Encoding.normalizedExtendedKern)
+bkern_content = kp.dumps(doc, encoding=kp.Encoding.basicKern)
+bekern_content = kp.dumps(doc, encoding=kp.Encoding.basicExtendedKern)
+agnostic_content = kp.dumps(doc, encoding=kp.Encoding.agnosticKern)
+agnostic_extended_content = kp.dumps(doc, encoding=kp.Encoding.agnosticExtendedKern)
 ```
 
 - Use `from_measure` and `to_measure` to select the measures to export. By default, all the measures are exported.
@@ -259,6 +263,16 @@ def how_many_instrumental_spines(document):
 
 def has_voice(document):
     return len(kp.spine_types(document, ['**text'])) > 0
+# True
+```
+
+- Check if the document is monophonic or polyphonic.
+
+This function checks if the document has only one **kern spine and has no chords in the spine.
+```python
+import kernpy as kp
+
+is_score_monophonic = kp.is_monophonic(document)
 # True
 ```
 

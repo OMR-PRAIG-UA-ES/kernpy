@@ -8,7 +8,8 @@ __all__ = [
     'merge',
     'concat',
     'spine_types',
-    'graph'
+    'graph',
+    'is_monophonic',
 ]
 
 

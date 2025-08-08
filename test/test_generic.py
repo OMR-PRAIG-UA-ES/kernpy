@@ -261,3 +261,24 @@ class GenericTestCase(unittest.TestCase):
         self.assertEqual(len(err), 0, f"Errors found: {err}")
         real_output = kp.dumps(doc, include=kp.BEKERN_CATEGORIES)
         self.assertEqual(expected, real_output, f"Expected:\n{expected}\n\nGot:\n{real_output}")
+
+
+    def test_is_monophonic_when_true(self):
+        # Arrange
+        input_file = Path('resource_dir/samples/monophonic-score.krn')
+
+        # Act
+        doc, _err = kp.load(input_file)
+
+        # Assert
+        self.assertTrue(kp.is_monophonic(doc), "Document should be monophonic")
+
+    def test_is_monophonic_when_false(self):
+        # Arrange
+        input_file = Path('resource_dir/samples/polyphonic-score.krn')
+
+        # Act
+        doc, _err = kp.load(input_file)
+
+        # Assert
+        self.assertFalse(kp.is_monophonic(doc), "Document should not be monophonic")
