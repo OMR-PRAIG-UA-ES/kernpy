@@ -14,7 +14,7 @@ from enum import Enum
 from typing import Dict
 
 from .tokens import (
-    GRAPHIC_TOKEN_SEPARATOR, ClefToken, Token, TokenCategory
+    GRAPHIC_TOKEN_SEPARATOR, TOKEN_SEPARATOR, ClefToken, Token, TokenCategory
 )
 
 from .transposer import (
@@ -53,7 +53,12 @@ class Alteration(Enum):
 
 
 class PositionInStaff:
-    LINE_CHARACTER = 'L'
+    """
+    The pair S/T was chosen for clarity and coherence:
+    S directly abbreviates Space (as in “Space bar”),
+    while T evokes Trace, Track, or Tier, terms associated with lines in English, German, and French.
+    """
+    LINE_CHARACTER = 'T'
     SPACE_CHARACTER = 'S'
 
     def __init__(self, line_space: int):
@@ -499,9 +504,17 @@ class ClefFactory:
 class Staff:
     def position_in_staff(self, *, clef: Clef, pitch: AgnosticPitch) -> PositionInStaff:
         """
-        Returns the position in staff for the given clef and pitch.
-        """
-        bottom_cleff_note_name = clef.bottom_line()
+       Computes the agnostic position in staff for the given clef and pitch.
+
+       Args:
+           clef (Clef): The clef defining the reference.
+           pitch (AgnosticPitch): The pitch to locate.
+
+       Returns:
+           PositionInStaff: The position of the pitch relative to the staff.
+       """
+        reference = clef.reference_point()
+        return reference.compute_position(pitch)
 
 
 
@@ -514,7 +527,7 @@ class GKernExporter:
         Exports the given pitch to a graphic **kern encoding.
         """
         position = self.agnostic_position(staff, pitch)
-        return f"{GRAPHIC_TOKEN_SEPARATOR}{str(position)}"
+        return str(position)
 
     def agnostic_position(self, staff: Staff, pitch: AgnosticPitch) -> PositionInStaff:
         """
@@ -523,4 +536,19 @@ class GKernExporter:
         return staff.position_in_staff(clef=self.clef, pitch=pitch)
 
 
+
+def pitch_to_gkern_string(pitch: AgnosticPitch, clef: Clef) -> str:
+    """
+    Converts a given pitch and clef to a graphic **kern string representation.
+
+    Args:
+        pitch (AgnosticPitch): The pitch to convert.
+        clef (Clef): The clef defining the staff context.
+
+    Returns:
+        str: The graphic **kern representation (e.g., '|L2').
+    """
+    staff = Staff()
+    exporter = GKernExporter(clef)
+    return exporter.export(staff, pitch)
 

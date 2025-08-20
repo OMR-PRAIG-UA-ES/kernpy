@@ -7,7 +7,7 @@ from collections.abc import Sequence
 from abc import ABC, abstractmethod
 
 from kernpy.core import Document, SpineOperationToken, HeaderToken, Importer, TokenCategory, InstrumentToken, \
-    TOKEN_SEPARATOR, DECORATION_SEPARATOR, Token, NoteRestToken, HEADERS, BEKERN_CATEGORIES, ComplexToken
+    TOKEN_SEPARATOR, DECORATION_SEPARATOR, Token, NoteRestToken, HEADERS, BEKERN_CATEGORIES, ComplexToken, Node
 from kernpy.core.tokenizers import Encoding, TokenizerFactory, Tokenizer
 
 
@@ -214,7 +214,7 @@ class Exporter:
                 for node in next_nodes:
                     content = ''
                     if isinstance(node.token, HeaderToken) and node.token.encoding in options.spine_types:
-                        content = self.export_token(node.token, options)
+                        content = self.export_token(node, options)
                         non_place_holder_in_row = True
                     elif spine_operation_row:
                         # either if it is the split operator that has been cancelled, or the join one
@@ -222,7 +222,7 @@ class Exporter:
                                 from_stage) or node.last_spine_operator_node and node.last_spine_operator_node.token.cancelled_at_stage == node.stage):
                             content = '*'
                         else:
-                            content = self.export_token(node.token, options)
+                            content = self.export_token(node, options)
                             non_place_holder_in_row = True
                     if content:
                         row.append(content)
@@ -237,7 +237,7 @@ class Exporter:
                 node_signature_rows = []
                 for signature_node in node.last_signature_nodes.nodes.values():
                     if not self.is_signature_cancelled(signature_node, node, from_stage, to_stage):
-                        node_signature_rows.append(self.export_token(signature_node.token, options))
+                        node_signature_rows.append(self.export_token(signature_node, options))
                 if len(node_signature_rows) > 0:
                     if not node_signatures:
                         node_signatures = []  # an array for each spine
@@ -269,9 +269,14 @@ class Exporter:
         # now, add the spine terminate row
         if options.to_measure is not None and len(rows) > 0 and rows[len(rows) - 1][
             0] != '*-':  # if the terminate is not added yet
-            spine_count = len(rows[len(rows) - 1])
+            last_row = rows[len(rows) - 1]
+            spine_count = len(last_row)
+            merge_tokens_count = sum(1 for column in last_row if column == '*^')
+            join_tokens_count = sum(1 for column in last_row if column == '*v')
+            next_row_spine_count = spine_count + merge_tokens_count - join_tokens_count
+
             row = []
-            for i in range(spine_count):
+            for i in range(next_row_spine_count):
                 row.append('*-')
             rows.append(row)
 
@@ -299,13 +304,21 @@ class Exporter:
             header_type = None
         return header_type
 
-    def export_token(self, token: Token, options: ExportOptions) -> str:
+    def export_token(self, node: Node, options: ExportOptions) -> str:
+        token = node.token
         if isinstance(token, HeaderToken):
             new_token = HeaderTokenGenerator.new(token=token, type=options.kern_type)
         else:
             new_token = token
+
+        last_clef_node = node.last_signature_nodes.nodes.get('ClefToken', None)
+        if last_clef_node is not None:
+            last_clef = last_clef_node.token
+        else:
+            last_clef = None  # Any clef appears at this point of the score (e.g., metadata rows)
+
         return (TokenizerFactory
-                .create(options.kern_type.value, token_categories=options.token_categories)
+                .create(options.kern_type.value, token_categories=options.token_categories, last_clef_reference=last_clef)
                 .tokenize(new_token))
 
     def append_row(self, document: Document, node, options: ExportOptions, row: list) -> bool:
@@ -328,7 +341,7 @@ class Exporter:
                 and (options.spine_ids is None or header_type.spine_id in options.spine_ids)
         # If None, all the spines will be exported. TODO: put all the spines as spine_ids = None
         ):
-            row.append(self.export_token(node.token, options))
+            row.append(self.export_token(node, options))
             return True
 
         return False

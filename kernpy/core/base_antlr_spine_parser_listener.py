@@ -116,7 +116,7 @@ class BaseANTLRSpineParserListener(kernSpineParserListener):
         pitch_duration_tokens = []
         for duration_subtoken in self.duration_subtokens:
             pitch_duration_tokens.append(duration_subtoken)
-        pitch_duration_tokens.append(Subtoken('r', TokenCategory.PITCH))
+        pitch_duration_tokens.append(Subtoken('r', TokenCategory.REST))
         self.addNoteRest(ctx, pitch_duration_tokens)
 
     def enterChord(self, ctx: kernSpineParser.ChordContext):

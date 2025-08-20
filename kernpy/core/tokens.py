@@ -9,7 +9,7 @@ from unittest import result
 
 TOKEN_SEPARATOR = '@'
 DECORATION_SEPARATOR = '·'
-GRAPHIC_TOKEN_SEPARATOR = ':'
+GRAPHIC_TOKEN_SEPARATOR = '$'
 HEADERS = {"**mens", "**kern", "**text", "**harm", "**mxhm", "**root", "**dyn", "**dynam", "**fing"}
 CORE_HEADERS = {"**kern", "**mens"}
 SPINE_OPERATIONS = {"*-", "*+", "*^", "*v", "*x"}
@@ -1819,36 +1819,67 @@ class NoteRestToken(ComplexToken):
         Exports the token.
 
         Keyword Arguments:
-            filter_categories (Optional[Callable[[TokenCategory], bool]]): A function that takes a TokenCategory and returns a boolean
-                indicating whether the token should be included in the export. If provided, only tokens for which the
-                function returns True will be exported. Defaults to None. If None, all tokens will be exported.
+            filter_categories (Optional[Callable[[TokenCategory], bool]]): predicate to keep categories
+            convert_pitch_to_agnostic (Optional[Callable[[str], str]]): converter for pitch+alteration
 
-        Returns (str): The exported token.
-
+        Returns:
+            str: The exported token.
         """
-        filter_categories_fn = kwargs.get('filter_categories', None)
+        filter_categories_fn = kwargs.get("filter_categories")
+        convert_pitch_to_agnostic_fn = kwargs.get("convert_pitch_to_agnostic")
 
-        # Filter subcategories
-        pitch_duration_tokens = {
-            subtoken for subtoken in self.pitch_duration_subtokens
-            if filter_categories_fn is None or filter_categories_fn(subtoken.category)
-        }
-        decoration_tokens = {
-            subtoken for subtoken in self.decoration_subtokens
-            if filter_categories_fn is None or filter_categories_fn(subtoken.category)
-        }
-        pitch_duration_tokens_sorted = sorted(pitch_duration_tokens, key=lambda t:  (t.category.value, t.encoding))
-        decoration_tokens_sorted     = sorted(decoration_tokens,     key=lambda t:  (t.category.value, t.encoding))
+        # Filter (keep list to preserve multiplicity; no sets)
+        pitch_duration_tokens = [
+            s for s in self.pitch_duration_subtokens
+            if filter_categories_fn is None or filter_categories_fn(s.category)
+        ]
+        decoration_tokens = [
+            s for s in self.decoration_subtokens
+            if filter_categories_fn is None or filter_categories_fn(s.category)
+        ]
 
-        # Join the sorted subtokens
-        pitch_duration_part = TOKEN_SEPARATOR.join([subtoken.encoding for subtoken in pitch_duration_tokens_sorted])
-        decoration_part = DECORATION_SEPARATOR.join([subtoken.encoding for subtoken in decoration_tokens_sorted])
+        # Deterministic order
+        pitch_duration_tokens_sorted = sorted(
+            pitch_duration_tokens, key=lambda t: (t.category.value, t.encoding)
+        )
+        decoration_tokens_sorted = sorted(
+            decoration_tokens, key=lambda t: (t.category.value, t.encoding)
+        )
 
-        result = pitch_duration_part
-        if len(decoration_part):
-            result += DECORATION_SEPARATOR + decoration_part
+        # Build agnostic pitch (if requested and applicable)
+        agnostic_pitch_representation = None
+        if convert_pitch_to_agnostic_fn is not None:
+            only_pitches_and_alterations = [
+                s for s in pitch_duration_tokens_sorted
+                if s.category in {TokenCategory.PITCH, TokenCategory.ALTERATION}
+            ]
+            if only_pitches_and_alterations:
+                agnostic_pitch_representation = convert_pitch_to_agnostic_fn(
+                    "".join(s.encoding for s in only_pitches_and_alterations)
+                )
 
-        return result if len(result) > 0 else EMPTY_TOKEN
+        if agnostic_pitch_representation is not None:
+            # When agnostic, add the duration part explicitly, then the agnostic pitch
+            duration_encs = [
+                s.encoding for s in pitch_duration_tokens_sorted
+                if s.category == TokenCategory.DURATION
+            ]
+            duration_part = TOKEN_SEPARATOR.join(duration_encs) if duration_encs else ""
+            if duration_part:
+                pitch_duration_part = duration_part + TOKEN_SEPARATOR + agnostic_pitch_representation
+            else:
+                pitch_duration_part = agnostic_pitch_representation
+        else:
+            # Normal case: just join all duration+pitch subtokens
+            pitch_duration_part = TOKEN_SEPARATOR.join(s.encoding for s in pitch_duration_tokens_sorted)
+
+        decoration_part = DECORATION_SEPARATOR.join(s.encoding for s in decoration_tokens_sorted)
+
+        content = pitch_duration_part
+        if decoration_part:
+            content += DECORATION_SEPARATOR + decoration_part
+
+        return content if len(content) > 0 else EMPTY_TOKEN
 
 
 class ChordToken(SimpleToken):
@@ -1880,7 +1911,7 @@ class ChordToken(SimpleToken):
             if len(result) > 0:
                 result += ' '
 
-            result += note_token.export()
+            result += note_token.export(**kwargs)
 
         return result
 

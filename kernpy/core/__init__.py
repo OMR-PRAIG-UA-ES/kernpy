@@ -46,6 +46,8 @@ __all__ = [
     'EkernTokenizer',
     'BekernTokenizer',
     'BkernTokenizer',
+    'AEKernTokenizer',
+    'AKernTokenizer',
     'TokenizerFactory',
     'Token',
     'KernTokenizer',
@@ -76,6 +78,7 @@ __all__ = [
     'TokenCategoryHierarchyMapper',
     'TOKEN_SEPARATOR',
     'DECORATION_SEPARATOR',
+    'GRAPHIC_TOKEN_SEPARATOR',
     'Subtoken',
     'AbstractToken',
     'SimpleToken',
@@ -114,6 +117,9 @@ __all__ = [
     'C3Clef',
     'C4Clef',
     'ClefFactory',
-    'AVAILABLE_INTERVALS'
+    'AVAILABLE_INTERVALS',
+    'GKernExporter',
+    'Staff',
+    'pitch_to_gkern_string',
 ]
 

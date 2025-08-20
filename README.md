@@ -485,12 +485,19 @@ Go to the file [CONTRIBUTING.md](CONTRIBUTING.md) for more information on how to
 
 ## Citation:
 ```bibtex
-@inproceedings{kernpy_mec_2025,
-  title={{kernpy: a Humdrum **Kern Oriented Python Package for Optical Music Recognition Tasks}},
-  author={Cerveto-Serrano, Joan and Rizo, David and Calvo-Zaragoza, Jorge},
-  booktitle={{Proceedings of the Music Encoding Conference (MEC2025)}},
-  address={London, United Kingdom},
-  year={2025}
+@inproceedings{kernpy_cerveto_mec_2025,
+  title        = {kernpy: a Humdrum **Kern Oriented Python Package for Optical Music Recognition Tasks},
+  author       = {Cerveto-Serrano, Joan and Rizo, David and Calvo-Zaragoza, Jorge},
+  editor       = {Lewis, David and Plaksin, Anna and Stremel, Sophie},
+  booktitle    = {Proceedings of the Music Encoding Conference 2025},
+  year         = {2025},
+  address      = {London, United Kingdom},
+  publisher    = {Knowledge Commons},
+  doi          = {10.17613/qhvtd-hkv52},
 }
 ```
 
+## Acknowledgements
+This paper is supported by grant CISEJI/2023/9 from “Programa para el apoyo a personas investigadoras con talento (Plan GenT) de la Generalitat Valenciana”.
+
+![Generalitat Valenciana](docs/assets/gva-logo.png)
