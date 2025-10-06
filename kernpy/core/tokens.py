@@ -1527,7 +1527,11 @@ class ErrorToken(SimpleToken):
         Returns (str): A string representation of the error token.
         """
         # return ERROR_TOKEN
-        return self.encoding  # TODO: add a constant for the error token
+        return self.encoding    # TODO: should we add a constant for the error token?
+                                # Not easy to represent in Humdrum
+                                # We need to add a previous row with singles '!' in every spine but in the
+                                # error spine...
+
 
     def __str__(self):
         """
@@ -1537,6 +1541,15 @@ class ErrorToken(SimpleToken):
         """
         return f'Error token found at line {self.line} with encoding "{self.encoding}". Description: {self.error}'
 
+    def __eq__(self, other):
+        """
+        Compare two error tokens.
+
+        Args:
+            other (ErrorToken): The other error token to compare.
+        Returns (bool): True if the error tokens are equal, False otherwise.
+        """
+        return super().__eq__(other) and self.error == other.error and self.line == other.line
 
 class MetacommentToken(SimpleToken):
     """
@@ -1605,6 +1618,9 @@ class HeaderToken(SimpleToken):
     def export(self, **kwargs) -> str:
         return self.encoding
 
+    def __eq__(self, other):
+        return super().__eq__(other) and self.spine_id == other.spine_id
+
 
 class SpineOperationToken(SimpleToken):
     """
@@ -1622,7 +1638,7 @@ class SpineOperationToken(SimpleToken):
         cancelled_at_stage (int): The stage at which the operation was cancelled. Defaults to None.
     """
 
-    def __init__(self, encoding):
+    def  __init__(self, encoding):
         super().__init__(encoding, TokenCategory.SPINE_OPERATION)
         self.cancelled_at_stage = None
 
@@ -1640,6 +1656,9 @@ class SpineOperationToken(SimpleToken):
             return False
         else:
             return self.cancelled_at_stage < stage
+
+    def __eq__(self, other):
+        return super().__eq__(other) and self.cancelled_at_stage == other.cancelled_at_stage
 
 
 class BarToken(SimpleToken):
@@ -1776,6 +1795,9 @@ class CompoundToken(ComplexToken):
                 parts.append(subtoken.encoding)
         return TOKEN_SEPARATOR.join(parts) if len(parts) > 0 else EMPTY_TOKEN
 
+    def __eq__(self, other):
+        return super().__eq__(other) and self.subtokens == other.subtokens
+
 
 class NoteRestToken(ComplexToken):
     """
@@ -1881,6 +1903,11 @@ class NoteRestToken(ComplexToken):
 
         return content if len(content) > 0 else EMPTY_TOKEN
 
+    def __eq__(self, other):
+        return super().__eq__(other) and \
+            self.pitch_duration_subtokens == other.pitch_duration_subtokens and \
+            self.decoration_subtokens == other.decoration_subtokens
+
 
 class ChordToken(SimpleToken):
     """
@@ -1914,6 +1941,9 @@ class ChordToken(SimpleToken):
             result += note_token.export(**kwargs)
 
         return result
+
+    def __eq__(self, other):
+        return super().__eq__(other) and self.notes_tokens == other.notes_tokens
 
 
 class BoundingBox:
@@ -1995,6 +2025,16 @@ class BoundingBox:
         """
         return f'{self.from_x},{self.from_y},{self.w()},{self.h()}'
 
+    def __eq__(self, other):
+        return isinstance(other, BoundingBox) and \
+            self.from_x == other.from_x and \
+            self.from_y == other.from_y and \
+            self.to_x == other.to_x and \
+            self.to_y == other.to_y
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
 
 class BoundingBoxToken(Token):
     """
@@ -2029,6 +2069,11 @@ class BoundingBoxToken(Token):
     def export(self, **kwargs) -> str:
         return self.encoding
 
+    def __eq__(self, other):
+        return super().__eq__(other) and \
+            self.page_number == other.page_number and \
+            self.bounding_box == other.bounding_box
+
 
 class MHXMToken(Token):
     """
@@ -2037,6 +2082,6 @@ class MHXMToken(Token):
     def __init__(self, encoding):
         super().__init__(encoding, TokenCategory.MHXM)
 
-    # TODO: Implement constructor
     def export(self, **kwargs) -> str:
         return self.encoding
+

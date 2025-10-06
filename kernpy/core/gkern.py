@@ -172,9 +172,9 @@ class PositionInStaff:
         Returns the string representation of the position in staff.
         """
         if self.is_line():
-            return f"{self.LINE_CHARACTER}{int(self.line())}"
+            return f"{self.LINE_CHARACTER}{TOKEN_SEPARATOR}{int(self.line())}"
         else:
-            return f"{self.SPACE_CHARACTER}{int(self.space())}"
+            return f"{self.SPACE_CHARACTER}{TOKEN_SEPARATOR}{int(self.space())}"
 
     def __repr__(self) -> str:
         """

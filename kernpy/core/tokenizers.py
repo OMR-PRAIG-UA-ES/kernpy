@@ -323,7 +323,7 @@ class TokenizerFactory:
     @classmethod
     def create(cls, type: str, *,
                token_categories: List['TokenCategory'],
-               last_clef_reference: Optional[Token],
+               last_clef_reference: Optional[Token] = None
 
         ) -> Tokenizer:
         if type is None:

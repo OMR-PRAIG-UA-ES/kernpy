@@ -137,8 +137,10 @@ class KernSpineImporterTest(unittest.TestCase):
         self.do_test_token_category("=6:|!|:", kp.TokenCategory.BARLINES)
         self.do_test_token_category("=7:|!", kp.TokenCategory.BARLINES)
 
-    def test_load_instrument(self):
+    def test_load_instrument_simple(self):
         self.do_test_token_category("*IPiano", kp.TokenCategory.INSTRUMENTS)
+
+    def test_load_instrument_with_string(self):
         self.do_test_token_category("*I\"Cklav", kp.TokenCategory.INSTRUMENTS)
 
 

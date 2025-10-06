@@ -15,9 +15,6 @@ class TestAgnostic(unittest.TestCase):
 
         real_output = kp.dumps(self.static_complex_doc, encoding=kp.Encoding.agnosticKern)
 
-        with open(Path('resource_dir/agnostic/beethoven_sonata_12_4.akrn'), 'w') as f:
-            f.write(real_output)
-
         self.assertEqual(expected, real_output)
 
     def test_agnostic_extended_dumps(self):
@@ -25,8 +22,5 @@ class TestAgnostic(unittest.TestCase):
             expected = f.read()
 
         real_output = kp.dumps(self.static_complex_doc, encoding=kp.Encoding.agnosticExtendedKern)
-
-        with open(Path('resource_dir/agnostic/beethoven_sonata_12_4_extended.aekrn'), 'w') as f:
-            f.write(real_output)
 
         self.assertEqual(expected, real_output)

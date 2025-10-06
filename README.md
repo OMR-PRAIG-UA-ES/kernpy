@@ -169,12 +169,14 @@ Select the proper Humdrum **kern encoding:
 
 `kernpy` provides different encodings to export the content each symbol in different formats.
 
-| Encoding | Output       | Description                            |
-|----------|--------------|----------------------------------------|
-| kern     | 2.bb-_L      | Traditional Humdrum **kern encoding    |
-| ekern    | 2@.@bb@-·_·L | Extended Humdrum **kern encoding       |
-| bkern    | 2.bb-        | Basic Humdrum **kern encoding          |
-| bekern   | 2@.@bb@-     | Basic Extended Humdrum **kern encoding |
+| Encoding               | Output       | Description                                                                     |
+|------------------------|--------------|---------------------------------------------------------------------------------|
+| kern                   | 2.bb-_L      | Traditional Humdrum **kern encoding                                             |
+| extended_kern          | 2@.@bb@-·_·L | Tokenised version of Humdrum **kern encoding                                    |
+| basic_kern             | 2.bb-        | Basic Humdrum **kern encoding: same of `kern` but with less semantic categories |
+| basic_extended_kern    | 2@.@bb@-     | Tokenised version of the Basic Extended Humdrum **kern encoding                 |
+| agnostic_kern          | 2S4-         | Agnostic encoding: pitches remain the same regardless of the Clef               |
+| agnostic_extended_kern | 2@S@4@-      | Tokenised version of the Agnostic encoding                                      |
 
 Use the `Encoding` enum class to select the encoding:
 

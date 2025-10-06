@@ -24,6 +24,23 @@ class BaseANTLRSpineParserListener(kernSpineParserListener):
         self.measure_start_rows = []
         self.last_bounding_box = None
 
+    def _add_decoration(self, new_decoration: Subtoken):
+        """
+        Private method for ensuring there are no duplicated decorations.
+
+        It's like a set sorted data structure.
+
+        Args:
+            new_decoration (Subtoken): The new decoration to add.
+
+        Returns (None):
+            None
+        """
+        for existing_decoration in self.decorations:
+            if existing_decoration.encoding == new_decoration.encoding:
+                return
+        self.decorations.append(new_decoration)
+
     def enterStart(self, ctx: kernSpineParser.StartContext):
         self.token = None
         self.duration_subtokens = []
@@ -55,13 +72,13 @@ class BaseANTLRSpineParserListener(kernSpineParserListener):
     def exitDuration(self, ctx: kernSpineParser.DurationContext):
         self.duration_subtokens = [Subtoken(ctx.modernDuration().getText(), TokenCategory.DURATION)]
         for i in range(len(ctx.augmentationDot())):
-            self.duration_subtokens.append(Subtoken(".", TokenCategory.DURATION))
+            self.duration_subtokens.append(Subtoken(".", TokenCategory.DURATION))  # TODO: Add a new TokenCategory for dots, inherit from DURATION.
 
         if ctx.graceNote():
-            self.duration_subtokens.append(Subtoken(ctx.graceNote().getText(), TokenCategory.DURATION))
+            self.duration_subtokens.append(Subtoken(ctx.graceNote().getText(), TokenCategory.DURATION))  # TODO: Add a new TokenCategory for grace notes, inherit from DURATION.
 
         if ctx.appoggiatura():
-            self.duration_subtokens.append(Subtoken(ctx.appoggiatura().getText(), TokenCategory.DURATION))
+            self.duration_subtokens.append(Subtoken(ctx.appoggiatura().getText(), TokenCategory.DURATION))  # TODO: Add a new TokenCategory for appoggiaturas, inherit from DURATION.
 
     def exitDiatonicPitchAndOctave(self, ctx: kernSpineParser.DiatonicPitchAndOctaveContext):
         self.diatonic_pitch_and_octave_subtoken = Subtoken(ctx.getText(), TokenCategory.PITCH)
@@ -77,7 +94,7 @@ class BaseANTLRSpineParserListener(kernSpineParserListener):
         # We cannot order it using the class name because there are rules with subrules, such as ties, or articulations. We order it using the encoding itself. NOT YET!
         decoration_encoding = ctx.getText()
         decoration_subtoken = Subtoken(decoration_encoding, TokenCategory.DECORATION)
-        self.decorations.append(decoration_subtoken)
+        self._add_decoration(decoration_subtoken)
 
     def exitRestDecoration(self, ctx: kernSpineParser.NoteDecorationContext):
         # clazz = type(ctx.getChild(0))
@@ -88,11 +105,11 @@ class BaseANTLRSpineParserListener(kernSpineParserListener):
 
         # self.decorations[decoration_type] = ctx.getText()
         # We cannot order it using the class name because there are rules with subrules, such as ties, or articulations. We order it using the encoding itself
-        decoration = ctx.getText();
+        decoration = ctx.getText()
         if decoration != '/' and decoration != '\\':
             decoration_encoding = ctx.getText()
             decoration_subtoken = Subtoken(decoration_encoding, TokenCategory.DECORATION)
-            self.decorations.append(decoration_subtoken)
+            self._add_decoration(decoration_subtoken)
 
     def addNoteRest(self, ctx, pitchduration_subtokens):
         # subtoken = Subtoken(self.decorations[key], TokenCategory.DECORATION)

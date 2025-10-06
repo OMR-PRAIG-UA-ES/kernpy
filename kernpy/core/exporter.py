@@ -260,10 +260,11 @@ class Exporter:
         #if not node.token.category == TokenCategory.LINE_COMMENTS and not node.token.category == TokenCategory.FIELD_COMMENTS:
         for stage in range(from_stage, to_stage + 1):  # to_stage included
             row = []
-            for node in document.tree.stages[stage]:
+            for i_column, node in enumerate(document.tree.stages[stage]):
                 self.append_row(document=document, node=node, options=options, row=row)
 
-            if len(row) > 0:
+            nullish_tokens = {'.', '*', ''}
+            if len(row) > 0 and not all(token in nullish_tokens for token in row):
                 rows.append(row)
 
         # now, add the spine terminate row
@@ -334,17 +335,38 @@ class Exporter:
         """
         header_type = self.compute_header_type(node)
 
-        if (header_type is not None
+        if not (header_type is not None
                 and header_type.encoding in options.spine_types
-                and not node.token.hidden
-                and (isinstance(node.token, ComplexToken) or node.token.category in options.token_categories)
                 and (options.spine_ids is None or header_type.spine_id in options.spine_ids)
-        # If None, all the spines will be exported. TODO: put all the spines as spine_ids = None
         ):
-            row.append(self.export_token(node, options))
-            return True
+            return False  # All the spine must be filtered out
 
-        return False
+        if not (not node.token.hidden
+                and (isinstance(node.token, ComplexToken) or node.token.category in options.token_categories)
+                # If None, all the spines will be exported. TODO: put all the spines as spine_ids = None
+        ):
+            row.append(self._retrieve_empty_token(node))
+            return True  # The spine must be kept, but this specific token does not achieve the requirements
+
+        # Normal case
+        exported_token = self.export_token(node, options)
+        exported_token = exported_token if len(exported_token) > 0 else self._retrieve_empty_token(node) # just in the unexpected case, the tokenizer returns an empty string...
+        row.append(exported_token)
+        return True
+
+
+    @classmethod
+    def _is_token_in_a_signature_row(cls, node: Node) -> bool:
+        return bool(TokenCategory.is_child(
+            child=node.token.category,
+            parent=TokenCategory.SIGNATURES,
+        ))
+
+    @classmethod
+    def _retrieve_empty_token(cls, node: Optional[Node]) -> str:
+        if node is None or node.token is None:
+            return ''
+        return '.' if not cls._is_token_in_a_signature_row(node) else '*'
 
     def get_spine_types(self, document: Document, spine_types: list = None):
         """

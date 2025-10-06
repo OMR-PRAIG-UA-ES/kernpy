@@ -233,7 +233,7 @@ class GenericTestCase(unittest.TestCase):
 
         real_output = kp.dumps(self.static_complex_doc, include=kp.TokenCategory.DECORATION)
 
-        self.assertEqual(expected, real_output)
+        self.assertEqual(expected, real_output, f"Expected:\n{expected}\n\nReal:\n{real_output}")
 
     def test_generic_dumps_include_note_rest_exclude_decorators(self):
         with open(Path('resource_dir/categories/note_rest_exclude_decorators.krn'), 'r') as f:
