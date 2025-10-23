@@ -441,9 +441,6 @@ pip3 install kernpy
 pip3 install kernpy --upgrade 
 ```
 
-> [!NOTE]
-> This module is downloaded by default in the _/tmp_ directory in Linux. So it is removed when shutdown the machine.
-
 <hr>
 
 ## Documentation
