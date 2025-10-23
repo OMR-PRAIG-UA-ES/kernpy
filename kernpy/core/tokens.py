@@ -9,7 +9,6 @@ from unittest import result
 
 TOKEN_SEPARATOR = '@'
 DECORATION_SEPARATOR = '·'
-GRAPHIC_TOKEN_SEPARATOR = ':'
 HEADERS = {"**mens", "**kern", "**text", "**harm", "**mxhm", "**root", "**dyn", "**dynam", "**fing"}
 CORE_HEADERS = {"**kern", "**mens"}
 SPINE_OPERATIONS = {"*-", "*+", "*^", "*v", "*x"}
@@ -1527,7 +1526,11 @@ class ErrorToken(SimpleToken):
         Returns (str): A string representation of the error token.
         """
         # return ERROR_TOKEN
-        return self.encoding  # TODO: add a constant for the error token
+        return self.encoding    # TODO: should we add a constant for the error token?
+                                # Not easy to represent in Humdrum
+                                # We need to add a previous row with singles '!' in every spine but in the
+                                # error spine...
+
 
     def __str__(self):
         """
@@ -1537,6 +1540,15 @@ class ErrorToken(SimpleToken):
         """
         return f'Error token found at line {self.line} with encoding "{self.encoding}". Description: {self.error}'
 
+    def __eq__(self, other):
+        """
+        Compare two error tokens.
+
+        Args:
+            other (ErrorToken): The other error token to compare.
+        Returns (bool): True if the error tokens are equal, False otherwise.
+        """
+        return super().__eq__(other) and self.error == other.error and self.line == other.line
 
 class MetacommentToken(SimpleToken):
     """
@@ -1605,6 +1617,9 @@ class HeaderToken(SimpleToken):
     def export(self, **kwargs) -> str:
         return self.encoding
 
+    def __eq__(self, other):
+        return super().__eq__(other) and self.spine_id == other.spine_id
+
 
 class SpineOperationToken(SimpleToken):
     """
@@ -1622,7 +1637,7 @@ class SpineOperationToken(SimpleToken):
         cancelled_at_stage (int): The stage at which the operation was cancelled. Defaults to None.
     """
 
-    def __init__(self, encoding):
+    def  __init__(self, encoding):
         super().__init__(encoding, TokenCategory.SPINE_OPERATION)
         self.cancelled_at_stage = None
 
@@ -1640,6 +1655,9 @@ class SpineOperationToken(SimpleToken):
             return False
         else:
             return self.cancelled_at_stage < stage
+
+    def __eq__(self, other):
+        return super().__eq__(other) and self.cancelled_at_stage == other.cancelled_at_stage
 
 
 class BarToken(SimpleToken):
@@ -1776,6 +1794,9 @@ class CompoundToken(ComplexToken):
                 parts.append(subtoken.encoding)
         return TOKEN_SEPARATOR.join(parts) if len(parts) > 0 else EMPTY_TOKEN
 
+    def __eq__(self, other):
+        return super().__eq__(other) and self.subtokens == other.subtokens
+
 
 class NoteRestToken(ComplexToken):
     """
@@ -1819,36 +1840,72 @@ class NoteRestToken(ComplexToken):
         Exports the token.
 
         Keyword Arguments:
-            filter_categories (Optional[Callable[[TokenCategory], bool]]): A function that takes a TokenCategory and returns a boolean
-                indicating whether the token should be included in the export. If provided, only tokens for which the
-                function returns True will be exported. Defaults to None. If None, all tokens will be exported.
+            filter_categories (Optional[Callable[[TokenCategory], bool]]): predicate to keep categories
+            convert_pitch_to_agnostic (Optional[Callable[[str], str]]): converter for pitch+alteration
 
-        Returns (str): The exported token.
-
+        Returns:
+            str: The exported token.
         """
-        filter_categories_fn = kwargs.get('filter_categories', None)
+        filter_categories_fn = kwargs.get("filter_categories")
+        convert_pitch_to_agnostic_fn = kwargs.get("convert_pitch_to_agnostic")
 
-        # Filter subcategories
-        pitch_duration_tokens = {
-            subtoken for subtoken in self.pitch_duration_subtokens
-            if filter_categories_fn is None or filter_categories_fn(subtoken.category)
-        }
-        decoration_tokens = {
-            subtoken for subtoken in self.decoration_subtokens
-            if filter_categories_fn is None or filter_categories_fn(subtoken.category)
-        }
-        pitch_duration_tokens_sorted = sorted(pitch_duration_tokens, key=lambda t:  (t.category.value, t.encoding))
-        decoration_tokens_sorted     = sorted(decoration_tokens,     key=lambda t:  (t.category.value, t.encoding))
+        # Filter (keep list to preserve multiplicity; no sets)
+        pitch_duration_tokens = [
+            s for s in self.pitch_duration_subtokens
+            if filter_categories_fn is None or filter_categories_fn(s.category)
+        ]
+        decoration_tokens = [
+            s for s in self.decoration_subtokens
+            if filter_categories_fn is None or filter_categories_fn(s.category)
+        ]
 
-        # Join the sorted subtokens
-        pitch_duration_part = TOKEN_SEPARATOR.join([subtoken.encoding for subtoken in pitch_duration_tokens_sorted])
-        decoration_part = DECORATION_SEPARATOR.join([subtoken.encoding for subtoken in decoration_tokens_sorted])
+        # Deterministic order
+        pitch_duration_tokens_sorted = sorted(
+            pitch_duration_tokens, key=lambda t: (t.category.value, t.encoding)
+        )
+        decoration_tokens_sorted = sorted(
+            decoration_tokens, key=lambda t: (t.category.value, t.encoding)
+        )
 
-        result = pitch_duration_part
-        if len(decoration_part):
-            result += DECORATION_SEPARATOR + decoration_part
+        # Build agnostic pitch (if requested and applicable)
+        agnostic_pitch_representation = None
+        if convert_pitch_to_agnostic_fn is not None:
+            only_pitches_and_alterations = [
+                s for s in pitch_duration_tokens_sorted
+                if s.category in {TokenCategory.PITCH, TokenCategory.ALTERATION}
+            ]
+            if only_pitches_and_alterations:
+                agnostic_pitch_representation = convert_pitch_to_agnostic_fn(
+                    "".join(s.encoding for s in only_pitches_and_alterations)
+                )
 
-        return result if len(result) > 0 else EMPTY_TOKEN
+        if agnostic_pitch_representation is not None:
+            # When agnostic, add the duration part explicitly, then the agnostic pitch
+            duration_encs = [
+                s.encoding for s in pitch_duration_tokens_sorted
+                if s.category == TokenCategory.DURATION
+            ]
+            duration_part = TOKEN_SEPARATOR.join(duration_encs) if duration_encs else ""
+            if duration_part:
+                pitch_duration_part = duration_part + TOKEN_SEPARATOR + agnostic_pitch_representation
+            else:
+                pitch_duration_part = agnostic_pitch_representation
+        else:
+            # Normal case: just join all duration+pitch subtokens
+            pitch_duration_part = TOKEN_SEPARATOR.join(s.encoding for s in pitch_duration_tokens_sorted)
+
+        decoration_part = DECORATION_SEPARATOR.join(s.encoding for s in decoration_tokens_sorted)
+
+        content = pitch_duration_part
+        if decoration_part:
+            content += DECORATION_SEPARATOR + decoration_part
+
+        return content if len(content) > 0 else EMPTY_TOKEN
+
+    def __eq__(self, other):
+        return super().__eq__(other) and \
+            self.pitch_duration_subtokens == other.pitch_duration_subtokens and \
+            self.decoration_subtokens == other.decoration_subtokens
 
 
 class ChordToken(SimpleToken):
@@ -1880,9 +1937,12 @@ class ChordToken(SimpleToken):
             if len(result) > 0:
                 result += ' '
 
-            result += note_token.export()
+            result += note_token.export(**kwargs)
 
         return result
+
+    def __eq__(self, other):
+        return super().__eq__(other) and self.notes_tokens == other.notes_tokens
 
 
 class BoundingBox:
@@ -1964,6 +2024,16 @@ class BoundingBox:
         """
         return f'{self.from_x},{self.from_y},{self.w()},{self.h()}'
 
+    def __eq__(self, other):
+        return isinstance(other, BoundingBox) and \
+            self.from_x == other.from_x and \
+            self.from_y == other.from_y and \
+            self.to_x == other.to_x and \
+            self.to_y == other.to_y
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
 
 class BoundingBoxToken(Token):
     """
@@ -1998,6 +2068,11 @@ class BoundingBoxToken(Token):
     def export(self, **kwargs) -> str:
         return self.encoding
 
+    def __eq__(self, other):
+        return super().__eq__(other) and \
+            self.page_number == other.page_number and \
+            self.bounding_box == other.bounding_box
+
 
 class MHXMToken(Token):
     """
@@ -2006,6 +2081,6 @@ class MHXMToken(Token):
     def __init__(self, encoding):
         super().__init__(encoding, TokenCategory.MHXM)
 
-    # TODO: Implement constructor
     def export(self, **kwargs) -> str:
         return self.encoding
+

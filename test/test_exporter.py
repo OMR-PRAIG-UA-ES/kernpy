@@ -64,6 +64,7 @@ class ExporterTestCase(unittest.TestCase):
         with open('resource_dir/mozart/concerto-piano-12-allegro-left-hand.krn', 'r') as f:
             expected_content = f.read()
         real_content = kp.dumps(self.doc_piano, spine_ids=[0])
+        print(f"Real content:\n{real_content}\nExpected content:\n{expected_content}")
         self.assertEqual(expected_content, real_content)
 
     def test_exporter_spine_id_right_hand(self):
@@ -86,7 +87,7 @@ class ExporterTestCase(unittest.TestCase):
         with open(expected_path, 'r') as f:
             expected_content = f.read()
 
-        doc, _ = kp.read(input_path)
+        doc, _ = kp.load(input_path)
         real_content = kp.dumps(doc, encoding=kp.Encoding.eKern, include=kp.BEKERN_CATEGORIES)
 
         self.assertEqual(expected_content, real_content,

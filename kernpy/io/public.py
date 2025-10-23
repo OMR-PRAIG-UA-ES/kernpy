@@ -354,4 +354,33 @@ def spine_types(
 
 
 
+def is_monophonic(
+        document: Document,
+) -> bool:
+    """
+    Check if a Document object is monophonic. Checks if the Document object has only one **kern spine, \
+    no chord tokens, and at least one note or rest token. \
+
+    Args:
+        document (Document): Document object to check
+
+
+    Returns (bool): True if the Document object is monophonic, False otherwise.
+
+    Examples:
+        >>> import kernpy as kp
+        >>> document_a, _ = kp.load('path/to/monophonic-file.krn')
+        >>> kp.is_monophonic(document_a)
+        True
+        >>> document_b, _ = kp.load('path/to/polyphonic-file.krn')
+        >>> kp.is_monophonic(document_b)
+        False
+    """
+    number_of_kern_spines = len(spine_types(document, headers=['**kern']))
+    number_of_chord_tokens = len(document.get_all_tokens(filter_by_categories=[TokenCategory.CHORD]))
+    there_is_any_note_rest_token = len(document.get_all_tokens(filter_by_categories=[TokenCategory.NOTE_REST])) > 0
+
+    return (number_of_kern_spines == 1
+            and number_of_chord_tokens == 0
+            and there_is_any_note_rest_token)
 

@@ -68,3 +68,8 @@ class DynamSpineImporterTest(unittest.TestCase):
         encoding_input = "[["
         self.do_test_token_exported(encoding_input, "[[")
         self.do_test_token_category(encoding_input, kp.TokenCategory.DYNAMICS)
+
+    def test_error_token(self):
+        encoding_input = "???"
+        self.do_test_token_exported(encoding_input, "???")
+        self.do_test_token_category(encoding_input, kp.TokenCategory.DYNAMICS)

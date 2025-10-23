@@ -167,12 +167,14 @@ Select the proper Humdrum **kern encoding:
 
 `kernpy` provides different encodings to export the content each symbol in different formats.
 
-| Encoding | Output       | Description                            |
-|----------|--------------|----------------------------------------|
-| kern     | 2.bb-_L      | Traditional Humdrum **kern encoding    |
-| ekern    | 2@.@bb@-·_·L | Extended Humdrum **kern encoding       |
-| bkern    | 2.bb-        | Basic Humdrum **kern encoding          |
-| bekern   | 2@.@bb@-     | Basic Extended Humdrum **kern encoding |
+| Encoding               | Output example | Description                                                                     |
+|------------------------|----------------|---------------------------------------------------------------------------------|
+| kern                   | 2.bb-_L        | Traditional Humdrum **kern encoding                                             |
+| extended_kern          | 2@.@bb@-·_·L   | Tokenised version of Humdrum **kern encoding                                    |
+| basic_kern             | 2.bb-          | Basic Humdrum **kern encoding: same of `kern` but with less semantic categories |
+| basic_extended_kern    | 2@.@bb@-       | Tokenised version of the Basic Extended Humdrum **kern encoding                 |
+| agnostic_kern          | 2S4-           | Agnostic encoding: pitches remain the same regardless of the Clef               |
+| agnostic_extended_kern | 2@S@4@-        | Tokenised version of the Agnostic encoding                                      |
 
 Use the `Encoding` enum class to select the encoding:
 
@@ -182,9 +184,11 @@ import kernpy as kp
 doc, _ = kp.load('resource_dir/legacy/chor048.krn')
 
 kern_content = kp.dumps(doc, encoding=kp.Encoding.normalizedKern)
-ekern_content = kp.dumps(doc, encoding=kp.Encoding.eKern)
-bkern_content = kp.dumps(doc, encoding=kp.KernTypeExporter.bKern)
-bekern_content = kp.dumps(doc, encoding=kp.KernTypeExporter.bEkern)
+ekern_content = kp.dumps(doc, encoding=kp.Encoding.normalizedExtendedKern)
+bkern_content = kp.dumps(doc, encoding=kp.Encoding.basicKern)
+bekern_content = kp.dumps(doc, encoding=kp.Encoding.basicExtendedKern)
+agnostic_content = kp.dumps(doc, encoding=kp.Encoding.agnosticKern)
+agnostic_extended_content = kp.dumps(doc, encoding=kp.Encoding.agnosticExtendedKern)
 ```
 
 - Use `from_measure` and `to_measure` to select the measures to export. By default, all the measures are exported.
@@ -259,6 +263,16 @@ def how_many_instrumental_spines(document):
 
 def has_voice(document):
     return len(kp.spine_types(document, ['**text'])) > 0
+# True
+```
+
+- Check if the document is monophonic or polyphonic.
+
+This function checks if the document has only one **kern spine and has no chords in the spine.
+```python
+import kernpy as kp
+
+is_score_monophonic = kp.is_monophonic(document)
 # True
 ```
 
@@ -468,12 +482,19 @@ Go to the file [CONTRIBUTING.md](CONTRIBUTING.md) for more information on how to
 
 ## Citation:
 ```bibtex
-@inproceedings{kernpy_mec_2025,
-  title={{kernpy: a Humdrum **Kern Oriented Python Package for Optical Music Recognition Tasks}},
-  author={Cerveto-Serrano, Joan and Rizo, David and Calvo-Zaragoza, Jorge},
-  booktitle={{Proceedings of the Music Encoding Conference (MEC2025)}},
-  address={London, United Kingdom},
-  year={2025}
+@inproceedings{kernpy_cerveto_mec_2025,
+  title        = {kernpy: a Humdrum **Kern Oriented Python Package for Optical Music Recognition Tasks},
+  author       = {Cerveto-Serrano, Joan and Rizo, David and Calvo-Zaragoza, Jorge},
+  editor       = {Lewis, David and Plaksin, Anna and Stremel, Sophie},
+  booktitle    = {Proceedings of the Music Encoding Conference 2025},
+  year         = {2025},
+  address      = {London, United Kingdom},
+  publisher    = {Knowledge Commons},
+  doi          = {10.17613/qhvtd-hkv52},
 }
 ```
 
+## Acknowledgements
+This paper is supported by grant CISEJI/2023/9 from “Programa para el apoyo a personas investigadoras con talento (Plan GenT) de la Generalitat Valenciana”.
+
+![Generalitat Valenciana](docs/assets/gva-logo.png)

@@ -36,6 +36,7 @@ class DynamSpineImporter(SpineImporter):
             TokenCategory.IMAGE_ANNOTATIONS,
             TokenCategory.BARLINES,
             TokenCategory.COMMENTS,
+            TokenCategory.DYNAMICS
         }
 
         if not any(TokenCategory.is_child(child=token.category, parent=cat) for cat in ACCEPTED_CATEGORIES):

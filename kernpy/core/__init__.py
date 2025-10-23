@@ -46,6 +46,8 @@ __all__ = [
     'EkernTokenizer',
     'BekernTokenizer',
     'BkernTokenizer',
+    'AEKernTokenizer',
+    'AKernTokenizer',
     'TokenizerFactory',
     'Token',
     'KernTokenizer',
@@ -114,6 +116,9 @@ __all__ = [
     'C3Clef',
     'C4Clef',
     'ClefFactory',
-    'AVAILABLE_INTERVALS'
+    'AVAILABLE_INTERVALS',
+    'GKernExporter',
+    'Staff',
+    'pitch_to_gkern_string',
 ]
 
