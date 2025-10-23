@@ -1,5 +1,3 @@
-from kernpy import is_monophonic
-
 # Python Humdrum **kern and **mens utilities
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/agpl-3.0)
@@ -169,14 +167,14 @@ Select the proper Humdrum **kern encoding:
 
 `kernpy` provides different encodings to export the content each symbol in different formats.
 
-| Encoding               | Output       | Description                                                                     |
-|------------------------|--------------|---------------------------------------------------------------------------------|
-| kern                   | 2.bb-_L      | Traditional Humdrum **kern encoding                                             |
-| extended_kern          | 2@.@bb@-·_·L | Tokenised version of Humdrum **kern encoding                                    |
-| basic_kern             | 2.bb-        | Basic Humdrum **kern encoding: same of `kern` but with less semantic categories |
-| basic_extended_kern    | 2@.@bb@-     | Tokenised version of the Basic Extended Humdrum **kern encoding                 |
-| agnostic_kern          | 2S4-         | Agnostic encoding: pitches remain the same regardless of the Clef               |
-| agnostic_extended_kern | 2@S@4@-      | Tokenised version of the Agnostic encoding                                      |
+| Encoding               | Output example | Description                                                                     |
+|------------------------|----------------|---------------------------------------------------------------------------------|
+| kern                   | 2.bb-_L        | Traditional Humdrum **kern encoding                                             |
+| extended_kern          | 2@.@bb@-·_·L   | Tokenised version of Humdrum **kern encoding                                    |
+| basic_kern             | 2.bb-          | Basic Humdrum **kern encoding: same of `kern` but with less semantic categories |
+| basic_extended_kern    | 2@.@bb@-       | Tokenised version of the Basic Extended Humdrum **kern encoding                 |
+| agnostic_kern          | 2S4-           | Agnostic encoding: pitches remain the same regardless of the Clef               |
+| agnostic_extended_kern | 2@S@4@-        | Tokenised version of the Agnostic encoding                                      |
 
 Use the `Encoding` enum class to select the encoding:
 
