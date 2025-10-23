@@ -78,7 +78,6 @@ __all__ = [
     'TokenCategoryHierarchyMapper',
     'TOKEN_SEPARATOR',
     'DECORATION_SEPARATOR',
-    'GRAPHIC_TOKEN_SEPARATOR',
     'Subtoken',
     'AbstractToken',
     'SimpleToken',

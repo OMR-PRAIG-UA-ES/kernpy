@@ -14,7 +14,7 @@ from enum import Enum
 from typing import Dict
 
 from .tokens import (
-    GRAPHIC_TOKEN_SEPARATOR, TOKEN_SEPARATOR, ClefToken, Token, TokenCategory
+    TOKEN_SEPARATOR, ClefToken, Token, TokenCategory
 )
 
 from .transposer import (
