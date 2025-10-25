@@ -71,7 +71,7 @@ kp.dump(document, "newfile_lyrics.krn",
                      
 # only export **kern and **text spines     
 kp.dump(document, "newfile_core_and_lyrics.krn",
-        spine_types=['*+text'])
+        spine_types=['**text'])
 ```
 
 - The categories are hierarchically defined in the `TokenCategory` class.
