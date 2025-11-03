@@ -120,5 +120,6 @@ __all__ = [
     'GKernExporter',
     'Staff',
     'pitch_to_gkern_string',
+    'gkern_to_g_clef_pitch',
 ]
 

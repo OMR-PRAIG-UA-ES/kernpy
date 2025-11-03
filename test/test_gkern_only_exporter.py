@@ -2,6 +2,7 @@ import unittest
 import logging
 
 import kernpy as kp
+import kernpy as kp
 
 
 logger = logging.getLogger(__name__)
@@ -159,6 +160,75 @@ class TestPitchToGKernString(unittest.TestCase):
             result = kp.pitch_to_gkern_string(pitch, clef)
             logger.info(f"Testing {pitch} with {clef}:\Expected: {expected}.\nGot: {result}")
             self.assertEqual(result, expected)
+
+    def test_gkern_to_g_clef_pitch_basic(self):
+        # Around middle C: T@0 == 'c', S@0 == 'd', T@1 == 'e'
+        cases = [
+            ('T@0', 'c'),
+            ('S@0', 'd'),
+            ('T@1', 'e'),
+        ]
+        for token, expected in cases:
+            with self.subTest(token=token):
+                self.assertEqual(kp.gkern_to_g_clef_pitch(token), expected)
+
+    def test_gkern_to_g_clef_pitch_mixed_examples(self):
+        # Mix of above and below middle C, including octave changes
+        cases = [
+            ('S@3', 'cc'),   # up to c5
+            ('T@4', 'dd'),   # up to d5
+            ('S@-2', 'G'),   # down to G3
+            ('T@-4', 'BB'),  # down to B2 (two-letter uppercase)
+        ]
+        for token, expected in cases:
+            with self.subTest(token=token):
+                self.assertEqual(kp.gkern_to_g_clef_pitch(token), expected)
+
+    def test_gkern_to_g_clef_pitch_bad_inputs(self):
+        bad_tokens = ['X@1', 'T@foo', 'bogus']
+        for token in bad_tokens:
+            with self.subTest(token=token):
+                with self.assertRaises(ValueError):
+                    kp.gkern_to_g_clef_pitch(token)
+
+    def test_import_from_standard_to_agnostic_and_export_back(self):
+        source_key = kp.GClef()
+        source_pitches = {
+            'ccc',
+            'bb',
+            'aa',
+            'gg',
+            'ff',
+            'ee',
+            'dd',
+            'cc',
+            'b',
+            'a',
+            'b',
+            'f',
+            'e',
+            'd',
+            'c',
+            'B',
+            'A',
+            'G',
+            'F',
+            'E',
+            'D',
+            'C',
+            'BB',
+        }
+
+        for g_clef_pitch in source_pitches:
+            with self.subTest(g_clef_pitch=g_clef_pitch):
+                pitch_importer = kp.PitchImporterFactory.create('kern')
+                agnostic_pitch: kp.AgnosticPitch = pitch_importer.import_pitch(g_clef_pitch)
+                agnostic_encoding: str = kp.pitch_to_gkern_string(
+                    agnostic_pitch,
+                    source_key
+                )
+                self.assertEqual(agnostic_encoding, kp.pitch_to_gkern_string(agnostic_pitch, source_key))
+
 
 
 if __name__ == "__main__":

@@ -32,6 +32,8 @@ from .pitch_models import (
     pitches,
 )
 
+LETTERS = ['c', 'd', 'e', 'f', 'g', 'a', 'b']
+
 class Alteration(Enum):
     """
     Enum for the alteration of a pitch.
@@ -536,6 +538,47 @@ class GKernExporter:
         return staff.position_in_staff(clef=self.clef, pitch=pitch)
 
 
+def gkern_to_g_clef_pitch(gkern_content: str) -> str:
+    """
+    Convert a graphic staff position like 'T@4' / 'S@-3' to a **kern pitch (no accidentals),
+    using the (G2) clef with middle C = 'c' == T@0.
+    (Zero positions exist: T@0 -> 'c', S@0 -> 'd')
+
+    Args:
+        gkern_content (str): The graphic staff position string ('T@N' or 'S@N').
+
+    Returns:
+        str: only the pitch: 'c', 'dd', 'B', 'BB', ...
+    """
+    token = gkern_content.strip()
+    try:
+        position_type, raw_num = token.split(TOKEN_SEPARATOR, 1)
+    except ValueError:
+        raise ValueError(f"Bad token {token!r}. Expect 'T@N' or 'S@N'.")
+
+    if position_type not in ('T', 'S'):
+        raise ValueError(f"Unknown position type {position_type!r}; use 'T' (line) or 'S' (space).")
+
+    try:
+        n = int(raw_num)
+    except ValueError:
+        raise ValueError(f"Bad position number {raw_num!r}; must be an integer.")
+
+    # Diatonic distance from middle C ('c'), anchored at T@0 = 0.
+    # Each staff step (line/space) is one diatonic step.
+    # Lines are even steps; spaces are odd steps relative to T@0.
+    distance = 2 * n + (1 if position_type == 'S' else 0)
+
+    # Map diatonic distance to **kern pitch letters
+    idx = distance % 7
+    octs = distance // 7
+
+    if distance > 0:
+        return LETTERS[idx] * (octs + 1)      # lowercase for c and above
+    if distance < 0:
+        return LETTERS[idx].upper() * (-octs) # uppercase for below c
+    return 'c'
+
 
 def pitch_to_gkern_string(pitch: AgnosticPitch, clef: Clef) -> str:
     """
@@ -550,5 +593,7 @@ def pitch_to_gkern_string(pitch: AgnosticPitch, clef: Clef) -> str:
     """
     staff = Staff()
     exporter = GKernExporter(clef)
-    return exporter.export(staff, pitch)
+    gkern_encoding = exporter.export(staff, pitch)
 
+    accidentals = pitch.accidentals()
+    return gkern_to_g_clef_pitch(gkern_encoding) + accidentals
