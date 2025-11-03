@@ -39615,10 +39615,10 @@ Examples:
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">staff</span> <span class="o">=</span> <span class="n">Staff</span><span class="p">()</span>
     <span class="n">exporter</span> <span class="o">=</span> <span class="n">GKernExporter</span><span class="p">(</span><span class="n">clef</span><span class="p">)</span>
-    <span class="n">gkern_encoding</span> <span class="o">=</span> <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">staff</span><span class="p">,</span> <span class="n">pitch</span><span class="p">)</span>
+    <span class="n">gkern_encoding</span> <span class="o">=</span> <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">staff</span><span class="p">,</span> <span class="n">pitch</span><span class="p">)</span> <span class="c1"># (e.g., &#39;L@2&#39;, S@-1&#39;, etc.)</span>
 
     <span class="n">accidentals</span> <span class="o">=</span> <span class="n">pitch</span><span class="o">.</span><span class="n">accidentals</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">gkern_to_g_clef_pitch</span><span class="p">(</span><span class="n">gkern_encoding</span><span class="p">)</span> <span class="o">+</span> <span class="n">accidentals</span>
+    <span class="k">return</span> <span class="n">gkern_to_g_clef_pitch</span><span class="p">(</span><span class="n">gkern_encoding</span><span class="p">)</span> <span class="o">+</span> <span class="n">accidentals</span>  <span class="c1"># a nornal **kern pitch with accidentals in G clef</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -73696,10 +73696,10 @@ for krn_file in krn_files:
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">staff</span> <span class="o">=</span> <span class="n">Staff</span><span class="p">()</span>
     <span class="n">exporter</span> <span class="o">=</span> <span class="n">GKernExporter</span><span class="p">(</span><span class="n">clef</span><span class="p">)</span>
-    <span class="n">gkern_encoding</span> <span class="o">=</span> <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">staff</span><span class="p">,</span> <span class="n">pitch</span><span class="p">)</span>
+    <span class="n">gkern_encoding</span> <span class="o">=</span> <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">staff</span><span class="p">,</span> <span class="n">pitch</span><span class="p">)</span> <span class="c1"># (e.g., &#39;L@2&#39;, S@-1&#39;, etc.)</span>
 
     <span class="n">accidentals</span> <span class="o">=</span> <span class="n">pitch</span><span class="o">.</span><span class="n">accidentals</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">gkern_to_g_clef_pitch</span><span class="p">(</span><span class="n">gkern_encoding</span><span class="p">)</span> <span class="o">+</span> <span class="n">accidentals</span>
+    <span class="k">return</span> <span class="n">gkern_to_g_clef_pitch</span><span class="p">(</span><span class="n">gkern_encoding</span><span class="p">)</span> <span class="o">+</span> <span class="n">accidentals</span>  <span class="c1"># a nornal **kern pitch with accidentals in G clef</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
