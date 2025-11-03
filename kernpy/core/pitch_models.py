@@ -123,6 +123,16 @@ class AgnosticPitch:
     def get_chroma(self):
         return 40 * self.octave + Chromas[self.name]
 
+    def accidentals(self):
+        accidentals_encoding = ''
+        for c in self.name:
+            if c == self.ASCENDANT_ACCIDENTAL_ALTERATION:
+                accidentals_encoding += '#'
+            elif c == self.DESCENDENT_ACCIDENTAL_ALTERATION:
+                accidentals_encoding += '-'
+
+        return accidentals_encoding
+
     @classmethod
     def to_transposed(cls, agnostic_pitch: 'AgnosticPitch', raw_interval, direction: str = Direction.UP.value) -> 'AgnosticPitch':
         delta = raw_interval if direction == Direction.UP.value else - raw_interval
