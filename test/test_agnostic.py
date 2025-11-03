@@ -14,6 +14,7 @@ class TestAgnostic(unittest.TestCase):
             expected = f.read()
 
         real_output = kp.dumps(self.static_complex_doc, encoding=kp.Encoding.agnosticKern)
+
         self.assertEqual(expected, real_output,
                          msg=f'Expected and real output differ:\nExpected:\n{expected}\n\nReal Output:\n{real_output}')
 
