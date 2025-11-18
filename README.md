@@ -244,10 +244,10 @@ import kernpy as kp
 kp.spine_types(document)
 # ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
 
-kp.spine_types(document, spine_types=None)
+kp.spine_types(document, headers=None)
 # ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
 
-kp.spine_types(document, spine_types=['**kern'])
+kp.spine_types(document, headers=['**kern'])
 # ['**kern', '**kern', '**kern', '**kern']
 ```
 
