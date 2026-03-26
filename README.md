@@ -181,7 +181,7 @@ Use the `Encoding` enum class to select the encoding:
 ```python
 import kernpy as kp
 
-doc, _ = kp.load('resource_dir/legacy/chor048.krn')
+doc, _ = kp.load('test/resources/legacy/chor048.krn')
 
 kern_content = kp.dumps(doc, encoding=kp.Encoding.normalizedKern)
 ekern_content = kp.dumps(doc, encoding=kp.Encoding.normalizedExtendedKern)
@@ -290,7 +290,7 @@ Iterate over all the measures of the document.
 ```python
 import kernpy as kp
 
-doc, _ = kp.load('resource_dir/legacy/chor048.krn')  # 10 measures score
+doc, _ = kp.load('test/resources/legacy/chor048.krn')  # 10 measures score
 for i in range(doc.get_first_measure(), doc.measures_count(), 1):  # from 1 to 11, step 1
     # Export only the i-th measure (1 long measure scores)
     content_ith_measure = kp.dumps(doc, from_measure=i, to_measure=i)
@@ -379,7 +379,7 @@ doc_merged, indexes = kp.concat(fragments, separator='')
 ### Inspect the `Document` class functions
 ```python
 import kernpy as kp
-doc, _ = kp.load('resource_dir/legacy/chor048.krn')  # 10 measures score
+doc, _ = kp.load('test/resources/legacy/chor048.krn')  # 10 measures score
 
 frequencies = doc.frequencies()  # All the token categories
 filtered_frequencies = doc.frequencies(filter_by_categories=[kp.TokenCategory.SIGNATURES])
@@ -420,7 +420,7 @@ print(kp.AVAILABLE_INTERVALS)
 ```python
 import kernpy as kp
 
-doc, err = kp.load('resource_dir/legacy/chor048.krn')  # 10 measures score
+doc, err = kp.load('test/resources/legacy/chor048.krn')  # 10 measures score
 higher_octave_doc = doc.to_transposed('octave', 'up')
 
 kp.dump(higher_octave_doc, 'higher_octave.krn')
@@ -446,13 +446,10 @@ kp.graph(document, '/tmp/graph.dot')
 
 ## Installation
 
-### Production version:
-Just install the last version of **kernpy** using pip:
 ```shell
 pip3 install kernpy
-
-# ensure you have the latest version
-pip3 install kernpy --upgrade 
+uv add kernpy
+# always ensure you have the latest version installed
 ```
 
 <hr>
@@ -461,7 +458,7 @@ pip3 install kernpy --upgrade
 Documentation available at [https://kernpy.pages.dev/](https://kernpy.pages.dev/)
 
 
-**kernpy** also supports been executed as a module. Find out the available commands:
+**Kernpy** also supports been executed as a module. Find out the available commands:
 ```shell
 python -m kernpy --help
 python -m kernpy <command> <options>
@@ -470,7 +467,14 @@ python -m kernpy <command> <options>
 
 ## Run tests:
 ```shell
-cd tests && python -m pytest
+uv sync --group tests
+uv run pytest test
+```
+
+## Build documentation:
+```bash
+uv sync --group docs
+uv run mkdocs serve/build
 ```
 
 

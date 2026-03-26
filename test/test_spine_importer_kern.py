@@ -80,7 +80,7 @@ class KernSpineImporterTest(unittest.TestCase):
 
     def test_all_permutations(self):
         expected_exported = '2@.@bb@-@·_'
-        all_permutations_path = Path('resource_dir/samples/permutations_of_2.bb-_ .krn')
+        all_permutations_path = Path('test/resources/samples/permutations_of_2.bb-_ .krn')
         lines = [L for L in all_permutations_path.read_text(encoding="utf-8").splitlines() if L.strip()]
 
         for line in lines:

@@ -13,19 +13,19 @@ class DocumentTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Read the basic score document once before all tests
-        cls.doc_organ_4_voices, _ = kp.read('resource_dir/legacy/chor048.krn')
-        cls.doc_piano, _ = kp.read('resource_dir/mozart/concerto-piano-12-allegro.krn')
+        cls.doc_organ_4_voices, _ = kp.read('test/resources/legacy/chor048.krn')
+        cls.doc_piano, _ = kp.read('test/resources/mozart/concerto-piano-12-allegro.krn')
 
     def all_tokens_have_the_correct_category(self, doc: kp.Document, category: kp.TokenCategory):
         tokens = doc.get_all_tokens(filter_by_categories=[category])
         for token in tokens:
-            self.assertEqual(category, token.category)
+            self.assertEqual(category, token.category, msg=f'Token {token} has category {token.category} but expected {category}')
 
     @unittest.skip
     def test_document_self_concat(self):
         # Arrange
-        doc_a, _ = kp.read('resource_dir/legacy/base_tuplet.krn')
-        doc_b, _ = kp.read('resource_dir/legacy/base_tuplet_longer.krn')
+        doc_a, _ = kp.read('test/resources/legacy/base_tuplet.krn')
+        doc_b, _ = kp.read('test/resources/legacy/base_tuplet_longer.krn')
 
         doc_concat = kp.Document.to_concat(doc_a, doc_b)
         kp.store_graph(doc_concat, '/tmp/graph_concat.dot')
@@ -37,14 +37,14 @@ class DocumentTestCase(unittest.TestCase):
 
     @unittest.skip("TODO: Not implemented yet")
     def test_document_append_spines(self):
-        doc, _ = kp.read('resource_dir/legacy/base_tuplet.krn')
+        doc, _ = kp.read('test/resources/legacy/base_tuplet.krn')
         doc.append_spines(spines=['4e\t4f\t4g\t4a\n4b\t4c\t4d\t4e\n*_\t*_\t*_\t*_\n'])
 
         pass
 
     @unittest.skip("TODO: Not implemented yet")
     def test_document_get_voices(self):
-        doc, _ = kp.read('resource_dir/legacy/chor048.krn')
+        doc, _ = kp.read('test/resources/legacy/chor048.krn')
 
         voices = doc.get_voices()
         self.assertEqual(['!sax', '!piano', '!bass'], voices)
@@ -53,7 +53,7 @@ class DocumentTestCase(unittest.TestCase):
         self.assertEqual(['sax', 'piano', 'bass'], voices)
 
     def test_document_get_header_nodes(self):
-        input_kern_file = 'resource_dir/mozart/divertimento-quartet.krn'
+        input_kern_file = 'test/resources/mozart/divertimento-quartet.krn'
         doc, err = kp.read(input_kern_file)
         headers_nodes = doc.get_header_nodes()
 
@@ -65,7 +65,7 @@ class DocumentTestCase(unittest.TestCase):
             [t.encoding for t in headers_nodes])
 
     def test_document_get_all_spines_ids(self):
-        input_kern_file = 'resource_dir/mozart/divertimento-quartet.krn'
+        input_kern_file = 'test/resources/mozart/divertimento-quartet.krn'
 
         doc, err = kp.read(input_kern_file)
         spines_ids = doc.get_spine_ids()
@@ -74,7 +74,7 @@ class DocumentTestCase(unittest.TestCase):
             spines_ids)
 
     def test_document_maximum_recursion_depth_exceeded_in_tree_traversal_dfs(self):
-        doc, err = kp.read('resource_dir/samples/score_with_dividing_two_spines.krn')
+        doc, err = kp.read('test/resources/samples/score_with_dividing_two_spines.krn')
         tokens = doc.get_all_tokens(filter_by_categories=[kp.TokenCategory.CORE])
 
         # optimize this dfs implementation for not exceeding maximum recursion depth
@@ -83,16 +83,16 @@ class DocumentTestCase(unittest.TestCase):
         self.assertTrue(len(tokens) > 0)
 
     def test_frequencies(self):
-        with open('resource_dir/metadata/frequency.json', 'r') as f:
+        with open('test/resources/metadata/frequency.json', 'r') as f:
             expected_frequencies = json.load(f)
 
-        doc, err = kp.read('resource_dir/legacy/chor001.krn')
+        doc, err = kp.read('test/resources/legacy/chor001.krn')
         real_frequencies = doc.frequencies()
 
         self.assertDictEqual(expected_frequencies, real_frequencies)
 
     def test_document_split(self):
-        doc, err = kp.read('resource_dir/legacy/chor001.krn')
+        doc, err = kp.read('test/resources/legacy/chor001.krn')
         docs = doc.split()
 
         for i, new_doc in enumerate(docs):
@@ -202,8 +202,8 @@ class DocumentTestCase(unittest.TestCase):
         self.assertEqual(expected_result, real_result)
 
     def test_document_to_transposed_easy(self):
-        doc, err = kp.load('resource_dir/legacy/base_tuplet_longer.krn')
-        with open(Path('resource_dir/legacy/base_tuplet_longer_plus_octave.krn')) as f:
+        doc, err = kp.load('test/resources/legacy/base_tuplet_longer.krn')
+        with open(Path('test/resources/legacy/base_tuplet_longer_plus_octave.krn')) as f:
             expected_content = f.read()
 
         doc_transposed = doc.to_transposed('octave', 'up')

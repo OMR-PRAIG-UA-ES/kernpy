@@ -1,16 +1,27 @@
 name: Publish to PyPI.org
+
 on:
   release:
     types: [published]
+
 jobs:
   pypi:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - run: python3 -m pip install --upgrade build && python3 -m build
+
+      - name: Install uv
+        run: |
+          curl -Ls https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Build package
+        run: uv build
+
       - name: Publish package
         uses: pypa/gh-action-pypi-publish@release/v1
         with:

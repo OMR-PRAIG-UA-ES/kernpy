@@ -7,10 +7,10 @@ import kernpy as kp
 class TestAgnostic(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.static_complex_doc, _ = kp.load('resource_dir/kern-scores/beethoven_sonata_12_4.krn')
+        cls.static_complex_doc, _ = kp.load('test/resources/kern-scores/beethoven_sonata_12_4.krn')
 
     def test_agnostic_dumps(self):
-        with open(Path('resource_dir/agnostic/beethoven_sonata_12_4.akrn'), 'r') as f:
+        with open(Path('test/resources/agnostic/beethoven_sonata_12_4.akrn'), 'r') as f:
             expected = f.read()
 
         real_output = kp.dumps(self.static_complex_doc, encoding=kp.Encoding.agnosticKern)
@@ -19,7 +19,7 @@ class TestAgnostic(unittest.TestCase):
                          msg=f'Expected and real output differ:\nExpected:\n{expected}\n\nReal Output:\n{real_output}')
 
     def test_agnostic_extended_dumps(self):
-        with open(Path('resource_dir/agnostic/beethoven_sonata_12_4_extended.aekrn'), 'r') as f:
+        with open(Path('test/resources/agnostic/beethoven_sonata_12_4_extended.aekrn'), 'r') as f:
             expected = f.read()
 
         real_output = kp.dumps(self.static_complex_doc, encoding=kp.Encoding.agnosticExtendedKern)

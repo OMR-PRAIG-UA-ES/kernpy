@@ -139,7 +139,7 @@ Use the `Encoding` enum class to select the encoding:
 ```python
 import kernpy as kp
 
-doc, _ = kp.load('resource_dir/legacy/chor048.krn')
+doc, _ = kp.load('test/resources/legacy/chor048.krn')
 
 kern_content = kp.dumps(doc, encoding=kp.Encoding.normalizedKern)
 ekern_content = kp.dumps(doc, encoding=kp.Encoding.eKern)
@@ -234,7 +234,7 @@ Iterate over all the measures of the document.
 ```python
 import kernpy as kp
 
-doc, _ = kp.load('resource_dir/legacy/chor048.krn')  # 10 measures score
+doc, _ = kp.load('test/resources/legacy/chor048.krn')  # 10 measures score
 for i in range(doc.get_first_measure(), doc.measures_count(), 1):  # from 1 to 11, step 1
     # Export only the i-th measure (1 long measure scores)
     content_ith_measure = kp.dumps(doc, from_measure=i, to_measure=i)
@@ -323,7 +323,7 @@ doc_merged, indexes = kp.concat(fragments, separator='')
 ### Inspect the `Document` class functions
 ```python
 import kernpy as kp
-doc, _ = kp.load('resource_dir/legacy/chor048.krn')  # 10 measures score
+doc, _ = kp.load('test/resources/legacy/chor048.krn')  # 10 measures score
 
 frequencies = doc.frequencies()  # All the token categories
 filtered_frequencies = doc.frequencies(filter_by_categories=[kp.TokenCategory.SIGNATURES])
