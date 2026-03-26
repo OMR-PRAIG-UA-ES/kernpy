@@ -19,7 +19,7 @@ class DocumentTestCase(unittest.TestCase):
     def all_tokens_have_the_correct_category(self, doc: kp.Document, category: kp.TokenCategory):
         tokens = doc.get_all_tokens(filter_by_categories=[category])
         for token in tokens:
-            self.assertEqual(category, token.category)
+            self.assertEqual(category, token.category, msg=f'Token {token} has category {token.category} but expected {category}')
 
     @unittest.skip
     def test_document_self_concat(self):
