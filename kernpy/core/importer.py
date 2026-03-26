@@ -4,13 +4,14 @@ import csv
 import io
 from copy import copy
 from pathlib import Path
-from typing import List, Optional
+from typing import Dict, List, Optional, Sequence, Tuple
 
 from kernpy.core.tokens import TokenCategory, SignatureToken, MetacommentToken, HeaderToken, SpineOperationToken, \
     FieldCommentToken, ErrorToken, \
-    BoundingBoxToken, SPINE_OPERATIONS, HEADERS, Token
+    BoundingBoxToken, SPINE_OPERATIONS, HEADERS, Token, TimeSignatureToken, NoteRestToken, Subtoken
 from kernpy.core.document import Document, MultistageTree, BoundingBoxMeasures
 from kernpy.core.importer_factory import createImporter
+from kernpy.core.measure_signature_validators import MeasureSignatureValidator
 
 
 class Importer:
@@ -19,7 +20,12 @@ class Importer:
 
     Use this class to import the content from a file or a string to a `Document` object.
     """
-    def __init__(self):
+    def __init__(
+            self,
+            *,
+            error_on_duration_mismatch: bool = False,
+            meter_signature_fallback_if_not_found: Optional[str] = None,
+    ):
         """
         Create an instance of the importer.
 
@@ -50,6 +56,11 @@ class Importer:
         self._prev_stage_parents = None
         self._last_node_previous_to_header = self._tree.root
         self._terminated_spine_columns = {}
+        self._error_on_duration_mismatch = error_on_duration_mismatch
+        self._meter_signature_fallback_if_not_found = meter_signature_fallback_if_not_found
+        self._current_measure_durations_by_column: Dict[int, List[Subtoken]] = {}
+        self._current_measure_signature_by_column: Dict[int, str] = {}
+        self._measure_duration_validation_memo: Dict[Tuple[str, Tuple[str, ...]], Tuple[bool, str]] = {}
 
     @staticmethod
     def get_last_spine_operator(parent):
@@ -132,6 +143,8 @@ class Importer:
                         node = self._tree.add_node(self._tree_stage, parent, token, self.get_last_spine_operator(parent), parent.last_signature_nodes, parent.header_node)
                         self._next_stage_parents.append(node)
 
+                        self._track_measure_validation_state(column_index=icolumn, token=token)
+
                         if (token.category == TokenCategory.BARLINES
                                 or TokenCategory.is_child(child=token.category, parent=TokenCategory.CORE)
                                     and len(self._document.measure_start_tree_stages) == 0):
@@ -147,7 +160,72 @@ class Importer:
                     if self.last_bounding_box:
                         self.last_bounding_box.to_measure = self.last_measure_number
             self._row_number = self._row_number + 1
+
+        self._validate_pending_measures_at_end()
         return self._document
+
+    def _track_measure_validation_state(self, column_index: int, token: Token):
+        if not self._error_on_duration_mismatch:
+            return
+
+        if isinstance(token, TimeSignatureToken):
+            self._current_measure_signature_by_column[column_index] = token.encoding
+            return
+
+        if token.category == TokenCategory.BARLINES:
+            measure_index = len(self._document.measure_start_tree_stages)
+            self._validate_measure_for_column(column_index=column_index, measure_index=measure_index)
+            return
+
+        if isinstance(token, NoteRestToken):
+            duration_subtokens = [
+                subtoken for subtoken in token.pitch_duration_subtokens
+                if subtoken.category == TokenCategory.DURATION
+            ]
+            if len(duration_subtokens) > 0:
+                durations = self._current_measure_durations_by_column.setdefault(column_index, [])
+                durations.extend(duration_subtokens)
+
+    def _validate_pending_measures_at_end(self):
+        if not self._error_on_duration_mismatch:
+            return
+
+        measure_index = len(self._document.measure_start_tree_stages)
+        for column_index in list(self._current_measure_durations_by_column.keys()):
+            self._validate_measure_for_column(column_index=column_index, measure_index=measure_index)
+
+    def _validate_measure_for_column(self, *, column_index: int, measure_index: int):
+        durations = self._current_measure_durations_by_column.get(column_index)
+        if not durations:
+            return
+
+        signature_encoding = self._current_measure_signature_by_column.get(column_index)
+        if signature_encoding is None:
+            signature_encoding = self._meter_signature_fallback_if_not_found
+
+        if signature_encoding is None:
+            raise ValueError(
+                f"No time signature available for column #{column_index} at measure #{measure_index}, "
+                "and no fallback signature was provided."
+            )
+
+        duration_pattern = self._duration_pattern_from_subtokens(durations)
+        memo_key = (signature_encoding, duration_pattern)
+        result = self._measure_duration_validation_memo.get(memo_key)
+        if result is None:
+            validator = MeasureSignatureValidator(TimeSignatureToken(signature_encoding))
+            result = validator.assert_measure(durations, measure_index=measure_index)
+            self._measure_duration_validation_memo[memo_key] = result
+
+        is_valid, error_message = result
+        if not is_valid:
+            raise ValueError(error_message)
+
+        self._current_measure_durations_by_column[column_index] = []
+
+    @staticmethod
+    def _duration_pattern_from_subtokens(duration_subtokens: Sequence[Subtoken]) -> Tuple[str, ...]:
+        return tuple(subtoken.encoding for subtoken in duration_subtokens)
 
     def handle_bounding_box(self, document: Document, token: BoundingBoxToken):
         page_number = token.page_number

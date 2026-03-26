@@ -27,7 +27,9 @@ class Generic:
     def read(
             cls,
             path: Path,
-            strict: Optional[bool] = False
+            strict: Optional[bool] = False,
+            error_on_duration_mismatch: bool = False,
+            meter_signature_fallback_if_not_found: Optional[str] = None,
     ) -> (Document, List[str]):
         """
 
@@ -38,7 +40,10 @@ class Generic:
         Returns:
 
         """
-        importer = Importer()
+        importer = Importer(
+            error_on_duration_mismatch=error_on_duration_mismatch,
+            meter_signature_fallback_if_not_found=meter_signature_fallback_if_not_found,
+        )
         document = importer.import_file(path)
         errors = importer.errors
 
@@ -51,7 +56,9 @@ class Generic:
     def create(
             cls,
             content: str,
-            strict: Optional[bool] = False
+            strict: Optional[bool] = False,
+            error_on_duration_mismatch: bool = False,
+            meter_signature_fallback_if_not_found: Optional[str] = None,
     ) -> (Document, List[str]):
         """
 
@@ -62,7 +69,10 @@ class Generic:
         Returns:
 
         """
-        importer = Importer()
+        importer = Importer(
+            error_on_duration_mismatch=error_on_duration_mismatch,
+            meter_signature_fallback_if_not_found=meter_signature_fallback_if_not_found,
+        )
         document = importer.import_string(content)
         errors = importer.errors
 

@@ -17,7 +17,14 @@ from kernpy.core import (
 )
 
 
-def load(fp: Union[str, Path], *, raise_on_errors: Optional[bool] = False, **kwargs) -> (Document, List[str]):
+def load(
+    fp: Union[str, Path],
+    *,
+    raise_on_errors: Optional[bool] = False,
+    error_on_duration_mismatch: bool = False,
+    meter_signature_fallback_if_not_found: Optional[str] = None,
+    **kwargs,
+) -> (Document, List[str]):
     """
     Load a Document object from a Humdrum **kern file-like object.
 
@@ -25,6 +32,10 @@ def load(fp: Union[str, Path], *, raise_on_errors: Optional[bool] = False, **kwa
         fp (Union[str, Path]): A path-like object representing a **kern file.
         raise_on_errors (Optional[bool], optional): If True, raise an exception if any grammar error is detected\
             during parsing.
+        error_on_duration_mismatch (bool): If True, validate per-measure rhythmic duration against the active meter
+            signature and raise a ValueError on mismatch.
+        meter_signature_fallback_if_not_found (Optional[str]): Fallback meter signature encoding (for example '*M4/4')
+            used when no time signature token is available for a measure.
 
     Returns ((Document, List[str])): A tuple containing the Document object and a list of messages representing \
         grammar errors detected during parsing. If the list is empty,\
@@ -48,10 +59,19 @@ def load(fp: Union[str, Path], *, raise_on_errors: Optional[bool] = False, **kwa
     return generic.Generic.read(
         path=fp,
         strict=raise_on_errors,
+        error_on_duration_mismatch=error_on_duration_mismatch,
+        meter_signature_fallback_if_not_found=meter_signature_fallback_if_not_found,
     )
 
 
-def loads(s, *, raise_on_errors: Optional[bool] = False, **kwargs) -> (Document, List[str]):
+def loads(
+    s,
+    *,
+    raise_on_errors: Optional[bool] = False,
+    error_on_duration_mismatch: bool = False,
+    meter_signature_fallback_if_not_found: Optional[str] = None,
+    **kwargs,
+) -> (Document, List[str]):
     """
     Load a Document object from a string encoded in Humdrum **kern.
 
@@ -59,6 +79,10 @@ def loads(s, *, raise_on_errors: Optional[bool] = False, **kwargs) -> (Document,
         s (str): A string containing a **kern file.
         raise_on_errors (Optional[bool], optional): If True, raise an exception if any grammar error is detected\
             during parsing.
+        error_on_duration_mismatch (bool): If True, validate per-measure rhythmic duration against the active meter
+            signature and raise a ValueError on mismatch.
+        meter_signature_fallback_if_not_found (Optional[str]): Fallback meter signature encoding (for example '*M4/4')
+            used when no time signature token is available for a measure.
 
     Returns ((Document, List[str])): A tuple containing the Document object and a list of messages representing \
         grammar errors detected during parsing. If the list is empty,\
@@ -82,6 +106,8 @@ def loads(s, *, raise_on_errors: Optional[bool] = False, **kwargs) -> (Document,
     return generic.Generic.create(
         content=s,
         strict=raise_on_errors,
+        error_on_duration_mismatch=error_on_duration_mismatch,
+        meter_signature_fallback_if_not_found=meter_signature_fallback_if_not_found,
     )
 
 

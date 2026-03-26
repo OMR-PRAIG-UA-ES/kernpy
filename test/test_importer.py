@@ -1,6 +1,7 @@
 import unittest
 import os
 from pathlib import Path
+from unittest.mock import patch
 
 import kernpy as kp
 
@@ -111,4 +112,65 @@ f'*ClefF2. '
         document = importer.import_file(input_kern_file)
 
         self.assertIsNotNone(document)
+
+    def test_load_raises_on_duration_mismatch_when_enabled(self):
+        content = "**kern\n*M4/4\n=1\n4c\n4d\n=2\n*-\n"
+
+        with self.assertRaises(ValueError) as context:
+            kp.loads(content, error_on_duration_mismatch=True)
+
+        self.assertIn("duration mismatch", str(context.exception))
+
+    def test_load_does_not_raise_on_duration_mismatch_when_disabled(self):
+        content = "**kern\n*M4/4\n=1\n4c\n4d\n=2\n*-\n"
+
+        document, errors = kp.loads(content, error_on_duration_mismatch=False)
+
+        self.assertIsNotNone(document)
+        self.assertIsInstance(errors, list)
+
+    def test_load_raises_when_signature_missing_and_no_fallback(self):
+        content = "**kern\n=1\n4c\n4d\n=2\n*-\n"
+
+        with self.assertRaises(ValueError) as context:
+            kp.loads(
+                content,
+                error_on_duration_mismatch=True,
+                meter_signature_fallback_if_not_found=None,
+            )
+
+        self.assertIn("No time signature available", str(context.exception))
+
+    def test_load_uses_fallback_signature_when_missing(self):
+        content = "**kern\n=1\n4c\n4d\n4e\n4f\n=2\n*-\n"
+
+        document, errors = kp.loads(
+            content,
+            error_on_duration_mismatch=True,
+            meter_signature_fallback_if_not_found="*M4/4",
+        )
+
+        self.assertIsNotNone(document)
+        self.assertEqual([], errors)
+
+    @patch("kernpy.core.importer.MeasureSignatureValidator.assert_measure", return_value=(True, ""))
+    def test_importer_uses_memo_for_repeated_measure_patterns(self, mock_assert_measure):
+        content = "**kern\n*M4/4\n=1\n4c\n4d\n4e\n4f\n=2\n4g\n4a\n4b\n4cc\n=3\n*-\n"
+
+        importer = kp.Importer(error_on_duration_mismatch=True)
+        importer.import_string(content)
+
+        # Both measures have identical rhythmic pattern (4,4,4,4), so validation should be cached.
+        self.assertEqual(1, mock_assert_measure.call_count)
+
+    def test_load_counts_dotted_duration_correctly(self):
+        content = "**kern\n*M4/4\n=1\n2.c\n8.c\n16c\n=2\n*-\n"
+
+        document, errors = kp.loads(
+            content,
+            error_on_duration_mismatch=True,
+        )
+
+        self.assertIsNotNone(document)
+        self.assertEqual([], errors)
 
