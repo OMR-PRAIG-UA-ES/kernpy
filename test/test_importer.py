@@ -7,6 +7,14 @@ import kernpy as kp
 
 class ImporterTestCase(unittest.TestCase):
 
+    def _assert_raise_error_when_writing_after_eof(self, input_kern_file: Path, expected_message: str):
+        importer = kp.Importer()
+
+        with self.assertRaises(ValueError) as context:
+            importer.import_file(input_kern_file)
+
+        self.assertEqual(str(context.exception), expected_message)
+
     def test_import_from_file(self):
         input_kern_file = 'test/resources/legacy/chor001.krn'
         importer = kp.Importer()
@@ -80,4 +88,27 @@ f'*ClefF2. '
 
         # Assert that the error message is as expected
         self.assertEqual(str(context.exception), expected_message)
+
+    def test_assertRaiseErrorWhenWritingAfterEndOfFile_monophonic_only_kern(self):
+        input_kern_file = Path('test/resources/end-of-file/eof_monophonic_only_kern_from_base_tuplet_longer.krn')
+        expected_message = 'Token found in column #0 and row #42 after an end-of-program token (*-) in row #41. Found 4A.'
+        self._assert_raise_error_when_writing_after_eof(input_kern_file=input_kern_file, expected_message=expected_message)
+
+    def test_assertRaiseErrorWhenWritingAfterEndOfFile_polyphonic_only_kern(self):
+        input_kern_file = Path('test/resources/end-of-file/eof_polyphonic_only_kern_from_grandstaff.krn')
+        expected_message = 'Token found in column #0 and row #10 after an end-of-program token (*-) in row #9. Found 4c.'
+        self._assert_raise_error_when_writing_after_eof(input_kern_file=input_kern_file, expected_message=expected_message)
+
+    def test_assertRaiseErrorWhenWritingAfterEndOfFile_polyphonic_with_other_spines(self):
+        input_kern_file = Path('test/resources/end-of-file/eof_polyphonic_mixed_from_didone.krn')
+        expected_message = 'Token found in column #0 and row #15 after an end-of-program token (*-) in row #14. Found 4dd.'
+        self._assert_raise_error_when_writing_after_eof(input_kern_file=input_kern_file, expected_message=expected_message)
+
+    def test_assertRaiseErrorWhenWritingAfterEndOfFile_not_raised_when_valid(self):
+        input_kern_file = Path('test/resources/end-of-file/eof_valid_no_write_after_terminator.krn')
+
+        importer = kp.Importer()
+        document = importer.import_file(input_kern_file)
+
+        self.assertIsNotNone(document)
 
