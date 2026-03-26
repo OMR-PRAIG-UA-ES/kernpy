@@ -49,6 +49,7 @@ class Importer:
         self._next_stage_parents = None
         self._prev_stage_parents = None
         self._last_node_previous_to_header = self._tree.root
+        self._terminated_spine_columns = {}
 
     @staticmethod
     def get_last_spine_operator(parent):
@@ -76,6 +77,14 @@ class Importer:
                 self._compute_metacomment_token(row[0].strip())
             else:
                 for icolumn, column in enumerate(row):
+                    if icolumn in self._terminated_spine_columns:
+                        terminated_row = self._terminated_spine_columns[icolumn]
+                        raise ValueError(
+                            f'Token found in column #{icolumn} and row #{self._row_number} '
+                            f'after an end-of-program token (*-) in row #{terminated_row}. '
+                            f'Found {column}.'
+                        )
+
                     if column.startswith("**"):
                         self._compute_header_token(icolumn, column)
                         # go to next row
@@ -258,6 +267,7 @@ class Importer:
         node = self._tree.add_node(self._tree_stage, self._last_node_previous_to_header, token, None, None)
         node.header_node = node # this value will be propagated
         self._next_stage_parents.append(node)
+        self._terminated_spine_columns = {}
 
     def _compute_spine_operator_token(self, column_index: int, column_content: str, row: List[str]):
         token = SpineOperationToken(column_content)
@@ -269,6 +279,7 @@ class Importer:
         node = self._tree.add_node(self._tree_stage, parent, token, self.get_last_spine_operator(parent), parent.last_signature_nodes, parent.header_node)
 
         if column_content == '*-':
+            self._terminated_spine_columns[column_index] = self._row_number
             if node.last_spine_operator_node is not None:
                 node.last_spine_operator_node.token.cancelled_at_stage = self._tree_stage
             pass # it's terminated, no continuation

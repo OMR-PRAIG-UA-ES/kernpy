@@ -551,7 +551,7 @@ wheels = [
 
 [[package]]
 name = "kernpy"
-version = "1.4.0"
+version = "1.5.0"
 source = { editable = "." }
 dependencies = [
     { name = "antlr4-python3-runtime" },
