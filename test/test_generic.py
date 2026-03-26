@@ -15,7 +15,7 @@ class GenericTestCase(unittest.TestCase):
     def load_contents_of_input_concatenated_load_files(cls):
         path_names = ['0_0.krn', '0_1.krn', '0_2.krn', '0_3.krn', '0_4.krn', '0_5.krn', '0_6.krn',
                       '0_7.krn', '0_8.krn', '0_9.krn', '0_10.krn', '0_11.krn']
-        paths = [os.path.join('resource_dir', 'concat', p) for p in path_names if 'concat' not in p]
+        paths = [os.path.join('test/resources', 'concat', p) for p in path_names if 'concat' not in p]
         contents = [open(p, 'r').read() for p in paths]
         return contents
 
@@ -23,7 +23,7 @@ class GenericTestCase(unittest.TestCase):
     def load_expected_contents_of_input_concatenated_load_files(cls):
         path_names = ['0_0.krn', '0_1.krn', '0_2.krn', '0_3.krn', '0_4.krn', '0_5.krn', '0_6.krn',
                       '0_7.krn', '0_8.krn', '0_9.krn', '0_10.krn', '0_11.krn']
-        paths = [os.path.join('resource_dir', 'concat', p) for p in path_names if 'concat' in p]
+        paths = [os.path.join('test/resources', 'concat', p) for p in path_names if 'concat' in p]
         contents = [open(p, 'r').read() for p in paths]
         return contents
 
@@ -34,14 +34,14 @@ class GenericTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.static_complex_doc, _ = kp.load('resource_dir/legacy/chor048.krn')
+        cls.static_complex_doc, _ = kp.load('test/resources/legacy/chor048.krn')
 
 
 
     def test_read_export_easy(self):
         # Arrange
-        expected_ekrn = 'resource_dir/legacy/base_tuplet.ekrn'
-        current_krn = 'resource_dir/legacy/base_tuplet.krn'
+        expected_ekrn = 'test/resources/legacy/base_tuplet.ekrn'
+        current_krn = 'test/resources/legacy/base_tuplet.krn'
         with open(expected_ekrn, 'r') as f:
             expected_content = f.read()
 
@@ -55,7 +55,7 @@ class GenericTestCase(unittest.TestCase):
 
     def test_store_non_existing_file(self):
         # Arrange
-        doc, _ = kp.read('resource_dir/legacy/base_tuplet.krn')
+        doc, _ = kp.read('test/resources/legacy/base_tuplet.krn')
         options = kp.ExportOptions()
         with TemporaryDirectory() as temp_dir:
             file_path = os.path.join(temp_dir, 'test.krn')
@@ -69,7 +69,7 @@ class GenericTestCase(unittest.TestCase):
     @patch('kernpy.Exporter.get_spine_types')
     def test_get_spine_types_uses_exporter_get_spines_types(self, mock_get_spines_types):
         # Arrange
-        doc, _ = kp.read('resource_dir/legacy/chor048.krn')
+        doc, _ = kp.read('test/resources/legacy/chor048.krn')
 
         # Act
         _ = kp.get_spine_types(doc)
@@ -80,7 +80,7 @@ class GenericTestCase(unittest.TestCase):
     @patch('kernpy.Importer.import_file')
     def test_read_use_importer_run(self, mock_importer_run):
         # Arrange
-        file_path = 'resource_dir/legacy/chor048.krn'
+        file_path = 'test/resources/legacy/chor048.krn'
 
         # Act
         _ = kp.read(file_path)
@@ -91,7 +91,7 @@ class GenericTestCase(unittest.TestCase):
     @patch('kernpy.Exporter.export_string')
     def test_export_use_exporter_run(self, mock_exporter_run):
         # Arrange
-        doc, _ = kp.read('resource_dir/legacy/chor048.krn')
+        doc, _ = kp.read('test/resources/legacy/chor048.krn')
         options = kp.ExportOptions()
 
         # Act
@@ -102,7 +102,7 @@ class GenericTestCase(unittest.TestCase):
 
     def test_create_document(self):
         # Arrange
-        file_path = 'resource_dir/legacy/chor048.krn'
+        file_path = 'test/resources/legacy/chor048.krn'
         with open(file_path, 'r') as f:
             content = f.read()
 
@@ -159,14 +159,14 @@ class GenericTestCase(unittest.TestCase):
 
 
     def test_generic_dumps_include_empty(self):
-        with open(Path('resource_dir/categories/empty.krn'), 'r') as f:
+        with open(Path('test/resources/categories/empty.krn'), 'r') as f:
             expected = f.read()
 
         real_output = kp.dumps(self.static_complex_doc, include=[])
         self.assertEqual(expected, real_output)
 
     def test_generic_dumps_include_all(self):
-        with open(Path('resource_dir/categories/all.krn'), 'r') as f:
+        with open(Path('test/resources/categories/all.krn'), 'r') as f:
             expected = f.read()
 
         real_output = kp.dumps(self.static_complex_doc)
@@ -174,7 +174,7 @@ class GenericTestCase(unittest.TestCase):
         self.assertEqual(expected, real_output)
 
     def test_generic_dumps_include_only_barlines(self):
-        with open(Path('resource_dir/categories/only_barlines.krn'), 'r') as f:
+        with open(Path('test/resources/categories/only_barlines.krn'), 'r') as f:
             expected = f.read()
 
         real_output = kp.dumps(self.static_complex_doc, include=kp.TokenCategory.BARLINES)
@@ -182,14 +182,14 @@ class GenericTestCase(unittest.TestCase):
         self.assertEqual(expected, real_output)
 
     def test_generic_dumps_include_all_less_note_rest(self):
-        with open(Path('resource_dir/categories/all_less_note_rest.krn'), 'r') as f:
+        with open(Path('test/resources/categories/all_less_note_rest.krn'), 'r') as f:
             expected = f.read()
         real_output = kp.dumps(self.static_complex_doc, exclude=kp.TokenCategory.NOTE_REST)
 
         self.assertEqual(expected, real_output)
 
     def test_generic_dumps_include_all_less_durations(self):
-        with open(Path('resource_dir/categories/all_less_durations.krn'), 'r') as f:
+        with open(Path('test/resources/categories/all_less_durations.krn'), 'r') as f:
             expected = f.read()
 
         real_output = kp.dumps(self.static_complex_doc, exclude=kp.TokenCategory.DURATION)
@@ -197,7 +197,7 @@ class GenericTestCase(unittest.TestCase):
         self.assertEqual(expected, real_output)
 
     def test_generic_dumps_include_all_less_pitches(self):
-        with open(Path('resource_dir/categories/all_less_pitches.krn'), 'r') as f:
+        with open(Path('test/resources/categories/all_less_pitches.krn'), 'r') as f:
             expected = f.read()
 
         real_output = kp.dumps(self.static_complex_doc, exclude=kp.TokenCategory.PITCH)
@@ -205,14 +205,14 @@ class GenericTestCase(unittest.TestCase):
         self.assertEqual(expected, real_output)
 
     def test_generic_dumps_include_all_less_decorators(self):
-        with open(Path('resource_dir/categories/all_less_decorators.krn'), 'r') as f:
+        with open(Path('test/resources/categories/all_less_decorators.krn'), 'r') as f:
             expected = f.read()
         real_output = kp.dumps(self.static_complex_doc, exclude=kp.TokenCategory.DECORATION)
 
         self.assertEqual(expected, real_output)
 
     def test_generic_dumps_only_durations(self):
-        with open(Path('resource_dir/categories/only_durations.krn'), 'r') as f:
+        with open(Path('test/resources/categories/only_durations.krn'), 'r') as f:
             expected = f.read()
 
         real_output = kp.dumps(self.static_complex_doc, include=kp.TokenCategory.DURATION)
@@ -220,7 +220,7 @@ class GenericTestCase(unittest.TestCase):
         self.assertEqual(expected, real_output)
 
     def test_generic_dumps_only_pitches(self):
-        with open(Path('resource_dir/categories/only_pitches.krn'), 'r') as f:
+        with open(Path('test/resources/categories/only_pitches.krn'), 'r') as f:
             expected = f.read()
 
         real_output = kp.dumps(self.static_complex_doc, include=kp.TokenCategory.PITCH)
@@ -228,7 +228,7 @@ class GenericTestCase(unittest.TestCase):
         self.assertEqual(expected, real_output)
 
     def test_generic_dumps_only_decorators(self):
-        with open(Path('resource_dir/categories/only_decorators.krn'), 'r') as f:
+        with open(Path('test/resources/categories/only_decorators.krn'), 'r') as f:
             expected = f.read()
 
         real_output = kp.dumps(self.static_complex_doc, include=kp.TokenCategory.DECORATION)
@@ -236,7 +236,7 @@ class GenericTestCase(unittest.TestCase):
         self.assertEqual(expected, real_output, f"Expected:\n{expected}\n\nReal:\n{real_output}")
 
     def test_generic_dumps_include_note_rest_exclude_decorators(self):
-        with open(Path('resource_dir/categories/note_rest_exclude_decorators.krn'), 'r') as f:
+        with open(Path('test/resources/categories/note_rest_exclude_decorators.krn'), 'r') as f:
             expected = f.read()
 
         real_output = kp.dumps(self.static_complex_doc,
@@ -247,8 +247,8 @@ class GenericTestCase(unittest.TestCase):
 
     def test_normalize_and_bekern_categories(self):
         # Arrange
-        input_file = Path('resource_dir/samples/nine-voices-score.krn')
-        expected_file = Path('resource_dir/samples/nine-voices-score_normalized.krn')
+        input_file = Path('test/resources/samples/nine-voices-score.krn')
+        expected_file = Path('test/resources/samples/nine-voices-score_normalized.krn')
 
         with open(expected_file, 'r') as f:
             expected = f.read()
@@ -265,7 +265,7 @@ class GenericTestCase(unittest.TestCase):
 
     def test_is_monophonic_when_true(self):
         # Arrange
-        input_file = Path('resource_dir/samples/monophonic-score.krn')
+        input_file = Path('test/resources/samples/monophonic-score.krn')
 
         # Act
         doc, _err = kp.load(input_file)
@@ -275,7 +275,7 @@ class GenericTestCase(unittest.TestCase):
 
     def test_is_monophonic_when_false(self):
         # Arrange
-        input_file = Path('resource_dir/samples/polyphonic-score.krn')
+        input_file = Path('test/resources/samples/polyphonic-score.krn')
 
         # Act
         doc, _err = kp.load(input_file)

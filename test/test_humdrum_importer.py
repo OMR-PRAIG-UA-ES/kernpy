@@ -78,90 +78,90 @@ class ImporterTestCase(unittest.TestCase):
 
     # it loads a simple file
     def testReadMinimalKern(self):
-        document = self.doJustImportTest('resource_dir/unit/minimal.krn')
+        document = self.doJustImportTest('test/resources/unit/minimal.krn')
         dot_exporter = kp.GraphvizExporter()
         dot_exporter.export_to_dot(document.tree, '/tmp/minimal.dot')
         # self.assertEqual(1, len(ts.files))
 
     def testClefs(self):
-        self.doJustImportTest('resource_dir/unit/clefs.krn')
+        self.doJustImportTest('test/resources/unit/clefs.krn')
         # self.assertEqual(1, len(ts.files))
 
     def testOctaves(self):
-        self.doJustImportTest('resource_dir/unit/octaves.krn')
+        self.doJustImportTest('test/resources/unit/octaves.krn')
         # self.assertEqual(1, len(ts.files))
 
     def testBars(self):
-        self.doJustImportTest('resource_dir/unit/bars.krn')
+        self.doJustImportTest('test/resources/unit/bars.krn')
         # self.assertEqual(1, len(ts.files))
 
     def testTime(self):
-        self.doJustImportTest('resource_dir/unit/time.krn')
+        self.doJustImportTest('test/resources/unit/time.krn')
         # self.assertEqual(1, len(ts.files))
 
     def testMensurations(self):
-        self.doJustImportTest('resource_dir/unit/mensurations.krn')
+        self.doJustImportTest('test/resources/unit/mensurations.krn')
         # self.assertEqual(1, len(ts.files))
 
     def testAccidentals(self):
-        self.doJustImportTest('resource_dir/unit/accidentals.krn')
+        self.doJustImportTest('test/resources/unit/accidentals.krn')
         # self.assertEqual(1, len(ts.files))
 
     def testAccidentalsWithAlterationDisplay(self):
-        self.doJustImportTest('resource_dir/unit/accidentals_alteration_display.krn')
+        self.doJustImportTest('test/resources/unit/accidentals_alteration_display.krn')
         # self.assertEqual(1, len(ts.files))
 
     def testKey(self):
-        self.doJustImportTest('resource_dir/unit/key.krn')
+        self.doJustImportTest('test/resources/unit/key.krn')
         # self.assertEqual(1, len(ts.files))
 
     def testKeyDesignation(self):
-        self.doJustImportTest('resource_dir/unit/key_designation.krn')
+        self.doJustImportTest('test/resources/unit/key_designation.krn')
         # self.assertEqual(1, len(ts.files))
 
     def testModal(self):
-        self.doJustImportTest('resource_dir/unit/modal.krn')
+        self.doJustImportTest('test/resources/unit/modal.krn')
         # self.assertEqual(1, len(ts.files))
 
     def testChords(self):
-        self.doJustImportTest('resource_dir/unit/chords.krn')
+        self.doJustImportTest('test/resources/unit/chords.krn')
         # self.assertEqual(1, len(ts.files))
 
     def testRhythm(self):
-        self.doJustImportTest('resource_dir/unit/rhythm.krn')
+        self.doJustImportTest('test/resources/unit/rhythm.krn')
         # self.assertEqual(1, len(ts.files))
 
     def testTies(self):
-        self.doJustImportTest('resource_dir/unit/ties.krn')
+        self.doJustImportTest('test/resources/unit/ties.krn')
         # self.assertEqual(1, len(ts.files))
 
     def testBeams(self):
-        self.doJustImportTest('resource_dir/unit/beaming.krn')
+        self.doJustImportTest('test/resources/unit/beaming.krn')
         # self.assertEqual(1, len(ts.files))
 
     def testAutoBeam(self):
-        self.doJustImportTest('resource_dir/unit/auto_beaming.krn')
+        self.doJustImportTest('test/resources/unit/auto_beaming.krn')
         # self.assertEqual(1, len(ts.files))
 
     def testRests(self):
-        self.doJustImportTest('resource_dir/unit/rests.krn')
+        self.doJustImportTest('test/resources/unit/rests.krn')
         # self.assertEqual(1, len(ts.files))
 
     def testSlurs(self):
-        self.doJustImportTest('resource_dir/unit/slurs.krn')
+        self.doJustImportTest('test/resources/unit/slurs.krn')
         # self.assertEqual(1, len(ts.files))
 
     def testArticulations(self):
-        self.doJustImportTest('resource_dir/unit/articulations.krn')
+        self.doJustImportTest('test/resources/unit/articulations.krn')
         # self.assertEqual(1, len(ts.files))
 
     def testOrnaments(self):
-        self.doJustImportTest('resource_dir/unit/ornaments.krn')
+        self.doJustImportTest('test/resources/unit/ornaments.krn')
         # self.assertEqual(1, len(ts.files))
 
     def testHeader(self):
         importer = kp.Importer()
-        document = importer.import_file('resource_dir/unit/headers.krn')
+        document = importer.import_file('test/resources/unit/headers.krn')
         self.assertEqual(8, document.get_spine_count())
         header_stage = document.tree.stages[document.header_stage]
         expected_importers = [kp.KernSpineImporter, kp.MensSpineImporter, kp.DynamSpineImporter, kp.DynSpineImporter,
@@ -189,102 +189,102 @@ class ImporterTestCase(unittest.TestCase):
 
     def testSpines(self):
         # Tests extracted from the discussion in  https://github.com/humdrum-tools/vhv-documentation/issues/7#event-3236429526
-        self.doTestCountSpines('resource_dir/spines/non_stacked_ends.krn', 12,
+        self.doTestCountSpines('test/resources/spines/non_stacked_ends.krn', 12,
                                [[1, 1, 2, 2, 3, 3, 4, 4, 2, 2, 1, 1]])  # in this test, three spines merge into one
-        self.doTestCountSpines('resource_dir/spines/non_stacked_ends_2.krn', 10,
+        self.doTestCountSpines('test/resources/spines/non_stacked_ends_2.krn', 10,
                                [[1, 1, 1, 1, 1, 1, 2, 2, 1, 1], [1, 1, 2, 2, 3, 3, 6, 6, 1, 1],
                                 [1, 1, 1, 1, 1, 1, 2, 2, 1,
                                  1]])  # the last join in VHV leads to just one main spine - we've added an issue
 
-        self.doTestCountSpines('resource_dir/spines/1.krn', 18,
+        self.doTestCountSpines('test/resources/spines/1.krn', 18,
                                [[1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1]])
-        self.doTestCountSpines('resource_dir/spines/2.krn', 18, [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        self.doTestCountSpines('test/resources/spines/2.krn', 18, [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                                                                  [1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1,
                                                                   1]])
-        self.doTestCountSpines('resource_dir/spines/3.krn', 16, [[1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1],
+        self.doTestCountSpines('test/resources/spines/3.krn', 16, [[1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1],
                                                                  [1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1]])
-        self.doTestCountSpines('resource_dir/spines/4.krn', 17, [[1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1],
+        self.doTestCountSpines('test/resources/spines/4.krn', 17, [[1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1],
                                                                  [1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1]])
-        self.doTestCountSpines('resource_dir/spines/5.krn', 24,
+        self.doTestCountSpines('test/resources/spines/5.krn', 24,
                                [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1],
                                 [1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 1, 1, 2, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1]])
 
-        self.doTestCountSpines('resource_dir/spines/spines-from-piano-joplin-bethena-start.krn', 23,
+        self.doTestCountSpines('test/resources/spines/spines-from-piano-joplin-bethena-start.krn', 23,
                                [[1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
                                 [1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 2, 2, 1, 1],
                                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
-        self.doTestCountSpines('resource_dir/spines/spines-piano-hummel-prelude67-15.krn', 19,
+        self.doTestCountSpines('test/resources/spines/spines-piano-hummel-prelude67-15.krn', 19,
                                [[1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 3, 3, 3, 1, 1, 2, 2, 1, 1],
                                 [1, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
                                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
 
     def testLegacyTests(self):
-        self.doEKernTest('resource_dir/legacy/base_tuplet.krn', [5])
-        self.doEKernTest('resource_dir/legacy/guide02-example2-1.krn', [5, 8, 11, 15])
-        self.doEKernTest('resource_dir/legacy/guide02-example2-3.krn', [8, 9, 18, 22, 30, 38])
-        self.doEKernTest('resource_dir/legacy/guide02-example2-4.krn', [6, 12, 16, 23, 27, 33, 37, 47, 51])
-        self.doEKernTest('resource_dir/legacy/guide06-example6-1.krn', [5, 18, 27])
-        self.doEKernTest('resource_dir/legacy/guide06-example6-2.krn', [6, 15, 28, 41])
-        self.doEKernTest('resource_dir/legacy/chor001.krn',
+        self.doEKernTest('test/resources/legacy/base_tuplet.krn', [5])
+        self.doEKernTest('test/resources/legacy/guide02-example2-1.krn', [5, 8, 11, 15])
+        self.doEKernTest('test/resources/legacy/guide02-example2-3.krn', [8, 9, 18, 22, 30, 38])
+        self.doEKernTest('test/resources/legacy/guide02-example2-4.krn', [6, 12, 16, 23, 27, 33, 37, 47, 51])
+        self.doEKernTest('test/resources/legacy/guide06-example6-1.krn', [5, 18, 27])
+        self.doEKernTest('test/resources/legacy/guide06-example6-2.krn', [6, 15, 28, 41])
+        self.doEKernTest('test/resources/legacy/chor001.krn',
                          # rows with comments
                          [26, 27, 32, 37, 43, 46, 50, 55, 57, 60, 67, 74, 77, 82, 88, 93, 96, 102, 107, 114, 117, 122,
                           128, 130])
         # rows without comments
         #[11, 12, 17, 22, 28, 31, 35, 40, 42, 45, 52, 58, 61, 66, 72, 77, 80, 86, 91, 98, 101, 106, 112, 114])
         self.doJustImportTest(
-            'resource_dir/legacy/chor009.krn')  # , [23, 32, 39, 48, 53, 57, 65, 74, 83, 90, 99, 107, 116, 122])
-        self.doJustImportTest('resource_dir/legacy/chor048.krn')  # , [22, 27, 32, 41, 46, 56, 65, 74, 83, 91, 98])
+            'test/resources/legacy/chor009.krn')  # , [23, 32, 39, 48, 53, 57, 65, 74, 83, 90, 99, 107, 116, 122])
+        self.doJustImportTest('test/resources/legacy/chor048.krn')  # , [22, 27, 32, 41, 46, 56, 65, 74, 83, 91, 98])
 
     def testBoundingBoxes(self):
         self.doJustImportTest(
-            'resource_dir/polish/test1/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn')
+            'test/resources/polish/test1/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn')
 
     def testSamples(self):
-        self.doJustImportTest('resource_dir/samples/bach-brandenburg-bwv1050a.krn')
-        self.doJustImportTest('resource_dir/samples/bach-chorale-chor205.krn')
-        self.doJustImportTest('resource_dir/samples/corelli-op01n12d.krn')
-        self.doJustImportTest('resource_dir/samples/harmonized-song-erk052.krn')
-        self.doJustImportTest('resource_dir/samples/haydn-quartet-op54n2-01.krn')
-        self.doJustImportTest('resource_dir/samples/piano-beethoven-sonata21-3.krn')
-        self.doJustImportTest('resource_dir/samples/piano-chopin-prelude28-17.krn')
-        self.doJustImportTest('resource_dir/samples/piano-hummel-prelude67-15.krn')
-        self.doJustImportTest('resource_dir/samples/piano-joplin-bethena.krn')
-        self.doJustImportTest('resource_dir/samples/piano-mozart-sonata07-3.krn')
-        self.doJustImportTest('resource_dir/samples/piano-scarlatti-L523K205.krn')
-        self.doJustImportTest('resource_dir/samples/quartet-beethoven-quartet13-6.krn')
-        self.doJustImportTest('resource_dir/samples/quartet-mozart-k590-04.krn')
-        self.doJustImportTest('resource_dir/samples/unaccompanied-songs-nova073.krn')
+        self.doJustImportTest('test/resources/samples/bach-brandenburg-bwv1050a.krn')
+        self.doJustImportTest('test/resources/samples/bach-chorale-chor205.krn')
+        self.doJustImportTest('test/resources/samples/corelli-op01n12d.krn')
+        self.doJustImportTest('test/resources/samples/harmonized-song-erk052.krn')
+        self.doJustImportTest('test/resources/samples/haydn-quartet-op54n2-01.krn')
+        self.doJustImportTest('test/resources/samples/piano-beethoven-sonata21-3.krn')
+        self.doJustImportTest('test/resources/samples/piano-chopin-prelude28-17.krn')
+        self.doJustImportTest('test/resources/samples/piano-hummel-prelude67-15.krn')
+        self.doJustImportTest('test/resources/samples/piano-joplin-bethena.krn')
+        self.doJustImportTest('test/resources/samples/piano-mozart-sonata07-3.krn')
+        self.doJustImportTest('test/resources/samples/piano-scarlatti-L523K205.krn')
+        self.doJustImportTest('test/resources/samples/quartet-beethoven-quartet13-6.krn')
+        self.doJustImportTest('test/resources/samples/quartet-mozart-k590-04.krn')
+        self.doJustImportTest('test/resources/samples/unaccompanied-songs-nova073.krn')
 
     def testExtractMeasures(self):
         self.doEKernMeasureToMeasureTest(
-            'resource_dir/grandstaff/5901766.krn', 24, 28)
+            'test/resources/grandstaff/5901766.krn', 24, 28)
 
-        self.doEKernMeasureToMeasureTest('resource_dir/spines/2.krn', 2, 2)
-        self.doEKernMeasureToMeasureTest('resource_dir/legacy/chor001.krn', 1, 3)
+        self.doEKernMeasureToMeasureTest('test/resources/spines/2.krn', 2, 2)
+        self.doEKernMeasureToMeasureTest('test/resources/legacy/chor001.krn', 1, 3)
 
         self.doEKernMeasureToMeasureTest(
-            'resource_dir/polish/test2/pl-wn--mus-iii-123-982--001-004_wieniawski-henryk--l-ecole-moderne-etudes-caprices-pour-violon-seul-op-10-4-le-staccato.krn',
+            'test/resources/polish/test2/pl-wn--mus-iii-123-982--001-004_wieniawski-henryk--l-ecole-moderne-etudes-caprices-pour-violon-seul-op-10-4-le-staccato.krn',
             1, 2)
         self.doEKernMeasureToMeasureTest(
-            'resource_dir/polish/test1/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 2)
+            'test/resources/polish/test1/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 2)
         self.doEKernMeasureToMeasureTest(
-            'resource_dir/polish/test1/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 3)
+            'test/resources/polish/test1/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 3)
         self.doEKernMeasureToMeasureTest(
-            'resource_dir/polish/test1/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 16)
+            'test/resources/polish/test1/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', 1, 16)
 
-        #self.doEKernMeasureToMeasureTest('resource_dir/polish/test2/pl-wn--mus-iii-123-982--001-004_wieniawski-henryk--l-ecole-moderne-etudes-caprices-pour-violon-seul-op-10-4-le-staccato.krn', 0, 1) # TODO: Correct it. It doesn't export all the required token_categories
+        #self.doEKernMeasureToMeasureTest('test/resources/polish/test2/pl-wn--mus-iii-123-982--001-004_wieniawski-henryk--l-ecole-moderne-etudes-caprices-pour-violon-seul-op-10-4-le-staccato.krn', 0, 1) # TODO: Correct it. It doesn't export all the required token_categories
 
     #TODO Joan: este test se puede hacer como el doEKernMeasureToMeasureTest, sin repetir tanto código...
     def test_extract_measures_same_measure(self):
         options = kp.ExportOptions(spine_types=['**kern'], kern_type=kp.Encoding.normalizedKern, from_measure=3,
                                    to_measure=3)
         importer = kp.Importer()
-        document = importer.import_file('resource_dir/legacy/base_tuplet_longer.krn')
+        document = importer.import_file('test/resources/legacy/base_tuplet_longer.krn')
 
         exporter = kp.Exporter()
         real_ouputput = exporter.export_string(document, options)
 
-        with open('resource_dir/legacy/base_tuplet_longer_m3-m3.krn', 'r') as f:
+        with open('test/resources/legacy/base_tuplet_longer_m3-m3.krn', 'r') as f:
             expected_output = f.read()
         self.assertEqual(real_ouputput, expected_output)
 
@@ -292,11 +292,11 @@ class ImporterTestCase(unittest.TestCase):
         options = kp.ExportOptions(spine_types=['**kern'], kern_type=kp.Encoding.normalizedKern, from_measure=2,
                                    to_measure=4)
         importer = kp.Importer()
-        document = importer.import_file('resource_dir/legacy/base_tuplet_longer.krn')
+        document = importer.import_file('test/resources/legacy/base_tuplet_longer.krn')
 
         exporter = kp.Exporter()
         real_ouputput = exporter.export_string(document, options)
-        with open('resource_dir/legacy/base_tuplet_longer_m2-m4.krn', 'r') as f:
+        with open('test/resources/legacy/base_tuplet_longer_m2-m4.krn', 'r') as f:
             expected_output = f.read()
         self.assertEqual(real_ouputput, expected_output)
 
@@ -304,20 +304,20 @@ class ImporterTestCase(unittest.TestCase):
         options = kp.ExportOptions(spine_types=['**kern'], kern_type=kp.Encoding.eKern, from_measure=2,
                                    to_measure=4)
         importer = kp.Importer()
-        document = importer.import_file('resource_dir/legacy/base_tuplet_longer.krn')
+        document = importer.import_file('test/resources/legacy/base_tuplet_longer.krn')
 
         dot_exporter = kp.GraphvizExporter()
         dot_exporter.export_to_dot(document.tree, f'/tmp/base_tuplet_longer.dot')
 
         exporter = kp.Exporter()
         actual_output = exporter.export_string(document, options)
-        with open('resource_dir/legacy/base_tuplet_longer_m2-m4.ekrn', 'r') as f:
+        with open('test/resources/legacy/base_tuplet_longer_m2-m4.ekrn', 'r') as f:
             expected_output = f.read()
         self.assertEqual(actual_output, expected_output)
 
     def test_extract_measures_bad_measures_input(self):
         importer = kp.Importer()
-        document = importer.import_file('resource_dir/legacy/base_tuplet_longer.krn')
+        document = importer.import_file('test/resources/legacy/base_tuplet_longer.krn')
 
         options = kp.ExportOptions(spine_types=['**kern'], from_measure=-1, to_measure=2)
         exporter = kp.Exporter()
@@ -341,7 +341,7 @@ class ImporterTestCase(unittest.TestCase):
             exporter.export_string(document, options)
 
     def test_extract_measures_when_spines_split_one_spine(self):
-        doc, err = kp.load('resource_dir/samples/score_with_dividing_one_spine.krn')
+        doc, err = kp.load('test/resources/samples/score_with_dividing_one_spine.krn')
 
         kp.store_graph(doc, '/tmp/x.dot')
         exported_real = kp.dumps(doc,
@@ -350,14 +350,14 @@ class ImporterTestCase(unittest.TestCase):
                                  from_measure=9,
                                  to_measure=13)
 
-        with open('resource_dir/samples/score_with_dividing_one_spine_m9-m13.krn', 'r') as f:
+        with open('test/resources/samples/score_with_dividing_one_spine_m9-m13.krn', 'r') as f:
             expected_output = f.read()
-        with open('resource_dir/samples/score_with_dividing_one_spine_m9-m13.krn', 'w') as f:
+        with open('test/resources/samples/score_with_dividing_one_spine_m9-m13.krn', 'w') as f:
             f.write(exported_real)
         self.assertEqual(expected_output, exported_real)
 
     def test_extract_measures_when_spines_split_two_spines(self):
-        doc, err = kp.read('resource_dir/samples/score_with_dividing_two_spines.krn')
+        doc, err = kp.read('test/resources/samples/score_with_dividing_two_spines.krn')
         export_otions = kp.ExportOptions(spine_types=['**kern'],
                                          kern_type=kp.Encoding.normalizedKern,
                                          from_measure=49,
@@ -365,13 +365,13 @@ class ImporterTestCase(unittest.TestCase):
 
         exported_real = kp.export(doc, export_otions)
 
-        with open('resource_dir/samples/score_with_dividing_two_spines_m49-m56.krn', 'r') as f:
+        with open('test/resources/samples/score_with_dividing_two_spines_m49-m56.krn', 'r') as f:
             expected_output = f.read()
         self.assertEqual(expected_output, exported_real)
 
     def testOther(self):
         importer = self.doJustImportTest(
-            'resource_dir/polish/test3/pl-wn--sd-xvi-qu-273--001-020_gomolka-mikolaj--melodiae-na-psalterz-polski-xx-wsiadaj-z-dobrym-sercem-o-krolu-cnotliwy.krn')
+            'test/resources/polish/test3/pl-wn--sd-xvi-qu-273--001-020_gomolka-mikolaj--melodiae-na-psalterz-polski-xx-wsiadaj-z-dobrym-sercem-o-krolu-cnotliwy.krn')
         print(importer)
 
     def testStringImporter(self):
@@ -418,9 +418,9 @@ class ImporterTestCase(unittest.TestCase):
         self.assertFalse(importer.has_errors())
 
     def test_metadatacomments_generic(self):
-        input_kern_file = 'resource_dir/legacy/chor001.krn'
+        input_kern_file = 'test/resources/legacy/chor001.krn'
         output_metadata_array_expected = []
-        with open('resource_dir/legacy/chor001-metadata-generic.txt', 'r') as f:
+        with open('test/resources/legacy/chor001-metadata-generic.txt', 'r') as f:
             for line in f:
                 output_metadata_array_expected.append(line.strip())
 
@@ -431,7 +431,7 @@ class ImporterTestCase(unittest.TestCase):
         self.assertListEqual(output_metadata_array_expected, output_metadata_real)
 
     def test_metadatacomments_specific_option(self):
-        input_kern_file = 'resource_dir/legacy/chor001.krn'
+        input_kern_file = 'test/resources/legacy/chor001.krn'
         output_metadata_array_expected = ['!!!COM: Bach, Johann Sebastian']
 
         importer = kp.Importer()
@@ -441,7 +441,7 @@ class ImporterTestCase(unittest.TestCase):
         self.assertListEqual(output_metadata_array_expected, output_metadata_array_output)  # composer
 
     def test_metadatacomments_specific_option_clear(self):
-        input_kern_file = 'resource_dir/legacy/chor001.krn'
+        input_kern_file = 'test/resources/legacy/chor001.krn'
         output_metadata_array_expected = ['Bach, Johann Sebastian']
 
         importer = kp.Importer()
@@ -457,7 +457,7 @@ class ImporterTestCase(unittest.TestCase):
         return False
 
     def test_has_token(self):
-        input_kern_file = Path('resource_dir/legacy/chor001.krn')
+        input_kern_file = Path('test/resources/legacy/chor001.krn')
         importer = kp.Importer()
         document = importer.import_file(input_kern_file)
         all_tokens = document.get_all_tokens()
@@ -482,7 +482,7 @@ class ImporterTestCase(unittest.TestCase):
         return False
 
     def test_has_token_category(self):
-        input_kern_file = Path('resource_dir/legacy/chor001.krn')
+        input_kern_file = Path('test/resources/legacy/chor001.krn')
         importer = kp.Importer()
         document = importer.import_file(input_kern_file)
         all_tokens = document.get_all_tokens()
@@ -498,11 +498,11 @@ class ImporterTestCase(unittest.TestCase):
 
     def test_get_all_tokens(self):
         # Arrange
-        input_kern_file = Path('resource_dir/legacy/chor001.krn')
+        input_kern_file = Path('test/resources/legacy/chor001.krn')
         importer = kp.Importer()
         document = importer.import_file(input_kern_file)
         expected_tokens = []
-        with open('resource_dir/legacy/chor001-all_tokens.txt', 'r') as f:
+        with open('test/resources/legacy/chor001-all_tokens.txt', 'r') as f:
             for line in f:
                 expected_tokens.append(line.strip())
 
@@ -516,10 +516,10 @@ class ImporterTestCase(unittest.TestCase):
 
     def test_get_unique_tokens(self):
         # Arrange
-        input_kern_file = Path('resource_dir/legacy/chor001.krn')
+        input_kern_file = Path('test/resources/legacy/chor001.krn')
         importer = kp.Importer()
         document = importer.import_file(input_kern_file)
-        with open('resource_dir/legacy/chor001-unique_tokens.txt', 'r') as f:
+        with open('test/resources/legacy/chor001-unique_tokens.txt', 'r') as f:
             expected_tokens = f.read().splitlines()
 
         # Act
@@ -535,10 +535,10 @@ class ImporterTestCase(unittest.TestCase):
     @unittest.skip("TODO: Add remove measure numbers")
     def test_get_unique_tokens_when_removing_measure_numbers(self):
         # Arrange
-        input_kern_file = Path('resource_dir/legacy/chor001.krn')
+        input_kern_file = Path('test/resources/legacy/chor001.krn')
         importer = kp.Importer()
         document = importer.import_file(input_kern_file)
-        with open('resource_dir/legacy/chor001-unique_tokens_without_measure_numbers.txt', 'r') as f:
+        with open('test/resources/legacy/chor001-unique_tokens_without_measure_numbers.txt', 'r') as f:
             expected_tokens = f.read().splitlines()
 
         # Act
@@ -552,10 +552,10 @@ class ImporterTestCase(unittest.TestCase):
 
     def test_get_unique_tokens_when_filter_by_categories(self):
         # Arrange
-        input_kern_file = Path('resource_dir/legacy/chor001.krn')
+        input_kern_file = Path('test/resources/legacy/chor001.krn')
         importer = kp.Importer()
         document = importer.import_file(input_kern_file)
-        with open('resource_dir/legacy/chor001-unique_tokens_with_category.txt', 'r') as f:
+        with open('test/resources/legacy/chor001-unique_tokens_with_category.txt', 'r') as f:
             expected_tokens = f.read().splitlines()
 
         # Act
@@ -570,7 +570,7 @@ class ImporterTestCase(unittest.TestCase):
 
     @unittest.skip("TODO: Instrument is not a valid category yet")
     def test_document_get_voices(self):
-        input_kern_file = Path('resource_dir/legacy/chor048.krn')
+        input_kern_file = Path('test/resources/legacy/chor048.krn')
         expected_voices = ['!bass', '!tenor', '!alto', '!soprno']
         expected_voices_cleaned = ['bass', 'tenor', 'alto', 'soprno']
 
@@ -594,7 +594,7 @@ class ImporterTestCase(unittest.TestCase):
         self.assertEqual(expected_kern, real_kern)
 
     def test_document_get_first_measure_ok(self):
-        input_kern_file = Path('resource_dir/legacy/chor001.krn')  # This score is correctly formatted
+        input_kern_file = Path('test/resources/legacy/chor001.krn')  # This score is correctly formatted
         importer = kp.Importer()
         document = importer.import_file(input_kern_file)
         first_measure = document.get_first_measure()
@@ -607,7 +607,7 @@ class ImporterTestCase(unittest.TestCase):
             first_measure = document.get_first_measure()
 
     def test_document_get_last_measure_ok(self):
-        input_kern_file = 'resource_dir/legacy/chor048.krn'  # This score has 10 measures
+        input_kern_file = 'test/resources/legacy/chor048.krn'  # This score has 10 measures
         importer = kp.Importer()
         document = importer.import_file(input_kern_file)
         measures = document.measures_count()
@@ -623,7 +623,7 @@ class ImporterTestCase(unittest.TestCase):
         # Arrange
         all_sub_kerns = []
         importer = kp.Importer()
-        document = importer.import_file(Path('resource_dir/legacy/chor048.krn'))
+        document = importer.import_file(Path('test/resources/legacy/chor048.krn'))
         expected_sub_kerns_size = document.measures_count()
         count = 0
         options = kp.ExportOptions(spine_types=['**kern'], kern_type=kp.Encoding.normalizedKern)
@@ -652,7 +652,7 @@ class ImporterTestCase(unittest.TestCase):
         all_sub_kerns = []
         all_indexes = []
         importer = kp.Importer()
-        document = importer.import_file(Path('resource_dir/legacy/chor048.krn'))
+        document = importer.import_file(Path('test/resources/legacy/chor048.krn'))
         expected_sub_kerns_size = document.measures_count()
 
         # Act
@@ -671,7 +671,7 @@ class ImporterTestCase(unittest.TestCase):
         all_sub_kerns = []
         all_indexes = []
         importer = kp.Importer()
-        document = importer.import_file(Path('resource_dir/legacy/chor048.krn'))
+        document = importer.import_file(Path('test/resources/legacy/chor048.krn'))
         expected_sub_kerns_size = document.measures_count()
 
         # Act
@@ -689,7 +689,7 @@ class ImporterTestCase(unittest.TestCase):
     def test_export_spines(self):
         # Arrange
         importer = kp.Importer()
-        document = importer.import_file('resource_dir/legacy/chor048.krn')
+        document = importer.import_file('test/resources/legacy/chor048.krn')
         expected_kern_spines = ['**kern', '**kern', '**kern', '**kern']
         expected_all_spines = ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
 
@@ -707,7 +707,7 @@ class ImporterTestCase(unittest.TestCase):
     @unittest.skip("TODO: Complete bug. ISSUE #12 test Eliseo")
     def test_export_string_two_different_spines(self):
         # Arrange
-        doc, err = kp.load('resource_dir/legacy/chor048.krn')
+        doc, err = kp.load('test/resources/legacy/chor048.krn')
 
         content = kp.dumps(doc, spine_types=['**kern', '**root', '**harm'],
                            encoding=kp.Encoding.eKern)
@@ -719,7 +719,7 @@ class ImporterTestCase(unittest.TestCase):
     def test_never_export_measure_numbers(self):
         # Arrange
         importer = kp.Importer()
-        document = importer.import_file(Path('resource_dir/legacy/chor009.krn'))
+        document = importer.import_file(Path('test/resources/legacy/chor009.krn'))
         options = kp.ExportOptions(spine_types=None,
                                    kern_type=kp.Encoding.eKern,
                                    show_measure_numbers=False)
@@ -735,7 +735,7 @@ class ImporterTestCase(unittest.TestCase):
     def test_always_export_measure_numbers(self):
         # Arrange
         importer = kp.Importer()
-        document = importer.import_file(Path('resource_dir/legacy/chor009.krn'))
+        document = importer.import_file(Path('test/resources/legacy/chor009.krn'))
         options = kp.ExportOptions(spine_types=None,
                                    kern_type=kp.Encoding.eKern,
                                    show_measure_numbers=True)
@@ -753,8 +753,8 @@ class ImporterTestCase(unittest.TestCase):
 
     def test_kern_with_first_measure_is_exported_without_the_measure_number_in_all_spines(self):
         # Arrange
-        input_kern_file = 'resource_dir/samples/haydn-sonate-15_1-original.krn'
-        output_kern_file = 'resource_dir/samples/haydn-sonate-15_1-output.krn'
+        input_kern_file = 'test/resources/samples/haydn-sonate-15_1-original.krn'
+        output_kern_file = 'test/resources/samples/haydn-sonate-15_1-output.krn'
         with open(output_kern_file, 'r') as f:
             expected_output = f.read()
 

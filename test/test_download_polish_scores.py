@@ -40,7 +40,7 @@ class DownloadPolishScoresTestCase(unittest.TestCase):
     @unittest.skip("This test is too slow. Maybe we should mock the download. Comment this line to run the test")
     def test_convert_and_download_file(self):
         temp_dir = tempfile.mkdtemp()
-        input_folder = 'resource_dir/polish/test1'
+        input_folder = 'test/resources/polish/test1'
         log_file = os.path.join(temp_dir, 'polish_index.json')
         logging.info(f'Writing DownloadPolishScoresTestCase test to folder {temp_dir}')
         convert_and_download_file(input_folder + '/pl-wn--mus-iii-118-771--003_badarzewska-tekla--mazurka-brillante.krn', temp_dir, log_file)

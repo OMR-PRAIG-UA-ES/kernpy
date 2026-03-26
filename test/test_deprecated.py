@@ -27,7 +27,7 @@ class TestDeprecated(unittest.TestCase):
 
     def test_deprecated_read(self):
         with self.assertWarns(DeprecationWarning):
-            kp.read('resource_dir/legacy/chor001.krn')
+            kp.read('test/resources/legacy/chor001.krn')
 
     def test_deprecated_create(self):
         with self.assertWarns(DeprecationWarning):

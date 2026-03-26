@@ -210,7 +210,7 @@ class TokenCategoryHierarchyTestCase(unittest.TestCase):
         self.assertSetEqual(expected_leaves, kp.TokenCategoryHierarchyMapper.leaves(target=kp.TokenCategory.NOTE_REST))
 
     def test_hierarchy_tree(self):
-        with open('resource_dir/hierarchy/tree.txt', 'r') as f:
+        with open('test/resources/hierarchy/tree.txt', 'r') as f:
             expected_tree = f.read()
 
         real_output = kp.TokenCategoryHierarchyMapper.tree()

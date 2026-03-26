@@ -6,7 +6,7 @@ import unittest
 class MxhmSpineImporterTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.doc_with_mxhm, _ = kp.load('resource_dir/samples/jazzmus_with_mxhm.krn')
+        cls.doc_with_mxhm, _ = kp.load('test/resources/samples/jazzmus_with_mxhm.krn')
 
     def do_test_token_exported(self, input_encoding, expected):
         importer = kp.MxhmSpineImporter()
