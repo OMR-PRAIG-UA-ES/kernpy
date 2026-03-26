@@ -34,7 +34,15 @@ Issues = "https://github.com/OMR-PRAIG-UA-ES/kernpy/issues"
 include = ["kernpy/**"]
 
 [dependency-groups]
-dev = [
+tests = [
     "pytest>=8.4.2",
     "pytest-cov>=7.1.0",
+]
+
+docs = [
+    "mkdocs>=1.5",
+    "mkdocs-material>=9.0",
+    "mkdocstrings>=0.24",
+    "mkdocstrings-python>=1.7",
+    "pymdown-extensions>=9.0",
 ]

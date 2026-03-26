@@ -467,7 +467,14 @@ python -m kernpy <command> <options>
 
 ## Run tests:
 ```shell
+uv sync --group tests
 uv run pytest test
+```
+
+## Build documentation:
+```bash
+uv sync --group docs
+uv run mkdocs serve/build
 ```
 
 
