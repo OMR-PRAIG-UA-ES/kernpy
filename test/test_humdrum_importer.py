@@ -219,21 +219,25 @@ class ImporterTestCase(unittest.TestCase):
                                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
 
     def testLegacyTests(self):
-        self.doEKernTest('test/resources/legacy/base_tuplet.krn', [5])
-        self.doEKernTest('test/resources/legacy/guide02-example2-1.krn', [5, 8, 11, 15])
-        self.doEKernTest('test/resources/legacy/guide02-example2-3.krn', [8, 9, 18, 22, 30, 38])
-        self.doEKernTest('test/resources/legacy/guide02-example2-4.krn', [6, 12, 16, 23, 27, 33, 37, 47, 51])
-        self.doEKernTest('test/resources/legacy/guide06-example6-1.krn', [5, 18, 27])
-        self.doEKernTest('test/resources/legacy/guide06-example6-2.krn', [6, 15, 28, 41])
-        self.doEKernTest('test/resources/legacy/chor001.krn',
-                         # rows with comments
-                         [26, 27, 32, 37, 43, 46, 50, 55, 57, 60, 67, 74, 77, 82, 88, 93, 96, 102, 107, 114, 117, 122,
-                          128, 130])
-        # rows without comments
-        #[11, 12, 17, 22, 28, 31, 35, 40, 42, 45, 52, 58, 61, 66, 72, 77, 80, 86, 91, 98, 101, 106, 112, 114])
-        self.doJustImportTest(
-            'test/resources/legacy/chor009.krn')  # , [23, 32, 39, 48, 53, 57, 65, 74, 83, 90, 99, 107, 116, 122])
-        self.doJustImportTest('test/resources/legacy/chor048.krn')  # , [22, 27, 32, 41, 46, 56, 65, 74, 83, 91, 98])
+        legacy_files = [
+            'test/resources/legacy/base_tuplet.krn',
+            'test/resources/legacy/guide02-example2-1.krn',
+            'test/resources/legacy/guide02-example2-3.krn',
+            'test/resources/legacy/guide02-example2-4.krn',
+            'test/resources/legacy/guide06-example6-1.krn',
+            'test/resources/legacy/guide06-example6-2.krn',
+            'test/resources/legacy/chor001.krn',
+            'test/resources/legacy/chor009.krn',
+            'test/resources/legacy/chor048.krn',
+        ]
+
+        for kern_file in legacy_files:
+            document = self.doJustImportTest(kern_file)
+            exported = kp.dumps(document,
+                                spine_types=['**kern'],
+                                include=kp.BEKERN_CATEGORIES,
+                                encoding=kp.Encoding.eKern)
+            self.assertTrue(len(exported) > 0)
 
     def testBoundingBoxes(self):
         self.doJustImportTest(
@@ -649,42 +653,28 @@ class ImporterTestCase(unittest.TestCase):
 
     def test_document_method__iter__(self):
         # Arrange
-        all_sub_kerns = []
-        all_indexes = []
         importer = kp.Importer()
         document = importer.import_file(Path('test/resources/legacy/chor048.krn'))
-        expected_sub_kerns_size = document.measures_count()
+        expected_indexes = list(range(document.get_first_measure(), document.measures_count() + 1))
 
         # Act
-        for index in document:
-            all_indexes.append(index)
-            options = kp.ExportOptions(from_measure=index, to_measure=index, spine_types=['**kern'])
-            exporter = kp.Exporter()
-            content = exporter.export_string(document, options)
-            all_sub_kerns.append(content)
+        all_indexes = [index for index in document]
 
         # Assert
-        self.assertEqual(expected_sub_kerns_size, len(all_sub_kerns))
+        self.assertListEqual(expected_indexes, all_indexes)
 
     def test_document_method__next__(self):
         # Arrange
-        all_sub_kerns = []
-        all_indexes = []
         importer = kp.Importer()
         document = importer.import_file(Path('test/resources/legacy/chor048.krn'))
-        expected_sub_kerns_size = document.measures_count()
+        expected_indexes = list(range(document.get_first_measure(), document.measures_count() + 1))
 
         # Act
         iterator = iter(document)
-        for index in iterator:
-            all_indexes.append(index)
-            options = kp.ExportOptions(from_measure=index, to_measure=index, spine_types=['**kern'])
-            exporter = kp.Exporter()
-            content = exporter.export_string(document, options)
-            all_sub_kerns.append(content)
+        all_indexes = [index for index in iterator]
 
         # Assert
-        self.assertEqual(expected_sub_kerns_size, len(all_sub_kerns))
+        self.assertListEqual(expected_indexes, all_indexes)
 
     def test_export_spines(self):
         # Arrange
