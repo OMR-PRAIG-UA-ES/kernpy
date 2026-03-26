@@ -446,13 +446,10 @@ kp.graph(document, '/tmp/graph.dot')
 
 ## Installation
 
-### Production version:
-Just install the last version of **kernpy** using pip:
 ```shell
 pip3 install kernpy
-
-# ensure you have the latest version
-pip3 install kernpy --upgrade 
+uv add kernpy
+# always ensure you have the latest version installed
 ```
 
 <hr>
@@ -461,7 +458,7 @@ pip3 install kernpy --upgrade
 Documentation available at [https://kernpy.pages.dev/](https://kernpy.pages.dev/)
 
 
-**kernpy** also supports been executed as a module. Find out the available commands:
+**Kernpy** also supports been executed as a module. Find out the available commands:
 ```shell
 python -m kernpy --help
 python -m kernpy <command> <options>
@@ -470,7 +467,7 @@ python -m kernpy <command> <options>
 
 ## Run tests:
 ```shell
-cd tests && python -m pytest
+uv run pytest test
 ```
 
 
