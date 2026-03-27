@@ -1,8 +1,23 @@
 site_name: kernpy
+site_description: "Python toolkit for symbolic music notation processing in Humdrum **kern format"
+site_keywords: [music notation, kern, "**kern", symbolic, python, "humdrum ecosystem", "music analysis"]
+repo_url: https://github.com/OMR-PRAIG-UA-ES/kernpy
+repo_name: GitHub
 
 theme:
   name: "material"
   custom_dir: "docs/overrides"
+  features:
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  palette:
+    scheme: default
+
+extra:
+  analytics:
+    provider: null
+
 extra_css: [css/extra.css]
 
 plugins:
@@ -14,13 +29,42 @@ plugins:
  - search
 
 markdown_extensions:
+  - fenced_code
+  - codehilite
   - attr_list
   - md_in_html
+  - pymdownx.highlight:
+      anchor_linenums: true
+      use_pygments: true
+  - pymdownx.superfences
+  - toc:
+      permalink: true
 
 nav:
-  - kernpy Docs: index.md
-  - Getting Started: get-started.md
+  - Home: index.md
+  - Getting Started:
+      - Installation & Setup: get-started.md
+      - Quick Start (5 min): get-started/quick-start-5min.md
+      - Tutorial: get-started/tutorial.md
+  - Core Concepts:
+      - Humdrum **kern Format: concepts/humdrum-kern.md
+      - Token Categories: concepts/token-categories.md
+      - Encoding Formats: concepts/encodings.md
+      - Documents and Spines: concepts/documents-and-spines.md
+  - Practical Guides:
+      - Parse and Analyze: guides/parse-and-analyze.md
+      - Transform Documents: guides/transform-documents.md
+      - Build Pipelines: guides/build-pipelines.md
+      - CLI Utilities: guides/cli-utilities.md
   - How-To Guides: how-to-guides.md
+  - Advanced Topics:
+      - Transposition and Pitch: advanced/transposition.md
+      - Document Structure: advanced/document-structure.md
+      - Custom Export: advanced/custom-export.md
   - API Reference: reference.md
+  - Examples: examples.md
+  - FAQ: faq.md
+  - Contributing: contributing.md
+  - Citation: citation.md
+  - Skill for LLMs: skill.md
   - About: about.md
-  - Tutorial: get-started/tutorial.md

@@ -352,3 +352,4 @@ pip-selfcheck.json
 /kernpy.iml
 .DS_Store
 **/*.DS_Store
+diff.out

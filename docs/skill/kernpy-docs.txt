@@ -1,0 +1,201 @@
+KERNPY LLM SKILL PACK
+Version: 1.6.0
+Project: kernpy
+Repository: https://github.com/OMR-PRAIG-UA-ES/kernpy
+
+==================================================
+1) QUICK OVERVIEW
+==================================================
+kernpy is a Python toolkit for symbolic music notation in Humdrum **kern.
+Primary capabilities:
+- Parse and load Humdrum files
+- Inspect documents/spines/tokens
+- Filter and transform content
+- Export in multiple encodings
+- Run batch workflows and CLI utilities
+
+Primary audience:
+- Musicology and digital humanities researchers
+- Developers building analysis/transformation pipelines
+
+==================================================
+2) MODERN API (PREFERRED)
+==================================================
+Loading:
+- kp.load(file_path) -> (doc, errors)
+- kp.loads(text) -> (doc, errors)
+- Optional strict duration validation flag: raise_on_duration_mismatch=True
+- Optional fallback meter flag: meter_signature_fallback_if_not_found='*M4/4'
+
+Exporting:
+- kp.dump(doc, file_path, **options)
+- kp.dumps(doc, **options) -> str
+
+Document operations:
+- kp.concat([doc1, doc2, ...]) -> Document
+- kp.merge([doc1, doc2, ...]) -> Document
+
+Visualization:
+- kp.graph(doc, output_file)
+
+Transposition:
+- doc.to_transposed(interval, direction)
+  Examples:
+  - doc.to_transposed('P4', 'up')
+  - doc.to_transposed('M2', 'down')
+
+==================================================
+3) EXPORT FILTERS
+==================================================
+Common dump/dumps options:
+- encoding=kp.Encoding.normalizedKern | eKern | agnosticKern | basicKern | basicExtendedKern
+- spine_types=['**kern', ...]
+- spine_ids=[0,1,...]
+- include={kp.TokenCategory.PITCH, ...}
+- exclude={kp.TokenCategory.DECORATION, ...}
+- from_measure=integer
+- to_measure=integer
+
+Examples:
+- kp.dump(doc, 'clean.krn', exclude={kp.TokenCategory.DECORATION})
+- kp.dump(doc, 'notes_only.krn', spine_types=['**kern'])
+- kp.dump(doc, 'section.krn', from_measure=10, to_measure=20)
+
+==================================================
+4) CORE OBJECT MODEL
+==================================================
+Document:
+- doc.get_spines() -> List[Spine]
+- doc.measures_count(from_measure=None, to_measure=None) -> int
+- doc.get_first_measure() -> int
+- doc.get_last_measure() -> int
+
+Spine:
+- spine.spine_type() -> str
+- spine.get_tokens() -> List[Token]
+
+Token:
+- token.value() -> str
+- token.get_categories() -> Set[TokenCategory]
+- token.duration() -> Fraction
+- token.is_null() -> bool
+
+==================================================
+5) FAQ SNAPSHOT
+==================================================
+Q: install?
+A: pip install kernpy
+
+Q: load vs loads?
+A: load reads from file, loads parses string.
+
+Q: dump vs dumps?
+A: dump writes file, dumps returns string.
+
+Q: old API names?
+A: Deprecated mapping:
+- read() -> load()
+- create() -> loads()
+- export() -> dumps()
+- store() -> dump()
+
+Q: performance tips?
+A: batch processing, filtering before export, and multiprocessing.
+
+==================================================
+6) GUIDE ENTRYPOINTS
+==================================================
+- Parse and Analyze: guides/parse-and-analyze.md
+- Transform Documents: guides/transform-documents.md
+- Build Pipelines: guides/build-pipelines.md
+- CLI Utilities: guides/cli-utilities.md
+- Quick Start: get-started/quick-start-5min.md
+
+Advanced:
+- Transposition: advanced/transposition.md
+- Document Structure: advanced/document-structure.md
+- Custom Export: advanced/custom-export.md
+
+==================================================
+7) CLI QUICK USAGE
+==================================================
+- python -m kernpy --kern2ekern input.krn output.ekrn
+- python -m kernpy --ekern2kern input.ekrn output.krn
+
+==================================================
+8) MINIMAL PYTHON PATTERNS
+==================================================
+Load and inspect:
+import kernpy as kp
+
+doc, errors = kp.load('score.krn')
+if errors:
+    print(len(errors))
+print(doc.measures_count())
+
+Export with filtering:
+import kernpy as kp
+
+doc, _ = kp.load('score.krn')
+kp.dump(doc, 'out.krn', exclude={kp.TokenCategory.DECORATION})
+
+Transpose:
+import kernpy as kp
+
+doc, _ = kp.load('score.krn')
+up_p4 = doc.to_transposed('P4', 'up')
+kp.dump(up_p4, 'up_p4.krn')
+
+==================================================
+9) LINKED PAGES
+==================================================
+- FAQ: faq.md
+- API Reference: reference.md
+- Examples: examples.md
+- Concepts: concepts/humdrum-kern.md
+
+==================================================
+10) TokenCategory Hierachy
+==================================================
+
+print(kp.TokenCategoryHierarchyMapper.tree())
+.
+├── STRUCTURAL
+│   ├── HEADER
+│   └── SPINE_OPERATION
+├── CORE
+│   ├── NOTE_REST
+│   │   ├── DURATION
+│   │   ├── NOTE
+│   │   │   ├── PITCH
+│   │   │   ├── DECORATION
+│   │   │   └── ALTERATION
+│   │   └── REST
+│   ├── CHORD
+│   ├── EMPTY
+│   └── ERROR
+├── SIGNATURES
+│   ├── CLEF
+│   ├── TIME_SIGNATURE
+│   ├── METER_SYMBOL
+│   ├── KEY_SIGNATURE
+│   └── KEY_TOKEN
+├── ENGRAVED_SYMBOLS
+├── OTHER_CONTEXTUAL
+├── BARLINES
+├── COMMENTS
+│   ├── FIELD_COMMENTS
+│   └── LINE_COMMENTS
+├── DYNAMICS
+├── HARMONY
+├── FINGERING
+├── LYRICS
+├── INSTRUMENTS
+├── IMAGE_ANNOTATIONS
+│   ├── BOUNDING_BOXES
+│   └── LINE_BREAK
+├── OTHER
+├── MHXM
+└── ROOT
+
+END OF KERNPY LLM SKILL PACK

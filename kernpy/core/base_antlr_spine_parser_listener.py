@@ -148,7 +148,9 @@ class BaseANTLRSpineParserListener(kernSpineParserListener):
         self.token = SimpleToken(ctx.getText(), TokenCategory.EMPTY)
 
     def exitNonVisualTandemInterpretation(self, ctx: kernSpineParser.NonVisualTandemInterpretationContext):
-        self.token = SimpleToken(ctx.getText(), TokenCategory.OTHER)
+        # Keep child-specific tokens (for example InstrumentToken) if already created.
+        if self.token is None:
+            self.token = SimpleToken(ctx.getText(), TokenCategory.OTHER)
 
     def exitVisualTandemInterpretation(self, ctx: kernSpineParser.VisualTandemInterpretationContext):
         self.token = SimpleToken(ctx.getText(), TokenCategory.ENGRAVED_SYMBOLS)
@@ -188,6 +190,9 @@ class BaseANTLRSpineParserListener(kernSpineParserListener):
         self.token = BoundingBoxToken(ctx.getText(), page, bbox)
 
     def exitInstrument(self, ctx: kernSpineParser.InstrumentContext):
+        self.token = InstrumentToken(ctx.getText())
+
+    def exitInstrumentTitle(self, ctx: kernSpineParser.InstrumentTitleContext):
         self.token = InstrumentToken(ctx.getText())
 
 

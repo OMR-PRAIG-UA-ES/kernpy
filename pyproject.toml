@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "kernpy"
-version = "1.5.0"
+version = "1.6.1"
 authors = [
     { name = "David Rizo Valero", email = "drizo@ua.es"},
     { name = "Joan Cerveto Serrano", email = "joan.cerveto@ua.es"}
@@ -22,7 +22,7 @@ dependencies = [
     "antlr4-python3-runtime>=4.13.2",
     "Pillow",
     "requests",
-    "urllib3>=1.26.6"
+    "urllib3>=1.26.6",
 ]
 
 [project.urls]
@@ -34,7 +34,8 @@ Issues = "https://github.com/OMR-PRAIG-UA-ES/kernpy/issues"
 include = ["kernpy/**"]
 
 [dependency-groups]
-tests = [
+test = [
+    "parameterized>=0.9.0",
     "pytest>=8.4.2",
     "pytest-cov>=7.1.0",
 ]

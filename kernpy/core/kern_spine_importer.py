@@ -52,6 +52,7 @@ class KernSpineImporter(SpineImporter):
 
     def import_token(self, encoding: str):
         self._raise_error_if_wrong_input(encoding)
+        self.error_listener.errors = []
 
         # self.listenerImporter = KernListenerImporter(token) # TODO ¿Por qué no va esto?
         # self.listenerImporter.start()
@@ -69,5 +70,5 @@ class KernSpineImporter(SpineImporter):
         listener = KernSpineListener()
         walker.walk(listener, tree)
         if self.error_listener.getNumberErrorsFound() > 0:
-            raise Exception(self.error_listener.errors)
+            raise ValueError(str(self.error_listener).strip())
         return listener.token

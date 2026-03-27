@@ -27,6 +27,7 @@ from .tokenizers import *
 from .transposer import *
 from .pitch_models import *
 from .gkern import *
+from .measure_signature_validators import *
 
 
 __all__ = [
@@ -121,5 +122,7 @@ __all__ = [
     'Staff',
     'pitch_to_gkern_string',
     'gkern_to_g_clef_pitch',
+    'MeasureSignatureToken',
+    'MeasureSignatureValidator',
 ]
 

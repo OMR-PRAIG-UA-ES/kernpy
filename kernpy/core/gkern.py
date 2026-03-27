@@ -593,7 +593,5 @@ def pitch_to_gkern_string(pitch: AgnosticPitch, clef: Clef) -> str:
     """
     staff = Staff()
     exporter = GKernExporter(clef)
-    gkern_encoding = exporter.export(staff, pitch) # (e.g., 'L@2', S@-1', etc.)
-
-    accidentals = pitch.accidentals()
-    return gkern_to_g_clef_pitch(gkern_encoding) + accidentals  # a nornal **kern pitch with accidentals in G clef
+    gkern_encoding = exporter.export(staff, pitch) # (e.g., 'T@2', 'S@-1', etc.)
+    return gkern_encoding
