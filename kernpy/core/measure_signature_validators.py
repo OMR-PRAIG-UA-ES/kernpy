@@ -485,3 +485,283 @@ class MeasureSignatureValidator:
         return (
             f"{message} at measure {measure_label}, position #{token_position}{suffix}."
         )
+
+
+class HorizontalRhythmValidator:
+    """
+    Validate horizontal rhythm alignment across multiple spines.
+    
+    Implements Humdrum's global rhythmic grid rule: every spine must account for
+    every rhythmic subdivision that exists anywhere in the measure across all spines.
+    All spines must have exactly one token per grid row, using null tokens (.)
+    for positions where a voice has no new attack.
+    """
+
+    @staticmethod
+    def _gcd(a: int, b: int) -> int:
+        """Compute greatest common divisor for LCM calculation."""
+        while b:
+            a, b = b, a % b
+        return a
+
+    @staticmethod
+    def _lcm(a: int, b: int) -> int:
+        """Compute least common multiple of two duration values."""
+        if a == 0 or b == 0:
+            return 0
+        return abs(a * b) // HorizontalRhythmValidator._gcd(a, b)
+
+    @classmethod
+    def _lcm_of_sequence(cls, duration_values: List[int]) -> int:
+        """Compute LCM across a sequence of duration values."""
+        if not duration_values:
+            return 0
+        result = duration_values[0]
+        for value in duration_values[1:]:
+            result = cls._lcm(result, value)
+        return result
+
+    @staticmethod
+    def _parse_duration_value(duration_encoding: str) -> int:
+        """
+        Extract numeric duration value, ignoring augmentation dots.
+        
+        Example: "4.." → 4; "12" → 12; "8..." → 8
+        """
+        # Strip leading/trailing whitespace and all trailing dots
+        encoding = duration_encoding.strip().rstrip(".")
+        try:
+            return int(encoding)
+        except ValueError:
+            raise ValueError(f"Invalid duration encoding: {duration_encoding}")
+
+    @classmethod
+    def _calculate_grid_resolution(cls, spines: List[List[str]]) -> int:
+        """
+        Calculate the finest rhythmic subdivision (grid resolution) across all spines.
+        
+        Grid resolution = LCM of all duration denominators in the measure.
+        
+        Args:
+            spines: List of spines, each spine is a list of duration strings
+                   (e.g., ["4", ".", "4", "."] for spine 1)
+        
+        Returns:
+            Grid resolution (smallest rhythmic unit in the measure)
+        """
+        all_durations = []
+        
+        for spine in spines:
+            for duration_str in spine:
+                # Skip null tokens entirely (they're not rhythmic events)
+                if duration_str.strip() == ".":
+                    continue
+                try:
+                    dur_value = cls._parse_duration_value(duration_str)
+                    all_durations.append(dur_value)
+                except ValueError:
+                    # Invalid encoding; skip
+                    continue
+        
+        if not all_durations:
+            return 1  # Default to whole note if no valid durations found
+        
+        grid = cls._lcm_of_sequence(all_durations)
+        return grid if grid > 0 else 1
+
+    @classmethod
+    def _expand_to_grid(
+        cls,
+        durations: List[str],
+        grid_resolution: int,
+    ) -> List[str | None]:
+        """
+        Expand a spine's duration list to match the grid resolution.
+        
+        For each real duration token, calculates how many grid slots it occupies.
+        Adds implicit None (null) placeholders for unfilled slots.
+        Explicit "." tokens are preserved and count toward filling slots.
+        
+        Args:
+            durations: List of duration strings for one spine
+            grid_resolution: The LCM grid resolution
+        
+        Returns:
+            List of strings/None representing all grid slots used
+        """
+        expanded = []
+        i = 0
+        
+        while i < len(durations):
+            duration_str = durations[i].strip()
+            
+            if duration_str == ".":
+                # Explicit null token - represents 1 slot
+                expanded.append(".")
+                i += 1
+            else:
+                # Real duration token
+                try:
+                    dur_value = cls._parse_duration_value(duration_str)
+                    slots_needed = grid_resolution // dur_value
+                    
+                    # Add the note itself
+                    expanded.append(duration_str)
+                    slots_filled = 1
+                    
+                    # Look ahead for explicit nulls to fill remaining slots
+                    j = i + 1
+                    while j < len(durations) and durations[j].strip() == "." and slots_filled < slots_needed:
+                        expanded.append(".")
+                        slots_filled += 1
+                        j += 1
+                    
+                    # Fill any remaining slots with implicit None
+                    while slots_filled < slots_needed:
+                        expanded.append(None)
+                        slots_filled += 1
+                    
+                    i = j
+                except ValueError:
+                    # Invalid encoding - just add it
+                    expanded.append(duration_str)
+                    i += 1
+        
+        return expanded
+
+    @classmethod
+    def _validate_grid_alignment(
+        cls,
+        durations: List[str],
+        grid_resolution: int,
+    ) -> Tuple[bool, str]:
+        """
+        Validate that a spine's durations properly align to the grid.
+        
+        Each token occupies a certain number of grid slots based on its duration.
+        Explicit null tokens (.) should mark continuation of previous events.
+        
+        Args:
+            durations: List of duration strings for one spine
+            grid_resolution: The grid resolution to validate against
+        
+        Returns:
+            (is_valid, error_message)
+        """
+        # Calculate total grid slots needed vs. what's provided
+        total_slots_needed = 0
+        slots_filled = 0
+        
+        i = 0
+        while i < len(durations):
+            duration_str = durations[i].strip()
+            
+            if duration_str == ".":
+                # Null token occupies 1 slot
+                slots_filled += 1
+                i += 1
+            else:
+                # Regular duration token
+                try:
+                    dur_value = cls._parse_duration_value(duration_str)
+                    slots_for_this = grid_resolution // dur_value
+                    
+                    # Count how many nulls follow this token
+                    nulls_after = 0
+                    j = i + 1
+                    while j < len(durations) and durations[j].strip() == ".":
+                        nulls_after += 1
+                        j += 1
+                    
+                    # This token + its following nulls should fill slots_for_this
+                    total_filled_by_group = 1 + nulls_after
+                    
+                    if total_filled_by_group < slots_for_this:
+                        return False, (
+                            f"Duration '{duration_str}' requires {slots_for_this} grid slots "
+                            f"but only {total_filled_by_group} tokens provided (1 note + {nulls_after} nulls)"
+                        )
+                    
+                    slots_filled += total_filled_by_group
+                    i = j
+                except ValueError as e:
+                    return False, f"Invalid duration: {duration_str} ({str(e)})"
+        
+        return True, ""
+
+    @classmethod
+    def validate_measure_horizontally(
+        cls,
+        spines: List[List[NoteRestToken | Subtoken]],
+        meter_signature: str,
+        measure_index: int | None = None,
+    ) -> Tuple[bool, str]:
+        """
+        Validate horizontal rhythm alignment across multiple spines.
+        
+        Args:
+            spines: List of spines, each spine is a list of note/rest/null tokens
+            meter_signature: Time signature (e.g., "*M4/4")
+            measure_index: Optional measure number for error messages
+        
+        Returns:
+            (is_valid, error_message)
+        """
+        if not spines:
+            return True, ""
+        
+        if len(spines) == 1:
+            # Single spine always aligns with itself
+            return True, ""
+        
+        # Extract duration values from each spine
+        spine_durations: List[List[str]] = []
+        for spine_idx, spine in enumerate(spines):
+            durations = []
+            for token in spine:
+                if isinstance(token, Subtoken):
+                    # Subtoken with category DURATION or EMPTY
+                    if token.category == TokenCategory.DURATION:
+                        durations.append(token.encoding)
+                    elif token.category == TokenCategory.EMPTY:
+                        durations.append(".")
+                    else:
+                        # Unexpected category
+                        return False, (
+                            f"Horizontal alignment error: unexpected token category "
+                            f"{token.category} in spine #{spine_idx}"
+                        )
+                elif isinstance(token, NoteRestToken):
+                    # Extract duration from NoteRestToken
+                    duration_subtokens = [
+                        st for st in token.pitch_duration_subtokens
+                        if st.category == TokenCategory.DURATION
+                    ]
+                    if duration_subtokens:
+                        durations.append(duration_subtokens[0].encoding)
+                    else:
+                        return False, (
+                            f"Horizontal alignment error: NoteRestToken in spine #{spine_idx} "
+                            f"has no duration subtoken"
+                        )
+                else:
+                    return False, (
+                        f"Horizontal alignment error: unsupported token type "
+                        f"{type(token).__name__} in spine #{spine_idx}"
+                    )
+            spine_durations.append(durations)
+        
+        # Calculate grid resolution (LCM of all rhythmic values)
+        grid_resolution = cls._calculate_grid_resolution(spine_durations)
+        
+        # Validate each spine aligns to the grid
+        for spine_idx, durations in enumerate(spine_durations):
+            is_valid, error_msg = cls._validate_grid_alignment(durations, grid_resolution)
+            if not is_valid:
+                measure_label = f"#{measure_index}" if measure_index is not None else "<unknown>"
+                return False, (
+                    f"Measure {measure_label}, spine #{spine_idx}: {error_msg} "
+                    f"(grid resolution: {grid_resolution})"
+                )
+        
+        return True, ""
