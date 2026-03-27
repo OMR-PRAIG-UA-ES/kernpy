@@ -28,7 +28,7 @@ jobs:
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
       - name: Sync dependencies (tests)
-        run: uv sync --group tests
+        run: uv sync --group test
 
       - name: Run tests
         run: uv run pytest test
