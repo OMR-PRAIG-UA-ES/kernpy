@@ -11,8 +11,7 @@ from kernpy.core.tokens import TokenCategory, SignatureToken, MetacommentToken, 
     BoundingBoxToken, SPINE_OPERATIONS, HEADERS, Token, TimeSignatureToken, NoteRestToken, Subtoken
 from kernpy.core.document import Document, MultistageTree, BoundingBoxMeasures
 from kernpy.core.importer_factory import createImporter
-from kernpy.core.measure_signature_validators import MeasureSignatureValidator
-
+from kernpy.core.measure_signature_validators import MeasureSignatureValidator, HorizontalRhythmValidator
 
 class Importer:
     """
@@ -62,6 +61,8 @@ class Importer:
         self._current_measure_signature_by_column: Dict[int, str] = {}
         self._measure_duration_validation_memo: Dict[Tuple[str, Tuple[str, ...]], Tuple[bool, str]] = {}
         self._seen_first_barline = False
+        # Horizontal rhythm validation: track token types per spine
+        self._current_measure_tokens_by_column: Dict[int, List[Token | Subtoken]] = {}
 
     @staticmethod
     def get_last_spine_operator(parent):
@@ -193,13 +194,22 @@ class Importer:
         if token.category == TokenCategory.BARLINES:
             measure_index = len(self._document.measure_start_tree_stages)
             self._validate_measure_for_column(column_index=column_index, measure_index=measure_index)
+            if self._is_last_column_in_row(column_index):
+                self._validate_horizontal_measure_for_all_columns(measure_index=measure_index)
             return
 
         if isinstance(token, NoteRestToken):
+            tokens = self._current_measure_tokens_by_column.setdefault(column_index, [])
+            tokens.append(token)
             duration_subtokens = MeasureSignatureValidator._extract_rhythm_subtokens(token)
             if len(duration_subtokens) > 0:
                 durations = self._current_measure_durations_by_column.setdefault(column_index, [])
                 durations.extend(duration_subtokens)
+            return
+
+        if token.category == TokenCategory.EMPTY:
+            tokens = self._current_measure_tokens_by_column.setdefault(column_index, [])
+            tokens.append(Subtoken(".", TokenCategory.EMPTY))
 
     def _validate_pending_measures_at_end(self):
         if not self._error_on_duration_mismatch:
@@ -208,6 +218,7 @@ class Importer:
         measure_index = len(self._document.measure_start_tree_stages)
         for column_index in list(self._current_measure_durations_by_column.keys()):
             self._validate_measure_for_column(column_index=column_index, measure_index=measure_index)
+        self._validate_horizontal_measure_for_all_columns(measure_index=measure_index)
 
     def _validate_measure_for_column(self, *, column_index: int, measure_index: int):
         durations = self._current_measure_durations_by_column.get(column_index)
@@ -228,7 +239,7 @@ class Importer:
         memo_key = (signature_encoding, duration_pattern)
         result = self._measure_duration_validation_memo.get(memo_key)
         if result is None:
-            validator = MeasureSignatureValidator(TimeSignatureToken(signature_encoding))
+            validator = self.get_measure_signature_validator(signature_encoding)
             result = validator.assert_measure(
                 durations,
                 measure_index=measure_index,
@@ -241,6 +252,48 @@ class Importer:
             raise ValueError(error_message)
 
         self._current_measure_durations_by_column[column_index] = []
+
+    def get_measure_signature_validator(self, signature_encoding: str) -> MeasureSignatureValidator:
+        return MeasureSignatureValidator(TimeSignatureToken(signature_encoding))
+
+    def _is_last_column_in_row(self, column_index: int) -> bool:
+        if self._prev_stage_parents is None:
+            return True
+        return column_index == len(self._prev_stage_parents) - 1
+
+    def _validate_horizontal_measure_for_all_columns(self, *, measure_index: int):
+        if len(self._current_measure_tokens_by_column) == 0:
+            return
+
+        sorted_columns = sorted(self._current_measure_tokens_by_column.keys())
+        spines_tokens: List[List[Token | Subtoken]] = []
+        for column_index in sorted_columns:
+            spines_tokens.append(self._current_measure_tokens_by_column.get(column_index, []))
+
+        signature_encoding = None
+        for column_index in sorted_columns:
+            signature_encoding = self._current_measure_signature_by_column.get(column_index)
+            if signature_encoding is not None:
+                break
+        if signature_encoding is None:
+            signature_encoding = self._meter_signature_fallback_if_not_found
+
+        if signature_encoding is None:
+            raise ValueError(
+                f"No time signature available for horizontal validation at measure #{measure_index}, "
+                "and no fallback signature was provided."
+            )
+
+        is_valid, error_message = HorizontalRhythmValidator.validate_measure_horizontally(
+            spines=spines_tokens,
+            meter_signature=signature_encoding,
+            measure_index=measure_index,
+        )
+        if not is_valid:
+            raise ValueError(error_message)
+
+        for column_index in sorted_columns:
+            self._current_measure_tokens_by_column[column_index] = []
 
     @staticmethod
     def _duration_pattern_from_subtokens(duration_subtokens: Sequence[Subtoken]) -> Tuple[str, ...]:

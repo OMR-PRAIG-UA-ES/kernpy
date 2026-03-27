@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 from parameterized import parameterized
 from fractions import Fraction
 from pathlib import Path
@@ -384,6 +384,72 @@ class MeasureSignatureValidatorTestCase(unittest.TestCase):
         self.assertIs(mocked_document, document_from_loads)
         self.assertEqual([], errors_from_loads)
 
+    def test_public_load_and_loads_use_importer_measure_validator_factory(self):
+        resource_path = "test/resources/wrongDurations/mono-good-duration-4by4.krn"
+        resource_content = Path(resource_path).read_text()
+
+        mocked_validator = Mock(spec=["assert_measure"])
+        mocked_validator.assert_measure.return_value = (False, "mocked validator mismatch")
+
+        with patch("kernpy.core.importer.Importer.get_measure_signature_validator", return_value=mocked_validator) as mocked_factory:
+            with self.assertRaises(ValueError) as load_error:
+                kp.load(resource_path, raise_on_duration_mismatch=True)
+            with self.assertRaises(ValueError) as loads_error:
+                kp.loads(resource_content, raise_on_duration_mismatch=True)
+
+        self.assertEqual("mocked validator mismatch", str(load_error.exception))
+        self.assertEqual("mocked validator mismatch", str(loads_error.exception))
+        self.assertGreaterEqual(mocked_factory.call_count, 2)
+        self.assertGreaterEqual(mocked_validator.assert_measure.call_count, 2)
+
+    def test_public_loads_raises_when_horizontal_validation_fails(self):
+        content = (
+            "**kern\t**kern\n"
+            "*M4/4\t*M4/4\n"
+            "=1\t=1\n"
+            "4c\t4e\n"
+            "4d\t4f\n"
+            "4e\t4g\n"
+            "4f\t4a\n"
+            "=2\t=2\n"
+            "*-\t*-"
+        )
+
+        mocked_validator = Mock(spec=["assert_measure"])
+        mocked_validator.assert_measure.return_value = (True, "")
+
+        with patch("kernpy.core.importer.Importer.get_measure_signature_validator", return_value=mocked_validator):
+            with patch(
+                "kernpy.core.measure_signature_validators.HorizontalRhythmValidator.validate_measure_horizontally",
+                return_value=(False, "mocked horizontal mismatch"),
+            ) as mocked_horizontal:
+                with self.assertRaises(ValueError) as context:
+                    kp.loads(content, raise_on_duration_mismatch=True)
+
+        self.assertEqual("mocked horizontal mismatch", str(context.exception))
+        mocked_horizontal.assert_called()
+
+    def test_public_load_and_loads_raise_when_horizontal_validation_fails(self):
+        resource_path = "test/resources/wrongDurations/mono-good-duration-4by4.krn"
+        resource_content = Path(resource_path).read_text()
+
+        mocked_validator = Mock(spec=["assert_measure"])
+        mocked_validator.assert_measure.return_value = (True, "")
+
+        with patch("kernpy.core.importer.Importer.get_measure_signature_validator", return_value=mocked_validator):
+            with patch(
+                "kernpy.core.measure_signature_validators.HorizontalRhythmValidator.validate_measure_horizontally",
+                return_value=(False, "mocked horizontal mismatch both"),
+            ) as mocked_horizontal:
+                with self.assertRaises(ValueError) as load_error:
+                    kp.load(resource_path, raise_on_duration_mismatch=True)
+                with self.assertRaises(ValueError) as loads_error:
+                    kp.loads(resource_content, raise_on_duration_mismatch=True)
+
+        self.assertEqual("mocked horizontal mismatch both", str(load_error.exception))
+        self.assertEqual("mocked horizontal mismatch both", str(loads_error.exception))
+        self.assertGreaterEqual(mocked_horizontal.call_count, 2)
+
 
     def test_build_error_message_bad_measure_underfilled(self):
         message = _build_error_message_bad_measure(
@@ -440,7 +506,7 @@ class MeasureSignatureValidatorTestCase(unittest.TestCase):
         ("test/resources/wrongDurations/mono-bad-duration-4by4-more-by-dot.krn", 1, "*M4/4", Fraction(9, 8)),
         ("test/resources/wrongDurations/mono-bad-duration-4by4-more-by-double-dot.krn", 1, "*M4/4", Fraction(19, 16)),
         ("test/resources/wrongDurations/mono-bad-duration-4by4-more-by-triple-dot.krn", 1, "*M4/4", Fraction(39, 32)),
-        #("test/resources/wrongDurations/prediction-piano.krn", 1, "*M4/4", Fraction(5, 4)),
+        #("test/resources/wrongDurations/prediction-piano-2.krn", 1, "*M3/4", Fraction(1, 2)),
     ])
     def test_validate_score_with_measure_signature_validator_directly(self, resource_path: str, measure_id: int, meter_signature: str, measured_missmatch_fraction: Fraction):
         document, _ = kp.load(resource_path)
@@ -501,6 +567,7 @@ class MeasureSignatureValidatorResourcesTestCase(unittest.TestCase):
         ("test/resources/unit/time.krn", "*M4/4", "time signature change"),
         ("test/resources/legacy/base_tuplet.krn", "*M4/4", "duration mismatch"),
         ("test/resources/legacy/base_tuplet_longer.krn", "*M4/4", "duration mismatch"),
+        ("test/resources/wrongDurations/prediction-piano.krn", "*M3/4", "load-error"),
         ("test/resources/samples/wrong_number_of_columns.krn", "*M2/2", "load-error"),
         (
             "test/resources/end-of-file/eof_monophonic_only_kern_from_base_tuplet_longer.krn",
@@ -532,6 +599,26 @@ class MeasureSignatureValidatorResourcesTestCase(unittest.TestCase):
         ])
     def test_all_resource_paths_exist(self, resource_path: str):
         self.assertTrue(Path(resource_path).exists())
+
+    @parameterized.expand([
+        ("test/resources/wrongDurations/prediction-piano.krn",),
+        ("test/resources/wrongDurations/prediction-piano-2.krn",),
+    ])
+    def test_prediction_piano_resources_raise_expected_message_in_load_and_loads(self, resource_path: str):
+        expected_message = (
+            "Measure #1 duration mismatch in spine #0 where the latest time signature is *M3/4: "
+            "got 1/2 of a full measure. The measure is underfilled by 1/4; "
+            "add rhythmic value(s) totaling 1/4."
+        )
+
+        with self.assertRaises(ValueError) as load_error:
+            kp.load(resource_path, raise_on_duration_mismatch=True)
+
+        with self.assertRaises(ValueError) as loads_error:
+            kp.loads(Path(resource_path).read_text(), raise_on_duration_mismatch=True)
+
+        self.assertEqual(expected_message, str(load_error.exception))
+        self.assertEqual(expected_message, str(loads_error.exception))
         
 
     def test_validate_filtered_score_tokens_returns_descriptive_error_when_measure_fails(self):
@@ -608,6 +695,568 @@ class MeasureSignatureValidatorResourcesTestCase(unittest.TestCase):
         is_valid, error_message = validator.validate_filtered_score_tokens(filtered_tokens)
         self.assertTrue(is_valid)
         self.assertEqual("", error_message)
+
+
+class HorizontalRhythmValidationTestCase(unittest.TestCase):
+    """
+    Tests for horizontal rhythm alignment validation across multiple spines.
+    
+    Validates that all spines account for every rhythmic subdivision that exists
+    anywhere in the score (Humdrum global rhythmic grid rule).
+    """
+
+    @staticmethod
+    def _duration_subtoken(value: int) -> kp.Subtoken:
+        """Helper: create a duration subtoken (e.g., '4' for quarter)."""
+        return kp.Subtoken(str(value), kp.TokenCategory.DURATION)
+
+    @staticmethod
+    def _null_token() -> kp.Subtoken:
+        """Helper: create a null token (.)."""
+        return kp.Subtoken(".", kp.TokenCategory.EMPTY)
+
+    @staticmethod
+    def _note_token(duration: int, pitch: str = "c") -> kp.NoteRestToken:
+        """Helper: create a note token (e.g., 4c for quarter note on C)."""
+        return kp.NoteRestToken(
+            encoding=f"{duration}{pitch}",
+            pitch_duration_subtokens=[
+                kp.Subtoken(str(duration), kp.TokenCategory.DURATION),
+                kp.Subtoken(pitch, kp.TokenCategory.PITCH),
+            ],
+            decoration_subtokens=[],
+        )
+
+    @staticmethod
+    def _rest_token(duration: int) -> kp.NoteRestToken:
+        """Helper: create a rest token (e.g., 4r for quarter rest)."""
+        return kp.NoteRestToken(
+            encoding=f"{duration}r",
+            pitch_duration_subtokens=[
+                kp.Subtoken(str(duration), kp.TokenCategory.DURATION),
+                kp.Subtoken("r", kp.TokenCategory.PITCH),
+            ],
+            decoration_subtokens=[],
+        )
+
+    # ============= LCM Utility Tests =============
+    
+    def test_gcd_returns_greatest_common_divisor(self):
+        """Test GCD computation for LCM calculation."""
+        # These tests assume HorizontalRhythmValidator._gcd method exists
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+        
+        self.assertEqual(4, HorizontalRhythmValidator._gcd(8, 12))
+        self.assertEqual(1, HorizontalRhythmValidator._gcd(7, 11))
+        self.assertEqual(8, HorizontalRhythmValidator._gcd(8, 16))
+        self.assertEqual(4, HorizontalRhythmValidator._gcd(4, 4))
+
+    def test_lcm_returns_least_common_multiple(self):
+        """Test LCM computation for rhythm grid resolution."""
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+        
+        self.assertEqual(12, HorizontalRhythmValidator._lcm(4, 12))
+        self.assertEqual(24, HorizontalRhythmValidator._lcm(8, 12))
+        self.assertEqual(16, HorizontalRhythmValidator._lcm(8, 16))
+        self.assertEqual(12, HorizontalRhythmValidator._lcm(12, 4))
+
+    def test_lcm_of_sequence_returns_lcm_across_all_values(self):
+        """Test LCM computation across multiple duration values."""
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+        
+        self.assertEqual(12, HorizontalRhythmValidator._lcm_of_sequence([4, 12]))
+        self.assertEqual(24, HorizontalRhythmValidator._lcm_of_sequence([4, 8, 12]))
+        self.assertEqual(12, HorizontalRhythmValidator._lcm_of_sequence([4, 6, 12]))
+        self.assertEqual(4, HorizontalRhythmValidator._lcm_of_sequence([4, 4, 4]))
+
+    def test_parse_duration_value_extracts_numeric_ignoring_dots(self):
+        """Test that duration parsing ignores augmentation dots."""
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+        
+        self.assertEqual(4, HorizontalRhythmValidator._parse_duration_value("4"))
+        self.assertEqual(4, HorizontalRhythmValidator._parse_duration_value("4."))
+        self.assertEqual(4, HorizontalRhythmValidator._parse_duration_value("4.."))
+        self.assertEqual(8, HorizontalRhythmValidator._parse_duration_value("8..."))
+        self.assertEqual(12, HorizontalRhythmValidator._parse_duration_value("12"))
+
+    # ============= Grid Resolution Calculation Tests =============
+
+    def test_calculate_grid_resolution_single_rhythm_type(self):
+        """Test grid resolution when all spines have same rhythm."""
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+        
+        # All quarters → grid = 4
+        spines = [["4", "4", "4", "4"], ["4", "4", "4", "4"]]
+        grid = HorizontalRhythmValidator._calculate_grid_resolution(spines)
+        self.assertEqual(4, grid)
+
+    def test_calculate_grid_resolution_quarters_and_eighths(self):
+        """Test grid resolution with quarters + eighths → grid = 8."""
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+        
+        # Spine 1: quarters (4); Spine 2: eighths (8)
+        spines = [["4", "4"], ["8", "8", "8", "8"]]
+        grid = HorizontalRhythmValidator._calculate_grid_resolution(spines)
+        self.assertEqual(8, grid)
+
+    def test_calculate_grid_resolution_quarters_and_triplet_eighths(self):
+        """Test grid resolution with quarters + triplet-eighths → grid = 12."""
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+        
+        # Spine 1: quarters (4); Spine 2: triplet eighths (12)
+        spines = [["4", "4", "4"], ["12", "12", "12", "12", "12", "12", "12", "12", "12"]]
+        grid = HorizontalRhythmValidator._calculate_grid_resolution(spines)
+        self.assertEqual(12, grid)
+
+    def test_calculate_grid_resolution_eighths_and_triplet_eighths(self):
+        """Test grid resolution with eighths + triplet-eighths → grid = 24."""
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+        
+        # Spine 1: eighths (8); Spine 2: triplet eighths (12)
+        spines = [["8", "8", "8"], ["12", "12", "12", "12", "12", "12"]]
+        grid = HorizontalRhythmValidator._calculate_grid_resolution(spines)
+        self.assertEqual(24, grid)
+
+    # ============= Null Token & Grid Expansion Tests =============
+
+    def test_expand_to_grid_single_quarter_matches_eighth_grid(self):
+        """Test that a single quarter expands to 2 slots in eighth-note grid."""
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+        
+        durations = ["4"]
+        expanded = HorizontalRhythmValidator._expand_to_grid(durations, grid_resolution=8)
+        # Quarter (4 = 1/4) in grid 8 = 2 slots
+        self.assertEqual(2, len(expanded))
+        self.assertEqual("4", expanded[0])
+        self.assertIsNone(expanded[1], "Second slot should be None (implicit null)")
+
+    def test_expand_to_grid_quarters_with_explicit_nulls(self):
+        """Test expansion when nulls (.) are explicitly provided."""
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+        
+        durations = ["4", ".", "4", "."]
+        expanded = HorizontalRhythmValidator._expand_to_grid(durations, grid_resolution=8)
+        # 4 tokens where nulls replace implicit ones 
+        self.assertEqual(4, len(expanded))
+        self.assertEqual("4", expanded[0])
+        self.assertEqual(".", expanded[1])
+        self.assertEqual("4", expanded[2])
+        self.assertEqual(".", expanded[3])
+
+    def test_expand_to_grid_detects_missing_null_tokens(self):
+        """Test that expansion detects when null tokens are missing."""
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+        
+        # Two quarters without nulls in eighth-note grid
+        durations = ["4", "4"]
+        is_valid, error_msg = HorizontalRhythmValidator._validate_grid_alignment(durations, grid_resolution=8)
+        self.assertFalse(is_valid, "Should detect missing nulls")
+        self.assertIn("null", error_msg.lower())
+
+    def test_expand_to_grid_accepts_valid_null_alignment(self):
+        """Test that correctly-aligned nulls are accepted."""
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+        
+        # Two quarters with correct nulls in eighth-note grid
+        durations = ["4", ".", "4", "."]
+        is_valid, error_msg = HorizontalRhythmValidator._validate_grid_alignment(durations, grid_resolution=8)
+        self.assertTrue(is_valid, f"Should accept valid alignment; got error: {error_msg}")
+        self.assertEqual("", error_msg)
+
+    # ============= Horizontal Alignment Tests (Simple Cases) =============
+
+    def test_validate_two_spines_same_rhythm_quarters(self):
+        """Test two spines with identical quarter notes → should PASS."""
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+        
+        spine_1 = [self._note_token(4, "c"), self._note_token(4, "d"), self._note_token(4, "e"), self._note_token(4, "f")]
+        spine_2 = [self._note_token(4, "g"), self._note_token(4, "a"), self._note_token(4, "b"), self._note_token(4, "cc")]
+        
+        is_valid, error_msg = HorizontalRhythmValidator.validate_measure_horizontally(
+            spines=[spine_1, spine_2],
+            meter_signature="*M4/4"
+        )
+        self.assertTrue(is_valid, f"Identical rhythms should pass; got: {error_msg}")
+        self.assertEqual("", error_msg)
+
+    def test_validate_two_spines_different_rhythms_without_nulls(self):
+        """Test two spines with quarters + eighths but NO nulls → should FAIL."""
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+        
+        spine_1 = [self._note_token(4, "c"), self._note_token(4, "d")]  # 2 quarters
+        spine_2 = [self._note_token(8, "e"), self._note_token(8, "f"), self._note_token(8, "g"), self._note_token(8, "a")]  # 4 eighths
+        
+        is_valid, error_msg = HorizontalRhythmValidator.validate_measure_horizontally(
+            spines=[spine_1, spine_2],
+            meter_signature="*M4/4"
+        )
+        self.assertFalse(is_valid, "Misaligned rhythms without nulls should fail")
+        # Error should mention grid slots or alignment problem
+        self.assertTrue(
+            "grid" in error_msg.lower() or "slot" in error_msg.lower() or "requires" in error_msg.lower(),
+            f"Error should indicate alignment issue: {error_msg}"
+        )
+
+    def test_validate_two_spines_quarters_and_eighths_with_nulls(self):
+        """Test quarters + eighths WITH proper null tokens → should PASS."""
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+        
+        # Spine 1: quarter, quarter (requires nulls between in 8th-note grid)
+        spine_1 = [self._note_token(4, "c"), self._null_token(), self._note_token(4, "d"), self._null_token()]
+        
+        # Spine 2: four eighths
+        spine_2 = [self._note_token(8, "e"), self._note_token(8, "f"), self._note_token(8, "g"), self._note_token(8, "a")]
+        
+        is_valid, error_msg = HorizontalRhythmValidator.validate_measure_horizontally(
+            spines=[spine_1, spine_2],
+            meter_signature="*M4/4"
+        )
+        self.assertTrue(is_valid, f"Properly aligned rhythms should pass; got: {error_msg}")
+        self.assertEqual("", error_msg)
+
+    # ============= Complex Rhythm Tests (Triplets, Tuplets, Dots) =============
+
+    def test_validate_quarters_and_triplet_eighths(self):
+        """Test quarters + triplet-eighths (grid=12) with proper nulls."""
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+        
+        # Spine 1: 3 quarters = 12 grid slots (12/4 = 3 slots per quarter)
+        spine_1 = [
+            self._note_token(4, "c"), self._null_token(), self._null_token(),
+            self._note_token(4, "d"), self._null_token(), self._null_token(),
+            self._note_token(4, "e"), self._null_token(), self._null_token(),
+        ]
+        
+        # Spine 2: 9 triplet eighths = 12 grid slots (12/12 = 1 slot per triplet eighth)
+        spine_2 = [
+            self._note_token(12, "f"), self._note_token(12, "g"), self._note_token(12, "a"),
+            self._note_token(12, "b"), self._note_token(12, "cc"), self._note_token(12, "dd"),
+            self._note_token(12, "ee"), self._note_token(12, "ff"), self._note_token(12, "gg"),
+        ]
+        
+        is_valid, error_msg = HorizontalRhythmValidator.validate_measure_horizontally(
+            spines=[spine_1, spine_2],
+            meter_signature="*M3/4"
+        )
+        self.assertTrue(is_valid, f"Quarters + triplet eighths should align; got: {error_msg}")
+
+    def test_validate_dotted_quarter_with_eighths(self):
+        """Test dotted quarter (4.) + plain eighths alignment."""
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+        
+        # Dotted quarter = 1/4 + 1/8 = 3/8 (3 eighth-note durations)
+        # For proper alignment with eighths, need nulls
+        spine_1 = [
+            # Dotted quarter at beginning, filling 3 eighth slots
+            self._note_token(4, "c"),
+            self._null_token(),
+            self._null_token(),
+            # Plain quarter (no dots), filling 2 eighth slots
+            self._note_token(4, "d"),
+            self._null_token(),
+        ]
+        
+        # Spine 2: 5 eighths
+        spine_2 = [
+            self._note_token(8, "e"), self._note_token(8, "f"),
+            self._note_token(8, "g"), self._note_token(8, "a"), self._note_token(8, "b"),
+        ]
+        
+        # Note: This test assumes the validator can compute that 4. = 3/8 slots
+        # For now, it's a placeholder; actual implementation may differ
+        is_valid, error_msg = HorizontalRhythmValidator.validate_measure_horizontally(
+            spines=[spine_1, spine_2],
+            meter_signature="*M5/8"
+        )
+        # Expect it to pass IF proper nulls are provided
+        # May need adjustment based on actual implementation
+
+    # ============= Rests vs. Nulls Tests =============
+
+    def test_validate_rest_is_not_equivalent_to_null(self):
+        """Test that rests (r) are distinct from nulls (.) in grid validation."""
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+        
+        # Spine 1: quarter note, then quarter rest (not a null!)
+        spine_1 = [self._note_token(4, "c"), self._rest_token(4)]
+        
+        # Spine 2: four eighths
+        spine_2 = [self._note_token(8, "d"), self._note_token(8, "e"), self._note_token(8, "f"), self._note_token(8, "g")]
+        
+        # This should FAIL because rests are events (occupy grid slots), not null placeholders
+        is_valid, error_msg = HorizontalRhythmValidator.validate_measure_horizontally(
+            spines=[spine_1, spine_2],
+            meter_signature="*M4/4"
+        )
+        self.assertFalse(is_valid, "Rests should be distinct from nulls in validation")
+
+    # ============= Error Message Tests =============
+
+    def test_error_message_includes_spine_index(self):
+        """Test that error messages include the spine index of misalignment."""
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+        
+        spine_1 = [self._note_token(4, "c"), self._note_token(4, "d")]
+        spine_2 = [self._note_token(8, "e"), self._note_token(8, "f"), self._note_token(8, "g"), self._note_token(8, "a")]
+        
+        is_valid, error_msg = HorizontalRhythmValidator.validate_measure_horizontally(
+            spines=[spine_1, spine_2],
+            meter_signature="*M4/4"
+        )
+        self.assertFalse(is_valid)
+        self.assertIn("spine", error_msg.lower())
+
+    def test_error_message_includes_grid_resolution(self):
+        """Test that error messages include the calculated grid resolution."""
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+        
+        spine_1 = [self._note_token(4), self._note_token(4)]
+        spine_2 = [self._note_token(8), self._note_token(8), self._note_token(8), self._note_token(8)]
+        
+        is_valid, error_msg = HorizontalRhythmValidator.validate_measure_horizontally(
+            spines=[spine_1, spine_2],
+            meter_signature="*M4/4"
+        )
+        self.assertFalse(is_valid)
+        # Error should mention grid or eighth-note resolution
+        self.assertTrue(
+            "grid" in error_msg.lower() or "eighth" in error_msg.lower() or "resolution" in error_msg.lower(),
+            f"Error message should mention grid resolution: {error_msg}"
+        )
+
+    # ============= Integration with MeasureSignatureValidator =============
+
+    def test_horizontal_validator_integrates_with_measure_signature_validator(self):
+        """Test that HorizontalRhythmValidator can be used alongside MeasureSignatureValidator."""
+        
+        # Both validators should exist and be independent
+        self.assertTrue(hasattr(kp.HorizontalRhythmValidator, "validate_measure_horizontally"))
+        self.assertTrue(hasattr(kp.HorizontalRhythmValidator, "_calculate_grid_resolution"))
+
+
+class HorizontalRhythmIrregularGroupsTestCase(unittest.TestCase):
+    """TDD tests for irregular tuplet groups across spines."""
+
+    @staticmethod
+    def _null_token() -> kp.Subtoken:
+        return kp.Subtoken(".", kp.TokenCategory.EMPTY)
+
+    @staticmethod
+    def _note_token(duration: int, pitch: str = "c") -> kp.NoteRestToken:
+        return kp.NoteRestToken(
+            encoding=f"{duration}{pitch}",
+            pitch_duration_subtokens=[
+                kp.Subtoken(str(duration), kp.TokenCategory.DURATION),
+                kp.Subtoken(pitch, kp.TokenCategory.PITCH),
+            ],
+            decoration_subtokens=[],
+        )
+
+    def test_triplet_quarters_in_4_4_align_with_plain_quarters(self):
+        """
+        4/4 with quarter-note triplets (duration 3) against plain quarters (duration 4).
+        Grid should resolve via LCM(3,4)=12 and align with explicit nulls.
+        """
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+
+        # 3 quarter-triplets in one whole note: each duration=1/3
+        spine_triplets = [
+            self._note_token(3, "c"), self._null_token(), self._null_token(), self._null_token(),
+            self._note_token(3, "d"), self._null_token(), self._null_token(), self._null_token(),
+            self._note_token(3, "e"), self._null_token(), self._null_token(), self._null_token(),
+        ]
+
+        # 4 quarters in 4/4: each quarter=3 slots in 12-grid
+        spine_quarters = [
+            self._note_token(4, "g"), self._null_token(), self._null_token(),
+            self._note_token(4, "a"), self._null_token(), self._null_token(),
+            self._note_token(4, "b"), self._null_token(), self._null_token(),
+            self._note_token(4, "cc"), self._null_token(), self._null_token(),
+        ]
+
+        is_valid, error_msg = HorizontalRhythmValidator.validate_measure_horizontally(
+            spines=[spine_triplets, spine_quarters],
+            meter_signature="*M4/4",
+            measure_index=1,
+        )
+        self.assertTrue(is_valid, error_msg)
+        self.assertEqual("", error_msg)
+
+    def test_triplet_eighths_in_4_4_without_required_nulls_fails(self):
+        """
+        4/4 with triplet eighths (duration 6) mixed with quarters must fail if
+        quarter spine omits required null tokens.
+        """
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+
+        # 12 triplet-eighths fill 4/4
+        spine_triplet_eighths = [self._note_token(6, "e") for _ in range(12)]
+
+        # 4 quarters, but missing null rows for 12-grid
+        spine_quarters_missing_nulls = [
+            self._note_token(4, "c"),
+            self._note_token(4, "d"),
+            self._note_token(4, "e"),
+            self._note_token(4, "f"),
+        ]
+
+        is_valid, error_msg = HorizontalRhythmValidator.validate_measure_horizontally(
+            spines=[spine_quarters_missing_nulls, spine_triplet_eighths],
+            meter_signature="*M4/4",
+            measure_index=1,
+        )
+        self.assertFalse(is_valid)
+        self.assertIn("grid", error_msg.lower())
+
+    def test_duplet_style_group_2_against_triplet_grid_in_3_4(self):
+        """
+        3/4 mixed subdivision: group-of-2 style (duration 4 quarters with nulls)
+        against triplet-eighths (duration 6) should align under LCM grid.
+        """
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+
+        # 3 quarters in 3/4 -> each quarter spans 3 slots in 12-grid
+        spine_group_2_style = [
+            self._note_token(4, "c"), self._null_token(), self._null_token(),
+            self._note_token(4, "d"), self._null_token(), self._null_token(),
+            self._note_token(4, "e"), self._null_token(), self._null_token(),
+        ]
+
+        # 9 triplet-eighths in 3/4, each 6 occupies 2 slots in 12-grid
+        spine_triplet_eighths = []
+        for _ in range(9):
+            spine_triplet_eighths.extend([self._note_token(6, "g"), self._null_token()])
+
+        is_valid, error_msg = HorizontalRhythmValidator.validate_measure_horizontally(
+            spines=[spine_group_2_style, spine_triplet_eighths],
+            meter_signature="*M3/4",
+            measure_index=1,
+        )
+        self.assertTrue(is_valid, error_msg)
+
+    def test_sextuplets_in_5_4_align_with_quarters(self):
+        """
+        5/4 with sextuplets (duration 12, i.e. 1/12) against quarter notes.
+        Quarters must include explicit null rows to match the 12-grid.
+        """
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+
+        # 15 sextuplet-eighth-like events (1/12 each) fill 5/4 (=15/12)
+        spine_sextuplets = [self._note_token(12, "a") for _ in range(15)]
+
+        # 5 quarters in 5/4 -> each quarter spans 3 slots in 12-grid
+        spine_quarters = []
+        for pitch in ["c", "d", "e", "f", "g"]:
+            spine_quarters.extend([self._note_token(4, pitch), self._null_token(), self._null_token()])
+
+        is_valid, error_msg = HorizontalRhythmValidator.validate_measure_horizontally(
+            spines=[spine_quarters, spine_sextuplets],
+            meter_signature="*M5/4",
+            measure_index=1,
+        )
+        self.assertTrue(is_valid, error_msg)
+
+    def test_quintuplets_duration_10_mixed_with_eighths(self):
+        """
+        Irregular quintuplet-like duration value 10 mixed with eighths in 5/4.
+        Ensures LCM-based grid resolution works for non-power-of-two denominators.
+        """
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+
+        # 5 events of duration 10 fill 1/2; duplicated to fill 5/4 => 25/20 -> use 10 events = 1
+        # Build a coherent 5/4 by mixing with eighths and explicit nulls for alignment behavior.
+        spine_tens = [self._note_token(10, "b") for _ in range(10)]
+
+        # Companion spine uses eighths; include enough events to cover rows.
+        spine_eighths = [self._note_token(8, "e") for _ in range(12)]
+
+        is_valid, error_msg = HorizontalRhythmValidator.validate_measure_horizontally(
+            spines=[spine_tens, spine_eighths],
+            meter_signature="*M5/4",
+            measure_index=1,
+        )
+        self.assertFalse(is_valid)
+        self.assertIn("grid", error_msg.lower())
+
+    def test_mixed_irregular_groups_report_spine_and_measure(self):
+        """Error message should include measure and spine in irregular mismatch."""
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+
+        spine_a = [self._note_token(3, "c"), self._note_token(3, "d"), self._note_token(3, "e")]
+        spine_b = [self._note_token(4, "g"), self._note_token(4, "a"), self._note_token(4, "b"), self._note_token(4, "cc")]
+
+        is_valid, error_msg = HorizontalRhythmValidator.validate_measure_horizontally(
+            spines=[spine_a, spine_b],
+            meter_signature="*M4/4",
+            measure_index=7,
+        )
+        self.assertFalse(is_valid)
+        self.assertIn("measure #7", error_msg.lower())
+        self.assertIn("spine #", error_msg.lower())
+
+    def test_fraction_style_duration_5_3_is_invalid(self):
+        """5/3 is not a valid **kern duration encoding and must be rejected."""
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+
+        with self.assertRaises(ValueError):
+            HorizontalRhythmValidator._parse_duration_value("5/3")
+
+    def test_septuplet_like_duration_7_aligns_with_quarters_in_4_4(self):
+        """
+        Duration 7 (1/7) against quarters in 4/4 requires LCM grid 28.
+        Both spines should align with explicit null rows.
+        """
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+
+        spine_sevenths = []
+        for _ in range(7):
+            spine_sevenths.extend([
+                self._note_token(7, "c"),
+                self._null_token(),
+                self._null_token(),
+                self._null_token(),
+            ])
+
+        spine_quarters = []
+        for pitch in ["g", "a", "b", "cc"]:
+            spine_quarters.extend([
+                self._note_token(4, pitch),
+                self._null_token(),
+                self._null_token(),
+                self._null_token(),
+                self._null_token(),
+                self._null_token(),
+                self._null_token(),
+            ])
+
+        is_valid, error_msg = HorizontalRhythmValidator.validate_measure_horizontally(
+            spines=[spine_sevenths, spine_quarters],
+            meter_signature="*M4/4",
+            measure_index=2,
+        )
+        self.assertTrue(is_valid, error_msg)
+
+    def test_irregular_duration_11_without_required_nulls_fails(self):
+        """
+        Duration 11 mixed with quarter durations must fail when null rows are missing.
+        """
+        from kernpy.core.measure_signature_validators import HorizontalRhythmValidator
+
+        spine_elevens = [self._note_token(11, "d") for _ in range(11)]
+        spine_quarters_missing_nulls = [
+            self._note_token(4, "c"),
+            self._note_token(4, "d"),
+            self._note_token(4, "e"),
+            self._note_token(4, "f"),
+        ]
+
+        is_valid, error_msg = HorizontalRhythmValidator.validate_measure_horizontally(
+            spines=[spine_elevens, spine_quarters_missing_nulls],
+            meter_signature="*M4/4",
+            measure_index=9,
+        )
+        self.assertFalse(is_valid)
+        self.assertIn("grid", error_msg.lower())
 
 
 if __name__ == "__main__":

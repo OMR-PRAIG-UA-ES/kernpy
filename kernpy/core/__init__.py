@@ -124,5 +124,6 @@ __all__ = [
     'gkern_to_g_clef_pitch',
     'MeasureSignatureToken',
     'MeasureSignatureValidator',
+    'HorizontalRhythmValidator',
 ]
 
