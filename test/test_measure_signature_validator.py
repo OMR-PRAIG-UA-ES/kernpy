@@ -440,7 +440,7 @@ class MeasureSignatureValidatorTestCase(unittest.TestCase):
         ("test/resources/wrongDurations/mono-bad-duration-4by4-more-by-dot.krn", 1, "*M4/4", Fraction(9, 8)),
         ("test/resources/wrongDurations/mono-bad-duration-4by4-more-by-double-dot.krn", 1, "*M4/4", Fraction(19, 16)),
         ("test/resources/wrongDurations/mono-bad-duration-4by4-more-by-triple-dot.krn", 1, "*M4/4", Fraction(39, 32)),
-
+        #("test/resources/wrongDurations/prediction-piano.krn", 1, "*M4/4", Fraction(5, 4)),
     ])
     def test_validate_score_with_measure_signature_validator_directly(self, resource_path: str, measure_id: int, meter_signature: str, measured_missmatch_fraction: Fraction):
         document, _ = kp.load(resource_path)
