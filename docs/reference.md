@@ -7,7 +7,7 @@ Complete reference for kernpy's public API. Use Ctrl+F / Cmd+F to search for spe
 Need machine-readable docs for assistants and pipelines?
 
 - Skill page: [Skill Endpoint](skill.md)
-- Plain text endpoint: [/skill/kernpy-docs.txt](/skill/kernpy-docs.txt)
+- Plain text endpoint: [/skill/kernpy-docs.txt](skill/kernpy-docs.txt)
 - Download artifact name: `kernpy-skills.md`
 
 ## API
@@ -22,6 +22,8 @@ Load a **kern file from disk.
 
 **Parameters:**
 - `filename` (str | Path) — Path to the file
+- `raise_on_duration_mismatch` (bool) — If `True`, raises `ValueError` when a measure duration does not match the active meter signature
+- `meter_signature_fallback_if_not_found` (str | None) — Fallback time signature (for example `*M4/4`) when the measure has no explicit signature
 
 **Returns:**
 - Tuple of (Document object, list of error messages)
@@ -41,6 +43,8 @@ Load a **kern document from a string.
 
 **Parameters:**
 - `content` (str) — Humdrum **kern content as string
+- `raise_on_duration_mismatch` (bool) — If `True`, raises `ValueError` when a measure duration does not match the active meter signature
+- `meter_signature_fallback_if_not_found` (str | None) — Fallback time signature (for example `*M4/4`) when the measure has no explicit signature
 
 **Returns:**
 - Tuple of (Document object, list of error messages)

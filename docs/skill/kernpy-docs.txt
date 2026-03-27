@@ -24,6 +24,8 @@ Primary audience:
 Loading:
 - kp.load(file_path) -> (doc, errors)
 - kp.loads(text) -> (doc, errors)
+- Optional strict duration validation flag: raise_on_duration_mismatch=True
+- Optional fallback meter flag: meter_signature_fallback_if_not_found='*M4/4'
 
 Exporting:
 - kp.dump(doc, file_path, **options)
@@ -151,5 +153,49 @@ kp.dump(up_p4, 'up_p4.krn')
 - API Reference: reference.md
 - Examples: examples.md
 - Concepts: concepts/humdrum-kern.md
+
+==================================================
+10) TokenCategory Hierachy
+==================================================
+
+print(kp.TokenCategoryHierarchyMapper.tree())
+.
+├── STRUCTURAL
+│   ├── HEADER
+│   └── SPINE_OPERATION
+├── CORE
+│   ├── NOTE_REST
+│   │   ├── DURATION
+│   │   ├── NOTE
+│   │   │   ├── PITCH
+│   │   │   ├── DECORATION
+│   │   │   └── ALTERATION
+│   │   └── REST
+│   ├── CHORD
+│   ├── EMPTY
+│   └── ERROR
+├── SIGNATURES
+│   ├── CLEF
+│   ├── TIME_SIGNATURE
+│   ├── METER_SYMBOL
+│   ├── KEY_SIGNATURE
+│   └── KEY_TOKEN
+├── ENGRAVED_SYMBOLS
+├── OTHER_CONTEXTUAL
+├── BARLINES
+├── COMMENTS
+│   ├── FIELD_COMMENTS
+│   └── LINE_COMMENTS
+├── DYNAMICS
+├── HARMONY
+├── FINGERING
+├── LYRICS
+├── INSTRUMENTS
+├── IMAGE_ANNOTATIONS
+│   ├── BOUNDING_BOXES
+│   └── LINE_BREAK
+├── OTHER
+├── MHXM
+└── ROOT
 
 END OF KERNPY LLM SKILL PACK

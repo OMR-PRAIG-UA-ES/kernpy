@@ -325,7 +325,7 @@ class MeasureSignatureValidatorTestCase(unittest.TestCase):
         with patch("kernpy.io.public.generic.Generic.read", return_value=("mock-document", [])) as mocked_read:
             kp.load(
                 "dummy.krn",
-                error_on_duration_mismatch=True,
+                raise_on_duration_mismatch=True,
                 meter_signature_fallback_if_not_found="*M4/4",
             )
         mocked_read.assert_called_once_with(
@@ -338,7 +338,7 @@ class MeasureSignatureValidatorTestCase(unittest.TestCase):
         with patch("kernpy.io.public.generic.Generic.create", return_value=("mock-document", [])) as mocked_create:
             kp.loads(
                 "**kern\n*-",
-                error_on_duration_mismatch=True,
+                raise_on_duration_mismatch=True,
                 meter_signature_fallback_if_not_found="*M4/4",
             )
         mocked_create.assert_called_once_with(
@@ -353,11 +353,11 @@ class MeasureSignatureValidatorTestCase(unittest.TestCase):
 
         with patch("kernpy.io.public.generic.Generic.read", side_effect=ValueError(expected_error)):
             with self.assertRaises(ValueError) as read_error:
-                kp.load("dummy.krn", error_on_duration_mismatch=True)
+                kp.load("dummy.krn", raise_on_duration_mismatch=True)
 
         with patch("kernpy.io.public.generic.Generic.create", side_effect=ValueError(expected_error)):
             with self.assertRaises(ValueError) as create_error:
-                kp.loads("**kern\n*-", error_on_duration_mismatch=True)
+                kp.loads("**kern\n*-", raise_on_duration_mismatch=True)
 
         self.assertEqual(
             expected_error,
@@ -374,10 +374,10 @@ class MeasureSignatureValidatorTestCase(unittest.TestCase):
         mocked_document = object()
 
         with patch("kernpy.io.public.generic.Generic.read", return_value=(mocked_document, [])):
-            document_from_load, errors_from_load = kp.load("dummy.krn", error_on_duration_mismatch=True)
+            document_from_load, errors_from_load = kp.load("dummy.krn", raise_on_duration_mismatch=True)
 
         with patch("kernpy.io.public.generic.Generic.create", return_value=(mocked_document, [])):
-            document_from_loads, errors_from_loads = kp.loads("**kern\n*-", error_on_duration_mismatch=True)
+            document_from_loads, errors_from_loads = kp.loads("**kern\n*-", raise_on_duration_mismatch=True)
 
         self.assertIs(mocked_document, document_from_load)
         self.assertEqual([], errors_from_load)

@@ -46,10 +46,10 @@ Validate the duration of the notes in the score.
 import kernpy as kp
 
 document, errors = kp.load("path/to/file.krn", 
-        error_on_duration_mismatch=True) # raise an exception here
+        raise_on_duration_mismatch=True) # raise an exception here
 
 document, errors = kp.load("path/to/file.krn", 
-        error_on_duration_mismatch=True,
+        raise_on_duration_mismatch=True,
         meter_signature_fallback_if_not_found="4/4")  # if there is no meter signature found, use 4/4 as fallback for validating the durations. By default it raises an exception
 ```
 

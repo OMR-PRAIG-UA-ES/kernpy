@@ -117,14 +117,14 @@ f'*ClefF2. '
         content = "**kern\n*M4/4\n=1\n4c\n4d\n=2\n*-\n"
 
         with self.assertRaises(ValueError) as context:
-            kp.loads(content, error_on_duration_mismatch=True)
+            kp.loads(content, raise_on_duration_mismatch=True)
 
         self.assertIn("duration mismatch", str(context.exception))
 
     def test_load_does_not_raise_on_duration_mismatch_when_disabled(self):
         content = "**kern\n*M4/4\n=1\n4c\n4d\n=2\n*-\n"
 
-        document, errors = kp.loads(content, error_on_duration_mismatch=False)
+        document, errors = kp.loads(content, raise_on_duration_mismatch=False)
 
         self.assertIsNotNone(document)
         self.assertIsInstance(errors, list)
@@ -135,7 +135,7 @@ f'*ClefF2. '
         with self.assertRaises(ValueError) as context:
             kp.loads(
                 content,
-                error_on_duration_mismatch=True,
+                raise_on_duration_mismatch=True,
                 meter_signature_fallback_if_not_found=None,
             )
 
@@ -146,7 +146,7 @@ f'*ClefF2. '
 
         document, errors = kp.loads(
             content,
-            error_on_duration_mismatch=True,
+            raise_on_duration_mismatch=True,
             meter_signature_fallback_if_not_found="*M4/4",
         )
 
@@ -168,7 +168,7 @@ f'*ClefF2. '
 
         document, errors = kp.loads(
             content,
-            error_on_duration_mismatch=True,
+            raise_on_duration_mismatch=True,
         )
 
         self.assertIsNotNone(document)
