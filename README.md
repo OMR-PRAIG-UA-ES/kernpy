@@ -1,4 +1,4 @@
-# Python Humdrum **kern and **mens utilities
+# kernpy: Python Humdrum **kern and **mens utilities
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/agpl-3.0)
 ![Python Version](https://img.shields.io/badge/Python-3.9+-3776AB?logo=python&logoColor=white&style=for-the-badge)
