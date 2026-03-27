@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from fractions import Fraction
 import re
-from typing import List, Sequence, Tuple, Union
+from typing import Iterable, List, Sequence, Tuple, Union
 
 from kernpy.core.document import Document
 from kernpy.core.tokens import (
@@ -21,6 +21,41 @@ class MeasureSignatureToken(TimeSignatureToken):
 
 DurationToken = Union[DurationClassical, Subtoken, NoteRestToken, int, str]
 FilteredScoreToken = Union[DurationToken, BarToken, TimeSignatureToken, MeasureSignatureToken]
+
+
+def _build_error_message_bad_measure(
+    *,
+    measure_id: int | None,
+    meter_signature: str,
+    measured_missmatch_fraction: Fraction,
+    expected_measure_duration: Fraction | None = None,
+    spine_index: int | None = None,
+) -> str:
+    if expected_measure_duration is None:
+        beats, beat_unit = meter_signature[2:].split("/")
+        expected_measure_duration = Fraction(int(beats), int(beat_unit))
+
+    duration_gap = abs(expected_measure_duration - measured_missmatch_fraction)
+
+    if measured_missmatch_fraction < expected_measure_duration:
+        direction_sentence = (
+            f"The measure is underfilled by {duration_gap}; "
+            f"add rhythmic value(s) totaling {duration_gap}."
+        )
+    else:
+        direction_sentence = (
+            f"The measure is overfilled by {duration_gap}; "
+            f"remove or redistribute {duration_gap} of rhythmic duration."
+        )
+
+    measure_label = f"#{measure_id}" if measure_id is not None else "<unknown>"
+    spine_label = f"#{spine_index}" if spine_index is not None else "<unknown>"
+
+    return (
+        f"Measure {measure_label} duration mismatch in spine {spine_label} "
+        f"where the latest time signature is {meter_signature}: "
+        f"got {measured_missmatch_fraction} of a full measure. {direction_sentence}"
+    )
 
 
 class MeasureSignatureValidator:
@@ -43,7 +78,12 @@ class MeasureSignatureValidator:
     def expected_measure_duration(self) -> Fraction:
         return self._expected_measure_duration
 
-    def fits_measure(self, duration_tokens: Sequence[DurationToken]) -> Tuple[bool, str]:
+    def fits_measure(
+        self,
+        duration_tokens: Sequence[DurationToken],
+        *,
+        spine_index: int | None = None,
+    ) -> Tuple[bool, str]:
         measured_duration, error_message = self._compute_total_duration(duration_tokens, measure_index=None)
         if error_message:
             return False, error_message
@@ -52,11 +92,18 @@ class MeasureSignatureValidator:
             return False, self._build_measure_mismatch_message(
                 measure_index=None,
                 measured_duration=measured_duration,
+                spine_index=spine_index,
             )
 
         return True, ""
 
-    def assert_measure(self, duration_tokens: Sequence[DurationToken], measure_index: int | None = None) -> Tuple[bool, str]:
+    def assert_measure(
+        self,
+        duration_tokens: Sequence[DurationToken],
+        measure_index: int | None = None,
+        *,
+        spine_index: int | None = None,
+    ) -> Tuple[bool, str]:
         measured_duration, error_message = self._compute_total_duration(duration_tokens, measure_index=measure_index)
         if error_message:
             return False, error_message
@@ -65,6 +112,7 @@ class MeasureSignatureValidator:
             return False, self._build_measure_mismatch_message(
                 measure_index=measure_index,
                 measured_duration=measured_duration,
+                spine_index=spine_index,
             )
 
         return True, ""
@@ -128,13 +176,34 @@ class MeasureSignatureValidator:
                 continue
 
             if isinstance(token, NoteRestToken):
-                duration_subtokens = [
-                    subtoken for subtoken in token.pitch_duration_subtokens
-                    if subtoken.category == TokenCategory.DURATION
-                ]
+                duration_subtokens = MeasureSignatureValidator._extract_rhythm_subtokens(token)
                 filtered_tokens.extend(duration_subtokens)
 
         return filtered_tokens
+
+    @staticmethod
+    def _extract_rhythm_subtokens(note_rest_token: NoteRestToken) -> List[Subtoken]:
+        duration_subtokens = [
+            subtoken for subtoken in note_rest_token.pitch_duration_subtokens
+            if subtoken.category == TokenCategory.DURATION
+        ]
+        dot_count = MeasureSignatureValidator._count_augmentation_dots(note_rest_token)
+        dot_subtokens = [Subtoken(".", TokenCategory.DECORATION)] * dot_count
+        return [*duration_subtokens, *dot_subtokens]
+
+    @staticmethod
+    def _count_augmentation_dots(note_rest_token: NoteRestToken) -> int:
+        encoding = note_rest_token.encoding.strip()
+        dot_count = 0
+        for char in reversed(encoding):
+            if char != ".":
+                break
+            dot_count += 1
+        return dot_count
+
+    @staticmethod
+    def _is_duration_dot_subtoken(subtoken: Subtoken) -> bool:
+        return subtoken.encoding.strip(".") == "" and len(subtoken.encoding) > 0
 
     @classmethod
     def _parse_measure_signature(cls, signature_encoding: str) -> tuple[int, int]:
@@ -248,6 +317,8 @@ class MeasureSignatureValidator:
             return duration_token.duration, ""
 
         if isinstance(duration_token, Subtoken):
+            if cls._is_dot_token_value(duration_token.encoding):
+                return ".", ""
             if duration_token.category != TokenCategory.DURATION:
                 return None, "Subtoken category must be DURATION"
             return duration_token.encoding, ""
@@ -391,11 +462,14 @@ class MeasureSignatureValidator:
         *,
         measure_index: int | None,
         measured_duration: Fraction,
+        spine_index: int | None = None,
     ) -> str:
-        measure_label = f"#{measure_index}" if measure_index is not None else "<unknown>"
-        return (
-            f"Measure {measure_label} duration mismatch for signature {self.measure_signature_token.encoding}: "
-            f"expected {self._expected_measure_duration}, got {measured_duration}."
+        return _build_error_message_bad_measure(
+            measure_id=measure_index,
+            meter_signature=self.measure_signature_token.encoding,
+            measured_missmatch_fraction=measured_duration,
+            expected_measure_duration=self._expected_measure_duration,
+            spine_index=spine_index,
         )
 
     @staticmethod

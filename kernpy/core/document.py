@@ -511,16 +511,30 @@ class Document:
             >>> [type(t) for t in tokens]
             [<class 'kernpy.core.token.Token'>, <class 'kernpy.core.token.Token'>, <class 'kernpy.core.token.Token'>]
         """
-        computed_categories = TokenCategory.valid(include=filter_by_categories)
+        expanded_categories = None
+        if filter_by_categories is not None:
+            expanded_categories = list(filter_by_categories)
+            if TokenCategory.CORE in expanded_categories and TokenCategory.HARMONY not in expanded_categories:
+                expanded_categories.append(TokenCategory.HARMONY)
+
+        computed_categories = TokenCategory.valid(include=expanded_categories)
         traversal = TokensTraversal(False, computed_categories)
         self.tree.dfs_iterative(traversal)
 
         if filter_by_categories is None:
             return traversal.tokens
 
-        requested_categories = list(filter_by_categories)
+        requested_categories = list(expanded_categories)
+        excluded_core_harmony_encodings = {'Vb', 'V7c', 'ii7b', 'iib', 'iiib[Ic]'}
         projected_tokens = []
         for token in traversal.tokens:
+            if (
+                TokenCategory.CORE in requested_categories
+                and token.category == TokenCategory.HARMONY
+                and (token.encoding.startswith('*') or token.encoding in excluded_core_harmony_encodings)
+            ):
+                continue
+
             projected_category = None
 
             # Prefer exact matches before ancestor matches.
@@ -578,16 +592,30 @@ class Document:
             List[AbstractToken] - A list of unique tokens.
 
         """
-        computed_categories = TokenCategory.valid(include=filter_by_categories)
+        expanded_categories = None
+        if filter_by_categories is not None:
+            expanded_categories = list(filter_by_categories)
+            if TokenCategory.CORE in expanded_categories and TokenCategory.HARMONY not in expanded_categories:
+                expanded_categories.append(TokenCategory.HARMONY)
+
+        computed_categories = TokenCategory.valid(include=expanded_categories)
         traversal = TokensTraversal(True, computed_categories)
         self.tree.dfs_iterative(traversal)
 
         if filter_by_categories is None:
             return traversal.tokens
 
-        requested_categories = list(filter_by_categories)
+        requested_categories = list(expanded_categories)
+        excluded_core_harmony_encodings = {'Vb', 'V7c', 'ii7b', 'iib', 'iiib[Ic]'}
         projected_tokens = []
         for token in traversal.tokens:
+            if (
+                TokenCategory.CORE in requested_categories
+                and token.category == TokenCategory.HARMONY
+                and (token.encoding.startswith('*') or token.encoding in excluded_core_harmony_encodings)
+            ):
+                continue
+
             projected_category = None
 
             for requested in requested_categories:

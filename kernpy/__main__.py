@@ -25,7 +25,6 @@ def create_parser() -> argparse.ArgumentParser:
 
     parser.add_argument('--input_path', type=str, help='Input file or directory')
     parser.add_argument('--output_path', type=str, help='Output file or directory')
-    parser.add_argument('-r', '--recursive', action='store_true', help='Enable recursive directory processing')
 
     # Polish Exporter
     parser.add_argument('--input_directory', type=str, help='Polish: Input directory')
@@ -39,14 +38,8 @@ def create_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def find_files(directory: Path, patterns: list[str], recursive: bool = False) -> list[Path]:
-    files = []
-    for pattern in patterns:
-        if recursive:
-            files.extend(directory.rglob(pattern))
-        else:
-            files.extend(directory.glob(pattern))
-    return files
+def find_files(directory: Path, patterns: list[str], ) -> list[Path]:
+    return list(directory.rglob(pattern) for pattern in patterns) 
 
 
 def handle_ekern2kern(args):

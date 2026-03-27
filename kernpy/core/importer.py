@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Sequence, Tuple
 
 from kernpy.core.tokens import TokenCategory, SignatureToken, MetacommentToken, HeaderToken, SpineOperationToken, \
-    FieldCommentToken, ErrorToken, \
+    FieldCommentToken, \
     BoundingBoxToken, SPINE_OPERATIONS, HEADERS, Token, TimeSignatureToken, NoteRestToken, Subtoken
 from kernpy.core.document import Document, MultistageTree, BoundingBoxMeasures
 from kernpy.core.importer_factory import createImporter
@@ -61,6 +61,7 @@ class Importer:
         self._current_measure_durations_by_column: Dict[int, List[Subtoken]] = {}
         self._current_measure_signature_by_column: Dict[int, str] = {}
         self._measure_duration_validation_memo: Dict[Tuple[str, Tuple[str, ...]], Tuple[bool, str]] = {}
+        self._seen_first_barline = False
 
     @staticmethod
     def get_last_spine_operator(parent):
@@ -79,7 +80,7 @@ class Importer:
                 continue
 
             self._tree_stage = self._tree_stage + 1
-            is_barline = False
+            measure_start_stage = None
             if self._next_stage_parents:
                 self._prev_stage_parents = copy(self._next_stage_parents)
             self._next_stage_parents = []
@@ -133,8 +134,13 @@ class Importer:
                             try:
                                 token = importer.import_token(column)
                             except Exception as error:
-                                token = ErrorToken(column, self._row_number, str(error))
-                                self.errors.append(token)
+                                original_error = str(error).strip() or type(error).__name__
+                                formatted_message = (
+                                    f"Invalid token at row {self._row_number}, column {icolumn} (spine #{icolumn}): "
+                                    f"'{column}'. Parsing detail: {original_error}"
+                                )
+                                self.errors.append(formatted_message)
+                                raise ValueError(formatted_message) from error
                         if not token:
                             raise Exception(
                                 f'No token generated for input {column} in row number #{self._row_number} using importer {importer}')
@@ -145,21 +151,33 @@ class Importer:
 
                         self._track_measure_validation_state(column_index=icolumn, token=token)
 
-                        if (token.category == TokenCategory.BARLINES
-                                or TokenCategory.is_child(child=token.category, parent=TokenCategory.CORE)
-                                    and len(self._document.measure_start_tree_stages) == 0):
-                            is_barline = True
+                        if token.category == TokenCategory.BARLINES:
+                            measure_start_stage = self._tree_stage + 1
+                            self._seen_first_barline = True
+                        elif (
+                            not self._seen_first_barline
+                            and TokenCategory.is_child(child=token.category, parent=TokenCategory.CORE)
+                            and len(self._document.measure_start_tree_stages) == 0
+                        ):
+                            # Scores without an opening barline still need a first measure start.
+                            measure_start_stage = self._tree_stage
                         elif isinstance(token, BoundingBoxToken):
                             self.handle_bounding_box(self._document, token)
                         elif isinstance(token, SignatureToken):
                             node.last_signature_nodes.update(node)
 
-                if is_barline:
-                    self._document.measure_start_tree_stages.append(self._tree_stage)
+                if measure_start_stage is not None:
+                    self._document.measure_start_tree_stages.append(measure_start_stage)
                     self.last_measure_number = len(self._document.measure_start_tree_stages)
                     if self.last_bounding_box:
                         self.last_bounding_box.to_measure = self.last_measure_number
             self._row_number = self._row_number + 1
+
+        last_stage_index = len(self._tree.stages) - 1
+        self._document.measure_start_tree_stages = [
+            stage for stage in self._document.measure_start_tree_stages
+            if stage <= last_stage_index
+        ]
 
         self._validate_pending_measures_at_end()
         return self._document
@@ -178,10 +196,7 @@ class Importer:
             return
 
         if isinstance(token, NoteRestToken):
-            duration_subtokens = [
-                subtoken for subtoken in token.pitch_duration_subtokens
-                if subtoken.category == TokenCategory.DURATION
-            ]
+            duration_subtokens = MeasureSignatureValidator._extract_rhythm_subtokens(token)
             if len(duration_subtokens) > 0:
                 durations = self._current_measure_durations_by_column.setdefault(column_index, [])
                 durations.extend(duration_subtokens)
@@ -214,7 +229,11 @@ class Importer:
         result = self._measure_duration_validation_memo.get(memo_key)
         if result is None:
             validator = MeasureSignatureValidator(TimeSignatureToken(signature_encoding))
-            result = validator.assert_measure(durations, measure_index=measure_index)
+            result = validator.assert_measure(
+                durations,
+                measure_index=measure_index,
+                spine_index=column_index,
+            )
             self._measure_duration_validation_memo[memo_key] = result
 
         is_valid, error_message = result

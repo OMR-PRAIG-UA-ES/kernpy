@@ -1859,12 +1859,27 @@ class NoteRestToken(ComplexToken):
             if filter_categories_fn is None or filter_categories_fn(s.category)
         ]
 
-        # Deterministic order
+        # Deterministic order aligned with legacy exporter expectations.
+        pitch_duration_order = {
+            TokenCategory.DURATION: 0,
+            TokenCategory.EMPTY: 1,
+            TokenCategory.PITCH: 2,
+            TokenCategory.ALTERATION: 3,
+        }
+        def pitch_duration_sort_key(t: Subtoken):
+            base_order = pitch_duration_order.get(t.category, 99)
+            if t.category == TokenCategory.DURATION:
+                is_dot_only = t.encoding == '.'
+                return (base_order, 1 if is_dot_only else 0, t.encoding)
+            return (base_order, t.encoding)
+
         pitch_duration_tokens_sorted = sorted(
-            pitch_duration_tokens, key=lambda t: (t.category.value, t.encoding)
+            pitch_duration_tokens,
+            key=pitch_duration_sort_key,
         )
         decoration_tokens_sorted = sorted(
-            decoration_tokens, key=lambda t: (t.category.value, t.encoding)
+            decoration_tokens,
+            key=lambda t: t.encoding,
         )
 
         # Build agnostic pitch (if requested and applicable)

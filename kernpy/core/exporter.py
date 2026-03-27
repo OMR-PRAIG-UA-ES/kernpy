@@ -234,6 +234,8 @@ class Exporter:
             # now, export the signatures
             node_signatures = None
             for node in document.tree.stages[from_stage]:
+                if not node.header_node or node.header_node.token.encoding not in options.spine_types:
+                    continue
                 node_signature_rows = []
                 for signature_node in node.last_signature_nodes.nodes.values():
                     if not self.is_signature_cancelled(signature_node, node, from_stage, to_stage):
@@ -241,16 +243,17 @@ class Exporter:
                 if len(node_signature_rows) > 0:
                     if not node_signatures:
                         node_signatures = []  # an array for each spine
-                    else:
-                        if len(node_signatures[0]) != len(node_signature_rows):
-                            raise Exception(f'Node signature mismatch: multiple spines with signatures at measure {len(rows)}')  # TODO better message
                     node_signatures.append(node_signature_rows)
 
             if node_signatures:
-                for irow in range(len(node_signatures[0])):  # all spines have the same number of rows
+                max_signature_rows = max(len(signature_rows) for signature_rows in node_signatures)
+                for irow in range(max_signature_rows):
                     row = []
-                    for icol in range(len(node_signatures)):  #len(node_signatures) = number of spines
-                        row.append(node_signatures[icol][irow])
+                    for icol in range(len(node_signatures)):  # len(node_signatures) = number of selected spines
+                        if irow < len(node_signatures[icol]):
+                            row.append(node_signatures[icol][irow])
+                        else:
+                            row.append('*')
                     rows.append(row)
 
         else:
