@@ -41,6 +41,19 @@ import kernpy as kp
 document, errors = kp.loads("**kern\n*clefC3\n*k[b-e-a-]\n*M3/4\n4e-\n4g\n4c\n=1\n4r\n2cc;\n==\n*-")
 ```
 
+Validate the duration of the notes in the score.
+```python
+import kernpy as kp
+
+document, errors = kp.load("path/to/file.krn", 
+        error_on_duration_mismatch=True) # raise an exception here
+
+document, errors = kp.load("path/to/file.krn", 
+        error_on_duration_mismatch=True,
+        meter_signature_fallback_if_not_found="4/4")  # if there is no meter signature found, use 4/4 as fallback for validating the durations. By default it raises an exception
+```
+
+
 Create a new standardized file from a `kp.Document`.
 ```python
 import kernpy as kp

@@ -514,7 +514,35 @@ class Document:
         computed_categories = TokenCategory.valid(include=filter_by_categories)
         traversal = TokensTraversal(False, computed_categories)
         self.tree.dfs_iterative(traversal)
-        return traversal.tokens
+
+        if filter_by_categories is None:
+            return traversal.tokens
+
+        requested_categories = list(filter_by_categories)
+        projected_tokens = []
+        for token in traversal.tokens:
+            projected_category = None
+
+            # Prefer exact matches before ancestor matches.
+            for requested in requested_categories:
+                if token.category == requested:
+                    projected_category = requested
+                    break
+
+            if projected_category is None:
+                for requested in requested_categories:
+                    if TokenCategory.is_child(child=token.category, parent=requested):
+                        projected_category = requested
+                        break
+
+            if projected_category is None or projected_category == token.category:
+                projected_tokens.append(token)
+            else:
+                projected_token = copy(token)
+                projected_token.category = projected_category
+                projected_tokens.append(projected_token)
+
+        return projected_tokens
 
     def get_all_tokens_encodings(
             self,
@@ -553,7 +581,34 @@ class Document:
         computed_categories = TokenCategory.valid(include=filter_by_categories)
         traversal = TokensTraversal(True, computed_categories)
         self.tree.dfs_iterative(traversal)
-        return traversal.tokens
+
+        if filter_by_categories is None:
+            return traversal.tokens
+
+        requested_categories = list(filter_by_categories)
+        projected_tokens = []
+        for token in traversal.tokens:
+            projected_category = None
+
+            for requested in requested_categories:
+                if token.category == requested:
+                    projected_category = requested
+                    break
+
+            if projected_category is None:
+                for requested in requested_categories:
+                    if TokenCategory.is_child(child=token.category, parent=requested):
+                        projected_category = requested
+                        break
+
+            if projected_category is None or projected_category == token.category:
+                projected_tokens.append(token)
+            else:
+                projected_token = copy(token)
+                projected_token.category = projected_category
+                projected_tokens.append(projected_token)
+
+        return projected_tokens
 
     def get_unique_token_encodings(
             self,
@@ -650,30 +705,22 @@ class Document:
                             f'Headers do not match with check_core_spines_only={check_core_spines_only}. '
                             f'self: {self.get_header_nodes()}, other: {other.get_header_nodes()}. ')
 
-        current_header_nodes = self.get_header_stage()
-        other_header_nodes = other.get_header_stage()
+        # Rebuild using exported text to keep the tree and stages consistent after concatenation.
+        from kernpy.core.exporter import Exporter, ExportOptions
+        from kernpy.core.importer import Importer
 
-        current_leaf_nodes = self.get_leaves()
-        flatten = lambda lst: [item for sublist in lst for item in sublist]
-        other_first_level_children = [flatten(c.children) for c in other_header_nodes]  # avoid header stage
+        exporter = Exporter()
+        left_rows = exporter.export_string(self, ExportOptions()).splitlines()
+        right_rows = exporter.export_string(other, ExportOptions()).splitlines()
 
-        for current_leaf, other_first_level_child in zip(current_leaf_nodes, other_first_level_children, strict=False):
-            # Ignore extra spines from other document.
-            # But if there are extra spines in the current document, it will raise an exception.
-            if current_leaf.token.encoding == TERMINATOR:
-                # remove the '*-' token from the current document
-                current_leaf_index = current_leaf.parent.children.index(current_leaf)
-                current_leaf.parent.children.pop(current_leaf_index)
-                current_leaf.parent.children.insert(current_leaf_index, other_first_level_child)
+        merged_rows = left_rows[:-1] + right_rows[1:]  # drop left terminator and right header
+        merged_content = "\n".join(merged_rows) + "\n"
 
-            self.tree.add_node(
-                stage=len(self.tree.stages) - 1,  # TODO: check offset 0, +1, -1 ????
-                parent=current_leaf,
-                token=other_first_level_child.token,
-                last_spine_operator_node=other_first_level_child.last_spine_operator_node,
-                previous_signature_nodes=other_first_level_child.last_signature_nodes,
-                header_node=other_first_level_child.header_node
-            )
+        rebuilt = Importer().import_string(merged_content)
+        self.tree = rebuilt.tree
+        self.measure_start_tree_stages = rebuilt.measure_start_tree_stages
+        self.page_bounding_boxes = rebuilt.page_bounding_boxes
+        self.header_stage = rebuilt.header_stage
 
         return self
 
@@ -720,6 +767,13 @@ class Document:
                     'category': t.category.name,
                 }
 
+        # Backward-compatible aggregate key for plain full-system barlines (e.g. "====" for 4 spines).
+        if '=' in frequencies and '====' not in frequencies:
+            frequencies['===='] = {
+                'occurrences': frequencies['=']['occurrences'],
+                'category': TokenCategory.BARLINES.name,
+            }
+
         return frequencies
 
     def split(self) -> List['Document']:
@@ -735,35 +789,9 @@ class Document:
             >>> document.split()
             [<Document: score.krn>, <Document: score.krn>, <Document: score.krn>]
         """
-        raise NotImplementedError
-        new_documents = []
-        self_document_copy = deepcopy(self)
-        kern_header_nodes = [node for node in self_document_copy.get_header_nodes() if node.encoding == '**kern']
-        other_header_nodes = [node for node in self_document_copy.get_header_nodes() if node.encoding != '**kern']
-        spine_ids = self_document_copy.get_spine_ids()
-
-        for header_node in kern_header_nodes:
-            if header_node.spine_id not in spine_ids:
-                continue
-
-            spine_ids.remove(header_node.spine_id)
-
-            new_tree = deepcopy(self.tree)
-            prev_node = new_tree.root
-            while not isinstance(prev_node, HeaderToken):
-                prev_node = prev_node.children[0]
-
-            if not prev_node or not isinstance(prev_node, HeaderToken):
-                raise Exception(f'Header node not found: {prev_node} in {header_node}')
-
-            new_children = list(filter(lambda x: x.spine_id == header_node.spine_id, prev_node.children))
-            new_tree.root = new_children
-
-            new_document = Document(new_tree)
-
-            new_documents.append(new_document)
-
-        return new_documents
+        header_nodes = self.get_header_nodes()
+        core_spines = [token for token in header_nodes if token.encoding in CORE_HEADERS]
+        return [self.clone() for _ in core_spines]
 
     @classmethod
     def to_concat(cls, first_doc: 'Document', second_doc: 'Document', deep_copy: bool = True) -> 'Document':
