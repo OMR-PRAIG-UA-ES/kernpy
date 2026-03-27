@@ -1,0 +1,1802 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Python toolkit for symbolic music notation processing in Humdrum **kern format">
+      
+      
+      
+      
+        <link rel="prev" href="../examples/">
+      
+      
+        <link rel="next" href="../contributing/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>FAQ - kernpy</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#do-you-have-questions" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="kernpy" class="md-header__button md-logo" aria-label="kernpy" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            kernpy
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              FAQ
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/OMR-PRAIG-UA-ES/kernpy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="kernpy" class="md-nav__button md-logo" aria-label="kernpy" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    kernpy
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/OMR-PRAIG-UA-ES/kernpy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../get-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation & Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../get-started/quick-start-5min/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start (5 min)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../get-started/tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/humdrum-kern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Humdrum **kern Format
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/token-categories/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Token Categories
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/encodings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Encoding Formats
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/documents-and-spines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documents and Spines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Practical Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Practical Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/parse-and-analyze/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parse and Analyze
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/transform-documents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transform Documents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/build-pipelines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/cli-utilities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Utilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to-guides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How-To Guides
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Topics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Advanced Topics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced/transposition/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transposition and Pitch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced/document-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Document Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced/custom-export/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Export
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#detailed-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detailed Answers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Detailed Answers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-how-do-i-install-kernpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. How do I install kernpy?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-i-get-modulenotfounderror-when-importing-kernpy-what-should-i-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. I get ModuleNotFoundError when importing kernpy. What should I do?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-what-python-versions-does-kernpy-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. What Python versions does kernpy support?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-what-file-formats-does-kernpy-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. What file formats does kernpy support?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-whats-the-difference-between-load-and-loads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. What's the difference between load() and loads()?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-how-do-i-transpose-a-score" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. How do I transpose a score?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-how-do-i-filter-out-certain-types-of-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. How do I filter out certain types of information?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-how-do-i-extract-just-one-spine-or-instrument" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. How do I extract just one spine or instrument?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-the-library-seems-slow-when-processing-many-files-any-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. The library seems slow when processing many files. Any tips?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-what-happened-to-the-old-api-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. What happened to the old API functions?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#still-have-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Still Have Questions?
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../citation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Citation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skill/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skill for LLMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#detailed-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detailed Answers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Detailed Answers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-how-do-i-install-kernpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. How do I install kernpy?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-i-get-modulenotfounderror-when-importing-kernpy-what-should-i-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. I get ModuleNotFoundError when importing kernpy. What should I do?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-what-python-versions-does-kernpy-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. What Python versions does kernpy support?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-what-file-formats-does-kernpy-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. What file formats does kernpy support?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-whats-the-difference-between-load-and-loads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. What's the difference between load() and loads()?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-how-do-i-transpose-a-score" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. How do I transpose a score?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-how-do-i-filter-out-certain-types-of-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. How do I filter out certain types of information?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-how-do-i-extract-just-one-spine-or-instrument" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. How do I extract just one spine or instrument?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-the-library-seems-slow-when-processing-many-files-any-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. The library seems slow when processing many files. Any tips?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-what-happened-to-the-old-api-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. What happened to the old API functions?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#still-have-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Still Have Questions?
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="do-you-have-questions">Do You Have Questions?<a class="headerlink" href="#do-you-have-questions" title="Permanent link">&para;</a></h1>
+<div style="text-align: center; margin-bottom: 40px;">
+  <h2 style="margin-bottom: 10px;">Explore this few ones</h2>
+  <p style="color: #666; font-size: 16px; margin-bottom: 20px;">
+    Can't find the answer you're looking for? Check our <a href="guides/parse-and-analyze.md">Practical Guides</a>, 
+    <a href="examples.md">Code Examples</a>, or <a href="get-started.md">Getting Started</a> documentation.
+  </p>
+  <img src="https://via.placeholder.com/600x300?text=kernpy+FAQ" alt="kernpy FAQ Illustration" style="max-width: 600px; width: 100%; height: auto; border-radius: 8px;">
+</div>
+
+<hr style="margin: 50px 0;">
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 50px;">
+
+  <div style="padding-right: 20px;">
+    <ul style="list-style: none; padding: 0;">
+
+      <li style="margin-bottom: 25px;">
+        <p style="font-weight: bold; margin-bottom: 8px;">
+          <span style="color: #007bff;">1.</span> 
+          <a href="#installation" style="text-decoration: none; color: #333;">How do I install kernpy?</a>
+        </p>
+      </li>
+
+      <li style="margin-bottom: 25px;">
+        <p style="font-weight: bold; margin-bottom: 8px;">
+          <span style="color: #007bff;">2.</span> 
+          <a href="#import-error" style="text-decoration: none; color: #333;">I get ModuleNotFoundError. What should I do?</a>
+        </p>
+      </li>
+
+      <li style="margin-bottom: 25px;">
+        <p style="font-weight: bold; margin-bottom: 8px;">
+          <span style="color: #007bff;">3.</span> 
+          <a href="#python-versions" style="text-decoration: none; color: #333;">What Python versions does kernpy support?</a>
+        </p>
+      </li>
+
+      <li style="margin-bottom: 25px;">
+        <p style="font-weight: bold; margin-bottom: 8px;">
+          <span style="color: #007bff;">4.</span> 
+          <a href="#file-formats" style="text-decoration: none; color: #333;">What file formats does kernpy support?</a>
+        </p>
+      </li>
+
+      <li style="margin-bottom: 25px;">
+        <p style="font-weight: bold; margin-bottom: 8px;">
+          <span style="color: #007bff;">5.</span> 
+          <a href="#load-vs-loads" style="text-decoration: none; color: #333;">What's the difference between load() and loads()?</a>
+        </p>
+      </li>
+
+    </ul>
+  </div>
+
+  <div style="padding-left: 20px;">
+    <ul style="list-style: none; padding: 0;">
+
+      <li style="margin-bottom: 25px;">
+        <p style="font-weight: bold; margin-bottom: 8px;">
+          <span style="color: #007bff;">6.</span> 
+          <a href="#transpose" style="text-decoration: none; color: #333;">How do I transpose a score?</a>
+        </p>
+      </li>
+
+      <li style="margin-bottom: 25px;">
+        <p style="font-weight: bold; margin-bottom: 8px;">
+          <span style="color: #007bff;">7.</span> 
+          <a href="#filtering" style="text-decoration: none; color: #333;">How do I filter out certain information?</a>
+        </p>
+      </li>
+
+      <li style="margin-bottom: 25px;">
+        <p style="font-weight: bold; margin-bottom: 8px;">
+          <span style="color: #007bff;">8.</span> 
+          <a href="#single-spine" style="text-decoration: none; color: #333;">How do I extract just one spine or instrument?</a>
+        </p>
+      </li>
+
+      <li style="margin-bottom: 25px;">
+        <p style="font-weight: bold; margin-bottom: 8px;">
+          <span style="color: #007bff;">9.</span> 
+          <a href="#performance" style="text-decoration: none; color: #333;">The library seems slow. Any tips?</a>
+        </p>
+      </li>
+
+      <li style="margin-bottom: 25px;">
+        <p style="font-weight: bold; margin-bottom: 8px;">
+          <span style="color: #007bff;">10.</span> 
+          <a href="#deprecated" style="text-decoration: none; color: #333;">What happened to the old API functions?</a>
+        </p>
+      </li>
+
+    </ul>
+  </div>
+
+</div>
+
+<hr style="margin: 50px 0;">
+
+<h2 id="detailed-answers">Detailed Answers<a class="headerlink" href="#detailed-answers" title="Permanent link">&para;</a></h2>
+<h3 id="1-how-do-i-install-kernpy"><a id="installation"></a>1. How do I install kernpy?<a class="headerlink" href="#1-how-do-i-install-kernpy" title="Permanent link">&para;</a></h3>
+<p>The easiest way is to use pip:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>kernpy
+</code></pre></div>
+<p>For the latest development version:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/OMR-PRAIG-UA-ES/kernpy.git
+</code></pre></div>
+<p>See <a href="../get-started/">Getting Started</a> for more options.</p>
+<hr />
+<h3 id="2-i-get-modulenotfounderror-when-importing-kernpy-what-should-i-do"><a id="import-error"></a>2. I get <code>ModuleNotFoundError</code> when importing kernpy. What should I do?<a class="headerlink" href="#2-i-get-modulenotfounderror-when-importing-kernpy-what-should-i-do" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Verify it's installed: <code>pip show kernpy</code></li>
+<li>Reinstall if needed: <code>pip install --force-reinstall kernpy</code></li>
+<li>Check your Python environment:</li>
+<li>If using a virtual environment, ensure it's activated</li>
+<li>Check <code>python --version</code> matches the command you installed with</li>
+<li>Try importing with absolute path: <code>python -c "import kernpy; print(kernpy.__version__)"</code></li>
+</ol>
+<hr />
+<h3 id="3-what-python-versions-does-kernpy-support"><a id="python-versions"></a>3. What Python versions does kernpy support?<a class="headerlink" href="#3-what-python-versions-does-kernpy-support" title="Permanent link">&para;</a></h3>
+<p>kernpy requires Python 3.9 or later. Check your version with:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>python<span class="w"> </span>--version
+</code></pre></div>
+<hr />
+<h3 id="4-what-file-formats-does-kernpy-support"><a id="file-formats"></a>4. What file formats does kernpy support?<a class="headerlink" href="#4-what-file-formats-does-kernpy-support" title="Permanent link">&para;</a></h3>
+<p>kernpy primarily supports <strong>kern and </strong>mens notation in Humdrum format (.krn, .mens, .ekrn, etc.). All must be plain text files.</p>
+<p>kernpy reports parsing issues as warnings, not fatal errors. You can usually still work with the document:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">doc</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;score.krn&#39;</span><span class="p">)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span><span class="si">}</span><span class="s2"> issues, but loaded doc has </span><span class="si">{</span><span class="n">doc</span><span class="o">.</span><span class="n">measures_count</span><span class="p">()</span><span class="si">}</span><span class="s2"> measures&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>To be strict about errors:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">doc</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;score.krn&#39;</span><span class="p">,</span> <span class="n">raise_on_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fatal parsing error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h3 id="5-whats-the-difference-between-load-and-loads"><a id="load-vs-loads"></a>5. What's the difference between <code>load()</code> and <code>loads()</code>?<a class="headerlink" href="#5-whats-the-difference-between-load-and-loads" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>load(filename)</code> — Reads from a file on disk</li>
+<li><code>loads(string)</code> — Parses from a string already in memory</li>
+</ul>
+<p>Choose based on your data source:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># From disk</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">doc</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;score.krn&#39;</span><span class="p">)</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># From a string or variable</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">content</span> <span class="o">=</span> <span class="s2">&quot;**kern</span><span class="se">\n</span><span class="s2">*M4/4</span><span class="se">\n</span><span class="s2">4c</span><span class="se">\n</span><span class="s2">*-&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">doc</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h3 id="6-how-do-i-transpose-a-score"><a id="transpose"></a>6. How do I transpose a score?<a class="headerlink" href="#6-how-do-i-transpose-a-score" title="Permanent link">&para;</a></h3>
+<p>Use the <code>to_transposed()</code> method:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">doc</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;score.krn&#39;</span><span class="p">)</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Transpose up a perfect 4th</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">transposed</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_transposed</span><span class="p">(</span><span class="s1">&#39;P4&#39;</span><span class="p">,</span> <span class="s1">&#39;up&#39;</span><span class="p">)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="n">kp</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">transposed</span><span class="p">,</span> <span class="s1">&#39;transposed.krn&#39;</span><span class="p">)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Transpose down</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="n">transposed_down</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_transposed</span><span class="p">(</span><span class="s1">&#39;M2&#39;</span><span class="p">,</span> <span class="s1">&#39;down&#39;</span><span class="p">)</span>
+</code></pre></div>
+<p>See <a href="../advanced/transposition/">Transposition Guide</a> for all intervals.</p>
+<hr />
+<h3 id="7-how-do-i-filter-out-certain-types-of-information"><a id="filtering"></a>7. How do I filter out certain types of information?<a class="headerlink" href="#7-how-do-i-filter-out-certain-types-of-information" title="Permanent link">&para;</a></h3>
+<p>Use token categories:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">doc</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;score.krn&#39;</span><span class="p">)</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Remove decorations (articulations)</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">kp</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="s1">&#39;no_decorations.krn&#39;</span><span class="p">,</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>        <span class="n">exclude</span><span class="o">=</span><span class="p">{</span><span class="n">kp</span><span class="o">.</span><span class="n">TokenCategory</span><span class="o">.</span><span class="n">DECORATION</span><span class="p">})</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Keep only core music</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="n">kp</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="s1">&#39;core_only.krn&#39;</span><span class="p">,</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>        <span class="n">include</span><span class="o">=</span><span class="p">{</span><span class="n">kp</span><span class="o">.</span><span class="n">TokenCategory</span><span class="o">.</span><span class="n">CORE</span><span class="p">,</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>                 <span class="n">kp</span><span class="o">.</span><span class="n">TokenCategory</span><span class="o">.</span><span class="n">SIGNATURES</span><span class="p">,</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>                 <span class="n">kp</span><span class="o">.</span><span class="n">TokenCategory</span><span class="o">.</span><span class="n">BARLINES</span><span class="p">})</span>
+</code></pre></div>
+<p>See <a href="../concepts/token-categories/">Token Categories</a> for details.</p>
+<hr />
+<h3 id="8-how-do-i-extract-just-one-spine-or-instrument"><a id="single-spine"></a>8. How do I extract just one spine or instrument?<a class="headerlink" href="#8-how-do-i-extract-just-one-spine-or-instrument" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">doc</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;score.krn&#39;</span><span class="p">)</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># By type</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="n">kp</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="s1">&#39;kern_only.krn&#39;</span><span class="p">,</span> <span class="n">spine_types</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;**kern&#39;</span><span class="p">])</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># By index</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="n">kp</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="s1">&#39;first_spine.krn&#39;</span><span class="p">,</span> <span class="n">spine_ids</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Multiple spines</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="n">kp</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="s1">&#39;first_two.krn&#39;</span><span class="p">,</span> <span class="n">spine_ids</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+</code></pre></div>
+<hr />
+<h3 id="9-the-library-seems-slow-when-processing-many-files-any-tips"><a id="performance"></a>9. The library seems slow when processing many files. Any tips?<a class="headerlink" href="#9-the-library-seems-slow-when-processing-many-files-any-tips" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Process in parallel using Python's <code>multiprocessing</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">multiprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pool</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">process</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="n">doc</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="c1"># ... do something</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="k">return</span> <span class="n">result</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="k">with</span> <span class="n">Pool</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="k">as</span> <span class="n">p</span><span class="p">:</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    <span class="n">results</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">file_list</span><span class="p">)</span>
+</code></pre></div>
+<ol>
+<li>Use batch operations instead of loops where possible</li>
+<li>Profile with Python's built-in profiler:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">cProfile</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">cProfile</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">&#39;kp.load(&quot;large_file.krn&quot;)&#39;</span><span class="p">)</span>
+</code></pre></div>
+<p>For large files running out of memory:</p>
+<ol>
+<li>Process by measures instead of loading entire document</li>
+<li>Use filtering to reduce data size:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">kp</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="s1">&#39;smaller.krn&#39;</span><span class="p">,</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>        <span class="n">spine_types</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;**kern&#39;</span><span class="p">],</span>  <span class="c1"># Only notes</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>        <span class="n">exclude</span><span class="o">=</span><span class="p">{</span><span class="n">kp</span><span class="o">.</span><span class="n">TokenCategory</span><span class="o">.</span><span class="n">DECORATION</span><span class="p">})</span>  <span class="c1"># No extra data</span>
+</code></pre></div>
+<hr />
+<h3 id="10-what-happened-to-the-old-api-functions"><a id="deprecated"></a>10. What happened to the old API functions?<a class="headerlink" href="#10-what-happened-to-the-old-api-functions" title="Permanent link">&para;</a></h3>
+<p>These older functions are deprecated. Use the modern API instead:</p>
+<table>
+<thead>
+<tr>
+<th>Old</th>
+<th>New</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>read()</code></td>
+<td><code>load()</code></td>
+<td>Read file from disk</td>
+</tr>
+<tr>
+<td><code>create()</code></td>
+<td><code>loads()</code></td>
+<td>Parse from string</td>
+</tr>
+<tr>
+<td><code>export()</code></td>
+<td><code>dumps()</code></td>
+<td>Export to string</td>
+</tr>
+<tr>
+<td><code>store()</code></td>
+<td><code>dump()</code></td>
+<td>Write to file</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="../reference/">API Reference</a> for migration details.</p>
+<p>Old code example:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># OLD (deprecated)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">HumdrumImporter</span><span class="p">()</span><span class="o">.</span><span class="n">import_file</span><span class="p">(</span><span class="s1">&#39;score.krn&#39;</span><span class="p">)</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># NEW (recommended)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="n">doc</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;score.krn&#39;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="still-have-questions">Still Have Questions?<a class="headerlink" href="#still-have-questions" title="Permanent link">&para;</a></h2>
+<p>If you don't find your answer here:</p>
+<ol>
+<li>Check the <a href="../">full documentation</a></li>
+<li>Search <a href="https://github.com/OMR-PRAIG-UA-ES/kernpy/issues">GitHub Issues</a> for similar questions</li>
+<li>Create a new issue if needed</li>
+</ol>
+<hr />
+<div style="text-align: center; margin-top: 60px; padding: 40px; background-color: #f8f9fa; border-radius: 8px;">
+  <h3 style="margin-top: 0;">Don't hesitate to contact us! 😊</h3>
+  <p style="color: #666; margin-bottom: 20px;">Found something wrong? Have a suggestion? We'd love to hear from you!</p>
+  <p>
+    <a href="https://github.com/OMR-PRAIG-UA-ES/kernpy/issues" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">
+      Open an Issue on GitHub
+    </a>
+  </p>
+  <p style="color: #999; font-size: 14px; margin-top: 15px;">
+    Or visit our <a href="https://praig.ua.es/">research group website</a> to learn more about kernpy and related projects.
+  </p>
+</div>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <div class="md-footer" style="padding: 20px 20px;">
+    <p class="md-typeset md-typeset--large" style="margin-bottom: 10px;">
+        &copy; 2024 - <script>document.write(new Date().toLocaleDateString("en-US", {year: 'numeric'}));</script>
+
+        <a href="https://www.ua.es" target="_blank" class="md-link">Universitat d'Alacant</a>
+    </p>
+    <p class="md-typeset md-typeset--large" style="margin-top: 10px;">
+        Visit our GitHub repository <a href="https://github.com/OMR-PRAIG-UA-ES/kernpy.git" target="_blank" class="md-link">here.</a>
+    </p>
+</div>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

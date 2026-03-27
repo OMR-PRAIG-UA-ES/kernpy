@@ -6,11 +6,15 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
+        <meta name="description" content="Python toolkit for symbolic music notation processing in Humdrum **kern format">
       
       
       
-        <link rel="prev" href="../../about/">
       
+        <link rel="prev" href="../quick-start-5min/">
+      
+      
+        <link rel="next" href="../../concepts/humdrum-kern/">
       
       
         
@@ -26,6 +30,9 @@
     
     
       <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -51,13 +58,20 @@
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
+  
+
 
     
     
   </head>
   
   
-    <body dir="ltr">
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -109,8 +123,8 @@
       </div>
     </div>
     
+      
     
-      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
     
     
     
@@ -139,6 +153,8 @@
         </button>
       </nav>
       
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
@@ -154,6 +170,18 @@
 </div>
       
     
+    
+      <div class="md-header__source">
+        <a href="https://github.com/OMR-PRAIG-UA-ES/kernpy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
     
   </nav>
   
@@ -189,6 +217,18 @@
     kernpy
   </label>
   
+    <div class="md-nav__source">
+      <a href="https://github.com/OMR-PRAIG-UA-ES/kernpy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
   <ul class="md-nav__list" data-md-scrollfix>
     
       
@@ -205,7 +245,7 @@
   <span class="md-ellipsis">
     
   
-    kernpy Docs
+    Home
   
 
     
@@ -222,11 +262,24 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
   
   
   <span class="md-ellipsis">
@@ -240,26 +293,35 @@
   
   
 
-      </a>
-    </li>
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
   
 
-    
-      
-      
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
   
   
   
   
     <li class="md-nav__item">
-      <a href="../../how-to-guides/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    How-To Guides
+    Installation & Setup
   
 
     
@@ -271,22 +333,23 @@
     </li>
   
 
-    
-      
-      
+              
+            
+              
+                
   
   
   
   
     <li class="md-nav__item">
-      <a href="../../reference/" class="md-nav__link">
+      <a href="../quick-start-5min/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    API Reference
+    Quick Start (5 min)
   
 
     
@@ -298,36 +361,10 @@
     </li>
   
 
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../about/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    About
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
+              
+            
+              
+                
   
   
     
@@ -499,6 +536,700 @@
     </li>
   
 
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/humdrum-kern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Humdrum **kern Format
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/token-categories/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Token Categories
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/encodings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Encoding Formats
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/documents-and-spines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documents and Spines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Practical Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Practical Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/parse-and-analyze/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parse and Analyze
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/transform-documents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transform Documents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/build-pipelines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/cli-utilities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Utilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to-guides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How-To Guides
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Topics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Advanced Topics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/transposition/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transposition and Pitch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/document-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Document Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/custom-export/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Export
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../citation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Citation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../skill/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skill for LLMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
     
   </ul>
 </nav>
@@ -642,116 +1373,117 @@
                   
 
 
+  
+  
 
-<h1 id="tutorial-learning-kernpy-in-5-minutes">Tutorial: Learning <code>kernpy</code> in 5 minutes.</h1>
+
+<h1 id="tutorial-learning-kernpy-in-5-minutes">Tutorial: Learning <code>kernpy</code> in 5 minutes.<a class="headerlink" href="#tutorial-learning-kernpy-in-5-minutes" title="Permanent link">&para;</a></h1>
 <p>This is a short introduction to <code>kernpy</code>. It will guide you through the main concepts and show you how to use the package in a few minutes.</p>
 <p>When using <code>kernpy</code>, you should be familiar with the Humdrum **kern encodings. You can easily find information in:</p>
 <ul>
 <li><a href="https://verovio.humdrum.org/" target="_blank">Verovio Humdrum Viewer</a></li>
 <li><a href="https://doc.verovio.humdrum.org/humdrum/getting_started/" target="_blank">Verovio Humdrum Viewer Documentation</a></li>
 </ul>
-<h2 id="running-the-code">Running the code</h2>
+<h2 id="running-the-code">Running the code<a class="headerlink" href="#running-the-code" title="Permanent link">&para;</a></h2>
 <p><code>kernpy</code> is able to be run as a normal snippet of code or as a module by command line interface.</p>
-<h2 id="we-will-import-kernpy-as-the-following-way">We will import <code>kernpy</code> as the following way:</h2>
-<pre><code class="language-python">import kernpy as kp
-</code></pre>
-<h2 id="what-is-humdrum-kern">What is Humdrum **kern?</h2>
-<p>First of all, let's see what a Humdrum **kern file looks like:</p>
-<pre><code class="language-kern">**kern  **text  **kern  **dynam **text
-*clefG2 *   *clefG2 *   *
-*M4/4   *   *   *   *
-=1  =1  =1  =1  =1
-4g  kern    4c  p   kern-
-4f  kern    4d  &lt;   -py
-4g  kern    4e  (   mo-
-4c  kern-   4f  (   -du-
-.   .   .   [   .
-=2  =2  =2  =2  =2
-2c  -py 2g  f   -le
-.   .   .   &gt;   .
-4B  kern    4f  )   is
-4A  kern-   4d  )   the
-=   =   =   =   =
-1G  -py 1c  ]   best
-==  ==  ==  ==  ==
-*-  *-  *-  *-  *-
-</code></pre>
-<p><img alt="Example in **kern" src="../../assets/001.svg" /></p>
-<h2 id="lets-code">Let's code!</h2>
-<h3 id="basic-usage">Basic Usage</h3>
-<p>Load a <code>**kern</code>/<code>**mens</code> file into a <code>kp.Document</code>.</p>
-<pre><code class="language-python">import kernpy as kp
-
-# Read a **kern file
-document, errors = kp.load(&quot;path/to/file.krn&quot;)
-</code></pre>
-<p>Load a <code>**kern</code>/<code>**mens</code> from a string into a <code>kp.Document</code>.</p>
-<pre><code class="language-python">import kernpy as kp
-
-document, errors = kp.loads(&quot;**kern\n*clefC3\n*k[b-e-a-]\n*M3/4\n4e-\n4g\n4c\n=1\n4r\n2cc;\n==\n*-&quot;)
-</code></pre>
-<p>Create a new standardized file from a <code>kp.Document</code>.</p>
-<pre><code class="language-python">import kernpy as kp
-
-kp.dump(document, &quot;newfile.krn&quot;)
-</code></pre>
-<p>Save the document in a string from a <code>kp.Document</code>.</p>
-<pre><code class="language-python">import kernpy as kp
-
-content = kp.dumps(document)
-````
-
-### Exploring different options when creating new files
-
-Only use the specified spines in `spine_types`.
-```python
-import kernpy as kp
-
-kp.dump(document, &quot;newfile_core.krn&quot;,
-        spine_types=['**kern'])
-kp.dump(document, &quot;newfile_lyrics.krn&quot;,
-        spine_types=['**text])
-kp.dump(document, &quot;newfile_core_and_lyrics.krn&quot;,
-        spine_types=['*+text'])
-</code></pre>
+<h2 id="we-will-import-kernpy-as-the-following-way">We will import <code>kernpy</code> as the following way:<a class="headerlink" href="#we-will-import-kernpy-as-the-following-way" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+</code></pre></div>
+<h2 id="what-is-humdrum-kern">What is Humdrum **kern?<a class="headerlink" href="#what-is-humdrum-kern" title="Permanent link">&para;</a></h2>
+<p>First of all, let's see what a Humdrum **kern file looks like:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**kern  **text  **kern  **dynam **text
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>*clefG2 *   *clefG2 *   *
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>*M4/4   *   *   *   *
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>=1  =1  =1  =1  =1
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>4g  kern    4c  p   kern-
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>4f  kern    4d  &lt;   -py
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>4g  kern    4e  (   mo-
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>4c  kern-   4f  (   -du-
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>.   .   .   [   .
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>=2  =2  =2  =2  =2
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>2c  -py 2g  f   -le
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>.   .   .   &gt;   .
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>4B  kern    4f  )   is
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>4A  kern-   4d  )   the
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>=   =   =   =   =
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>1G  -py 1c  ]   best
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>==  ==  ==  ==  ==
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>*-  *-  *-  *-  *-
+</code></pre></div>
+<img alt="Example in **kern" src="../../assets/001.svg" /></p>
+<h2 id="lets-code">Let's code!<a class="headerlink" href="#lets-code" title="Permanent link">&para;</a></h2>
+<h3 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h3>
+<p>Load a <code>**kern</code>/<code>**mens</code> file into a <code>kp.Document</code>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Read a **kern file</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">document</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;path/to/file.krn&quot;</span><span class="p">)</span>
+</code></pre></div></p>
+<p>Load a <code>**kern</code>/<code>**mens</code> from a string into a <code>kp.Document</code>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">document</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="s2">&quot;**kern</span><span class="se">\n</span><span class="s2">*clefC3</span><span class="se">\n</span><span class="s2">*k[b-e-a-]</span><span class="se">\n</span><span class="s2">*M3/4</span><span class="se">\n</span><span class="s2">4e-</span><span class="se">\n</span><span class="s2">4g</span><span class="se">\n</span><span class="s2">4c</span><span class="se">\n</span><span class="s2">=1</span><span class="se">\n</span><span class="s2">4r</span><span class="se">\n</span><span class="s2">2cc;</span><span class="se">\n</span><span class="s2">==</span><span class="se">\n</span><span class="s2">*-&quot;</span><span class="p">)</span>
+</code></pre></div></p>
+<p>Create a new standardized file from a <code>kp.Document</code>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">kp</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="s2">&quot;newfile.krn&quot;</span><span class="p">)</span>
+</code></pre></div></p>
+<p>Save the document in a string from a <code>kp.Document</code>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">content</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="err">````</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1">### Exploring different options when creating new files</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="n">Only</span> <span class="n">use</span> <span class="n">the</span> <span class="n">specified</span> <span class="n">spines</span> <span class="ow">in</span> <span class="err">`</span><span class="n">spine_types</span><span class="err">`</span><span class="o">.</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="err">```</span><span class="n">python</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="n">kp</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="s2">&quot;newfile_core.krn&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>        <span class="n">spine_types</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;**kern&#39;</span><span class="p">])</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="n">kp</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="s2">&quot;newfile_lyrics.krn&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>        <span class="n">spine_types</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;**text])</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="n">kp</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="s2">&quot;newfile_core_and_lyrics.krn&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>        <span class="n">spine_types</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;*+text&#39;</span><span class="p">])</span>
+</code></pre></div></p>
 <ul>
-<li>Use <code>include</code> for selecting the <strong>kern semantic categories </strong>to use**. The output only contains what is passed. By default, all the categories are included.</li>
+<li>Use <code>include</code> for selecting the <strong>kern semantic categories </strong>to use**. The output only contains what is passed. By default, all the categories are included.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">kp</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="s2">&quot;newfile_only_clefs.krn&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>        <span class="n">include</span><span class="o">=</span><span class="p">{</span><span class="n">kp</span><span class="o">.</span><span class="n">TokenCategory</span><span class="o">.</span><span class="n">CLEF</span><span class="p">})</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">kp</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="s2">&quot;newfile_only_durations_and_bounding_boxes.krn&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>        <span class="n">include</span><span class="o">=</span><span class="p">{</span><span class="n">kp</span><span class="o">.</span><span class="n">TokenCategory</span><span class="o">.</span><span class="n">DURATION</span><span class="p">,</span> <span class="n">kp</span><span class="o">.</span><span class="n">TokenCategory</span><span class="o">.</span><span class="n">BOUNDING_BOXES</span><span class="p">})</span>
+</code></pre></div></li>
+<li>Use <code>exclude</code> for selecting the <strong>kern semantic categories </strong>to not use**. The output contains everything except what is passed. By default, any category is excluded.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">kp</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="s2">&quot;newfile_without_pitches.krn&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>        <span class="n">exclude</span><span class="o">=</span><span class="p">{</span><span class="n">kp</span><span class="o">.</span><span class="n">TokenCategory</span><span class="o">.</span><span class="n">PITCH</span><span class="p">})</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">kp</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="s2">&quot;newfile_without_durations_or_rests.krn&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>        <span class="n">exclude</span><span class="o">=</span><span class="p">{</span><span class="n">kp</span><span class="o">.</span><span class="n">TokenCategory</span><span class="o">.</span><span class="n">BARLINES</span><span class="p">,</span> <span class="n">kp</span><span class="o">.</span><span class="n">TokenCategory</span><span class="o">.</span><span class="n">REST</span><span class="p">})</span>
+</code></pre></div></li>
+<li>
+<p>Use <code>include</code> and <code>exclude</code> together to select the <strong>kern semantic categories </strong>to use**. The output combines both.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">kp</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="s2">&quot;newfile_custom.krn&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>        <span class="n">include</span><span class="o">=</span><span class="n">kp</span><span class="o">.</span><span class="n">BEKERN_CATEGORIES</span><span class="p">,</span>  <span class="c1"># Preloaded set of simple categories</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>        <span class="n">exclude</span><span class="o">=</span><span class="p">{</span><span class="n">kp</span><span class="o">.</span><span class="n">TokenCategory</span><span class="o">.</span><span class="n">PITCH</span><span class="p">})</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>Use <code>encoding</code> to select how the categories are split. By default, the <code>normalizedKern</code> encoding is used.</p>
+</li>
 </ul>
-<pre><code class="language-python">import kernpy as kp
-
-kp.dump(document, &quot;newfile_only_clefs.krn&quot;,
-        include={kp.TokenCategory.CLEF})
-kp.dump(document, &quot;newfile_only_durations_and_bounding_boxes.krn&quot;,
-        include={kp.TokenCategory.DURATION, kp.TokenCategory.BOUNDING_BOXES})
-</code></pre>
-<ul>
-<li>Use <code>exclude</code> for selecting the <strong>kern semantic categories </strong>to not use**. The output contains everything except what is passed. By default, any category is excluded.</li>
-</ul>
-<pre><code class="language-python">import kernpy as kp
-
-kp.dump(document, &quot;newfile_without_pitches.krn&quot;,
-        exclude={kp.TokenCategory.PITCH})
-kp.dump(document, &quot;newfile_without_durations_or_rests.krn&quot;,
-        exclude={kp.TokenCategory.BARLINES, kp.TokenCategory.REST})
-</code></pre>
-<ul>
-<li>Use <code>include</code> and <code>exclude</code> together to select the <strong>kern semantic categories </strong>to use**. The output combines both.</li>
-</ul>
-<pre><code class="language-python">import kernpy as kp
-
-kp.dump(document, &quot;newfile_custom.krn&quot;,
-        include=kp.BEKERN_CATEGORIES,  # Preloaded set of simple categories
-        exclude={kp.TokenCategory.PITCH})
-</code></pre>
-<ul>
-<li>Use <code>encoding</code> to select how the categories are split. By default, the <code>normalizedKern</code> encoding is used.</li>
-</ul>
-<pre><code class="language-python">import kernpy as kp
-
-kp.dump(document, &quot;newfile_normalized.krn&quot;,
-        encoding=kp.Encoding.normalizedKern)  # Default encoding
-</code></pre>
-<p>Select the proper Humdrum **kern encoding:</p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">kp</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="s2">&quot;newfile_normalized.krn&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>        <span class="n">encoding</span><span class="o">=</span><span class="n">kp</span><span class="o">.</span><span class="n">Encoding</span><span class="o">.</span><span class="n">normalizedKern</span><span class="p">)</span>  <span class="c1"># Default encoding</span>
+</code></pre></div>
+Select the proper Humdrum **kern encoding:</p>
 <p><code>kernpy</code> provides different tokenizers to export the content each symbol in different formats.</p>
 <table>
 <thead>
@@ -775,200 +1507,204 @@ kp.dump(document, &quot;newfile_normalized.krn&quot;,
 </tbody>
 </table>
 <p>Use the <code>Encoding</code> enum class to select the encoding:</p>
-<pre><code class="language-python">import kernpy as kp
-
-doc, _ = kp.load('test/resources/legacy/chor048.krn')
-
-kern_content = kp.dumps(doc, encoding=kp.Encoding.normalizedKern)
-ekern_content = kp.dumps(doc, encoding=kp.Encoding.eKern)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">doc</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;test/resources/legacy/chor048.krn&#39;</span><span class="p">)</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">kern_content</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="n">kp</span><span class="o">.</span><span class="n">Encoding</span><span class="o">.</span><span class="n">normalizedKern</span><span class="p">)</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="n">ekern_content</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="n">kp</span><span class="o">.</span><span class="n">Encoding</span><span class="o">.</span><span class="n">eKern</span><span class="p">)</span>
+</code></pre></div>
 <ul>
-<li>Use <code>from_measure</code> and <code>to_measure</code> to select the measures to export. By default, all the measures are exported.</li>
+<li>
+<p>Use <code>from_measure</code> and <code>to_measure</code> to select the measures to export. By default, all the measures are exported.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">kp</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="s2">&quot;newfile_1_to_10.krn&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>        <span class="n">from_measure</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># First from measure 1</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>        <span class="n">to_measure</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>   <span class="c1"># Last measure exported</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>Use <code>spine_ids</code> to select the spines to export. By default, all the spines are exported.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="n">kp</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="s2">&quot;newfile_1_and_2.krn&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>        <span class="n">spine_ids</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>  <span class="c1"># Export only the first and the second spine</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>Use <code>show_measure_numbers</code> to select if the measure numbers are shown. By default, the measure numbers are shown.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="n">kp</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="s2">&quot;newfile_no_measure_numbers.krn&quot;</span><span class="p">,</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>        <span class="n">show_measure_numbers</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># Do not show measure numbers</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>Use all the options at the same time.</p>
+</li>
 </ul>
-<pre><code class="language-python">import kernpy as kp
-
-kp.dump(document, &quot;newfile_1_to_10.krn&quot;,
-        from_measure=1,  # First from measure 1
-        to_measure=10)   # Last measure exported
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="n">kp</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="s2">&quot;newfile.krn&quot;</span><span class="p">,</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>        <span class="n">spine_types</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;**kern&#39;</span><span class="p">],</span>  <span class="c1"># Export only the **kern spines</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>        <span class="n">include</span><span class="o">=</span><span class="n">kp</span><span class="o">.</span><span class="n">BEKERN_CATEGORIES</span><span class="p">,</span>  <span class="c1"># Token categories to include</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>        <span class="n">exclude</span><span class="o">=</span><span class="p">{</span><span class="n">kp</span><span class="o">.</span><span class="n">TokenCategory</span><span class="o">.</span><span class="n">PITCH</span><span class="p">},</span>  <span class="c1"># Token categories to exclude</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>        <span class="n">encoding</span><span class="o">=</span><span class="n">kp</span><span class="o">.</span><span class="n">Encoding</span><span class="o">.</span><span class="n">eKern</span><span class="p">,</span>  <span class="c1"># Kern encoding</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>        <span class="n">from_measure</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># First from measure 1</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>        <span class="n">to_measure</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>  <span class="c1"># Last measure exported</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>        <span class="n">spine_ids</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>  <span class="c1"># Export only the first and the second spine</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>        <span class="n">show_measure_numbers</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># Do not show measure numbers</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>        <span class="p">)</span>
+</code></pre></div>
+<h2 id="exploring-kernpy-utilities">Exploring <code>kernpy</code> utilities.<a class="headerlink" href="#exploring-kernpy-utilities" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Use <code>spine_ids</code> to select the spines to export. By default, all the spines are exported.</li>
+<li>
+<p>Spines analysis
+  Retrieve all the spine types of the document.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="n">kp</span><span class="o">.</span><span class="n">spine_types</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># [&#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;, &#39;**root&#39;, &#39;**harm&#39;]</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="n">kp</span><span class="o">.</span><span class="n">spine_types</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">spine_types</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># [&#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;, &#39;**root&#39;, &#39;**harm&#39;]</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="n">kp</span><span class="o">.</span><span class="n">spine_types</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">spine_types</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;**kern&#39;</span><span class="p">])</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># [&#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;]</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>Get specific **kern spines.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">how_many_instrumental_spines</span><span class="p">(</span><span class="n">document</span><span class="p">):</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">kp</span><span class="o">.</span><span class="n">spine_types</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;**kern&#39;</span><span class="p">]))</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">kp</span><span class="o">.</span><span class="n">spine_types</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;**kern&#39;</span><span class="p">]))</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># [&#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;, &#39;**kern&#39;]</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># 4</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="k">def</span><span class="w"> </span><span class="nf">has_voice</span><span class="p">(</span><span class="n">document</span><span class="p">):</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">kp</span><span class="o">.</span><span class="n">spine_types</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;**text&#39;</span><span class="p">]))</span> <span class="o">&gt;</span> <span class="mi">0</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="c1"># True</span>
+</code></pre></div></p>
+</li>
 </ul>
-<pre><code class="language-python">import kernpy as kp
-
-kp.dump(document, &quot;newfile_1_and_2.krn&quot;,
-        spine_ids=[0, 1])  # Export only the first and the second spine
-</code></pre>
-<ul>
-<li>Use <code>show_measure_numbers</code> to select if the measure numbers are shown. By default, the measure numbers are shown.</li>
-</ul>
-<pre><code class="language-python">import kernpy as kp
-
-kp.dump(document, &quot;newfile_no_measure_numbers.krn&quot;,
-        show_measure_numbers=False)  # Do not show measure numbers
-</code></pre>
-<ul>
-<li>Use all the options at the same time.</li>
-</ul>
-<pre><code class="language-python">import kernpy as kp
-
-kp.dump(document, &quot;newfile.krn&quot;,
-        spine_types=['**kern'],  # Export only the **kern spines
-        include=kp.BEKERN_CATEGORIES,  # Token categories to include
-        exclude={kp.TokenCategory.PITCH},  # Token categories to exclude
-        encoding=kp.Encoding.eKern,  # Kern encoding
-        from_measure=1,  # First from measure 1
-        to_measure=10,  # Last measure exported
-        spine_ids=[0, 1],  # Export only the first and the second spine
-        show_measure_numbers=False,  # Do not show measure numbers
-        )
-</code></pre>
-<h2 id="exploring-kernpy-utilities">Exploring <code>kernpy</code> utilities.</h2>
-<ul>
-<li>Spines analysis
-  Retrieve all the spine types of the document.</li>
-</ul>
-<pre><code class="language-python">import kernpy as kp
-
-kp.spine_types(document)
-# ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
-
-kp.spine_types(document, spine_types=None)
-# ['**kern', '**kern', '**kern', '**kern', '**root', '**harm']
-
-kp.spine_types(document, spine_types=['**kern'])
-# ['**kern', '**kern', '**kern', '**kern']
-</code></pre>
-<ul>
-<li>Get specific **kern spines.</li>
-</ul>
-<pre><code class="language-python">import kernpy as kp
-
-def how_many_instrumental_spines(document):
-    print(kp.spine_types(document, ['**kern']))
-    return len(kp.spine_types(document, ['**kern']))
-# ['**kern', '**kern', '**kern', '**kern']
-# 4
-
-def has_voice(document):
-    return len(kp.spine_types(document, ['**text'])) &gt; 0
-# True
-</code></pre>
-<h3 id="how-many-measures-are-there-in-the-document-which-measures-do-you-want-to-export">How many measures are there in the document? Which measures do you want to export?</h3>
-<p>After reading the score into the <code>Document</code> object. You can get some useful data:</p>
-<pre><code class="language-python">first_measure: int = document.get_first_measure()
-last_measure: int = document.measures_count()
-</code></pre>
-<p>Iterate over all the measures of the document.</p>
-<pre><code class="language-python">import kernpy as kp
-
-doc, _ = kp.load('test/resources/legacy/chor048.krn')  # 10 measures score
-for i in range(doc.get_first_measure(), doc.measures_count(), 1):  # from 1 to 11, step 1
-    # Export only the i-th measure (1 long measure scores)
-    content_ith_measure = kp.dumps(doc, from_measure=i, to_measure=i)
-
-    # Export the i-th measure and the next 4 measures (5 long measure scores)
-    if i + 4 &lt;= doc.measures_count():
-        content_longer = kp.dumps(doc, from_measure=i, to_measure=i + 4)
-    ...
-</code></pre>
+<h3 id="how-many-measures-are-there-in-the-document-which-measures-do-you-want-to-export">How many measures are there in the document? Which measures do you want to export?<a class="headerlink" href="#how-many-measures-are-there-in-the-document-which-measures-do-you-want-to-export" title="Permanent link">&para;</a></h3>
+<p>After reading the score into the <code>Document</code> object. You can get some useful data:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">first_measure</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">get_first_measure</span><span class="p">()</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="n">last_measure</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">measures_count</span><span class="p">()</span>
+</code></pre></div></p>
+<p>Iterate over all the measures of the document.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="n">doc</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;test/resources/legacy/chor048.krn&#39;</span><span class="p">)</span>  <span class="c1"># 10 measures score</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">get_first_measure</span><span class="p">(),</span> <span class="n">doc</span><span class="o">.</span><span class="n">measures_count</span><span class="p">(),</span> <span class="mi">1</span><span class="p">):</span>  <span class="c1"># from 1 to 11, step 1</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>    <span class="c1"># Export only the i-th measure (1 long measure scores)</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    <span class="n">content_ith_measure</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">from_measure</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">to_measure</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>    <span class="c1"># Export the i-th measure and the next 4 measures (5 long measure scores)</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>    <span class="k">if</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">&lt;=</span> <span class="n">doc</span><span class="o">.</span><span class="n">measures_count</span><span class="p">():</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>        <span class="n">content_longer</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">from_measure</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">to_measure</span><span class="o">=</span><span class="n">i</span> <span class="o">+</span> <span class="mi">4</span><span class="p">)</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>    <span class="o">...</span>
+</code></pre></div></p>
 <p>It is easier to iterate over all the measures using the <code>for measure in doc</code>: loop
-(using the <code>__ iter__</code> method):</p>
-<pre><code class="language-python">import kernpy as kp
-
-for measure in doc:
-    content = kp.dumps(doc, from_measure=measure, to_measure=measure)
-    ...
-</code></pre>
+(using the <code>__ iter__</code> method):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="k">for</span> <span class="n">measure</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">:</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    <span class="n">content</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">from_measure</span><span class="o">=</span><span class="n">measure</span><span class="p">,</span> <span class="n">to_measure</span><span class="o">=</span><span class="n">measure</span><span class="p">)</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>    <span class="o">...</span>
+</code></pre></div></p>
 <p>Exploring the page bounding boxes.</p>
-<pre><code class="language-python">import kernpy as kp
-
-# Iterate over the pages using the bounding boxes
-doc, _ = kp.load('kern_having_bounding_boxes.krn')
-
-# Inspect the bounding boxes
-print(doc.page_bounding_boxes)
-
-
-def are_there_bounding_boxes(doc):
-    return len(doc.get_all_tokens(filter_by_categories=[kp.TokenCategory.BOUNDING_BOXES])) &gt; 0
-
-
-# True
-
-# Iterate over the pages
-for page_label, bounding_box_measure in doc.page_bounding_boxes.items():
-    print(f&quot;Page: {page_label}&quot;
-          f&quot;Bounding box: {bounding_box_measure}&quot;
-          f&quot;from_measure: {bounding_box_measure.from_measure}&quot;
-          f&quot;to_measure+1: {bounding_box_measure.to_measure}&quot;)  # TODO: Check bounds
-    kp.dump(doc, f&quot;foo_{page_label}.ekrn&quot;,
-            spine_types=['**kern'],
-            token_categories=kp.BEKERN_CATEGORIES,
-            encoding=kp.Encoding.eKern,
-            from_measure=bounding_box_measure.from_measure,
-            to_measure=bounding_box_measure.to_measure - 1  # TODO: Check bounds            
-            )
-</code></pre>
-<h3 id="merge-different-full-kern-scores">Merge different full kern scores</h3>
-<pre><code class="language-python">import kernpy as kp
-# NOT AVAILABLE YET!!!
-# Pay attention to `kp.merge` too.
-
-# Concat two valid documents
-score_a = '**kern\n*clefG2\n=1\n4c\n4d\n4e\n4f\n*-\n'
-score_b = '**kern\n*clefG2\n=1\n4a\n4c\n4d\n4c\n*-\n'
-concatenated = kp.merge([score_a, score_b])
-</code></pre>
-<h1 id="concatenate-sorted-fragments-of-the-same-score">Concatenate sorted fragments of the same score</h1>
-<pre><code class="language-python">import kernpy as kp
-
-fragment_a = '**kern\n*clefG2\n=1\n4c\n4d\n4e\n4f\n*-\n'
-fragment_b = '=2\n4a\n4c\n4d\n4c\n*-\n=3\n4a\n4c\n4d\n4c\n*-\n'
-fragment_c = '=4\n4a\n4c\n4d\n4c\n*-\n=5\n4a\n4c\n4d\n4c\n*-\n'
-fragment_d = '=6\n4a\n4c\n4d\n4c\n*-\n=7\n4a\n4c\n4d\n4c\n*-\n==*-'
-fragments = [fragment_a, fragment_b, fragment_c, fragment_d]
-
-doc_merged, indexes = kp.concat(fragments)
-for index_pair in indexes:
-    from_measure, to_measure = index_pair
-    print(f'From measure: {from_measure}, To measure: {to_measure}')
-    print(kp.dumps(doc_merged, from_measure=from_measure, to_measure=to_measure))
-
-# Sometimes is useful having a different separator between the fragments rather than the default one (newline)...
-doc_merged, indexes = kp.concat(fragments, separator='')
-</code></pre>
-<h3 id="inspect-the-document-class-functions">Inspect the <code>Document</code> class functions</h3>
-<pre><code class="language-python">import kernpy as kp
-doc, _ = kp.load('test/resources/legacy/chor048.krn')  # 10 measures score
-
-frequencies = doc.frequencies()  # All the token categories
-filtered_frequencies = doc.frequencies(filter_by_categories=[kp.TokenCategory.SIGNATURES])
-frequencies['*k[f#c#]']
-# {
-#   'occurrences': 4,
-#   'category': SIGNATURES,
-# }
-
-# Get all the tokens in the document
-all_tokens: [kp.Token] = doc.get_all_tokens()
-all_tokens_encodings: [str] = doc.get_all_tokens_encodings()
-
-# Get the unique tokens in the document (vocabulary)
-unique_tokens: [kp.Token] = doc.get_unique_tokens()
-unique_token_encodings: [str] = doc.get_unique_token_encodings()
-
-# Get the line comments in the document
-document.get_metacomments()
-# ['!!!COM: Coltrane', '!!!voices: 1', '!!!OPR: Blue Train']
-document.get_metacomments(KeyComment='COM')
-# ['!!!COM: Coltrane']
-document.get_metacomments(KeyComment='COM', clear=True)
-# ['Coltrane']
-document.get_metacomments(KeyComment='non_existing_key')
-# []
-</code></pre>
-<h2 id="next-steps">Next steps</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="c1"># Iterate over the pages using the bounding boxes</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="n">doc</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;kern_having_bounding_boxes.krn&#39;</span><span class="p">)</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="c1"># Inspect the bounding boxes</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">page_bounding_boxes</span><span class="p">)</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="k">def</span><span class="w"> </span><span class="nf">are_there_bounding_boxes</span><span class="p">(</span><span class="n">doc</span><span class="p">):</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">get_all_tokens</span><span class="p">(</span><span class="n">filter_by_categories</span><span class="o">=</span><span class="p">[</span><span class="n">kp</span><span class="o">.</span><span class="n">TokenCategory</span><span class="o">.</span><span class="n">BOUNDING_BOXES</span><span class="p">]))</span> <span class="o">&gt;</span> <span class="mi">0</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="c1"># True</span>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a><span class="c1"># Iterate over the pages</span>
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a><span class="k">for</span> <span class="n">page_label</span><span class="p">,</span> <span class="n">bounding_box_measure</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">page_bounding_boxes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Page: </span><span class="si">{</span><span class="n">page_label</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>          <span class="sa">f</span><span class="s2">&quot;Bounding box: </span><span class="si">{</span><span class="n">bounding_box_measure</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a>          <span class="sa">f</span><span class="s2">&quot;from_measure: </span><span class="si">{</span><span class="n">bounding_box_measure</span><span class="o">.</span><span class="n">from_measure</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a>          <span class="sa">f</span><span class="s2">&quot;to_measure+1: </span><span class="si">{</span><span class="n">bounding_box_measure</span><span class="o">.</span><span class="n">to_measure</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># TODO: Check bounds</span>
+<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a>    <span class="n">kp</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;foo_</span><span class="si">{</span><span class="n">page_label</span><span class="si">}</span><span class="s2">.ekrn&quot;</span><span class="p">,</span>
+<a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a>            <span class="n">spine_types</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;**kern&#39;</span><span class="p">],</span>
+<a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a>            <span class="n">token_categories</span><span class="o">=</span><span class="n">kp</span><span class="o">.</span><span class="n">BEKERN_CATEGORIES</span><span class="p">,</span>
+<a id="__codelineno-20-25" name="__codelineno-20-25" href="#__codelineno-20-25"></a>            <span class="n">encoding</span><span class="o">=</span><span class="n">kp</span><span class="o">.</span><span class="n">Encoding</span><span class="o">.</span><span class="n">eKern</span><span class="p">,</span>
+<a id="__codelineno-20-26" name="__codelineno-20-26" href="#__codelineno-20-26"></a>            <span class="n">from_measure</span><span class="o">=</span><span class="n">bounding_box_measure</span><span class="o">.</span><span class="n">from_measure</span><span class="p">,</span>
+<a id="__codelineno-20-27" name="__codelineno-20-27" href="#__codelineno-20-27"></a>            <span class="n">to_measure</span><span class="o">=</span><span class="n">bounding_box_measure</span><span class="o">.</span><span class="n">to_measure</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># TODO: Check bounds            </span>
+<a id="__codelineno-20-28" name="__codelineno-20-28" href="#__codelineno-20-28"></a>            <span class="p">)</span>
+</code></pre></div>
+<h3 id="merge-different-full-kern-scores">Merge different full kern scores<a class="headerlink" href="#merge-different-full-kern-scores" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="c1"># NOT AVAILABLE YET!!!</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="c1"># Pay attention to `kp.merge` too.</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="c1"># Concat two valid documents</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="n">score_a</span> <span class="o">=</span> <span class="s1">&#39;**kern</span><span class="se">\n</span><span class="s1">*clefG2</span><span class="se">\n</span><span class="s1">=1</span><span class="se">\n</span><span class="s1">4c</span><span class="se">\n</span><span class="s1">4d</span><span class="se">\n</span><span class="s1">4e</span><span class="se">\n</span><span class="s1">4f</span><span class="se">\n</span><span class="s1">*-</span><span class="se">\n</span><span class="s1">&#39;</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="n">score_b</span> <span class="o">=</span> <span class="s1">&#39;**kern</span><span class="se">\n</span><span class="s1">*clefG2</span><span class="se">\n</span><span class="s1">=1</span><span class="se">\n</span><span class="s1">4a</span><span class="se">\n</span><span class="s1">4c</span><span class="se">\n</span><span class="s1">4d</span><span class="se">\n</span><span class="s1">4c</span><span class="se">\n</span><span class="s1">*-</span><span class="se">\n</span><span class="s1">&#39;</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="n">concatenated</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">merge</span><span class="p">([</span><span class="n">score_a</span><span class="p">,</span> <span class="n">score_b</span><span class="p">])</span>
+</code></pre></div>
+<h1 id="concatenate-sorted-fragments-of-the-same-score">Concatenate sorted fragments of the same score<a class="headerlink" href="#concatenate-sorted-fragments-of-the-same-score" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="n">fragment_a</span> <span class="o">=</span> <span class="s1">&#39;**kern</span><span class="se">\n</span><span class="s1">*clefG2</span><span class="se">\n</span><span class="s1">=1</span><span class="se">\n</span><span class="s1">4c</span><span class="se">\n</span><span class="s1">4d</span><span class="se">\n</span><span class="s1">4e</span><span class="se">\n</span><span class="s1">4f</span><span class="se">\n</span><span class="s1">*-</span><span class="se">\n</span><span class="s1">&#39;</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="n">fragment_b</span> <span class="o">=</span> <span class="s1">&#39;=2</span><span class="se">\n</span><span class="s1">4a</span><span class="se">\n</span><span class="s1">4c</span><span class="se">\n</span><span class="s1">4d</span><span class="se">\n</span><span class="s1">4c</span><span class="se">\n</span><span class="s1">*-</span><span class="se">\n</span><span class="s1">=3</span><span class="se">\n</span><span class="s1">4a</span><span class="se">\n</span><span class="s1">4c</span><span class="se">\n</span><span class="s1">4d</span><span class="se">\n</span><span class="s1">4c</span><span class="se">\n</span><span class="s1">*-</span><span class="se">\n</span><span class="s1">&#39;</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="n">fragment_c</span> <span class="o">=</span> <span class="s1">&#39;=4</span><span class="se">\n</span><span class="s1">4a</span><span class="se">\n</span><span class="s1">4c</span><span class="se">\n</span><span class="s1">4d</span><span class="se">\n</span><span class="s1">4c</span><span class="se">\n</span><span class="s1">*-</span><span class="se">\n</span><span class="s1">=5</span><span class="se">\n</span><span class="s1">4a</span><span class="se">\n</span><span class="s1">4c</span><span class="se">\n</span><span class="s1">4d</span><span class="se">\n</span><span class="s1">4c</span><span class="se">\n</span><span class="s1">*-</span><span class="se">\n</span><span class="s1">&#39;</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="n">fragment_d</span> <span class="o">=</span> <span class="s1">&#39;=6</span><span class="se">\n</span><span class="s1">4a</span><span class="se">\n</span><span class="s1">4c</span><span class="se">\n</span><span class="s1">4d</span><span class="se">\n</span><span class="s1">4c</span><span class="se">\n</span><span class="s1">*-</span><span class="se">\n</span><span class="s1">=7</span><span class="se">\n</span><span class="s1">4a</span><span class="se">\n</span><span class="s1">4c</span><span class="se">\n</span><span class="s1">4d</span><span class="se">\n</span><span class="s1">4c</span><span class="se">\n</span><span class="s1">*-</span><span class="se">\n</span><span class="s1">==*-&#39;</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="n">fragments</span> <span class="o">=</span> <span class="p">[</span><span class="n">fragment_a</span><span class="p">,</span> <span class="n">fragment_b</span><span class="p">,</span> <span class="n">fragment_c</span><span class="p">,</span> <span class="n">fragment_d</span><span class="p">]</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="n">doc_merged</span><span class="p">,</span> <span class="n">indexes</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">fragments</span><span class="p">)</span>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="k">for</span> <span class="n">index_pair</span> <span class="ow">in</span> <span class="n">indexes</span><span class="p">:</span>
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>    <span class="n">from_measure</span><span class="p">,</span> <span class="n">to_measure</span> <span class="o">=</span> <span class="n">index_pair</span>
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;From measure: </span><span class="si">{</span><span class="n">from_measure</span><span class="si">}</span><span class="s1">, To measure: </span><span class="si">{</span><span class="n">to_measure</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">kp</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">doc_merged</span><span class="p">,</span> <span class="n">from_measure</span><span class="o">=</span><span class="n">from_measure</span><span class="p">,</span> <span class="n">to_measure</span><span class="o">=</span><span class="n">to_measure</span><span class="p">))</span>
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a><span class="c1"># Sometimes is useful having a different separator between the fragments rather than the default one (newline)...</span>
+<a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a><span class="n">doc_merged</span><span class="p">,</span> <span class="n">indexes</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="inspect-the-document-class-functions">Inspect the <code>Document</code> class functions<a class="headerlink" href="#inspect-the-document-class-functions" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="n">doc</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;test/resources/legacy/chor048.krn&#39;</span><span class="p">)</span>  <span class="c1"># 10 measures score</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="n">frequencies</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">frequencies</span><span class="p">()</span>  <span class="c1"># All the token categories</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="n">filtered_frequencies</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">frequencies</span><span class="p">(</span><span class="n">filter_by_categories</span><span class="o">=</span><span class="p">[</span><span class="n">kp</span><span class="o">.</span><span class="n">TokenCategory</span><span class="o">.</span><span class="n">SIGNATURES</span><span class="p">])</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="n">frequencies</span><span class="p">[</span><span class="s1">&#39;*k[f#c#]&#39;</span><span class="p">]</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="c1"># {</span>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="c1">#   &#39;occurrences&#39;: 4,</span>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="c1">#   &#39;category&#39;: SIGNATURES,</span>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="c1"># }</span>
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a><span class="c1"># Get all the tokens in the document</span>
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a><span class="n">all_tokens</span><span class="p">:</span> <span class="p">[</span><span class="n">kp</span><span class="o">.</span><span class="n">Token</span><span class="p">]</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">get_all_tokens</span><span class="p">()</span>
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a><span class="n">all_tokens_encodings</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">get_all_tokens_encodings</span><span class="p">()</span>
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>
+<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a><span class="c1"># Get the unique tokens in the document (vocabulary)</span>
+<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a><span class="n">unique_tokens</span><span class="p">:</span> <span class="p">[</span><span class="n">kp</span><span class="o">.</span><span class="n">Token</span><span class="p">]</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">get_unique_tokens</span><span class="p">()</span>
+<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a><span class="n">unique_token_encodings</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">get_unique_token_encodings</span><span class="p">()</span>
+<a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a>
+<a id="__codelineno-23-20" name="__codelineno-23-20" href="#__codelineno-23-20"></a><span class="c1"># Get the line comments in the document</span>
+<a id="__codelineno-23-21" name="__codelineno-23-21" href="#__codelineno-23-21"></a><span class="n">document</span><span class="o">.</span><span class="n">get_metacomments</span><span class="p">()</span>
+<a id="__codelineno-23-22" name="__codelineno-23-22" href="#__codelineno-23-22"></a><span class="c1"># [&#39;!!!COM: Coltrane&#39;, &#39;!!!voices: 1&#39;, &#39;!!!OPR: Blue Train&#39;]</span>
+<a id="__codelineno-23-23" name="__codelineno-23-23" href="#__codelineno-23-23"></a><span class="n">document</span><span class="o">.</span><span class="n">get_metacomments</span><span class="p">(</span><span class="n">KeyComment</span><span class="o">=</span><span class="s1">&#39;COM&#39;</span><span class="p">)</span>
+<a id="__codelineno-23-24" name="__codelineno-23-24" href="#__codelineno-23-24"></a><span class="c1"># [&#39;!!!COM: Coltrane&#39;]</span>
+<a id="__codelineno-23-25" name="__codelineno-23-25" href="#__codelineno-23-25"></a><span class="n">document</span><span class="o">.</span><span class="n">get_metacomments</span><span class="p">(</span><span class="n">KeyComment</span><span class="o">=</span><span class="s1">&#39;COM&#39;</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-23-26" name="__codelineno-23-26" href="#__codelineno-23-26"></a><span class="c1"># [&#39;Coltrane&#39;]</span>
+<a id="__codelineno-23-27" name="__codelineno-23-27" href="#__codelineno-23-27"></a><span class="n">document</span><span class="o">.</span><span class="n">get_metacomments</span><span class="p">(</span><span class="n">KeyComment</span><span class="o">=</span><span class="s1">&#39;non_existing_key&#39;</span><span class="p">)</span>
+<a id="__codelineno-23-28" name="__codelineno-23-28" href="#__codelineno-23-28"></a><span class="c1"># []</span>
+</code></pre></div>
+<h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <p>Congratulations! You have learned the basics of <code>kernpy</code>. Now you can start using the package in your projects.</p>
 <p>Go to the <a href="../../reference/">API reference</a> to learn more about the <code>kernpy</code> API.</p>
 
@@ -979,6 +1715,8 @@ document.get_metacomments(KeyComment='non_existing_key')
 
 
 
+
+  
 
 
 
@@ -1013,7 +1751,7 @@ document.get_metacomments(KeyComment='non_existing_key')
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
