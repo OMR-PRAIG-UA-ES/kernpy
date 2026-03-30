@@ -304,40 +304,37 @@ def merge(
         contents: List[str],
         *,
         raise_on_errors: Optional[bool] = False,
+    raise_on_header_mismatch: bool = True,
+    only_check_core_spines: bool = False,
 ) -> Tuple[Document, List[Tuple[int, int]]]:
     """
-    Merge multiple **kern fragments into a single **kern string. \
-     All the fragments should be presented in order. Each fragment does not need to be a complete **kern file. \
+    Merge multiple full **kern documents into one document.
+
+    The merge process validates spine header compatibility. By default all headers are compared.
+    If ``only_check_core_spines=True``, only core headers (for example **kern/**mens) are checked.
 
     Warnings:
         Processing a large number of files in a row may take some time.
          This method performs as many `kp.read` operations as there are fragments to concatenate.
     Args:
         contents (Sequence[str]): List of **kern strings
-        raise_on_errors (Optional[bool], optional): If True, raise an exception if any grammar error is detected\
-            during parsing.
+        raise_on_errors (Optional[bool], optional): If True, raise an exception if parsing produces grammar errors.
+        raise_on_header_mismatch (bool): If True, raise ``ValueError`` when documents are structurally incompatible.
+        only_check_core_spines (bool): If True, compare only core spines during compatibility checks.
 
     Returns (Tuple[Document, List[Tuple[int, int]]]): Document object and \
       and a List of Pairs (Tuple[int, int]) representing the measure fragment indexes of the concatenated document.
 
     Examples:
         >>> import kernpy as kp
-        >>> contents = ['**kern\n4e\n4f\n4g\n*-\n*-', '**kern\n4a\n4b\n4c\n*-\n=\n*-', '**kern\n4d\n4e\n4f\n*-\n*-']
-        >>> document, indexes = kp.concat(contents)
-        >>> indexes
-        [(0, 3), (3, 6), (6, 9)]
-        >>> document, indexes = kp.concat(contents, separator='\n')
-        >>> indexes
-        [(0, 3), (3, 6), (6, 9)]
-        >>> document, indexes = kp.concat(contents, separator='')
-        >>> indexes
-        [(0, 3), (3, 6), (6, 9)]
-        >>> for start, end in indexes:
-        >>>     print(kp.dumps(document, from_measure=start, to_measure=end)))
+        >>> contents = ['**kern\n=1\n4c\n*-\n', '**kern\n=1\n4d\n*-\n']
+        >>> document, indexes = kp.merge(contents)
     """
     return generic.Generic.merge(
         contents=contents,
-        strict=raise_on_errors
+        strict=raise_on_errors,
+        raise_on_header_mismatch=raise_on_header_mismatch,
+        only_check_core_spines=only_check_core_spines,
     )
 
 

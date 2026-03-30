@@ -157,7 +157,9 @@ class Generic:
     def merge(
             cls,
             contents: Sequence[str],
-            strict: Optional[bool] = False
+            strict: Optional[bool] = False,
+            raise_on_header_mismatch: bool = True,
+            only_check_core_spines: bool = False,
     ) -> Tuple[Document, List[Tuple[int, int]]]:
         """
 
@@ -168,26 +170,129 @@ class Generic:
         Returns:
 
         """
-        if len(contents) < 2:
-            raise ValueError(f"Concatenation action requires at least two documents to concatenate."
-                             f"But {len(contents)} was given.")
-
-        raise NotImplementedError("The merge function is not implemented yet.")
-
-        doc_a, err_a = cls.create(contents[0], strict=strict)
-        for i, content in enumerate(contents[1:]):
-            doc_b, err_b = cls.create(content, strict=strict)
-
-            if strict and (len(err_a) > 0 or len(err_b) > 0):
-                raise Exception(f"Errors were found during the creation of the documents "
-                                f"while using the strict=True option. "
-                                f"Description: concatenating: {err_a if len(err_a) > 0 else err_b}")
-
-            doc_a.add(doc_b)
-        return cls.export(
-            document=doc_a,
-            options=options
+        return cls._merge_documents_via_filtered_roundtrip(
+            contents=contents,
+            strict=strict,
+            raise_on_header_mismatch=raise_on_header_mismatch,
+            only_check_core_spines=only_check_core_spines,
         )
+
+    @classmethod
+    def _validate_document_compatibility(
+            cls,
+            left: Document,
+            right: Document,
+            *,
+            raise_on_header_mismatch: bool,
+            only_check_core_spines: bool,
+    ) -> bool:
+        is_compatible = Document.match(
+            left,
+            right,
+            check_core_spines_only=only_check_core_spines,
+        )
+
+        if not is_compatible and raise_on_header_mismatch:
+            left_headers = [token.encoding for token in left.get_header_nodes()]
+            right_headers = [token.encoding for token in right.get_header_nodes()]
+            raise ValueError(
+                f"Documents are not compatible for merge. "
+                f"Headers do not match with only_check_core_spines={only_check_core_spines}. "
+                f"left: {left_headers}, right: {right_headers}."
+            )
+
+        return is_compatible
+
+    @classmethod
+    def _merge_documents_via_add(
+            cls,
+            contents: Sequence[str],
+            strict: Optional[bool] = False,
+            raise_on_header_mismatch: bool = True,
+            only_check_core_spines: bool = False,
+    ) -> Tuple[Document, List[Tuple[int, int]]]:
+        if len(contents) < 2:
+            raise ValueError(
+                f"Merge action requires at least two documents to merge. "
+                f"But {len(contents)} was given."
+            )
+
+        documents = []
+        indexes = []
+        low_index = 0
+
+        for content in contents:
+            doc, _ = cls.create(content, strict=strict)
+            documents.append(doc)
+
+            high_index = low_index + doc.measures_count()
+            indexes.append((low_index, high_index))
+            low_index = high_index + 1
+
+        merged_document = documents[0].clone()
+
+        for doc in documents[1:]:
+            cls._validate_document_compatibility(
+                merged_document,
+                doc,
+                raise_on_header_mismatch=raise_on_header_mismatch,
+                only_check_core_spines=only_check_core_spines,
+            )
+
+            merged_document.add(
+                doc,
+                check_core_spines_only=only_check_core_spines,
+            )
+
+        return merged_document, indexes
+
+    @classmethod
+    def _merge_documents_via_filtered_roundtrip(
+            cls,
+            contents: Sequence[str],
+            strict: Optional[bool] = False,
+            raise_on_header_mismatch: bool = True,
+            only_check_core_spines: bool = False,
+            include=None,
+            exclude=None,
+    ) -> Tuple[Document, List[Tuple[int, int]]]:
+        if len(contents) < 2:
+            raise ValueError(
+                f"Merge action requires at least two documents to merge. "
+                f"But {len(contents)} was given."
+            )
+
+        docs = []
+        indexes = []
+        low_index = 0
+
+        for content in contents:
+            doc, _ = cls.create(content, strict=strict)
+            docs.append(doc)
+
+            high_index = low_index + doc.measures_count()
+            indexes.append((low_index, high_index))
+            low_index = high_index + 1
+
+        for doc in docs[1:]:
+            cls._validate_document_compatibility(
+                docs[0],
+                doc,
+                raise_on_header_mismatch=raise_on_header_mismatch,
+                only_check_core_spines=only_check_core_spines,
+            )
+
+        options = cls.parse_options_to_ExportOptions(include=include, exclude=exclude)
+        exported_contents = [cls.export(doc, options) for doc in docs]
+
+        merged_content = exported_contents[0]
+        for content in exported_contents[1:]:
+            left_rows = merged_content.splitlines()
+            right_rows = content.splitlines()
+            merged_content = "\n".join(left_rows[:-1] + right_rows[1:]) + "\n"
+
+        merged_document, _ = cls.create(merged_content, strict=strict)
+        return merged_document, indexes
 
     @classmethod
     def concat(

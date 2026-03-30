@@ -1,0 +1,5 @@
+test/resources/samples/monophonic-score.krn
+test/resources/grandstaff/5901766.krn
+test/resources/samples/bach-brandenburg-bwv1050a.krn
+test/resources/samples/jazzmus_with_mxhm.krn
+test/resources/merge/grandstaff_5901766_non_core_mismatch.krn
