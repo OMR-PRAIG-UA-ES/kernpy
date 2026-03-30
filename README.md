@@ -360,13 +360,15 @@ for page_label, bounding_box_measure in doc.page_bounding_boxes.items():
 ### Merge different full kern scores
 ```python
 import kernpy as kp
-# NOT AVAILABLE YET!!!
-# Pay attention to `kp.merge` too.
+# Merge is available.
 
-# Concat two valid documents
+# Merge two valid **kern contents
 score_a = '**kern\n*clefG2\n=1\n4c\n4d\n4e\n4f\n*-\n'
 score_b = '**kern\n*clefG2\n=1\n4a\n4c\n4d\n4c\n*-\n'
-concatenated = kp.merge([score_a, score_b])
+merged_doc, merge_indexes = kp.merge([score_a, score_b])
+
+print(merge_indexes)
+print(kp.dumps(merged_doc))
 ```
 
 # Concatenate sorted fragments of the same score

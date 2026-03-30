@@ -146,25 +146,28 @@ combined = kp.concat([doc1, doc2])
 kp.dump(combined, 'both_parts.krn')
 ```
 
-#### `kp.merge(documents) -> Document`
+#### `kp.merge(contents) -> Tuple[Document, List[Tuple[int, int]]]`
 
 Merge multiple documents side-by-side (combine spines).
 
 **Parameters:**
-- `documents` (List[Document]) — Documents to merge
+- `contents` (List[str]) — Full **kern contents to merge
 
 **Returns:**
-- New merged Document
+- Tuple with merged Document and per-input measure index ranges
 
 **Example:**
 ```python
 import kernpy as kp
 
-soprano, _ = kp.load('soprano.krn')
-alto, _ = kp.load('alto.krn')
+with open('soprano.krn', 'r') as f:
+    soprano = f.read()
+with open('alto.krn', 'r') as f:
+    alto = f.read()
 
-merged = kp.merge([soprano, alto])
-kp.dump(merged, 'sa.krn')
+merged_doc, merge_indexes = kp.merge([soprano, alto])
+kp.dump(merged_doc, 'sa.krn')
+print(merge_indexes)
 ```
 
 ### Visualization

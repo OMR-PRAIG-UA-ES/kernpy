@@ -410,18 +410,20 @@ kp.dump(doc2, 'common2.krn', spine_ids=common_extent)
 ```python
 import kernpy as kp
 
-# Load documents
-doc1, _ = kp.load('soprano.krn')
-doc2, _ = kp.load('alto.krn')
-doc3, _ = kp.load('tenor.krn')
+# Load raw **kern contents
+doc1 = open('soprano.krn', 'r').read()
+doc2 = open('alto.krn', 'r').read()
+doc3 = open('tenor.krn', 'r').read()
 
 # Merge spines side-by-side
-merged = kp.merge([doc1, doc2, doc3])
-kp.dump(merged, 'satb_merged.krn')
+merged_doc, merge_indexes = kp.merge([doc1, doc2, doc3])
+kp.dump(merged_doc, 'satb_merged.krn')
+print(merge_indexes)
 
 # Or concatenate sequentially
-concatenated = kp.concat([doc1, doc2, doc3])
+concatenated, concat_indexes = kp.concat([doc1, doc2, doc3])
 kp.dump(concatenated, 'satb_sequential.krn')
+print(concat_indexes)
 ```
 
 ### Analyze Document Complexity
