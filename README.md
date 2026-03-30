@@ -480,7 +480,7 @@ python -m kernpy <command> <options>
 
 ## Run tests:
 ```shell
-uv sync --group tests
+uv sync --group test
 uv run pytest test
 ```
 
