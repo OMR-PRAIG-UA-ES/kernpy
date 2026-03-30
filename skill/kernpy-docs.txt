@@ -32,8 +32,8 @@ Exporting:
 - kp.dumps(doc, **options) -> str
 
 Document operations:
-- kp.concat([doc1, doc2, ...]) -> Document
-- kp.merge([doc1, doc2, ...]) -> Document
+- kp.concat([content1, content2, ...]) -> (doc, indexes)
+- kp.merge([content1, content2, ...]) -> (doc, indexes)
 
 Visualization:
 - kp.graph(doc, output_file)
