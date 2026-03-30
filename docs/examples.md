@@ -440,12 +440,15 @@ kp.dump(combined, 'combined.krn')
 ```python
 import kernpy as kp
 
-doc1, _ = kp.load('melody.krn')
-doc2, _ = kp.load('harmony.krn')
+with open('melody.krn', 'r') as f:
+    doc1_content = f.read()
+with open('harmony.krn', 'r') as f:
+    doc2_content = f.read()
 
 # Merge side-by-side
-merged = kp.merge([doc1, doc2])
-kp.dump(merged, 'merged.krn')
+merged_doc, merge_indexes = kp.merge([doc1_content, doc2_content])
+kp.dump(merged_doc, 'merged.krn')
+print(merge_indexes)
 ```
 
 ## Visualization
