@@ -44,14 +44,14 @@
 4r
 4r
 =
-.2r
+2.r
 =
 4F(
 4AA
 4D
 =
 4GG
-.4C
+4.C
 8AA)
 =
 4FF(>
@@ -69,12 +69,12 @@
 4FF
 4r
 *clefG2
-.8a(L .8cc(L
+8.a(L 8.cc(L
 16gJk 16b-Jk
 =
 4f) 4a)
 4f 4a
-.8f(L .8a(L
+8.f(L 8.a(L
 16cJk 16gJk
 =
 4A) 4f)
@@ -87,12 +87,12 @@
 =
 4c( 4g(
 4f) 4a)
-.8a(L .8cc(L
+8.a(L 8.cc(L
 16gJk 16b-Jk
 =
 4f) 4a)
 4f 4a
-.8f(L .8a(L
+8.f(L 8.a(L
 16cJk 16gJk
 =
 4A) 4f)
@@ -216,7 +216,7 @@
 8C
 8E-)J
 =
-.4GG .4G
+4.GG 4.G
 16A-(L
 16GJ
 16FL
@@ -406,7 +406,7 @@
 4c 4f
 =
 *^
-2f(	.2c
+2f(	2.c
 4e)	.
 =	=
 4d	4G
@@ -496,14 +496,14 @@
 16c)J
 =
 4C 4E 4G 4c
-.4E .4e
+4.E 4.e
 8GG# 8G#
 =
 4AA 4A
-.4C .4c
+4.C 4.c
 8E
 =
-.8F(LT
+8.F(LT
 32EL
 32DJ
 4Gn)
@@ -518,13 +518,13 @@
 4E(
 4C)
 =
-.2G
+2.G
 =
 4r
 4E(
 4C)
 =
-.2G
+2.G
 =
 4F 4A 4d
 4r
@@ -534,7 +534,7 @@
 4r
 4r
 =
-.2G .2d .2f
+2.G 2.d 2.f
 =
 4c 4e
 4r
@@ -544,13 +544,13 @@
 4E(
 4C)
 =
-.2GG .2G
+2.GG 2.G
 =
 4r
 4E(
 4C)
 =
-.2GG .2G
+2.GG 2.G
 =
 4FF 4AA 4D
 4r
@@ -655,7 +655,7 @@
 4r
 =
 *^
-.2B-X[	8Gn(L
+2.B-X[	8Gn(L
 .	8A
 .	8G
 .	8A
@@ -667,7 +667,7 @@
 .	4r
 *clefG2	*clefG2
 =	=
-8g(L	.2c[
+8g(L	2.c[
 8f#	.
 8g	.
 8f#	.
@@ -712,14 +712,14 @@
 4r
 4r
 =
-.2r
+2.r
 =
 4F(
 4AA
 4D
 =
 4GG
-.4C
+4.C
 8AA)
 =
 4FF(>
@@ -737,12 +737,12 @@
 4FF
 4r
 *clefG2
-.8a(L .8cc(L
+8.a(L 8.cc(L
 16gJk 16b-Jk
 =
 4f) 4a)
 4f 4a
-.8f(L .8a(L
+8.f(L 8.a(L
 16cJk 16gJk
 =
 4A) 4f)
@@ -755,12 +755,12 @@
 =
 4c( 4g(
 4f) 4a)
-.8a(L .8cc(L
+8.a(L 8.cc(L
 16gJk 16b-Jk
 =
 4f) 4a)
 4f 4a
-.8f(L .8a(L
+8.f(L 8.a(L
 16cJk 16gJk
 =
 4A) 4f)
@@ -906,7 +906,7 @@
 8F
 8A-)J
 =
-.4c
+4.c
 16d-(L
 16cJ
 16B-L
@@ -1095,7 +1095,7 @@
 4f 4b-
 =
 *^
-2b-(	.2f
+2b-(	2.f
 4a)	.
 =	=
 4g	4c
@@ -1192,14 +1192,14 @@
 16F)J
 =
 4FF 4AA 4C 4F
-.4AA .4A
+4.AA 4.A
 8C# 8c#
 =
 4D 4d
-.4F .4f
+4.F 4.f
 8A
 =
-.8B-(LT
+8.B-(LT
 32AL
 32GJ
 4cn)
