@@ -65,6 +65,7 @@ doc, _ = kp.load(input_file)
 
 # Generate versions in different keys
 intervals = ['P1', 'M2', 'M3', 'P4', 'P5', 'M6', 'M7', 'P8']
+print(f"Available intervals: {kp.AVAILABLE_INTERVALS}")
 
 for interval in intervals:
     transposed = doc.to_transposed(interval, 'up')
@@ -162,40 +163,6 @@ for group_start in range(first, last + 1, group_size):
     print(f"Saved: {output_file}")
 ```
 
-## Parallel Processing
-
-Process large collections efficiently (using multiprocessing):
-
-```python
-import kernpy as kp
-from pathlib import Path
-from multiprocessing import Pool
-
-def process_file(krn_file):
-    """Process a single file"""
-    try:
-        doc, errors = kp.load(krn_file)
-        if not errors:
-            # Save a filtered version
-            output_file = f'filtered_{krn_file.stem}.krn'
-            kp.dump(doc, output_file,
-                   spine_types=['**kern'])
-            return (krn_file.name, 'success')
-        else:
-            return (krn_file.name, f'{len(errors)} errors')
-    except Exception as e:
-        return (krn_file.name, f'failed: {e}')
-
-# Process all files in parallel
-score_files = list(Path('scores').glob('*.krn'))
-
-with Pool(processes=4) as pool:  # Use 4 processes
-    results = pool.map(process_file, score_files)
-
-# Print results
-for filename, status in results:
-    print(f"{filename}: {status}")
-```
 
 ## Create Dataset Inventory
 
@@ -213,13 +180,13 @@ for krn_file in sorted(score_dir.glob('*.krn')):
     try:
         doc, errors = kp.load(krn_file)
         
-        spines = doc.get_spines()
-        spine_types = [s.header for s in spines]
+        spine_types = kp.spine_types(doc)
+        spine_count = doc.get_spine_count()
         
         results.append({
             'filename': krn_file.name,
             'measures': doc.measures_count(),
-            'spines': len(spines),
+            'spines': spine_count,
             'types': ','.join(spine_types),
             'errors': len(errors)
         })
@@ -258,8 +225,7 @@ for directory in [output_dir_satb, output_dir_solo, output_dir_other]:
 
 for krn_file in Path('scores').glob('*.krn'):
     doc, _ = kp.load(krn_file)
-    spines = doc.get_spines()
-    spine_count = len(spines)
+    spine_count = doc.get_spine_count()
     
     if spine_count == 4:
         # SATB score
@@ -360,7 +326,7 @@ for krn_file in score_dir.glob('*.krn'):
         
         if errors:
             error_log.append((krn_file.name, errors))
-            print(f"⚠ {krn_file.name}: {len(errors)} parsing issues")
+            print(f"{krn_file.name}: {len(errors)} parsing issues")
         else:
             success_count += 1
             # Process the file

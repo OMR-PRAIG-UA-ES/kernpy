@@ -124,7 +124,7 @@
     "occurrences": 6
   },
   "*Iorgan": {
-    "category": "OTHER",
+    "category": "INSTRUMENTS",
     "occurrences": 5
   },
   "*M3/4": {
@@ -462,6 +462,10 @@
   "==": {
     "category": "BARLINES",
     "occurrences": 6
+  },
+  "====": {
+    "category": "BARLINES",
+    "occurrences": 126
   },
   "I": {
     "category": "HARMONY",
