@@ -202,7 +202,7 @@ import kernpy as kp
 doc, _ = kp.load('score.krn')
 
 # Step 1: Load document
-print(f"Original: {doc.measures_count()} measures, {len(doc.get_spines())} spines")
+print(f"Original: {doc.measures_count()} measures, {doc.get_spine_count()} spines")
 
 # Step 2: Transpose
 doc_transposed = doc.to_transposed('P5', 'up')
@@ -228,8 +228,7 @@ from pathlib import Path
 
 doc, _ = kp.load('original.krn')
 
-# Soprano line only
-sopranos = doc.get_spines()[0]  # Assuming first spine is soprano
+# First spine only; adjust the spine id to match the line you want.
 kp.dump(doc, 'soprano_only.krn', spine_ids=[0])
 
 # SATB arrangement
@@ -273,6 +272,28 @@ kp.dump(doc, 'simplified.krn',
             kp.TokenCategory.FINGERING
         })
 ```
+
+### Mix sum and difference of sets of tokens
+```python
+import kernpy as kp
+
+doc, _ = kp.load('score.krn')
+
+kp.dump(doc, 'only_notes_and_rests_without_alterations.krn',
+        include={kp.TokenCategory.NOTE_REST},
+        exclude={kp.TokenCategory.ALTERATION})
+```
+
+### Use preloaded token categories
+```python
+import kernpy as kp
+
+doc, _ = kp.load('score.krn')
+kp.dump(doc, 'simplified_with_bekern.krn',
+        include={kp.BEKERN_CATEGORIES}
+        headers=['**kern'])
+```
+
 
 ### Create Study Scores
 

@@ -14,8 +14,8 @@ import kernpy as kp
 document, errors = kp.load('path/to/score.krn')
 
 # Handle any parsing errors
-if errors:
-    print(f"Parser found {len(errors)} issues:")
+if len(errors) > 0:
+    print(f"Parser found {len(errors)} issues:")  # Usually renders like Verovio althouh these errors
     for error in errors[:3]:  # Show first 3
         print(f"  {error}")
 ```
@@ -61,32 +61,23 @@ except ValueError as e:
 
 ## Understanding Document Structure
 
-### Access Spines
+### Inspect Spine Metadata
 
-Spines are vertical columns representing voices or instruments:
+The public API exposes spine metadata, not individual spine objects:
 
 ```python
 import kernpy as kp
 
 doc, _ = kp.load('score.krn')
 
-# Get all spines
-spines = doc.get_spines()
-print(f"Total spines: {len(spines)}")
-
-# Print spine headers
-for i, spine in enumerate(spines):
-    print(f"  Spine {i}: {spine.header}")
-
-# Filter to specific types
-kern_spines = [s for s in spines if s.header == '**kern']
-text_spines = [s for s in spines if s.header == '**text']
-print(f"Kern spines: {len(kern_spines)}, Text spines: {len(text_spines)}")
+spine_types = kp.spine_types(doc)
+spine_ids = doc.get_spine_ids()
+print(f"Total spines: {doc.get_spine_count()}")
+print(f"Spine ids: {spine_ids}")
+print(f"Spine types: {spine_types}")
 ```
 
 ### Measure Information
-
-Access measures and their ranges:
 
 ```python
 import kernpy as kp
@@ -94,29 +85,23 @@ import kernpy as kp
 doc, _ = kp.load('score.krn')
 
 first_measure = doc.get_first_measure()
-total_measures = doc.measures_count()
+last_measure = doc.measures_count()
 
-print(f"Score spans measures {first_measure} to {total_measures}")
-print(f"Total measure count: {total_measures - first_measure + 1}")
+print(f"Score spans measures {first_measure} to {last_measure}")
 ```
 
-### Get Tokens from a Spine
-
-Access the individual musical elements:
+### Get Tokens from the Document
 
 ```python
 import kernpy as kp
 
 doc, _ = kp.load('score.krn')
-spines = doc.get_spines()
-
-# Get tokens from the first kern spine
-kern_spine = [s for s in spines if s.header == '**kern'][0]
-tokens = kern_spine.get_tokens()
+tokens = doc.get_all_tokens()
+token_encodings = doc.get_all_tokens_encodings()
 
 print(f"Total tokens: {len(tokens)}")
+print(f"First 20 encodings: {token_encodings[:20]}")
 
-# Print first 20 token encodings
 for i, token in enumerate(tokens[:20]):
     print(f"  {i:2d}: {token.encoding}")
 ```
@@ -125,16 +110,12 @@ for i, token in enumerate(tokens[:20]):
 
 ### Inspect Individual Tokens
 
-Each token carries rich information:
-
 ```python
 import kernpy as kp
 
 doc, _ = kp.load('score.krn')
-kern_spine = doc.get_spines()[0]
-tokens = kern_spine.get_tokens()
+tokens = doc.get_all_tokens()
 
-# Examine a specific token
 token = tokens[4]
 print(f"Encoding: {token.encoding}")
 print(f"Category: {token.category}")
@@ -143,30 +124,32 @@ print(f"Type: {type(token).__name__}")
 
 ### Filter Tokens by Category
 
-Select only certain types of tokens for analysis:
+```python
+import kernpy as kp
+
+doc, _ = kp.load('score.krn')
+
+note_rest_tokens = doc.get_all_tokens(filter_by_categories=[kp.TokenCategory.NOTE_REST])
+pitch_tokens = doc.get_all_tokens(filter_by_categories=[kp.TokenCategory.PITCH])
+clef_tokens = doc.get_all_tokens(filter_by_categories=[kp.TokenCategory.CLEF])
+
+print(f"Note/rest tokens: {len(note_rest_tokens)}")
+print(f"Pitch subtokens: {len(pitch_tokens)}")
+print(f"Clef tokens: {len(clef_tokens)}")
+```
+
+### Count Token Frequencies
 
 ```python
 import kernpy as kp
 
 doc, _ = kp.load('score.krn')
-kern_spine = doc.get_spines()[0]
-tokens = kern_spine.get_tokens()
 
-# Get only notes and rests
-note_rest_tokens = [t for t in tokens 
-                    if t.category == kp.TokenCategory.NOTE_REST]
+frequencies = doc.frequencies()
+note_rest_frequencies = doc.frequencies(token_categories=[kp.TokenCategory.NOTE_REST])
 
-# Get only pitches
-pitch_tokens = [t for t in tokens 
-                if t.category == kp.TokenCategory.PITCH]
-
-# Get clef information
-clef_tokens = [t for t in tokens 
-               if t.category == kp.TokenCategory.CLEF]
-
-print(f"Notes/rests: {len(note_rest_tokens)}")
-print(f"Pitches: {len(pitch_tokens)}")
-print(f"Clef declarations: {len(clef_tokens)}")
+print(f"Total unique tokens: {len(frequencies)}")
+print(f"Note/rest frequencies: {note_rest_frequencies}")
 ```
 
 ## Extract Musical Information
@@ -178,14 +161,8 @@ import kernpy as kp
 
 doc, _ = kp.load('score.krn')
 
-# Get time signatures from all spines
-time_sigs = set()
-for spine in doc.get_spines():
-    for token in spine.get_tokens():
-        if token.category == kp.TokenCategory.TIME_SIGNATURE:
-            time_sigs.add(token.encoding)
-
-print(f"Time signatures found: {time_sigs}")
+time_sigs = doc.get_all_tokens(filter_by_categories=[kp.TokenCategory.TIME_SIGNATURE])
+print(f"Time signatures found: {[token.encoding for token in time_sigs]}")
 ```
 
 ### Find Key Signatures
@@ -195,13 +172,8 @@ import kernpy as kp
 
 doc, _ = kp.load('score.krn')
 
-key_signatures = []
-for spine in doc.get_spines():
-    for token in spine.get_tokens():
-        if token.category == kp.TokenCategory.KEY_SIGNATURE:
-            key_signatures.append(token.encoding)
-
-print(f"Key signatures: {key_signatures}")
+key_signatures = doc.get_all_tokens(filter_by_categories=[kp.TokenCategory.KEY_SIGNATURE])
+print(f"Key signatures: {[token.encoding for token in key_signatures]}")
 ```
 
 ### List All Clefs
@@ -211,105 +183,32 @@ import kernpy as kp
 
 doc, _ = kp.load('score.krn')
 
-clefs = {}
-for i, spine in enumerate(doc.get_spines()):
-    for token in spine.get_tokens():
-        if token.category == kp.TokenCategory.CLEF:
-            clefs[f"Spine {i}"] = token.encoding
-            break  # Usually just one per spine
-
-for spine_name, clef in clefs.items():
-    print(f"{spine_name}: {clef}")
+clef_tokens = doc.get_all_tokens(filter_by_categories=[kp.TokenCategory.CLEF])
+print(f"Clefs: {[token.encoding for token in clef_tokens]}")
 ```
 
 ## Analyze Musical Content
 
-### Count Notes and Rests
+### Count Note and Rest Tokens
 
 ```python
 import kernpy as kp
 
 doc, _ = kp.load('score.krn')
-kern_spine = [s for s in doc.get_spines() if s.header == '**kern'][0]
-tokens = kern_spine.get_tokens()
+note_rest_tokens = doc.get_all_tokens(filter_by_categories=[kp.TokenCategory.NOTE_REST])
 
-notes = []
-rests = []
+rest_count = sum(
+    1 for token in note_rest_tokens
+    if any(subtoken.category == kp.TokenCategory.REST for subtoken in token.pitch_duration_subtokens)
+)
+note_count = len(note_rest_tokens) - rest_count
 
-for token in tokens:
-    if token.category == kp.TokenCategory.REST:
-        rests.append(token)
-    elif token.category == kp.TokenCategory.NOTE_REST:
-        notes.append(token)
-
-print(f"Notes: {len(notes)}")
-print(f"Rests: {len(rests)}")
-print(f"Total: {len(notes) + len(rests)}")
-```
-
-### Analyze Pitches
-
-```python
-import kernpy as kp
-
-doc, _ = kp.load('score.krn')
-kern_spine = doc.get_spines()[0]
-
-pitches = {}
-for token in kern_spine.get_tokens():
-    if token.category == kp.TokenCategory.PITCH:
-        pitch = token.encoding
-        pitches[pitch] = pitches.get(pitch, 0) + 1
-
-# Sort by frequency
-for pitch, count in sorted(pitches.items(), 
-                          key=lambda x: x[1], 
-                          reverse=True)[:10]:
-    print(f"{pitch}: {count} times")
-```
-
-### Calculate Durations
-
-```python
-import kernpy as kp
-from fractions import Fraction
-
-doc, _ = kp.load('score.krn')
-kern_spine = doc.get_spines()[0]
-
-total_duration = Fraction(0)
-for token in kern_spine.get_tokens():
-    if token.category == kp.TokenCategory.DURATION:
-        # Extract numeric duration
-        try:
-            duration_val = float(token.encoding)
-            total_duration += Fraction(1, int(duration_val))
-        except (ValueError, ZeroDivisionError):
-            pass  # Skip non-numeric or zero values
-
-print(f"Total duration (in quarter notes): {total_duration}")
-print(f"As beats: {float(total_duration) * 4}")
+print(f"Notes: {note_count}")
+print(f"Rests: {rest_count}")
+print(f"Total: {len(note_rest_tokens)}")
 ```
 
 ## Practical Analysis Patterns
-
-### Find All Occurrences of a Pattern
-
-```python
-import kernpy as kp
-
-doc, _ = kp.load('score.krn')
-kern_spine = doc.get_spines()[0]
-tokens = kern_spine.get_tokens()
-
-# Find all instances of a specific note
-search_pitch = 'c'
-occurrences = [t for t in tokens 
-               if t.category == kp.TokenCategory.PITCH 
-               and t.encoding == search_pitch]
-
-print(f"Found {len(occurrences)} instances of pitch {search_pitch}")
-```
 
 ### Extract Lyrics
 
@@ -317,38 +216,28 @@ print(f"Found {len(occurrences)} instances of pitch {search_pitch}")
 import kernpy as kp
 
 doc, _ = kp.load('score.krn')
+lyrics = doc.get_all_tokens(filter_by_categories=[kp.TokenCategory.LYRICS])
 
-# Find text spine
-text_spine = None
-for spine in doc.get_spines():
-    if spine.header == '**text':
-        text_spine = spine
-        break
-
-if text_spine:
-    lyrics = []
-    for token in text_spine.get_tokens():
-        if not token.encoding.startswith('*') and '-' not in token.encoding:
-            lyrics.append(token.encoding)
-    
-    print(f"Lyrics: {' '.join(lyrics)}")
+print(f"Lyrics: {' '.join(token.encoding for token in lyrics)}")
 ```
 
-### Compare Spines
+### Compare Spine Metadata
 
 ```python
 import kernpy as kp
+from collections import Counter
 
 doc, _ = kp.load('score.krn')
-spines = doc.get_spines()
+spine_types = kp.spine_types(doc)
+spine_ids = doc.get_spine_ids()
 
-# Compare spine lengths
-for i, spine in enumerate(spines):
-    tokens = spine.get_tokens()
-    print(f"Spine {i} ({spine.header}): {len(tokens)} tokens")
+for spine_type, count in Counter(spine_types).items():
+    print(f"{spine_type}: {count}")
+
+print(f"Spine ids: {spine_ids}")
 ```
 
-##Batch Analysis
+## Batch Analysis
 
 Process multiple files:
 
@@ -356,22 +245,22 @@ Process multiple files:
 import kernpy as kp
 from pathlib import Path
 
-# Process all .krn files in a directory
 score_dir = Path('scores')
 results = []
 
 for krn_file in score_dir.glob('*.krn'):
     doc, errors = kp.load(krn_file)
     if not errors:
-        num_measures = doc.measures_count()
-        num_spines = len(doc.get_spines())
         results.append({
             'file': krn_file.name,
-            'measures': num_measures,
-            'spines': num_spines
+            'measures': doc.measures_count(),
+            'spines': doc.get_spine_count(),
+            'types': ','.join(kp.spine_types(doc)),
+            'errors': len(errors),
+            'tokens': len(doc.get_all_tokens()),
+            'frequencies': doc.frequencies(),
         })
 
-# Display results
 for result in results:
     print(f"{result['file']}: {result['measures']} measures, {result['spines']} spines")
 ```
