@@ -19,6 +19,7 @@ Visit the online website: <a target="_blank" href="https://kernpy.pages.dev/">ht
 - [Documentation](#documentation)
 - [Run tests](#run-tests)
 - [Contributing](#contributing)
+- [Create a release](#create-release)
 - [Citation](#citation)
 
 
@@ -186,8 +187,8 @@ Select the proper Humdrum **kern encoding:
 | extended_kern          | 2@.@bb@-·_·L   | Tokenised version of Humdrum **kern encoding                                    |
 | basic_kern             | 2.bb-          | Basic Humdrum **kern encoding: same of `kern` but with less semantic categories |
 | basic_extended_kern    | 2@.@bb@-       | Tokenised version of the Basic Extended Humdrum **kern encoding                 |
-| agnostic_kern          | 2S4-           | Agnostic encoding: pitches remain the same regardless of the Clef               |
-| agnostic_extended_kern | 2@S@4@-        | Tokenised version of the Agnostic encoding                                      |
+| agnostic_kern          | 2.bb-_L           | Agnostic encoding: pitches remain in G clef regardless of the original spine's Clef               |
+| agnostic_extended_kern | 2@.@bb@-·_·L        | Tokenised version of the Agnostic encoding                                      |
 
 Use the `Encoding` enum class to select the encoding:
 
@@ -498,6 +499,17 @@ uv run mkdocs serve/build
 We welcome contributions from the community! If you'd like to contribute to the project, please follow these steps:
 
 Go to the file [CONTRIBUTING.md](CONTRIBUTING.md) for more information on how to contribute.
+
+## Create release:
+
+After committing the changes, run:
+```sh
+uv version --bump patch|minor|major
+```
+
+Commit again the the update changes and push the to origin/main.
+
+Then, create the release in GitHub and add the release notes. The release will be automatically published in PyPI. Use the same version number as the generated one in the previous step!
 
 ## Citation:
 ```bibtex
