@@ -47436,7 +47436,14 @@ used when no time signature token is available for a measure.</p>
 <span class="normal"><a href="#__codelineno-0-594">594</a></span>
 <span class="normal"><a href="#__codelineno-0-595">595</a></span>
 <span class="normal"><a href="#__codelineno-0-596">596</a></span>
-<span class="normal"><a href="#__codelineno-0-597">597</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-583" name="__codelineno-0-583"></a><span class="k">def</span><span class="w"> </span><span class="nf">pitch_to_gkern_string</span><span class="p">(</span><span class="n">pitch</span><span class="p">:</span> <span class="n">AgnosticPitch</span><span class="p">,</span> <span class="n">clef</span><span class="p">:</span> <span class="n">Clef</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-597">597</a></span>
+<span class="normal"><a href="#__codelineno-0-598">598</a></span>
+<span class="normal"><a href="#__codelineno-0-599">599</a></span>
+<span class="normal"><a href="#__codelineno-0-600">600</a></span>
+<span class="normal"><a href="#__codelineno-0-601">601</a></span>
+<span class="normal"><a href="#__codelineno-0-602">602</a></span>
+<span class="normal"><a href="#__codelineno-0-603">603</a></span>
+<span class="normal"><a href="#__codelineno-0-604">604</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-583" name="__codelineno-0-583"></a><span class="k">def</span><span class="w"> </span><span class="nf">pitch_to_gkern_string</span><span class="p">(</span><span class="n">pitch</span><span class="p">:</span> <span class="n">AgnosticPitch</span><span class="p">,</span> <span class="n">clef</span><span class="p">:</span> <span class="n">Clef</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <a id="__codelineno-0-584" name="__codelineno-0-584"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <a id="__codelineno-0-585" name="__codelineno-0-585"></a><span class="sd">    Converts a given pitch and clef to a graphic **kern string representation.</span>
 <a id="__codelineno-0-586" name="__codelineno-0-586"></a>
@@ -47447,10 +47454,17 @@ used when no time signature token is available for a measure.</p>
 <a id="__codelineno-0-591" name="__codelineno-0-591"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-592" name="__codelineno-0-592"></a><span class="sd">        str: The graphic **kern representation (e.g., &#39;|L2&#39;).</span>
 <a id="__codelineno-0-593" name="__codelineno-0-593"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-594" name="__codelineno-0-594"></a>    <span class="n">staff</span> <span class="o">=</span> <span class="n">Staff</span><span class="p">()</span>
+<a id="__codelineno-0-594" name="__codelineno-0-594"></a>    <span class="n">staff</span> <span class="o">=</span> <span class="n">Staff</span><span class="p">()</span>        
 <a id="__codelineno-0-595" name="__codelineno-0-595"></a>    <span class="n">exporter</span> <span class="o">=</span> <span class="n">GKernExporter</span><span class="p">(</span><span class="n">clef</span><span class="p">)</span>
-<a id="__codelineno-0-596" name="__codelineno-0-596"></a>    <span class="n">gkern_encoding</span> <span class="o">=</span> <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">staff</span><span class="p">,</span> <span class="n">pitch</span><span class="p">)</span> <span class="c1"># (e.g., &#39;T@2&#39;, &#39;S@-1&#39;, etc.)</span>
-<a id="__codelineno-0-597" name="__codelineno-0-597"></a>    <span class="k">return</span> <span class="n">gkern_encoding</span>
+<a id="__codelineno-0-596" name="__codelineno-0-596"></a>    <span class="c1"># legacy S/T agnostic...</span>
+<a id="__codelineno-0-597" name="__codelineno-0-597"></a>    <span class="c1">#gkern_encoding = exporter.export(staff, pitch) # (e.g., &#39;T@2&#39;, &#39;S@-1&#39;, etc.)</span>
+<a id="__codelineno-0-598" name="__codelineno-0-598"></a>    <span class="c1">#return gkern_encoding</span>
+<a id="__codelineno-0-599" name="__codelineno-0-599"></a>
+<a id="__codelineno-0-600" name="__codelineno-0-600"></a>
+<a id="__codelineno-0-601" name="__codelineno-0-601"></a>    <span class="n">gkern_encoding</span> <span class="o">=</span> <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">staff</span><span class="p">,</span> <span class="n">pitch</span><span class="p">)</span> <span class="c1"># normalized to G clef with middle C = &#39;c&#39; == T@0, so we can directly map the gkern encoding to a **kern pitch without accidentals</span>
+<a id="__codelineno-0-602" name="__codelineno-0-602"></a>
+<a id="__codelineno-0-603" name="__codelineno-0-603"></a>    <span class="n">accidentals</span> <span class="o">=</span> <span class="n">pitch</span><span class="o">.</span><span class="n">accidentals</span><span class="p">()</span>
+<a id="__codelineno-0-604" name="__codelineno-0-604"></a>    <span class="k">return</span> <span class="n">gkern_to_g_clef_pitch</span><span class="p">(</span><span class="n">gkern_encoding</span><span class="p">)</span> <span class="o">+</span> <span class="n">accidentals</span>  <span class="c1"># a nornal **kern pitch with accidentals in G clef</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -85414,7 +85428,14 @@ using the (G2) clef with middle C = 'c' == T@0.
 <span class="normal"><a href="#__codelineno-0-594">594</a></span>
 <span class="normal"><a href="#__codelineno-0-595">595</a></span>
 <span class="normal"><a href="#__codelineno-0-596">596</a></span>
-<span class="normal"><a href="#__codelineno-0-597">597</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-583" name="__codelineno-0-583"></a><span class="k">def</span><span class="w"> </span><span class="nf">pitch_to_gkern_string</span><span class="p">(</span><span class="n">pitch</span><span class="p">:</span> <span class="n">AgnosticPitch</span><span class="p">,</span> <span class="n">clef</span><span class="p">:</span> <span class="n">Clef</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-597">597</a></span>
+<span class="normal"><a href="#__codelineno-0-598">598</a></span>
+<span class="normal"><a href="#__codelineno-0-599">599</a></span>
+<span class="normal"><a href="#__codelineno-0-600">600</a></span>
+<span class="normal"><a href="#__codelineno-0-601">601</a></span>
+<span class="normal"><a href="#__codelineno-0-602">602</a></span>
+<span class="normal"><a href="#__codelineno-0-603">603</a></span>
+<span class="normal"><a href="#__codelineno-0-604">604</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-583" name="__codelineno-0-583"></a><span class="k">def</span><span class="w"> </span><span class="nf">pitch_to_gkern_string</span><span class="p">(</span><span class="n">pitch</span><span class="p">:</span> <span class="n">AgnosticPitch</span><span class="p">,</span> <span class="n">clef</span><span class="p">:</span> <span class="n">Clef</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <a id="__codelineno-0-584" name="__codelineno-0-584"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <a id="__codelineno-0-585" name="__codelineno-0-585"></a><span class="sd">    Converts a given pitch and clef to a graphic **kern string representation.</span>
 <a id="__codelineno-0-586" name="__codelineno-0-586"></a>
@@ -85425,10 +85446,17 @@ using the (G2) clef with middle C = 'c' == T@0.
 <a id="__codelineno-0-591" name="__codelineno-0-591"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-592" name="__codelineno-0-592"></a><span class="sd">        str: The graphic **kern representation (e.g., &#39;|L2&#39;).</span>
 <a id="__codelineno-0-593" name="__codelineno-0-593"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-594" name="__codelineno-0-594"></a>    <span class="n">staff</span> <span class="o">=</span> <span class="n">Staff</span><span class="p">()</span>
+<a id="__codelineno-0-594" name="__codelineno-0-594"></a>    <span class="n">staff</span> <span class="o">=</span> <span class="n">Staff</span><span class="p">()</span>        
 <a id="__codelineno-0-595" name="__codelineno-0-595"></a>    <span class="n">exporter</span> <span class="o">=</span> <span class="n">GKernExporter</span><span class="p">(</span><span class="n">clef</span><span class="p">)</span>
-<a id="__codelineno-0-596" name="__codelineno-0-596"></a>    <span class="n">gkern_encoding</span> <span class="o">=</span> <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">staff</span><span class="p">,</span> <span class="n">pitch</span><span class="p">)</span> <span class="c1"># (e.g., &#39;T@2&#39;, &#39;S@-1&#39;, etc.)</span>
-<a id="__codelineno-0-597" name="__codelineno-0-597"></a>    <span class="k">return</span> <span class="n">gkern_encoding</span>
+<a id="__codelineno-0-596" name="__codelineno-0-596"></a>    <span class="c1"># legacy S/T agnostic...</span>
+<a id="__codelineno-0-597" name="__codelineno-0-597"></a>    <span class="c1">#gkern_encoding = exporter.export(staff, pitch) # (e.g., &#39;T@2&#39;, &#39;S@-1&#39;, etc.)</span>
+<a id="__codelineno-0-598" name="__codelineno-0-598"></a>    <span class="c1">#return gkern_encoding</span>
+<a id="__codelineno-0-599" name="__codelineno-0-599"></a>
+<a id="__codelineno-0-600" name="__codelineno-0-600"></a>
+<a id="__codelineno-0-601" name="__codelineno-0-601"></a>    <span class="n">gkern_encoding</span> <span class="o">=</span> <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">staff</span><span class="p">,</span> <span class="n">pitch</span><span class="p">)</span> <span class="c1"># normalized to G clef with middle C = &#39;c&#39; == T@0, so we can directly map the gkern encoding to a **kern pitch without accidentals</span>
+<a id="__codelineno-0-602" name="__codelineno-0-602"></a>
+<a id="__codelineno-0-603" name="__codelineno-0-603"></a>    <span class="n">accidentals</span> <span class="o">=</span> <span class="n">pitch</span><span class="o">.</span><span class="n">accidentals</span><span class="p">()</span>
+<a id="__codelineno-0-604" name="__codelineno-0-604"></a>    <span class="k">return</span> <span class="n">gkern_to_g_clef_pitch</span><span class="p">(</span><span class="n">gkern_encoding</span><span class="p">)</span> <span class="o">+</span> <span class="n">accidentals</span>  <span class="c1"># a nornal **kern pitch with accidentals in G clef</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
