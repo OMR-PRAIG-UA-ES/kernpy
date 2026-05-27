@@ -591,7 +591,14 @@ def pitch_to_gkern_string(pitch: AgnosticPitch, clef: Clef) -> str:
     Returns:
         str: The graphic **kern representation (e.g., '|L2').
     """
-    staff = Staff()
+    staff = Staff()        
     exporter = GKernExporter(clef)
-    gkern_encoding = exporter.export(staff, pitch) # (e.g., 'T@2', 'S@-1', etc.)
-    return gkern_encoding
+    # legacy S/T agnostic...
+    #gkern_encoding = exporter.export(staff, pitch) # (e.g., 'T@2', 'S@-1', etc.)
+    #return gkern_encoding
+
+
+    gkern_encoding = exporter.export(staff, pitch) # normalized to G clef with middle C = 'c' == T@0, so we can directly map the gkern encoding to a **kern pitch without accidentals
+
+    accidentals = pitch.accidentals()
+    return gkern_to_g_clef_pitch(gkern_encoding) + accidentals  # a nornal **kern pitch with accidentals in G clef
