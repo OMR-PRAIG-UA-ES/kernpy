@@ -10,7 +10,7 @@
 
 Python package that provides comprehensive tools for working with symbolic modern and mensural notations in Humdrum format. kernpy is a fully open-source project open to contributions.
 
-It extends the canonic tools for processing Humdrum, *humlib* [https://github.com/craigsapp/humlib], for mainly machine learning tasks.
+It extends the canonic tools for processing Humdrum, [*humlib*](https://github.com/craigsapp/humlib), for mainly machine learning tasks.
 
 
 ## Documentation 
