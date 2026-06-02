@@ -268,15 +268,10 @@ class PitchPositionReferenceSystem:
 # INPUT: Pitch (Semantic) + Clef (Semantic)
 # OUTPUT: PositionInStaff (Agnostic)
 
-# CLEF has
-# 1. bottom line equivalent to C4
-# - C in 1st clef: 1st line is F2 == F
-# - C in 2nd clef: 1st line is D2 == D
-# - C in 3rd clef: 1st line is B2 == BB
-# - C in 4th clef: 1st line is G2 == GG
-# - G clef: 1st line is E4 == e
-# - F in 3rd clef: 1st line is B2 == BB
-# - F in 4th clef: 1st line is G2 == GG
+# Clef bottom-line pitches (Humdrum line 1 = bottom; middle C = C4 on the clef anchor line):
+# - G clef (G2): E4
+# - F clef (F3): B3; F clef (F4): G2
+# - C clef (C1 soprano): C4; C2 (mezzo): B3; C3 (alto): F3; C4 (tenor): D3
 
 # New abstraction:
 # TARGET: PositionInStaff
@@ -380,7 +375,7 @@ class F3Clef(Clef):
         """
         Returns the pitch of the bottom line of the staff.
         """
-        return AgnosticPitch('B', 3)
+        return AgnosticPitch('B', 2)
 
 class F4Clef(Clef):
     def __init__(self):
@@ -406,20 +401,20 @@ class C1Clef(Clef):
         """
         Returns the pitch of the bottom line of the staff.
         """
-        return AgnosticPitch('C', 3)
+        return AgnosticPitch('C', 4)
 
 class C2Clef(Clef):
     def __init__(self):
         """
         Initializes the C Clef object.
         """
-        super().__init__(DiatonicPitch('A'), 2)
+        super().__init__(DiatonicPitch('C'), 2)
 
     def bottom_line(self) -> AgnosticPitch:
         """
         Returns the pitch of the bottom line of the staff.
         """
-        return AgnosticPitch('A', 2)
+        return AgnosticPitch('A', 3)
 
 
 class C3Clef(Clef):
@@ -433,7 +428,7 @@ class C3Clef(Clef):
         """
         Returns the pitch of the bottom line of the staff.
         """
-        return AgnosticPitch('B', 2)
+        return AgnosticPitch('F', 3)
 
 class C4Clef(Clef):
     def __init__(self):
@@ -446,7 +441,7 @@ class C4Clef(Clef):
         """
         Returns the pitch of the bottom line of the staff.
         """
-        return AgnosticPitch('D', 2)
+        return AgnosticPitch('D', 3)
 
 
 class ClefFactory:
@@ -465,15 +460,25 @@ class ClefFactory:
         Returns:
 
         """
+        if not encoding.startswith('*clef'):
+            raise ValueError(
+                f"Invalid clef encoding: {encoding!r}. Expected a token starting with '*clef'."
+            )
+
         encoding = encoding.replace('*clef', '')
 
         # at this point the encoding is like G2, F4,... or Gv2, F^4,... or G^^2, Fvv4,... or G^^...^^2, Fvvv4,...
-        name = list(filter(lambda x: x in cls.CLEF_NAMES, encoding))[0]
-        line = int(list(filter(lambda x: x.isdigit(), encoding))[0])
-        decorators = ''.join(filter(lambda x: x in ['^', 'v'], encoding))
+        names = [char for char in encoding if char in cls.CLEF_NAMES]
+        if not names:
+            raise ValueError(
+                f"Invalid clef name in {encoding!r}. Expected one of {sorted(cls.CLEF_NAMES)}."
+            )
+        name = names[0]
 
-        if name not in cls.CLEF_NAMES:
-            raise ValueError(f"Invalid clef name: {name}. Expected one of {cls.CLEF_NAMES}.")
+        digits = [char for char in encoding if char.isdigit()]
+        if not digits:
+            raise ValueError(f"Invalid clef line in {encoding!r}. Expected a line number (1–4).")
+        line = int(digits[0])
 
         if name == 'G':
             return GClef()
@@ -589,7 +594,7 @@ def pitch_to_gkern_string(pitch: AgnosticPitch, clef: Clef) -> str:
         clef (Clef): The clef defining the staff context.
 
     Returns:
-        str: The graphic **kern representation (e.g., '|L2').
+        str: The graphic **kern representation, every pitch is normalized to the G clef regardless of the clef of the input pitch.
     """
     staff = Staff()        
     exporter = GKernExporter(clef)

@@ -3,13 +3,15 @@ import os
 from pathlib import Path
 
 import kernpy as kp
+from kernpy.core.tokens import TOKEN_SEPARATOR
 
 
 class GkernTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.LINE_CHARACTER = 'L'
-        cls.SPACE_CHARACTER = 'S'
+        cls.LINE_CHARACTER = kp.PositionInStaff.LINE_CHARACTER
+        cls.SPACE_CHARACTER = kp.PositionInStaff.SPACE_CHARACTER
+        cls.TOKEN_SEPARATOR = TOKEN_SEPARATOR
 
     def test_line_character(self):
         self.assertEqual(kp.PositionInStaff.LINE_CHARACTER, self.LINE_CHARACTER)
@@ -116,41 +118,19 @@ class GkernTestCase(unittest.TestCase):
         p = kp.PositionInStaff(2).position_below()
         self.assertEqual(p, kp.PositionInStaff(0))
 
+    def _encoded_line(self, line: int) -> str:
+        return f'{self.LINE_CHARACTER}{self.TOKEN_SEPARATOR}{line}'
+
+    def _encoded_space(self, space: int) -> str:
+        return f'{self.SPACE_CHARACTER}{self.TOKEN_SEPARATOR}{space}'
+
     def test_str_from_line(self):
-        p = kp.PositionInStaff.from_line(1)
-        self.assertEqual(str(p), self.LINE_CHARACTER + '1')
-        p = kp.PositionInStaff.from_line(2)
-        self.assertEqual(str(p), self.LINE_CHARACTER + '2')
-        p = kp.PositionInStaff.from_line(3)
-        self.assertEqual(str(p), self.LINE_CHARACTER + '3')
-        p = kp.PositionInStaff.from_line(4)
-        self.assertEqual(str(p), self.LINE_CHARACTER + '4')
-        p = kp.PositionInStaff.from_line(5)
-        self.assertEqual(str(p), self.LINE_CHARACTER + '5')
-        p = kp.PositionInStaff.from_line(-1)
-        self.assertEqual(str(p), self.LINE_CHARACTER + '-1')
-        p = kp.PositionInStaff.from_line(-2)
-        self.assertEqual(str(p), self.LINE_CHARACTER + '-2')
-        p = kp.PositionInStaff.from_line(-3)
-        self.assertEqual(str(p), self.LINE_CHARACTER + '-3')
+        for line in (1, 2, 3, 4, 5, -1, -2, -3):
+            self.assertEqual(self._encoded_line(line), str(kp.PositionInStaff.from_line(line)))
 
     def test_str_from_space(self):
-        p = kp.PositionInStaff.from_space(1)
-        self.assertEqual(str(p), self.SPACE_CHARACTER + '1')
-        p = kp.PositionInStaff.from_space(2)
-        self.assertEqual(str(p), self.SPACE_CHARACTER + '2')
-        p = kp.PositionInStaff.from_space(3)
-        self.assertEqual(str(p), self.SPACE_CHARACTER + '3')
-        p = kp.PositionInStaff.from_space(4)
-        self.assertEqual(str(p), self.SPACE_CHARACTER + '4')
-        p = kp.PositionInStaff.from_space(5)
-        self.assertEqual(str(p), self.SPACE_CHARACTER + '5')
-        p = kp.PositionInStaff.from_space(-1)
-        self.assertEqual(str(p), self.SPACE_CHARACTER + '-1')
-        p = kp.PositionInStaff.from_space(-2)
-        self.assertEqual(str(p), self.SPACE_CHARACTER + '-2')
-        p = kp.PositionInStaff.from_space(-3)
-        self.assertEqual(str(p), self.SPACE_CHARACTER + '-3')
+        for space in (1, 2, 3, 4, 5, -1, -2, -3):
+            self.assertEqual(self._encoded_space(space), str(kp.PositionInStaff.from_space(space)))
 
     def test_equality(self):
         self.assertEqual(kp.PositionInStaff(2), kp.PositionInStaff(2))
@@ -182,11 +162,11 @@ class GkernTestCase(unittest.TestCase):
 
     def test_str_ledger_line(self):
         p = kp.PositionInStaff.from_line(0)
-        self.assertEqual(str(p), 'L0')
+        self.assertEqual(str(p), 'T@0')
 
     def test_str_ledger_space(self):
         p = kp.PositionInStaff.from_space(0)
-        self.assertEqual(str(p), 'S0')
+        self.assertEqual(str(p), 'S@0')
 
     def test_is_line_negative_even(self):
         p = kp.PositionInStaff(-4)
@@ -284,15 +264,15 @@ class GkernTestCase(unittest.TestCase):
 
     def test_f3_clef_scale(self):
         f3clef = kp.F3Clef()
-        self.assertEqual(kp.AgnosticPitch('B', 3), f3clef.bottom_line())
-        self.do_test_pitches_to_positions(f3clef.reference_point(), kp.AgnosticPitch('B', 3), kp.PositionInStaff.from_line(1))
-        self.do_test_pitches_to_positions(f3clef.reference_point(), kp.AgnosticPitch('C', 4), kp.PositionInStaff.from_space(1))
-        self.do_test_pitches_to_positions(f3clef.reference_point(), kp.AgnosticPitch('D', 4), kp.PositionInStaff.from_line(2))
-        self.do_test_pitches_to_positions(f3clef.reference_point(), kp.AgnosticPitch('E', 4), kp.PositionInStaff.from_space(2))
-        self.do_test_pitches_to_positions(f3clef.reference_point(), kp.AgnosticPitch('F', 4), kp.PositionInStaff.from_line(3))
-        self.do_test_pitches_to_positions(f3clef.reference_point(), kp.AgnosticPitch('G', 4), kp.PositionInStaff.from_space(3))
-        self.do_test_pitches_to_positions(f3clef.reference_point(), kp.AgnosticPitch('A', 4), kp.PositionInStaff.from_line(4))
-        self.do_test_pitches_to_positions(f3clef.reference_point(), kp.AgnosticPitch('B', 4), kp.PositionInStaff.from_space(4))
+        self.assertEqual(kp.AgnosticPitch('B', 2), f3clef.bottom_line())
+        self.do_test_pitches_to_positions(f3clef.reference_point(), kp.AgnosticPitch('B', 2), kp.PositionInStaff.from_line(1))
+        self.do_test_pitches_to_positions(f3clef.reference_point(), kp.AgnosticPitch('C', 3), kp.PositionInStaff.from_space(1))
+        self.do_test_pitches_to_positions(f3clef.reference_point(), kp.AgnosticPitch('D', 3), kp.PositionInStaff.from_line(2))
+        self.do_test_pitches_to_positions(f3clef.reference_point(), kp.AgnosticPitch('E', 3), kp.PositionInStaff.from_space(2))
+        self.do_test_pitches_to_positions(f3clef.reference_point(), kp.AgnosticPitch('F', 3), kp.PositionInStaff.from_line(3))
+        self.do_test_pitches_to_positions(f3clef.reference_point(), kp.AgnosticPitch('G', 3), kp.PositionInStaff.from_space(3))
+        self.do_test_pitches_to_positions(f3clef.reference_point(), kp.AgnosticPitch('A', 3), kp.PositionInStaff.from_line(4))
+        self.do_test_pitches_to_positions(f3clef.reference_point(), kp.AgnosticPitch('B', 3), kp.PositionInStaff.from_space(4))
 
     def test_f4_clef_scale(self):
         f4clef = kp.F4Clef()
@@ -308,51 +288,51 @@ class GkernTestCase(unittest.TestCase):
 
     def test_c1_clef_scale(self):
         c1clef = kp.C1Clef()
-        self.assertEqual(kp.AgnosticPitch('C', 3), c1clef.bottom_line())
-        self.do_test_pitches_to_positions(c1clef.reference_point(), kp.AgnosticPitch('C', 3), kp.PositionInStaff.from_line(1))
-        self.do_test_pitches_to_positions(c1clef.reference_point(), kp.AgnosticPitch('D', 3), kp.PositionInStaff.from_space(1))
-        self.do_test_pitches_to_positions(c1clef.reference_point(), kp.AgnosticPitch('E', 3), kp.PositionInStaff.from_line(2))
-        self.do_test_pitches_to_positions(c1clef.reference_point(), kp.AgnosticPitch('F', 3), kp.PositionInStaff.from_space(2))
-        self.do_test_pitches_to_positions(c1clef.reference_point(), kp.AgnosticPitch('G', 3), kp.PositionInStaff.from_line(3))
-        self.do_test_pitches_to_positions(c1clef.reference_point(), kp.AgnosticPitch('A', 3), kp.PositionInStaff.from_space(3))
-        self.do_test_pitches_to_positions(c1clef.reference_point(), kp.AgnosticPitch('B', 3), kp.PositionInStaff.from_line(4))
-        self.do_test_pitches_to_positions(c1clef.reference_point(), kp.AgnosticPitch('C', 4), kp.PositionInStaff.from_space(4))
+        self.assertEqual(kp.AgnosticPitch('C', 4), c1clef.bottom_line())
+        self.do_test_pitches_to_positions(c1clef.reference_point(), kp.AgnosticPitch('C', 4), kp.PositionInStaff.from_line(1))
+        self.do_test_pitches_to_positions(c1clef.reference_point(), kp.AgnosticPitch('D', 4), kp.PositionInStaff.from_space(1))
+        self.do_test_pitches_to_positions(c1clef.reference_point(), kp.AgnosticPitch('E', 4), kp.PositionInStaff.from_line(2))
+        self.do_test_pitches_to_positions(c1clef.reference_point(), kp.AgnosticPitch('F', 4), kp.PositionInStaff.from_space(2))
+        self.do_test_pitches_to_positions(c1clef.reference_point(), kp.AgnosticPitch('G', 4), kp.PositionInStaff.from_line(3))
+        self.do_test_pitches_to_positions(c1clef.reference_point(), kp.AgnosticPitch('A', 4), kp.PositionInStaff.from_space(3))
+        self.do_test_pitches_to_positions(c1clef.reference_point(), kp.AgnosticPitch('B', 4), kp.PositionInStaff.from_line(4))
+        self.do_test_pitches_to_positions(c1clef.reference_point(), kp.AgnosticPitch('C', 5), kp.PositionInStaff.from_space(4))
 
     def test_c2_clef_scale(self):
         c2clef = kp.C2Clef()
-        self.assertEqual(kp.AgnosticPitch('A', 2), c2clef.bottom_line())
-        self.do_test_pitches_to_positions(c2clef.reference_point(), kp.AgnosticPitch('A', 2), kp.PositionInStaff.from_line(1))
-        self.do_test_pitches_to_positions(c2clef.reference_point(), kp.AgnosticPitch('B', 2), kp.PositionInStaff.from_space(1))
-        self.do_test_pitches_to_positions(c2clef.reference_point(), kp.AgnosticPitch('C', 2), kp.PositionInStaff.from_line(2))
-        self.do_test_pitches_to_positions(c2clef.reference_point(), kp.AgnosticPitch('D', 2), kp.PositionInStaff.from_space(2))
-        self.do_test_pitches_to_positions(c2clef.reference_point(), kp.AgnosticPitch('E', 2), kp.PositionInStaff.from_line(3))
-        self.do_test_pitches_to_positions(c2clef.reference_point(), kp.AgnosticPitch('F', 2), kp.PositionInStaff.from_space(3))
-        self.do_test_pitches_to_positions(c2clef.reference_point(), kp.AgnosticPitch('G', 2), kp.PositionInStaff.from_line(4))
-        self.do_test_pitches_to_positions(c2clef.reference_point(), kp.AgnosticPitch('A', 3), kp.PositionInStaff.from_space(4))
+        self.assertEqual(kp.AgnosticPitch('A', 3), c2clef.bottom_line())
+        self.do_test_pitches_to_positions(c2clef.reference_point(), kp.AgnosticPitch('A', 3), kp.PositionInStaff.from_line(1))
+        self.do_test_pitches_to_positions(c2clef.reference_point(), kp.AgnosticPitch('B', 3), kp.PositionInStaff.from_space(1))
+        self.do_test_pitches_to_positions(c2clef.reference_point(), kp.AgnosticPitch('C', 4), kp.PositionInStaff.from_line(2))
+        self.do_test_pitches_to_positions(c2clef.reference_point(), kp.AgnosticPitch('D', 4), kp.PositionInStaff.from_space(2))
+        self.do_test_pitches_to_positions(c2clef.reference_point(), kp.AgnosticPitch('E', 4), kp.PositionInStaff.from_line(3))
+        self.do_test_pitches_to_positions(c2clef.reference_point(), kp.AgnosticPitch('F', 4), kp.PositionInStaff.from_space(3))
+        self.do_test_pitches_to_positions(c2clef.reference_point(), kp.AgnosticPitch('G', 4), kp.PositionInStaff.from_line(4))
+        self.do_test_pitches_to_positions(c2clef.reference_point(), kp.AgnosticPitch('A', 4), kp.PositionInStaff.from_space(4))
 
     def test_c3_clef_scale(self):
         c3clef = kp.C3Clef()
-        self.assertEqual(kp.AgnosticPitch('B', 2), c3clef.bottom_line())
-        self.do_test_pitches_to_positions(c3clef.reference_point(), kp.AgnosticPitch('B', 2), kp.PositionInStaff.from_line(1))
-        self.do_test_pitches_to_positions(c3clef.reference_point(), kp.AgnosticPitch('C', 2), kp.PositionInStaff.from_space(1))
-        self.do_test_pitches_to_positions(c3clef.reference_point(), kp.AgnosticPitch('D', 2), kp.PositionInStaff.from_line(2))
-        self.do_test_pitches_to_positions(c3clef.reference_point(), kp.AgnosticPitch('E', 2), kp.PositionInStaff.from_space(2))
-        self.do_test_pitches_to_positions(c3clef.reference_point(), kp.AgnosticPitch('F', 2), kp.PositionInStaff.from_line(3))
-        self.do_test_pitches_to_positions(c3clef.reference_point(), kp.AgnosticPitch('G', 2), kp.PositionInStaff.from_space(3))
-        self.do_test_pitches_to_positions(c3clef.reference_point(), kp.AgnosticPitch('A', 2), kp.PositionInStaff.from_line(4))
-        self.do_test_pitches_to_positions(c3clef.reference_point(), kp.AgnosticPitch('B', 3), kp.PositionInStaff.from_space(4))
+        self.assertEqual(kp.AgnosticPitch('F', 3), c3clef.bottom_line())
+        self.do_test_pitches_to_positions(c3clef.reference_point(), kp.AgnosticPitch('F', 3), kp.PositionInStaff.from_line(1))
+        self.do_test_pitches_to_positions(c3clef.reference_point(), kp.AgnosticPitch('G', 3), kp.PositionInStaff.from_space(1))
+        self.do_test_pitches_to_positions(c3clef.reference_point(), kp.AgnosticPitch('A', 3), kp.PositionInStaff.from_line(2))
+        self.do_test_pitches_to_positions(c3clef.reference_point(), kp.AgnosticPitch('B', 3), kp.PositionInStaff.from_space(2))
+        self.do_test_pitches_to_positions(c3clef.reference_point(), kp.AgnosticPitch('C', 4), kp.PositionInStaff.from_line(3))
+        self.do_test_pitches_to_positions(c3clef.reference_point(), kp.AgnosticPitch('D', 4), kp.PositionInStaff.from_space(3))
+        self.do_test_pitches_to_positions(c3clef.reference_point(), kp.AgnosticPitch('E', 4), kp.PositionInStaff.from_line(4))
+        self.do_test_pitches_to_positions(c3clef.reference_point(), kp.AgnosticPitch('F', 4), kp.PositionInStaff.from_space(4))
 
     def test_c4_clef_scale(self):
         c4clef = kp.C4Clef()
-        self.assertEqual(kp.AgnosticPitch('D', 2), c4clef.bottom_line())
-        self.do_test_pitches_to_positions(c4clef.reference_point(), kp.AgnosticPitch('D', 2), kp.PositionInStaff.from_line(1))
-        self.do_test_pitches_to_positions(c4clef.reference_point(), kp.AgnosticPitch('E', 2), kp.PositionInStaff.from_space(1))
-        self.do_test_pitches_to_positions(c4clef.reference_point(), kp.AgnosticPitch('F', 2), kp.PositionInStaff.from_line(2))
-        self.do_test_pitches_to_positions(c4clef.reference_point(), kp.AgnosticPitch('G', 2), kp.PositionInStaff.from_space(2))
-        self.do_test_pitches_to_positions(c4clef.reference_point(), kp.AgnosticPitch('A', 2), kp.PositionInStaff.from_line(3))
-        self.do_test_pitches_to_positions(c4clef.reference_point(), kp.AgnosticPitch('B', 2), kp.PositionInStaff.from_space(3))
-        self.do_test_pitches_to_positions(c4clef.reference_point(), kp.AgnosticPitch('C', 3), kp.PositionInStaff.from_line(4))
-        self.do_test_pitches_to_positions(c4clef.reference_point(), kp.AgnosticPitch('D', 3), kp.PositionInStaff.from_space(4))
+        self.assertEqual(kp.AgnosticPitch('D', 3), c4clef.bottom_line())
+        self.do_test_pitches_to_positions(c4clef.reference_point(), kp.AgnosticPitch('D', 3), kp.PositionInStaff.from_line(1))
+        self.do_test_pitches_to_positions(c4clef.reference_point(), kp.AgnosticPitch('E', 3), kp.PositionInStaff.from_space(1))
+        self.do_test_pitches_to_positions(c4clef.reference_point(), kp.AgnosticPitch('F', 3), kp.PositionInStaff.from_line(2))
+        self.do_test_pitches_to_positions(c4clef.reference_point(), kp.AgnosticPitch('G', 3), kp.PositionInStaff.from_space(2))
+        self.do_test_pitches_to_positions(c4clef.reference_point(), kp.AgnosticPitch('A', 3), kp.PositionInStaff.from_line(3))
+        self.do_test_pitches_to_positions(c4clef.reference_point(), kp.AgnosticPitch('B', 3), kp.PositionInStaff.from_space(3))
+        self.do_test_pitches_to_positions(c4clef.reference_point(), kp.AgnosticPitch('C', 4), kp.PositionInStaff.from_line(4))
+        self.do_test_pitches_to_positions(c4clef.reference_point(), kp.AgnosticPitch('D', 4), kp.PositionInStaff.from_space(4))
 
 
 class TestClefFactory(unittest.TestCase):
@@ -431,6 +411,3 @@ class TestClefFactory(unittest.TestCase):
             kp.ClefFactory.create_clef('clefG2')
         with self.assertRaises(ValueError):
             kp.ClefFactory.create_clef('random')
-
-
-
