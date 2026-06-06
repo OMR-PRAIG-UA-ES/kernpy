@@ -1,5 +1,7 @@
 # kernpy: Python Humdrum **kern and **mens utilities
 
+> 🌐 **Parte del ecosistema [MuRET / OMR](https://github.com/OMR-PRAIG-UA-ES).** La documentación y memoria de sincronización *cross-project* (armonización de versiones, arquitectura, onboarding, pendientes que cruzan repos) vive en **[MuRET-powered](https://github.com/OMR-PRAIG-UA-ES/MuRET-powered)**.
+
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/agpl-3.0)
 ![Python Version](https://img.shields.io/badge/Python-3.9+-3776AB?logo=python&logoColor=white&style=for-the-badge)
 [![PyPI](https://img.shields.io/pypi/v/kernpy?color=brightgreen&label=PyPI&style=for-the-badge&logo=pypi)](https://pypi.org/project/kernpy/)
