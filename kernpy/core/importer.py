@@ -440,7 +440,48 @@ class Importer:
             if node.last_spine_operator_node is not None:
                 node.last_spine_operator_node.token.cancelled_at_stage = self._tree_stage
 
-            if column_index == 0 or row[column_index-1] != '*v' or self._prev_stage_parents[column_index-1].header_node != self._prev_stage_parents[column_index].header_node: # don't collapse two different spines
-                self._next_stage_parents.append(node) # just one spine each two
+            if self._starts_join_output_spine(row, column_index):
+                self._next_stage_parents.append(node) # one parent per output spine of the join run
         else:
             raise Exception(f'Unknown spine operation in column #{column_content} and row #{self._row_number}')
+
+    def _starts_join_output_spine(self, row: List[str], column_index: int) -> bool:
+        """Decide whether the '*v' at column_index begins a new output spine of its join run.
+
+        A maximal run of adjacent '*v' columns is grouped by sub-spine ancestry (the
+        header_node), and each ancestry group joins into one output spine — the behaviour
+        pinned by testSpines (see humdrum-tools/vhv-documentation#7: VHV would join the
+        whole run into one spine; kernpy deliberately groups by ancestry instead).
+
+        A group of size 1 cannot join anything by itself (Humdrum requires two or more
+        adjacent spines to join), so it is absorbed into the neighbouring group of the
+        same run. Without this, a run that crosses an ancestry boundary with a single
+        '*v' on either side (e.g. '*\t*v\t*v\t*\t*' merging the last sub-spine of one
+        **kern with the first sub-spine of the next, as in KernScores
+        mozart/sonata05-2.krn) leaves _next_stage_parents one wider than the next row:
+        every later column then attaches to the wrong parent, and spine-type-filtered
+        exports leak the trailing spines' content (e.g. **dynam cells exported as
+        **kern) from that row to the end of the file.
+        """
+        run_start = column_index
+        while run_start > 0 and row[run_start - 1] == '*v':
+            run_start -= 1
+        run_end = column_index
+        while run_end + 1 < len(row) and row[run_end + 1] == '*v':
+            run_end += 1
+        # ancestry groups within the run: [first_column, size]
+        groups: List[List[int]] = []
+        for i in range(run_start, run_end + 1):
+            anc = self._prev_stage_parents[i].header_node
+            if groups and self._prev_stage_parents[groups[-1][0]].header_node is anc:
+                groups[-1][1] += 1
+            else:
+                groups.append([i, 1])
+        # absorb singleton groups into their neighbour (left if any, else right)
+        outputs: List[List[int]] = []
+        for group in groups:
+            if outputs and (group[1] == 1 or outputs[-1][1] == 1):
+                outputs[-1][1] += group[1]
+            else:
+                outputs.append(group)
+        return any(first_column == column_index for first_column, _ in outputs)
