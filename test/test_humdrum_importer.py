@@ -95,6 +95,39 @@ class ImporterTestCase(unittest.TestCase):
         self.doJustImportTest('test/resources/unit/bars.krn')
         # self.assertEqual(1, len(ts.files))
 
+    def testMeasureCountIgnoresTerminalSpineTermination(self):
+        document = self.doJustImportTest('test/resources/unit/bars.krn')
+
+        self.assertEqual(6, document.measures_count())
+        self.assertListEqual([3, 5, 7, 9, 11, 13], document.measure_start_tree_stages)
+
+    def testMeasureIterationIgnoresTerminalSpineTermination(self):
+        document = self.doJustImportTest('test/resources/unit/bars.krn')
+
+        self.assertListEqual(list(range(document.get_first_measure(), document.measures_count() + 1)),
+                             [1, 2, 3, 4, 5, 6])
+
+    def testStrictMeasureCountIgnoresOpeningSeparatorBar(self):
+        cases = [
+            (
+                'test/resources/unit/haydn_measure_count_strict.krn',
+                6,
+                [22, 30, 37, 44, 57, 63],
+            ),
+            (
+                'test/resources/unit/haydn_measure_count_strict_minimal.krn',
+                6,
+                [14, 22, 29, 36, 49, 55],
+            ),
+        ]
+
+        for fixture, expected_measures, expected_starts in cases:
+            with self.subTest(fixture=fixture):
+                document = self.doJustImportTest(fixture)
+
+                self.assertEqual(expected_measures, document.measures_count())
+                self.assertListEqual(expected_starts, document.measure_start_tree_stages)
+
     def testTime(self):
         self.doJustImportTest('test/resources/unit/time.krn')
         # self.assertEqual(1, len(ts.files))
@@ -615,7 +648,7 @@ class ImporterTestCase(unittest.TestCase):
         importer = kp.Importer()
         document = importer.import_file(input_kern_file)
         measures = document.measures_count()
-        self.assertEqual(11, measures)
+        self.assertEqual(10, measures)
 
     def test_document_get_last_measure_empty(self):
         importer = kp.Importer()

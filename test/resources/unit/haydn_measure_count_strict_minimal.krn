@@ -1,0 +1,60 @@
+**kern	**kern	**dynam
+*staff2	*staff1	*staff1/2
+*Ipiano	*Ipiano	*Ipiano
+*I"4. (15)	*I"4. (15)	*
+*>[A,A,B,B]	*>[A,A,B,B]	*>[A,A,B,B]
+*>norep[A,B]	*>norep[A,B]	*>norep[A,B]
+*>A	*>A	*>A
+*clefF4	*clefG2	*
+*k[f#c#g#d#]	*k[f#c#g#d#]	*
+*E:	*E:	*
+*M2/4	*M2/4	*
+*MM100	*MM100	*
+=1-	=1-	=1-
+!	!	!LO:DY:rj
+4EE 4E	8.e 8.g# 8.b 8.eeL	f
+.	(16eJk	p
+*clefG2	*	*
+!	!	!LO:DY:b=2
+(8eL	8g#L	p
+8f#J	8aJ	.
+=2	=2	=2
+8.g#L	8.bSSSL	.
+16aJk	16cc#Jk	.
+8g#L)	8bL)	.
+(8d#J	(8aTJ	.
+.	32qg#LLL	.
+.	32qaJJJ	.
+=3	=3	=3
+8e)	8g#)	.
+*clefF4	*	*
+!	!	!LO:DY:rj
+8GG#\' 8G#\'L	8B\' 8e\'L	mf
+8AA\' 8A\'	8c#\' 8f#\'	.
+8BB\' 8F#\'J	8d#\'J	.
+=4	=4	=4
+4EE 4E	(24eLL	.
+.	24f#	.
+.	24g#J	.
+.	8B`J)	.
+4r	32r	.
+.	(32eLLL	<
+.	32f#	.
+.	32g#	.
+.	32a	.
+.	32b	.
+.	32cc#	.
+.	32dd#JJJ	[
+=5	=5	=5
+8.E 8.G# 8.B	8.eeL)	f
+*clefG2	*	*
+(16e	(16g#Jk	p
+8f#L	8aL	.
+8g#J	8bJ	.
+=6	=6	=6
+8aL	8.cc#SSSL	.
+8AJ	.	.
+.	16eeJk	.
+8g#L	8bL	.
+8eJ)	8g#J)	.
+*clefF4	*	*

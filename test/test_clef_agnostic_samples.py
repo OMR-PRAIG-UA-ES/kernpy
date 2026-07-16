@@ -1,7 +1,9 @@
 """
 Clef sample tests: agnostic kern export and T/S staff-position encoding.
 
-Fixtures: test/resources/agnostic/samples/ (regenerate with generate_fixtures.py).
+Fixtures:
+  - test/resources/agnostic/samples/ (generate_fixtures.py)
+  - test/resources/agnostic/samples_with_alterations/ (generate_altered_fixtures.py)
 
     uv sync --group test
     uv run python -m unittest test.test_clef_agnostic_samples -v
