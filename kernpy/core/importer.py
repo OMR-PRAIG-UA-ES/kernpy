@@ -8,7 +8,7 @@ from typing import Dict, List, Optional, Sequence, Tuple
 
 from kernpy.core.tokens import TokenCategory, SignatureToken, MetacommentToken, HeaderToken, SpineOperationToken, \
     FieldCommentToken, \
-    BoundingBoxToken, SPINE_OPERATIONS, HEADERS, Token, TimeSignatureToken, NoteRestToken, Subtoken
+    BoundingBoxToken, SPINE_OPERATIONS, HEADERS, Token, TimeSignatureToken, NoteRestToken, Subtoken, TERMINATOR
 from kernpy.core.document import Document, MultistageTree, BoundingBoxMeasures
 from kernpy.core.importer_factory import createImporter
 from kernpy.core.measure_signature_validators import MeasureSignatureValidator, HorizontalRhythmValidator
@@ -49,6 +49,8 @@ class Importer:
         self._document = Document(self._tree)
         self._importers = {}
         self._header_row_number = None
+        self._started_with_fallback_measure_start = False
+        self._first_barline_is_opening_separator = False
         self._row_number = 1
         self._tree_stage = 0
         self._next_stage_parents = None
@@ -153,6 +155,8 @@ class Importer:
                         self._track_measure_validation_state(column_index=icolumn, token=token)
 
                         if token.category == TokenCategory.BARLINES:
+                            if not self._seen_first_barline and column.strip().endswith('-'):
+                                self._first_barline_is_opening_separator = True
                             measure_start_stage = self._tree_stage + 1
                             self._seen_first_barline = True
                         elif (
@@ -162,6 +166,7 @@ class Importer:
                         ):
                             # Scores without an opening barline still need a first measure start.
                             measure_start_stage = self._tree_stage
+                            self._started_with_fallback_measure_start = True
                         elif isinstance(token, BoundingBoxToken):
                             self.handle_bounding_box(self._document, token)
                         elif isinstance(token, SignatureToken):
@@ -177,11 +182,20 @@ class Importer:
         last_stage_index = len(self._tree.stages) - 1
         self._document.measure_start_tree_stages = [
             stage for stage in self._document.measure_start_tree_stages
-            if stage <= last_stage_index
+            if stage <= last_stage_index and not self._is_terminal_measure_stage(stage)
         ]
+        if self._first_barline_is_opening_separator and self._started_with_fallback_measure_start:
+            self._document.measure_start_tree_stages = self._document.measure_start_tree_stages[1:]
+        self.last_measure_number = len(self._document.measure_start_tree_stages)
 
         self._validate_pending_measures_at_end()
         return self._document
+
+    def _is_terminal_measure_stage(self, stage: int) -> bool:
+        return all(
+            isinstance(node.token, SpineOperationToken) and node.token.encoding == TERMINATOR
+            for node in self._tree.stages[stage]
+        )
 
     def _track_measure_validation_state(self, column_index: int, token: Token):
         if not self._error_on_duration_mismatch:
