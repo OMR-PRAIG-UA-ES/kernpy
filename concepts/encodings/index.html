@@ -1475,17 +1475,21 @@
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">ekern_content</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="agnostic-kern-akern">Agnostic Kern (aKern)<a class="headerlink" href="#agnostic-kern-akern" title="Permanent link">&para;</a></h2>
-<p>Normalizes pitch representation to be independent of clef. In agnostic kern, the same pitch in the staff always has the same representation, regardless of which clef is active.</p>
+<p>Normalizes pitch representation to be independent of clef. In agnostic kern, the same staff position always maps to the same G-clef pitch spelling, regardless of which clef is active.</p>
 <p><strong>Characteristics:</strong></p>
 <ul>
-<li>Pitch notation independent of clef context</li>
-<li>Useful for transposition and analysis</li>
-<li>Standardizes pitch across different clefs</li>
-<li>Maps staff positions to absolute pitches</li>
+<li>Pitch letters remapped to an implied G clef (staff line/space → G-clef kern pitch)</li>
+<li>Useful for transposition, OMR-style analysis, and cross-clef comparison</li>
+<li>Key-signature tandem tokens (<code>*k[...]</code>) are preserved unchanged</li>
+<li>Note accidentals are <strong>score-visible</strong> glyphs, not a raw copy of every Humdrum alteration:</li>
+<li>Humdrum pitches are absolute (bare <code>b</code> is B natural even under <code>*k[b-]</code>)</li>
+<li>The key signature sets the default alteration for each pitch class (all octaves)</li>
+<li>A written accidental applies only to later notes of the <strong>same pitch and octave</strong> until changed or the next barline</li>
+<li>Matching key or carried accidentals are omitted on the note; cancelling a key flat/sharp shows <code>n</code></li>
 </ul>
 <p><strong>Example:</strong></p>
-<p>If a note appears on the middle line of a G2 clef (B), it's always represented as B regardless of clef changes.</p>
-<p><strong>Use case:</strong> Analysis workflows where you want pitch-normalized data.</p>
+<p>If a note appears on the middle line of a G2 clef (B), it is always represented as B after remapping, regardless of clef changes. Under an empty key, <code>4b- 4b- 4b 4b</code> in one measure exports as <code>4b- 4b 4bn 4b</code> (flat carries on that octave; natural must be shown to cancel it).</p>
+<p><strong>Use case:</strong> Analysis workflows where you want clef-normalized pitches and accidentals as they appear on the score.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">kernpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kp</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">doc</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;score.krn&#39;</span><span class="p">)</span>
