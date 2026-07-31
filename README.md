@@ -192,8 +192,8 @@ Select the proper Humdrum **kern encoding:
 | extended_kern          | 2@.@bb@-·_·L   | Tokenised version of Humdrum **kern encoding                                    |
 | basic_kern             | 2.bb-          | Basic Humdrum **kern encoding: same of `kern` but with less semantic categories |
 | basic_extended_kern    | 2@.@bb@-       | Tokenised version of the Basic Extended Humdrum **kern encoding                 |
-| agnostic_kern          | 2.bb-_L           | Agnostic encoding: pitches remain in G clef regardless of the original spine's Clef               |
-| agnostic_extended_kern | 2@.@bb@-·_·L        | Tokenised version of the Agnostic encoding                                      |
+| agnostic_kern          | 2.bb-_L        | Agnostic: pitches remapped to G clef and note accidentals as shown graphically on the score  |
+| agnostic_extended_kern | 2@.@bb@-·_·L   | Tokenised version of the Agnostic encoding: pitches remapped to G clef and note accidentals as shown graphically on the score  |
 
 Use the `Encoding` enum class to select the encoding:
 

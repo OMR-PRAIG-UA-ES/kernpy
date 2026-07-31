@@ -68,7 +68,7 @@ Everything is re-exported at package root, so users write `import kernpy as kp; 
 
 ### Export pipeline (`Document` → text)
 - `core/exporter.py`: `ExportOptions` holds all filters (`spine_types`, `token_categories`, `from_measure`/`to_measure`, `kern_type` encoding, `instruments`, `show_measure_numbers`, `spine_ids`). `Exporter.export_string` walks the tree applying these.
-- `core/tokenizers.py::Encoding` (enum) selects the output dialect; `TokenizerFactory` produces the matching `Tokenizer`: `kern`, `extended_kern` (`@`-tokenised), `basic_kern`, `basic_extended_kern`, `agnostic_kern`/`agnostic_extended_kern`. Agnostic encodings place all pitches in G-clef position regardless of the source clef (see `core/gkern.py`, `PositionInStaff`, `Clef` hierarchy).
+- `core/tokenizers.py::Encoding` (enum) selects the output dialect; `TokenizerFactory` produces the matching `Tokenizer`: `kern`, `extended_kern` (`@`-tokenised), `basic_kern`, `basic_extended_kern`, `agnostic_kern`/`agnostic_extended_kern`. Agnostic encodings remap pitches to G-clef staff positions (see `core/gkern.py`, `PositionInStaff`, `Clef` hierarchy). Score-visible note accidentals follow key signature defaults plus same pitch+octave measure carry via `AccidentalDisplayState` in `core/pitch_models.py` (barlines reset; do not carry across octaves). Fixtures: `test/resources/agnostic/key_accidentals/`.
 
 ### Other modules
 - `core/transposer.py` + `core/pitch_models.py`: transposition (`Document.to_transposed(interval, direction)`, `AVAILABLE_INTERVALS`), pitch import/export (`HumdrumPitchImporter`/`AmericanPitchImporter`), `AgnosticPitch`.

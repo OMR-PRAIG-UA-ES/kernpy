@@ -7,8 +7,10 @@ from collections.abc import Sequence
 from abc import ABC, abstractmethod
 
 from kernpy.core import Document, SpineOperationToken, HeaderToken, Importer, TokenCategory, InstrumentToken, \
-    TOKEN_SEPARATOR, DECORATION_SEPARATOR, Token, NoteRestToken, HEADERS, BEKERN_CATEGORIES, ComplexToken, Node
+    TOKEN_SEPARATOR, DECORATION_SEPARATOR, Token, NoteRestToken, HEADERS, BEKERN_CATEGORIES, ComplexToken, Node, \
+    KeySignatureToken, BarToken
 from kernpy.core.tokenizers import Encoding, TokenizerFactory, Tokenizer
+from kernpy.core.pitch_models import AccidentalDisplayState
 
 
 
@@ -181,8 +183,12 @@ class HeaderTokenGenerator:
 
 
 class Exporter:
+    def __init__(self):
+        self._agnostic_accidental_states: dict[int, AccidentalDisplayState] = {}
+
     def export_string(self, document: Document, options: ExportOptions) -> str:
         self.export_options_validator(document, options)
+        self._agnostic_accidental_states = {}
 
         rows = []
 
@@ -321,9 +327,42 @@ class Exporter:
         else:
             last_clef = None  # Any clef appears at this point of the score (e.g., metadata rows)
 
+        accidental_state = None
+        if options.kern_type in (Encoding.agnosticKern, Encoding.agnosticExtendedKern):
+            accidental_state = self._accidental_state_for_node(node)
+            if isinstance(token, KeySignatureToken):
+                accidental_state.set_key_signature(token.encoding)
+            elif isinstance(token, BarToken):
+                accidental_state.reset_measure()
+
         return (TokenizerFactory
-                .create(options.kern_type.value, token_categories=options.token_categories, last_clef_reference=last_clef)
+                .create(
+                    options.kern_type.value,
+                    token_categories=options.token_categories,
+                    last_clef_reference=last_clef,
+                    accidental_state=accidental_state,
+                )
                 .tokenize(new_token))
+
+    def _accidental_state_for_node(self, node: Node) -> AccidentalDisplayState:
+        spine_id = None
+        if isinstance(node.token, HeaderToken):
+            spine_id = node.token.spine_id
+        elif node.header_node is not None and isinstance(node.header_node.token, HeaderToken):
+            spine_id = node.header_node.token.spine_id
+        if spine_id is None:
+            spine_id = -1
+
+        state = self._agnostic_accidental_states.get(spine_id)
+        if state is None:
+            state = AccidentalDisplayState()
+            key_node = node.last_signature_nodes.nodes.get('KeySignatureToken') if node.last_signature_nodes else None
+            if key_node is not None:
+                state.set_key_signature(key_node.token.encoding)
+            else:
+                state.reset_measure()
+            self._agnostic_accidental_states[spine_id] = state
+        return state
 
     def append_row(self, document: Document, node, options: ExportOptions, row: list) -> bool:
         """

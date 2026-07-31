@@ -98,20 +98,24 @@ print(ekern_content)
 
 ## Agnostic Kern (aKern)
 
-Normalizes pitch representation to be independent of clef. In agnostic kern, the same pitch in the staff always has the same representation, regardless of which clef is active.
+Normalizes pitch representation to be independent of clef. In agnostic kern, the same staff position always maps to the same G-clef pitch spelling, regardless of which clef is active.
 
 **Characteristics:**
 
-- Pitch notation independent of clef context
-- Useful for transposition and analysis
-- Standardizes pitch across different clefs
-- Maps staff positions to absolute pitches
+- Pitch letters remapped to an implied G clef (staff line/space → G-clef kern pitch)
+- Useful for transposition, OMR-style analysis, and cross-clef comparison
+- Key-signature tandem tokens (`*k[...]`) are preserved unchanged
+- Note accidentals are **score-visible** glyphs, not a raw copy of every Humdrum alteration:
+  - Humdrum pitches are absolute (bare `b` is B natural even under `*k[b-]`)
+  - The key signature sets the default alteration for each pitch class (all octaves)
+  - A written accidental applies only to later notes of the **same pitch and octave** until changed or the next barline
+  - Matching key or carried accidentals are omitted on the note; cancelling a key flat/sharp shows `n`
 
 **Example:**
 
-If a note appears on the middle line of a G2 clef (B), it's always represented as B regardless of clef changes.
+If a note appears on the middle line of a G2 clef (B), it is always represented as B after remapping, regardless of clef changes. Under an empty key, `4b- 4b- 4b 4b` in one measure exports as `4b- 4b 4bn 4b` (flat carries on that octave; natural must be shown to cancel it).
 
-**Use case:** Analysis workflows where you want pitch-normalized data.
+**Use case:** Analysis workflows where you want clef-normalized pitches and accidentals as they appear on the score.
 
 ```python
 import kernpy as kp

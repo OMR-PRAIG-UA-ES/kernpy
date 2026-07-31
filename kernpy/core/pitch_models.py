@@ -193,6 +193,174 @@ class PitchImporter(ABC):
     def _parse_pitch(self, pitch: str):
         pass
 
+_HUMDRUM_PITCH_LETTERS = 'abcdefgABCDEFG'
+_PITCH_CLASSES = 'abcdefg'
+
+
+def split_kern_pitch_encoding(encoding: str) -> tuple[str, str, bool]:
+    """
+    Split a Humdrum pitch+alteration encoding into pitch letters, written accidental, and hide flag.
+
+    Returns:
+        tuple[str, str, bool]: ``(pitch_letters, written_accidental, is_hidden)`` where
+        ``written_accidental`` is ``''``, ``'n'``, or one or more ``#`` / ``-`` as encoded
+        on the token (before key/measure display logic). Hidden ``y``/``yy`` clears the written glyph.
+    """
+    pitch_letters = ''.join(c for c in encoding if c in _HUMDRUM_PITCH_LETTERS)
+    if not pitch_letters:
+        raise ValueError(f"Invalid pitch encoding: {encoding!r}")
+
+    sharp_count = encoding.count('#')
+    flat_count = encoding.count('-')
+    has_natural = 'n' in encoding
+
+    remainder = encoding
+    for c in pitch_letters:
+        remainder = remainder.replace(c, '', 1)
+    remainder = remainder.replace('#', '').replace('-', '').replace('n', '')
+    is_hidden = 'y' in remainder.lower()
+
+    if is_hidden:
+        written_accidental = ''
+    elif sharp_count:
+        written_accidental = '#' * sharp_count
+    elif flat_count:
+        written_accidental = '-' * flat_count
+    elif has_natural:
+        written_accidental = 'n'
+    else:
+        written_accidental = ''
+
+    return pitch_letters, written_accidental, is_hidden
+
+
+def kern_pitch_sounding_accidental(encoding: str) -> str:
+    """
+    Absolute Humdrum pitch alteration: ``#``/``-`` runs, or ``''`` for natural (bare or ``n``).
+
+    Key signatures do not affect Humdrum pitch tokens; bare ``b`` is always B natural.
+    """
+    sharp_count = encoding.count('#')
+    flat_count = encoding.count('-')
+    if sharp_count:
+        return '#' * sharp_count
+    if flat_count:
+        return '-' * flat_count
+    return ''
+
+
+def parse_key_signature_accidentals(encoding: str) -> dict[str, str]:
+    """
+    Parse ``*k[f#c#]`` / ``*k[b-e-a-]`` / ``*k[]`` into pitch-class → accidental map.
+
+    Accidental values are ``'#'``, ``'-'``, or longer runs (``'##'``, ``'--'``, ...).
+    Pitch classes absent from the key are omitted (treated as natural).
+
+    Args:
+        encoding (str): The encoding of the key signature.
+
+    Returns:
+        dict[str, str]: A dictionary of pitch-class -> accidental map.
+
+    Examples:
+        >>> parse_key_signature_accidentals('*k[f#c#]')
+        {'f': '#', 'c': '#'}
+        >>> parse_key_signature_accidentals('*k[b-e-a-]')
+        {'b': '-', 'e': '-', 'a': '-'}
+        >>> parse_key_signature_accidentals('*k[]')
+        {}
+        >>> parse_key_signature_accidentals('random string')
+        {}
+    """
+    start = encoding.find('[')
+    end = encoding.find(']', start + 1) if start >= 0 else -1
+    if start < 0 or end < 0:  # if no key signature, return empty dictionary. treat as natural ("C major" so so..)
+        return {}
+
+    body = encoding[start + 1:end]
+    result: dict[str, str] = {}
+    index = 0
+    while index < len(body):
+        char = body[index]
+        if char in _PITCH_CLASSES:
+            letter = char
+            index += 1
+            accidental = ''
+            while index < len(body) and body[index] in '#-':
+                accidental += body[index]
+                index += 1
+            result[letter] = accidental
+        else:
+            index += 1
+    return result
+
+
+def kern_pitch_octave(pitch_letters: str) -> int:
+    """Humdrum octave from pitch-letter run (``c``/``cc``/``C``/``CC``...)."""
+    if not pitch_letters:
+        raise ValueError('pitch_letters must be non-empty')
+    extra = len(pitch_letters[1:])
+    if pitch_letters[0].islower():
+        return HumdrumPitchImporter.C4_OCATAVE + extra
+    if pitch_letters[0].isupper():
+        return HumdrumPitchImporter.C3_OCATAVE - extra
+    raise ValueError(f'Invalid pitch letters: {pitch_letters!r}')
+
+
+class AccidentalDisplayState:
+    """
+    Score-visible accidental state for agnostic export.
+
+    Humdrum pitches are absolute. Display follows common notation:
+    - key signature sets the default alteration for every octave of a pitch class
+    - a written accidental applies only to later notes of the same pitch and octave
+      until changed or the barline
+    - barlines clear measure overrides (defaults fall back to the key again)
+    """
+
+    def __init__(self) -> None:
+        self.key: dict[str, str] = {}
+        # (pitch_class, octave) -> sounding accidental after a note in this measure
+        self.measure_overrides: dict[tuple[str, int], str] = {}
+
+    def set_key_signature(self, encoding: str) -> None:
+        self.key = parse_key_signature_accidentals(encoding)
+        self.reset_measure()
+
+    def reset_measure(self) -> None:
+        self.measure_overrides = {}
+
+    def _current_for(self, pitch_class: str, octave: int) -> str:
+        key = (pitch_class, octave)
+        if key in self.measure_overrides:
+            return self.measure_overrides[key]
+        return self.key.get(pitch_class, '')
+
+    def display_accidental(self, pitch_subtoken: str) -> str:
+        """
+        Return the accidental glyph to show on this note (``''``, ``'n'``, ``'#'``, ``'-'``, ...),
+        then update measure state for that pitch+octave.
+        """
+        pitch_letters, _written, is_hidden = split_kern_pitch_encoding(pitch_subtoken)
+        pitch_class = pitch_letters[0].lower()
+        octave = kern_pitch_octave(pitch_letters)
+        sounding = kern_pitch_sounding_accidental(pitch_subtoken)
+        current = self._current_for(pitch_class, octave)
+
+        if sounding == current:
+            to_show = ''
+        elif sounding == '':
+            to_show = 'n'
+        else:
+            to_show = sounding
+
+        if is_hidden:
+            to_show = ''
+
+        self.measure_overrides[(pitch_class, octave)] = sounding
+        return to_show
+
+
 class HumdrumPitchImporter(PitchImporter):
     """
     Represents the pitch in the Humdrum Kern format.
@@ -229,7 +397,7 @@ class HumdrumPitchImporter(PitchImporter):
     C4_OCATAVE = 4
     C3_PITCH_UPPERCASE = 'C'
     C3_OCATAVE = 3
-    VALID_PITCHES = 'abcdefg' + 'ABCDEFG'
+    VALID_PITCHES = _HUMDRUM_PITCH_LETTERS
 
     def __init__(self):
         super().__init__()
@@ -239,18 +407,12 @@ class HumdrumPitchImporter(PitchImporter):
         return AgnosticPitch(self.name, self.octave)
 
     def _parse_pitch(self, encoding: str) -> tuple:
-        accidentals = ''.join([c for c in encoding if c in ['#', '-']])
-        accidentals = accidentals.replace('#', '+')
-        encoding = encoding.replace('#', '').replace('-', '')
-        pitch = encoding[0].lower()
-        octave = None
-        if encoding[0].islower():
-            min_octave = HumdrumPitchImporter.C4_OCATAVE
-            octave = min_octave + (len(encoding) - 1)
-        elif encoding[0].isupper():
-            max_octave = HumdrumPitchImporter.C3_OCATAVE
-            octave = max_octave - (len(encoding) - 1)
-        name = f"{pitch}{accidentals}"
+        pitch_letters, _written, _is_hidden = split_kern_pitch_encoding(encoding)
+        # Absolute Humdrum alteration for chroma; naturals do not alter AgnosticPitch name.
+        chroma_accidentals = kern_pitch_sounding_accidental(encoding).replace('#', '+')
+        pitch = pitch_letters[0].lower()
+        octave = kern_pitch_octave(pitch_letters)
+        name = f"{pitch}{chroma_accidentals}"
         return name, octave
 
 

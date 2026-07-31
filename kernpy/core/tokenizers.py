@@ -8,6 +8,7 @@ from typing import List, Union, Set, Optional
 from .tokens import DECORATION_SEPARATOR, Token, TOKEN_SEPARATOR
 from .gkern import pitch_to_gkern_string, ClefFactory
 from .transposer import AgnosticPitch, PitchImporterFactory
+from .pitch_models import AccidentalDisplayState, split_kern_pitch_encoding
 
 
 class Encoding(Enum):  # TODO: Eventually, polymorphism will be used to export different types of kern files
@@ -236,24 +237,25 @@ class AEKernTokenizer(Tokenizer):
     AEKernTokenizer converts a Token into an **aekern (Agnostic Extended **kern) string representation. This format is a \
     tokenized semantic agnostic version of the normalized **kern.
 
-
-
-    In details, the pitch representation depends on the line/space position in the staff, but not depends on the \
-    key signature.
+    Staff position depends on clef (line/space), not key signature. Score-visible accidentals follow key \
+    signature and measure carry via ``AccidentalDisplayState``.
     """
 
     def __init__(self, *,
                  token_categories: Set['TokenCategory'],
-                 last_clef: Optional[str] = None):
+                 last_clef: Optional[str] = None,
+                 accidental_state: Optional[AccidentalDisplayState] = None):
         """
         Create a new AKernTokenizer
 
         Args:
             token_categories (Set[TokenCategory]): List of categories to be tokenized. If None will raise an exception.
             last_clef (Optional[str]): The last clef used in the tokenization. This is required to correctly \
+            accidental_state (Optional[AccidentalDisplayState]): Mutable key/measure accidental display state.
         """
         super().__init__(token_categories=token_categories)
         self.last_clef = last_clef
+        self.accidental_state = accidental_state
 
     def tokenize(self, token: Token, **kwargs) -> str:
         """
@@ -265,17 +267,20 @@ class AEKernTokenizer(Tokenizer):
         """
         clef = ClefFactory.create_clef(self.last_clef) if self.last_clef is not None else None
 
-
-
-    # Create a callback function to pass it dynamically to the export method
+        # Create a callback function to pass it dynamically to the export method
         def callback_convert_pitch_subtoken_to_agnostic(pitch_subtoken: str) -> str:
             if clef is None:
                 raise ValueError("Clef must be provided to convert pitch subtoken to an agnostic pitch representation.")
 
             pitch_importer = PitchImporterFactory.create('kern')
             agnostic_pitch: AgnosticPitch = pitch_importer.import_pitch(pitch_subtoken)
-            return pitch_to_gkern_string(agnostic_pitch, clef)  # Reading clef as a major scope variable
-
+            remapped = pitch_to_gkern_string(agnostic_pitch, clef)
+            base = remapped.rstrip('#-')
+            if self.accidental_state is not None:
+                display_accidental = self.accidental_state.display_accidental(pitch_subtoken)
+            else:
+                _letters, display_accidental, _hidden = split_kern_pitch_encoding(pitch_subtoken)
+            return base + display_accidental
 
         return token.export(
             filter_categories=lambda cat: cat in self.token_categories,
@@ -289,19 +294,22 @@ class AKernTokenizer(Tokenizer):
     AKernTokenizer converts a Token into an **akern (Agnostic **kern) string representation. This format is a \
     tokenized semantic agnostic version of the normalized **kern.
 
-    In details, the pitch representation depends on the line/space position in the staff, but not depends on the \
-    key signature.
+    Staff position depends on clef (line/space), not key signature. Score-visible accidentals follow key \
+    signature and measure carry via ``AccidentalDisplayState``.
     """
 
-    def __init__(self, *, token_categories: Set['TokenCategory'], last_clef: Optional[str] = None):
+    def __init__(self, *, token_categories: Set['TokenCategory'], last_clef: Optional[str] = None,
+                 accidental_state: Optional[AccidentalDisplayState] = None):
         """
         Create a new AKernTokenizer
 
         Args:
             token_categories (Set[TokenCategory]): List of categories to be tokenized. If None will raise an exception.
+            accidental_state (Optional[AccidentalDisplayState]): Mutable key/measure accidental display state.
         """
         super().__init__(token_categories=token_categories)
         self.last_clef = last_clef
+        self.accidental_state = accidental_state
 
     def tokenize(self, token: Token) -> str:
         """
@@ -313,7 +321,8 @@ class AKernTokenizer(Tokenizer):
         """
         return ((AEKernTokenizer(
             token_categories=self.token_categories,
-            last_clef=self.last_clef)
+            last_clef=self.last_clef,
+            accidental_state=self.accidental_state)
         ).tokenize(token)
                 .replace(TOKEN_SEPARATOR, '')
                 .replace(DECORATION_SEPARATOR, ''))
@@ -323,7 +332,8 @@ class TokenizerFactory:
     @classmethod
     def create(cls, type: str, *,
                token_categories: List['TokenCategory'],
-               last_clef_reference: Optional[Token] = None
+               last_clef_reference: Optional[Token] = None,
+               accidental_state: Optional[AccidentalDisplayState] = None,
 
         ) -> Tokenizer:
         if type is None:
@@ -342,13 +352,14 @@ class TokenizerFactory:
         elif type == Encoding.agnosticKern.value:
             return AKernTokenizer(
                 token_categories=token_categories,
-                last_clef=getattr(last_clef_reference, 'encoding', None)  # Retrieve the last_clef_reference object (str). None if not provided
-
+                last_clef=getattr(last_clef_reference, 'encoding', None),
+                accidental_state=accidental_state,
             )
         elif type == Encoding.agnosticExtendedKern.value:
             return AEKernTokenizer(
                 token_categories=token_categories,
-                last_clef=getattr(last_clef_reference, 'encoding', None)  # Retrieve the last_clef_reference object (str). None if not provided
+                last_clef=getattr(last_clef_reference, 'encoding', None),
+                accidental_state=accidental_state,
             )
 
         raise ValueError(f"Unknown kern type: {type}. "
