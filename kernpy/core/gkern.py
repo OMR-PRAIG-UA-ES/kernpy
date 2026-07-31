@@ -30,6 +30,8 @@ from .transposer import (
 from .pitch_models import (
     AgnosticPitch,
     pitches,
+    iter_key_signature_entries,
+    HumdrumPitchImporter,
 )
 
 LETTERS = ['c', 'd', 'e', 'f', 'g', 'a', 'b']
@@ -607,3 +609,36 @@ def pitch_to_gkern_string(pitch: AgnosticPitch, clef: Clef) -> str:
 
     accidentals = pitch.accidentals()
     return gkern_to_g_clef_pitch(gkern_encoding) + accidentals  # a nornal **kern pitch with accidentals in G clef
+
+
+def remap_key_signature_for_clef(encoding: str, clef: Clef) -> str:
+    """
+    Remap a Humdrum key signature through ``clef`` into G-clef pitch-class spelling.
+
+    Each key accidental is converted like a note (reference octave 4), then reduced to a
+    single pitch-class letter plus accidental so ``*k[f#c#g#d#]`` under ``*clefF4`` becomes
+    ``*k[d#a#e#b#]``. Trailing material after ``]`` (e.g. cancel ``X``) is preserved.
+    """
+    start = encoding.find('[')
+    end = encoding.find(']', start + 1) if start >= 0 else -1
+    if start < 0 or end < 0:
+        return encoding
+
+    prefix = encoding[: start + 1]
+    suffix = encoding[end:]
+    entries = iter_key_signature_entries(encoding)
+    if not entries:
+        return encoding
+
+    importer = HumdrumPitchImporter()
+    remapped_parts: list[str] = []
+    for letter, accidental in entries:
+        reference = f'{letter}{accidental}'
+        remapped = pitch_to_gkern_string(importer.import_pitch(reference), clef)
+        pitch_letters = ''.join(c for c in remapped if c.isalpha())
+        if not pitch_letters:
+            raise ValueError(f'Could not remap key signature entry {reference!r} for clef {clef}')
+        remapped_accidental = ''.join(c for c in remapped if c in '#-')
+        remapped_parts.append(pitch_letters[0].lower() + remapped_accidental)
+
+    return prefix + ''.join(remapped_parts) + suffix

@@ -140,11 +140,11 @@ class TestScoreVisibleNoteAccidentals(unittest.TestCase):
     """Note / key display checks against resource goldens (no inline kern data)."""
 
     @parameterized.expand([(name,) for name in CASE_NAMES], name_func=_case_name_func)
-    def test_key_header_matches_input(self, case_name: str):
-        # Arrange
+    def test_key_header_matches_expected_akrn(self, case_name: str):
+        # Arrange — agnostic may remap *k[...] through the spine clef
         case_dir = KeyAccidentalsFixtures.case_dir(case_name)
-        input_keys = KeyAccidentalsFixtures.key_lines(
-            KeyAccidentalsFixtures.read_text(case_dir / 'input.krn')
+        expected_keys = KeyAccidentalsFixtures.key_lines(
+            KeyAccidentalsFixtures.read_text(case_dir / 'expected.akrn')
         )
         document = KeyAccidentalsFixtures.load_input(case_name)
 
@@ -154,7 +154,7 @@ class TestScoreVisibleNoteAccidentals(unittest.TestCase):
         )
 
         # Assert
-        self.assertEqual(input_keys, akern_keys)
+        self.assertEqual(expected_keys, akern_keys)
 
     @parameterized.expand([(name,) for name in CASE_NAMES], name_func=_case_name_func)
     def test_note_lines_match_expected_akrn(self, case_name: str):

@@ -272,13 +272,22 @@ def parse_key_signature_accidentals(encoding: str) -> dict[str, str]:
         >>> parse_key_signature_accidentals('random string')
         {}
     """
+    return dict(iter_key_signature_entries(encoding))
+
+
+def iter_key_signature_entries(encoding: str) -> list[tuple[str, str]]:
+    """
+    Ordered ``(pitch_class, accidental)`` entries from a ``*k[...]`` tandem.
+
+    Accidental is ``''``, ``'#'``, ``'-'``, or longer runs. Empty / malformed keys yield ``[]``.
+    """
     start = encoding.find('[')
     end = encoding.find(']', start + 1) if start >= 0 else -1
-    if start < 0 or end < 0:  # if no key signature, return empty dictionary. treat as natural ("C major" so so..)
-        return {}
+    if start < 0 or end < 0:
+        return []
 
     body = encoding[start + 1:end]
-    result: dict[str, str] = {}
+    result: list[tuple[str, str]] = []
     index = 0
     while index < len(body):
         char = body[index]
@@ -289,7 +298,7 @@ def parse_key_signature_accidentals(encoding: str) -> dict[str, str]:
             while index < len(body) and body[index] in '#-':
                 accidental += body[index]
                 index += 1
-            result[letter] = accidental
+            result.append((letter, accidental))
         else:
             index += 1
     return result

@@ -5,8 +5,8 @@ from enum import Enum
 from abc import ABC, abstractmethod
 from typing import List, Union, Set, Optional
 
-from .tokens import DECORATION_SEPARATOR, Token, TOKEN_SEPARATOR
-from .gkern import pitch_to_gkern_string, ClefFactory
+from .tokens import DECORATION_SEPARATOR, Token, TOKEN_SEPARATOR, KeySignatureToken
+from .gkern import pitch_to_gkern_string, ClefFactory, remap_key_signature_for_clef
 from .transposer import AgnosticPitch, PitchImporterFactory
 from .pitch_models import AccidentalDisplayState, split_kern_pitch_encoding
 
@@ -266,6 +266,13 @@ class AEKernTokenizer(Tokenizer):
         Returns (str): **aekern string representation.
         """
         clef = ClefFactory.create_clef(self.last_clef) if self.last_clef is not None else None
+
+        if isinstance(token, KeySignatureToken):
+            if clef is None:
+                return token.export(
+                    filter_categories=lambda cat: cat in self.token_categories,
+                )
+            return remap_key_signature_for_clef(token.encoding, clef)
 
         # Create a callback function to pass it dynamically to the export method
         def callback_convert_pitch_subtoken_to_agnostic(pitch_subtoken: str) -> str:

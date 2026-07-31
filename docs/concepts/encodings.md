@@ -104,10 +104,10 @@ Normalizes pitch representation to be independent of clef. In agnostic kern, the
 
 - Pitch letters remapped to an implied G clef (staff line/space → G-clef kern pitch)
 - Useful for transposition, OMR-style analysis, and cross-clef comparison
-- Key-signature tandem tokens (`*k[...]`) are preserved unchanged
+- Key-signature tandem tokens (`*k[...]`) are remapped through the active clef into G-clef pitch-class spelling (e.g. `*k[f#c#g#d#]` under `*clefF4` → `*k[d#a#e#b#]`; unchanged under `*clefG2`)
 - Note accidentals are **score-visible** glyphs, not a raw copy of every Humdrum alteration:
   - Humdrum pitches are absolute (bare `b` is B natural even under `*k[b-]`)
-  - The key signature sets the default alteration for each pitch class (all octaves)
+  - The **semantic** (pre-remap) key signature sets the default alteration for each pitch class (all octaves)
   - A written accidental applies only to later notes of the **same pitch and octave** until changed or the next barline
   - Matching key or carried accidentals are omitted on the note; cancelling a key flat/sharp shows `n`
 
