@@ -1480,10 +1480,10 @@
 <ul>
 <li>Pitch letters remapped to an implied G clef (staff line/space → G-clef kern pitch)</li>
 <li>Useful for transposition, OMR-style analysis, and cross-clef comparison</li>
-<li>Key-signature tandem tokens (<code>*k[...]</code>) are preserved unchanged</li>
+<li>Key-signature tandem tokens (<code>*k[...]</code>) are remapped through the active clef into G-clef pitch-class spelling (e.g. <code>*k[f#c#g#d#]</code> under <code>*clefF4</code> → <code>*k[d#a#e#b#]</code>; unchanged under <code>*clefG2</code>)</li>
 <li>Note accidentals are <strong>score-visible</strong> glyphs, not a raw copy of every Humdrum alteration:</li>
 <li>Humdrum pitches are absolute (bare <code>b</code> is B natural even under <code>*k[b-]</code>)</li>
-<li>The key signature sets the default alteration for each pitch class (all octaves)</li>
+<li>The <strong>semantic</strong> (pre-remap) key signature sets the default alteration for each pitch class (all octaves)</li>
 <li>A written accidental applies only to later notes of the <strong>same pitch and octave</strong> until changed or the next barline</li>
 <li>Matching key or carried accidentals are omitted on the note; cancelling a key flat/sharp shows <code>n</code></li>
 </ul>
