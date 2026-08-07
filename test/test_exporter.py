@@ -148,3 +148,71 @@ class ExporterTestCase(unittest.TestCase):
 
 
 
+
+
+class CrossHeaderSpineMergeTestCase(unittest.TestCase):
+    """Regression test: joining adjacent spines that descend from DIFFERENT
+    same-type headers (e.g. a spine split from the 1st **kern merged with a
+    spine split from the 2nd **kern) is legal Humdrum ("only spines of the
+    same data type may be joined" — there is no same-header requirement).
+
+    The importer used to refuse the collapse (it compared header-node IDENTITY
+    instead of exclusive TYPE), which left the internal parent list one wider
+    than the real column count. From the next row onward every column attached
+    to the wrong parent chain, so spine-type-filtered exports kept the **dynam
+    column (as '*', '.', '*-' cells) from the second consecutive merge row to
+    the end of the file. Real-world case: KernScores Mozart sonata05-2.krn.
+    """
+
+    INPUT = (
+        "**kern\t**kern\t**dynam\n"
+        "*^\t*\t*\n"                 # -> [kern, kern, kern, dynam]
+        "*\t*\t*^\t*\n"              # -> [kern, kern, kern, kern, dynam]
+        "4c\t4d\t4e\t4f\tp\n"
+        "*\t*v\t*v\t*\t*\n"          # merge cols 2,3 (cross-header) -> 4 spines
+        "*v\t*v\t*\t*\n"             # merge cols 1,2 -> 3 spines
+        "4g\t4a\t.\n"
+        "*-\t*-\t*-\n"
+    )
+
+    def test_kern_only_export_drops_dynam_after_consecutive_cross_header_merges(self):
+        doc, _ = kp.loads(self.INPUT)
+        exported = kp.dumps(doc, spine_types=['**kern'])
+        expected = (
+            "**kern\t**kern\n"
+            "*^\t*\n"
+            "*\t*\t*^\n"
+            "4c\t4d\t4e\t4f\n"
+            "*\t*v\t*v\t*\n"
+            "*v\t*v\t*\n"
+            "4g\t4a\n"
+            "*-\t*-\n"
+        )
+        self.assertEqual(expected, exported)
+
+    def test_full_export_row_widths_follow_spine_arithmetic(self):
+        doc, _ = kp.loads(self.INPUT)
+        exported = kp.dumps(doc, spine_types=['**kern'])
+        width = None
+        for lineno, line in enumerate(exported.splitlines(), start=1):
+            cells = line.split('\t')
+            if width is None:
+                self.assertTrue(all(c.startswith('**') for c in cells),
+                                f"line {lineno}: expected header row, got {line!r}")
+                width = len(cells)
+                continue
+            self.assertEqual(width, len(cells),
+                             f"line {lineno}: {len(cells)} cells where spine "
+                             f"arithmetic requires {width}: {line!r}")
+            delta, merge_run = 0, 0
+            for c in cells:
+                if c == '*^':
+                    delta += 1
+                    merge_run = 0
+                elif c == '*v':
+                    if merge_run >= 1:
+                        delta -= 1
+                    merge_run += 1
+                else:
+                    merge_run = 0
+            width += delta
