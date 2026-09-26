@@ -388,7 +388,7 @@ class MeasureSignatureValidatorTestCase(unittest.TestCase):
         resource_path = "test/resources/wrongDurations/mono-good-duration-4by4.krn"
         resource_content = Path(resource_path).read_text()
 
-        mocked_validator = Mock(spec=["assert_measure"])
+        mocked_validator = Mock(spec=["assert_measure"], unsafe=True)
         mocked_validator.assert_measure.return_value = (False, "mocked validator mismatch")
 
         with patch("kernpy.core.importer.Importer.get_measure_signature_validator", return_value=mocked_validator) as mocked_factory:
@@ -415,7 +415,7 @@ class MeasureSignatureValidatorTestCase(unittest.TestCase):
             "*-\t*-"
         )
 
-        mocked_validator = Mock(spec=["assert_measure"])
+        mocked_validator = Mock(spec=["assert_measure"], unsafe=True)
         mocked_validator.assert_measure.return_value = (True, "")
 
         with patch("kernpy.core.importer.Importer.get_measure_signature_validator", return_value=mocked_validator):
@@ -433,7 +433,7 @@ class MeasureSignatureValidatorTestCase(unittest.TestCase):
         resource_path = "test/resources/wrongDurations/mono-good-duration-4by4.krn"
         resource_content = Path(resource_path).read_text()
 
-        mocked_validator = Mock(spec=["assert_measure"])
+        mocked_validator = Mock(spec=["assert_measure"], unsafe=True)
         mocked_validator.assert_measure.return_value = (True, "")
 
         with patch("kernpy.core.importer.Importer.get_measure_signature_validator", return_value=mocked_validator):
