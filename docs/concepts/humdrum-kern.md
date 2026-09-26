@@ -16,7 +16,7 @@ Every **kern file begins with spine headers that declare the type of data in eac
 Standard spine types include:
 
 - `**kern` — Musical notation (pitches and durations)
-- `**mens` — Mensural notation (medieval/renaissance music)
+- `**mens` — Mensural notation (medieval/renaissance music), see [Mensural Notation](humdrum-mens.md)
 - `**text` — Lyrics or text underlay
 - `**dynam` — Dynamics (p, f, ff, ppp, etc.)
 - `**harm` — Harmonic analysis symbols

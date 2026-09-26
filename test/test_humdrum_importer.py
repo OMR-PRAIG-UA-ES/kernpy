@@ -389,8 +389,6 @@ class ImporterTestCase(unittest.TestCase):
 
         with open('test/resources/samples/score_with_dividing_one_spine_m9-m13.krn', 'r') as f:
             expected_output = f.read()
-        with open('test/resources/samples/score_with_dividing_one_spine_m9-m13.krn', 'w') as f:
-            f.write(exported_real)
         self.assertEqual(expected_output, exported_real)
 
     def test_extract_measures_when_spines_split_two_spines(self):

@@ -47,6 +47,15 @@ import kernpy as kp
 document, errors = kp.loads("**kern\n*clefC3\n*k[b-e-a-]\n*M3/4\n4e-\n4g\n4c\n=1\n4r\n2cc;\n==\n*-")
 ```
 
+`**mens` spines (white mensural notation) are read with the `**kern`/`**mens` grammar shared with [mOOsicae](https://github.com/OMR-PRAIG-UA-ES), and exported back.
+```python
+import kernpy as kp
+
+document, errors = kp.loads("**mens\n*clefC1\n*met(C)\nSc\nsi~d\nsp:a\n<Sa\nSg>\n*-")
+print(kp.dumps(document))
+```
+See [Mensural Notation](https://kernpy.pages.dev/concepts/humdrum-mens/) for the signifiers, the export and the SEILS dialect.
+
 Validate the duration of the notes in the score.
 ```python
 import kernpy as kp

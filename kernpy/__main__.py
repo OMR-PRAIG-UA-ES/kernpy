@@ -8,6 +8,7 @@ Usage:
 import argparse
 import sys
 from pathlib import Path
+from typing import List
 
 from kernpy import polish_scores, ekern_to_krn, kern_to_ekern
 
@@ -25,6 +26,7 @@ def create_parser() -> argparse.ArgumentParser:
 
     parser.add_argument('--input_path', type=str, help='Input file or directory')
     parser.add_argument('--output_path', type=str, help='Output file or directory')
+    parser.add_argument('--recursive', action='store_true', help='Look for input files in subdirectories too')
 
     # Polish Exporter
     parser.add_argument('--input_directory', type=str, help='Polish: Input directory')
@@ -38,8 +40,9 @@ def create_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def find_files(directory: Path, patterns: list[str], ) -> list[Path]:
-    return list(directory.rglob(pattern) for pattern in patterns) 
+def find_files(directory: Path, patterns: List[str], recursive: bool = False) -> List[Path]:
+    glob = directory.rglob if recursive else directory.glob
+    return sorted(path for pattern in patterns for path in glob(pattern) if path.is_file())
 
 
 def handle_ekern2kern(args):

@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Sequence, Tuple
 
 from kernpy.core.tokens import TokenCategory, SignatureToken, MetacommentToken, HeaderToken, SpineOperationToken, \
-    FieldCommentToken, \
+    FieldCommentToken, ErrorToken, \
     BoundingBoxToken, SPINE_OPERATIONS, HEADERS, Token, TimeSignatureToken, NoteRestToken, Subtoken, TERMINATOR
 from kernpy.core.document import Document, MultistageTree, BoundingBoxMeasures
 from kernpy.core.importer_factory import createImporter
@@ -142,8 +142,10 @@ class Importer:
                                     f"Invalid token at row {self._row_number}, column {icolumn} (spine #{icolumn}): "
                                     f"'{column}'. Parsing detail: {original_error}"
                                 )
+                                # Keep the cell as an ErrorToken and go on: the caller decides
+                                # (Generic.read/create raise only when strict=True).
                                 self.errors.append(formatted_message)
-                                raise ValueError(formatted_message) from error
+                                token = ErrorToken(column, self._row_number, original_error)
                         if not token:
                             raise Exception(
                                 f'No token generated for input {column} in row number #{self._row_number} using importer {importer}')
@@ -162,6 +164,8 @@ class Importer:
                         elif (
                             not self._seen_first_barline
                             and TokenCategory.is_child(child=token.category, parent=TokenCategory.CORE)
+                            # a null token ('*' or '.') in another spine is no music: it must not open a measure
+                            and token.category != TokenCategory.EMPTY
                             and len(self._document.measure_start_tree_stages) == 0
                         ):
                             # Scores without an opening barline still need a first measure start.
