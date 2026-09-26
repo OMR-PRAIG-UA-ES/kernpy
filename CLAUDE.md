@@ -44,6 +44,9 @@ This writes generated lexer/parser/listener/visitor code into `kernpy/core/gener
 `**mens` spines are parsed with a second grammar, `kern/kernMensSpine*.g4`: **mOOsicae's combined
 `**kern`/`**mens` grammar, vendored verbatim** so both libraries read `**mens` alike. Never edit it
 here; change it in mOOsicae and copy it back (`kern/README-mens.md`). `antlr4.sh` generates both.
+`test/test_mens_roundtrip.py` checks the `**mens` round trip on real data (`test/resources/mens/`,
+sources and licences in its `SOURCES.md`); `KERNPY_MENS_CORPUS=<dir>` runs it over a whole corpus
+(e.g. `muret-corpora path seils-diplomatic`). User docs: `docs/concepts/humdrum-mens.md`.
 
 ## Architecture
 

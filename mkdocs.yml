@@ -48,6 +48,7 @@ nav:
       - Tutorial: get-started/tutorial.md
   - Core Concepts:
       - Humdrum **kern Format: concepts/humdrum-kern.md
+      - Mensural Notation (**mens): concepts/humdrum-mens.md
       - Token Categories: concepts/token-categories.md
       - Encoding Formats: concepts/encodings.md
       - Documents and Spines: concepts/documents-and-spines.md
