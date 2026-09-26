@@ -37,6 +37,24 @@ class MensSpineListener(BaseANTLRSpineParserListener):
         if modern.appoggiatura():
             self.duration_subtokens.append(Subtoken(modern.appoggiatura().getText(), TokenCategory.DURATION))
 
+    # Perfection marks. The grammar wants them right after the figure (`si~d`); written after the
+    # coloration (`s~id`, as SEILS does) it still accepts the token, but reads the mark as a note
+    # decoration (`i` user-assignable, `p` appoggiatura), so the duration silently loses it.
+    MISPLACED_PERFECTION = {'p', 'i', 'I'}
+
+    def enterNote(self, ctx: kernMensSpineParser.NoteContext):
+        after_mensural_duration = False
+        for child in ctx.getChildren():
+            if isinstance(child, kernMensSpineParser.DurationContext):
+                after_mensural_duration = child.mensuralDuration() is not None
+            elif isinstance(child, kernMensSpineParser.DiatonicPitchAndOctaveContext):
+                break
+            elif after_mensural_duration and isinstance(child, kernMensSpineParser.NoteDecorationContext) \
+                    and child.getText() in self.MISPLACED_PERFECTION:
+                raise ValueError(
+                    f"'{ctx.getText()}': the perfection mark '{child.getText()}' must follow the mensural "
+                    f"figure, before the coloration and the dot (e.g. 'si~d', not 's~id')")
+
     def exitNote(self, ctx: kernMensSpineParser.NoteContext):
         # The combined grammar takes ligature, tie, slur, phrase and stem marks as a PREFIX of the note
         # (`<S~a`, `[sB`), outside noteDecoration; keep them as decorations, as **kern keeps its own.
