@@ -32,7 +32,7 @@ class GenericTestCase(unittest.TestCase):
     @classmethod
     def load_expected_indexes_of_input_concatenated_load_files(cls):
         return [(0, 5), (6, 11), (12, 16), (17, 21), (22, 26), (27, 31), (32, 37), (38, 43), (44, 49), (50, 54),
-            (55, 59), (60, 66)]
+            (55, 59), (60, 65)]
 
     @classmethod
     def setUpClass(cls):

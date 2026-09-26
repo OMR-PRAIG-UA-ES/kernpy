@@ -193,19 +193,16 @@ class Exporter:
         rows = []
 
         if options.to_measure is not None and options.to_measure < len(document.measure_start_tree_stages):
-
-            if options.to_measure < len(document.measure_start_tree_stages) - 1:
-                to_stage = document.measure_start_tree_stages[
-                    options.to_measure]  # take the barlines from the next coming measure
-            else:
-                to_stage = len(document.tree.stages) - 1  # all stages
+            # A measure starts on the stage after its opening barline, so the last stage of measure
+            # `to_measure` is the barline that opens the next one: include it, stop there.
+            to_stage = self._opening_barline_stage(document, options.to_measure)
         else:
             to_stage = len(document.tree.stages) - 1  # all stages
 
         if options.from_measure:
             # In case of beginning not from the first measure, we recover the spine creation and the headers
             # Traversed in reverse order to only include the active spines at the given measure...
-            from_stage = document.measure_start_tree_stages[options.from_measure - 1]
+            from_stage = self._opening_barline_stage(document, options.from_measure - 1)
             next_nodes = document.tree.stages[from_stage]
             while next_nodes and len(next_nodes) > 0 and next_nodes[0] != document.tree.root:
                 row = []
@@ -222,7 +219,8 @@ class Exporter:
                     if isinstance(node.token, HeaderToken) and node.token.encoding in options.spine_types:
                         content = self.export_token(node, options)
                         non_place_holder_in_row = True
-                    elif spine_operation_row:
+                    elif spine_operation_row and (
+                            not node.header_node or node.header_node.token.encoding in options.spine_types):
                         # either if it is the split operator that has been cancelled, or the join one
                         if isinstance(node.token, SpineOperationToken) and (node.token.is_cancelled_at(
                                 from_stage) or node.last_spine_operator_node and node.last_spine_operator_node.token.cancelled_at_stage == node.stage):
@@ -232,7 +230,9 @@ class Exporter:
                             non_place_holder_in_row = True
                     if content:
                         row.append(content)
-                    new_next_nodes.append(node.parent)
+                    # the spines born from a split share their parent: walk it back once
+                    if not any(node.parent is seen for seen in new_next_nodes):
+                        new_next_nodes.append(node.parent)
                 next_nodes = new_next_nodes
                 if non_place_holder_in_row:  # if the row contains just place holders due to an ommitted place holder, don't add it
                     rows.insert(0, row)
@@ -295,6 +295,23 @@ class Exporter:
             if not empty_row(row):
                 result += '\t'.join(row) + '\n'
         return result
+
+    @staticmethod
+    def _opening_barline_stage(document: Document, measure_index: int) -> int:
+        """
+        The stage where measure `measure_index` (0-based) begins, including its opening barline.
+
+        `Document.measure_start_tree_stages` holds the first stage *after* each opening barline; a
+        measure with no opening barline (the first one of a score without `=1`) starts on its own
+        first stage.
+        """
+        start = document.measure_start_tree_stages[measure_index]
+        previous = start - 1
+        if previous >= 0 and any(
+                node.token is not None and node.token.category == TokenCategory.BARLINES
+                for node in document.tree.stages[previous]):
+            return previous
+        return start
 
     def compute_header_type(self, node) -> Optional[HeaderToken]:
         """

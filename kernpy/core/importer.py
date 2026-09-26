@@ -164,6 +164,8 @@ class Importer:
                         elif (
                             not self._seen_first_barline
                             and TokenCategory.is_child(child=token.category, parent=TokenCategory.CORE)
+                            # a null token ('*' or '.') in another spine is no music: it must not open a measure
+                            and token.category != TokenCategory.EMPTY
                             and len(self._document.measure_start_tree_stages) == 0
                         ):
                             # Scores without an opening barline still need a first measure start.
