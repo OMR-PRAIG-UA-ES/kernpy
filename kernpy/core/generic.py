@@ -48,7 +48,7 @@ class Generic:
         errors = importer.errors
 
         if strict and len(errors) > 0:
-            raise Exception(importer.get_error_messages())
+            raise ValueError(importer.get_error_messages())
 
         return document, errors
 
@@ -77,7 +77,7 @@ class Generic:
         errors = importer.errors
 
         if strict and len(errors) > 0:
-            raise Exception(importer.get_error_messages())
+            raise ValueError(importer.get_error_messages())
 
         return document, errors
 
