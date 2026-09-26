@@ -699,9 +699,12 @@ class Document:
             check_core_spines_only: If True, only the core spines (**kern and **mens) are checked. If False, all spines are checked.
 
         Returns ('Document'): The current document (self) with the other document concatenated.
+
+        Raises:
+            ValueError: If the headers of both documents do not match.
         """
         if not Document.match(self, other, check_core_spines_only=check_core_spines_only):
-            raise Exception(f'Documents are not compatible for addition. '
+            raise ValueError(f'Documents are not compatible for addition. '
                             f'Headers do not match with check_core_spines_only={check_core_spines_only}. '
                             f'self: {self.get_header_nodes()}, other: {other.get_header_nodes()}. ')
 

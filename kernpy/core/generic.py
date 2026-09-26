@@ -275,12 +275,19 @@ class Generic:
             low_index = high_index + 1
 
         for doc in docs[1:]:
-            cls._validate_document_compatibility(
+            is_compatible = cls._validate_document_compatibility(
                 docs[0],
                 doc,
                 raise_on_header_mismatch=raise_on_header_mismatch,
                 only_check_core_spines=only_check_core_spines,
             )
+            if not is_compatible:
+                # Same refusal as Document.add (strategy A): gluing the rows of documents whose
+                # headers differ would silently put one spine's data under another spine's header.
+                raise ValueError(
+                    f"Documents are not compatible for addition. "
+                    f"Headers do not match with check_core_spines_only={only_check_core_spines}."
+                )
 
         options = cls.parse_options_to_ExportOptions(include=include, exclude=exclude)
         exported_contents = [cls.export(doc, options) for doc in docs]
