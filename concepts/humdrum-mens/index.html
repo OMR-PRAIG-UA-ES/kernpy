@@ -1307,10 +1307,15 @@
 TypeScript library of the same ecosystem, <strong>vendored verbatim</strong> in <code>kern/kernMensSpine*.g4</code>. Both
 libraries therefore accept and reject the same <code>**mens</code> tokens. The grammar is never edited in
 kernpy: it is changed in mOOsicae and copied back (<code>kern/README-mens.md</code>). <code>**kern</code> spines keep
-their own grammar, <code>kern/kernSpine*.g4</code>, because in the combined one the mensural figures (<code>M</code>,
-<code>m</code>, <code>S</code>...) collide with <code>**kern</code> articulations and ornaments.</p>
+their own grammar, <code>kern/kernSpine*.g4</code>, shared with mOOsicae rule by rule. The combined grammar reads a
+<code>**mens</code> cell from its own entry rule, <code>startMens</code>: the same letter means different things in the two
+representations (<code>L</code> beam / longa, <code>S</code> turn / breve, <code>m</code> mordent / semiminima, <code>X</code> editorial mark /
+maxima, <code>u</code> down-bow / semifusa, <code>p</code> appoggiatura / perfect), and, as in Craig Sapp's humlib, the spine
+type decides.</p>
 <h2 id="what-a-mensural-note-looks-like">What a mensural note looks like<a class="headerlink" href="#what-a-mensural-note-looks-like" title="Permanent link">&para;</a></h2>
-<p>A note is its duration, then its pitch, then its marks:</p>
+<p>A note is a figure, a pitch and its marks, <strong>in any order</strong>: Humdrum does not fix the order of the
+signifiers inside a token (humlib and Verovio find each one anywhere in it), so <code>si~d</code>, <code>s~id</code> and
+<code>d~is</code> are the same note, and so are <code>Sa</code> and <code>aS</code>.</p>
 <table>
 <thead>
 <tr>
@@ -1327,23 +1332,28 @@ their own grammar, <code>kern/kernSpine*.g4</code>, because in the combined one 
 </tr>
 <tr>
 <td>Perfection</td>
-<td><code>p</code> perfect, <code>i</code> imperfect, <code>I</code> imperfect by alteration, <strong>right after the figure</strong></td>
-<td><code>Sic</code></td>
+<td><code>p</code> perfect, <code>i</code> imperfect, <code>I</code> imperfect by alteration, <code>+</code> altera</td>
+<td><code>Sic</code>, <code>Sd+</code></td>
 </tr>
 <tr>
 <td>Coloration</td>
-<td><code>~</code>, after the perfection</td>
-<td><code>si~d</code></td>
+<td><code>~</code></td>
+<td><code>si~d</code>, <code>sc~</code></td>
 </tr>
 <tr>
 <td>Dot</td>
-<td><code>.</code> augmentation, <code>:</code> division, last</td>
-<td><code>sp:a</code></td>
+<td><code>.</code> augmentation, <code>:</code> division</td>
+<td><code>sp:a</code>, <code>sa:</code></td>
 </tr>
 <tr>
 <td>Ligature</td>
-<td><code>&lt;</code> starts, <code>&gt;</code> ends</td>
+<td><code>[</code> <code>]</code> recta, <code>&lt;</code> <code>&gt;</code> obliqua</td>
 <td><code>&lt;Sa</code>, <code>Sg&gt;</code></td>
+</tr>
+<tr>
+<td>Beam</td>
+<td><code>L</code> and <code>J</code>, <strong>after</strong> the figure (before it, <code>L</code> is the longa)</td>
+<td><code>UaL</code></td>
 </tr>
 <tr>
 <td>Rest</td>
@@ -1353,7 +1363,8 @@ their own grammar, <code>kern/kernSpine*.g4</code>, because in the combined one 
 </tbody>
 </table>
 <p>kernpy keeps the whole mensural duration (figure, perfection, coloration and dot) as <strong>one</strong>
-duration subtoken, as written, so the export never reorders it.</p>
+duration subtoken, written in a fixed order, figure, perfection, coloration, dot (<code>s~id</code> is exported
+<code>si~d</code>), so the export never splits it.</p>
 <p>Tandem interpretations include mensurations (<code>*met(O)</code>, <code>*met(C|)</code>, with the optional
 <code>*met(O)_2232</code> specification of maximodus, modus, tempus and prolatio), clefs, key signatures,
 <code>*custosG</code> (a custos with its pitch) and layout marks.</p>
@@ -1376,12 +1387,10 @@ list returned by <code>kp.load</code>/<code>kp.loads</code> (or raised with <cod
 the document and in the export. SEILS, for instance, writes:</p>
 <ul>
 <li>a bare <code>*custos</code>: the grammar wants its pitch, <code>*custosG</code>;</li>
-<li>the perfection mark after the coloration, <code>s~id</code>: the grammar wants <code>si~d</code>. Read as it stands,
-  the <code>i</code> would become a note decoration and the note would lose its imperfection, so kernpy
-  reports it instead;</li>
-<li>the coloration after the dot, <code>Mp:~</code>.</li>
+<li>a stray <code>ui6G</code>.</li>
 </ul>
-<p>Readers of such sources normalise them before parsing if they want those cells as notes.</p>
+<p>Its orders (<code>s~id</code>, the coloration after the dot in <code>Mp:~</code>) are valid <code>**mens</code> and are read as
+written. Readers of such sources normalise the rest before parsing if they want those cells.</p>
 
 
 
