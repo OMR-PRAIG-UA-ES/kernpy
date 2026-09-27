@@ -17,12 +17,30 @@ class kernMensSpineParserListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by kernMensSpineParser#startMens.
+    def enterStartMens(self, ctx:kernMensSpineParser.StartMensContext):
+        pass
+
+    # Exit a parse tree produced by kernMensSpineParser#startMens.
+    def exitStartMens(self, ctx:kernMensSpineParser.StartMensContext):
+        pass
+
+
     # Enter a parse tree produced by kernMensSpineParser#field.
     def enterField(self, ctx:kernMensSpineParser.FieldContext):
         pass
 
     # Exit a parse tree produced by kernMensSpineParser#field.
     def exitField(self, ctx:kernMensSpineParser.FieldContext):
+        pass
+
+
+    # Enter a parse tree produced by kernMensSpineParser#fieldMens.
+    def enterFieldMens(self, ctx:kernMensSpineParser.FieldMensContext):
+        pass
+
+    # Exit a parse tree produced by kernMensSpineParser#fieldMens.
+    def exitFieldMens(self, ctx:kernMensSpineParser.FieldMensContext):
         pass
 
 
@@ -59,6 +77,15 @@ class kernMensSpineParserListener(ParseTreeListener):
 
     # Exit a parse tree produced by kernMensSpineParser#notes_rests_chords.
     def exitNotes_rests_chords(self, ctx:kernMensSpineParser.Notes_rests_chordsContext):
+        pass
+
+
+    # Enter a parse tree produced by kernMensSpineParser#mensNotes_rests_chords.
+    def enterMensNotes_rests_chords(self, ctx:kernMensSpineParser.MensNotes_rests_chordsContext):
+        pass
+
+    # Exit a parse tree produced by kernMensSpineParser#mensNotes_rests_chords.
+    def exitMensNotes_rests_chords(self, ctx:kernMensSpineParser.MensNotes_rests_chordsContext):
         pass
 
 
@@ -152,12 +179,66 @@ class kernMensSpineParserListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by kernMensSpineParser#mensChord.
+    def enterMensChord(self, ctx:kernMensSpineParser.MensChordContext):
+        pass
+
+    # Exit a parse tree produced by kernMensSpineParser#mensChord.
+    def exitMensChord(self, ctx:kernMensSpineParser.MensChordContext):
+        pass
+
+
     # Enter a parse tree produced by kernMensSpineParser#note.
     def enterNote(self, ctx:kernMensSpineParser.NoteContext):
         pass
 
     # Exit a parse tree produced by kernMensSpineParser#note.
     def exitNote(self, ctx:kernMensSpineParser.NoteContext):
+        pass
+
+
+    # Enter a parse tree produced by kernMensSpineParser#mensNote.
+    def enterMensNote(self, ctx:kernMensSpineParser.MensNoteContext):
+        pass
+
+    # Exit a parse tree produced by kernMensSpineParser#mensNote.
+    def exitMensNote(self, ctx:kernMensSpineParser.MensNoteContext):
+        pass
+
+
+    # Enter a parse tree produced by kernMensSpineParser#mensNoteSignifier.
+    def enterMensNoteSignifier(self, ctx:kernMensSpineParser.MensNoteSignifierContext):
+        pass
+
+    # Exit a parse tree produced by kernMensSpineParser#mensNoteSignifier.
+    def exitMensNoteSignifier(self, ctx:kernMensSpineParser.MensNoteSignifierContext):
+        pass
+
+
+    # Enter a parse tree produced by kernMensSpineParser#mensNoteSignifierAfterFigure.
+    def enterMensNoteSignifierAfterFigure(self, ctx:kernMensSpineParser.MensNoteSignifierAfterFigureContext):
+        pass
+
+    # Exit a parse tree produced by kernMensSpineParser#mensNoteSignifierAfterFigure.
+    def exitMensNoteSignifierAfterFigure(self, ctx:kernMensSpineParser.MensNoteSignifierAfterFigureContext):
+        pass
+
+
+    # Enter a parse tree produced by kernMensSpineParser#mensRest.
+    def enterMensRest(self, ctx:kernMensSpineParser.MensRestContext):
+        pass
+
+    # Exit a parse tree produced by kernMensSpineParser#mensRest.
+    def exitMensRest(self, ctx:kernMensSpineParser.MensRestContext):
+        pass
+
+
+    # Enter a parse tree produced by kernMensSpineParser#mensRestSignifier.
+    def enterMensRestSignifier(self, ctx:kernMensSpineParser.MensRestSignifierContext):
+        pass
+
+    # Exit a parse tree produced by kernMensSpineParser#mensRestSignifier.
+    def exitMensRestSignifier(self, ctx:kernMensSpineParser.MensRestSignifierContext):
         pass
 
 
@@ -926,15 +1007,6 @@ class kernMensSpineParserListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by kernMensSpineParser#modernFigure.
-    def enterModernFigure(self, ctx:kernMensSpineParser.ModernFigureContext):
-        pass
-
-    # Exit a parse tree produced by kernMensSpineParser#modernFigure.
-    def exitModernFigure(self, ctx:kernMensSpineParser.ModernFigureContext):
-        pass
-
-
     # Enter a parse tree produced by kernMensSpineParser#augmentationDot.
     def enterAugmentationDot(self, ctx:kernMensSpineParser.AugmentationDotContext):
         pass
@@ -959,6 +1031,15 @@ class kernMensSpineParserListener(ParseTreeListener):
 
     # Exit a parse tree produced by kernMensSpineParser#mensuralDuration.
     def exitMensuralDuration(self, ctx:kernMensSpineParser.MensuralDurationContext):
+        pass
+
+
+    # Enter a parse tree produced by kernMensSpineParser#mensuralQualifier.
+    def enterMensuralQualifier(self, ctx:kernMensSpineParser.MensuralQualifierContext):
+        pass
+
+    # Exit a parse tree produced by kernMensSpineParser#mensuralQualifier.
+    def exitMensuralQualifier(self, ctx:kernMensSpineParser.MensuralQualifierContext):
         pass
 
 
@@ -1013,6 +1094,24 @@ class kernMensSpineParserListener(ParseTreeListener):
 
     # Exit a parse tree produced by kernMensSpineParser#alteration.
     def exitAlteration(self, ctx:kernMensSpineParser.AlterationContext):
+        pass
+
+
+    # Enter a parse tree produced by kernMensSpineParser#mensAlteration.
+    def enterMensAlteration(self, ctx:kernMensSpineParser.MensAlterationContext):
+        pass
+
+    # Exit a parse tree produced by kernMensSpineParser#mensAlteration.
+    def exitMensAlteration(self, ctx:kernMensSpineParser.MensAlterationContext):
+        pass
+
+
+    # Enter a parse tree produced by kernMensSpineParser#mensAlterationDisplay.
+    def enterMensAlterationDisplay(self, ctx:kernMensSpineParser.MensAlterationDisplayContext):
+        pass
+
+    # Exit a parse tree produced by kernMensSpineParser#mensAlterationDisplay.
+    def exitMensAlterationDisplay(self, ctx:kernMensSpineParser.MensAlterationDisplayContext):
         pass
 
 
@@ -1076,6 +1175,78 @@ class kernMensSpineParserListener(ParseTreeListener):
 
     # Exit a parse tree produced by kernMensSpineParser#noteDecoration.
     def exitNoteDecoration(self, ctx:kernMensSpineParser.NoteDecorationContext):
+        pass
+
+
+    # Enter a parse tree produced by kernMensSpineParser#bowing.
+    def enterBowing(self, ctx:kernMensSpineParser.BowingContext):
+        pass
+
+    # Exit a parse tree produced by kernMensSpineParser#bowing.
+    def exitBowing(self, ctx:kernMensSpineParser.BowingContext):
+        pass
+
+
+    # Enter a parse tree produced by kernMensSpineParser#sforzando.
+    def enterSforzando(self, ctx:kernMensSpineParser.SforzandoContext):
+        pass
+
+    # Exit a parse tree produced by kernMensSpineParser#sforzando.
+    def exitSforzando(self, ctx:kernMensSpineParser.SforzandoContext):
+        pass
+
+
+    # Enter a parse tree produced by kernMensSpineParser#breath.
+    def enterBreath(self, ctx:kernMensSpineParser.BreathContext):
+        pass
+
+    # Exit a parse tree produced by kernMensSpineParser#breath.
+    def exitBreath(self, ctx:kernMensSpineParser.BreathContext):
+        pass
+
+
+    # Enter a parse tree produced by kernMensSpineParser#harmonic.
+    def enterHarmonic(self, ctx:kernMensSpineParser.HarmonicContext):
+        pass
+
+    # Exit a parse tree produced by kernMensSpineParser#harmonic.
+    def exitHarmonic(self, ctx:kernMensSpineParser.HarmonicContext):
+        pass
+
+
+    # Enter a parse tree produced by kernMensSpineParser#glissandoMark.
+    def enterGlissandoMark(self, ctx:kernMensSpineParser.GlissandoMarkContext):
+        pass
+
+    # Exit a parse tree produced by kernMensSpineParser#glissandoMark.
+    def exitGlissandoMark(self, ctx:kernMensSpineParser.GlissandoMarkContext):
+        pass
+
+
+    # Enter a parse tree produced by kernMensSpineParser#unpitched.
+    def enterUnpitched(self, ctx:kernMensSpineParser.UnpitchedContext):
+        pass
+
+    # Exit a parse tree produced by kernMensSpineParser#unpitched.
+    def exitUnpitched(self, ctx:kernMensSpineParser.UnpitchedContext):
+        pass
+
+
+    # Enter a parse tree produced by kernMensSpineParser#groupetto.
+    def enterGroupetto(self, ctx:kernMensSpineParser.GroupettoContext):
+        pass
+
+    # Exit a parse tree produced by kernMensSpineParser#groupetto.
+    def exitGroupetto(self, ctx:kernMensSpineParser.GroupettoContext):
+        pass
+
+
+    # Enter a parse tree produced by kernMensSpineParser#mensNoteDecoration.
+    def enterMensNoteDecoration(self, ctx:kernMensSpineParser.MensNoteDecorationContext):
+        pass
+
+    # Exit a parse tree produced by kernMensSpineParser#mensNoteDecoration.
+    def exitMensNoteDecoration(self, ctx:kernMensSpineParser.MensNoteDecorationContext):
         pass
 
 

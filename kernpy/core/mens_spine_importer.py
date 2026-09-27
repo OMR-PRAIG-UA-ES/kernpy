@@ -15,60 +15,79 @@ class MensSpineListener(BaseANTLRSpineParserListener):
     """
     Builds kernpy tokens from the combined **kern/**mens grammar (``kern/kernMensSpine*.g4``).
 
-    That grammar is mOOsicae's, vendored verbatim, so both libraries read **mens alike. It shares the
-    **kern rules with ``kernSpine*.g4`` and adds the mensural layer, where ``duration`` is either a
-    mensural duration (figure, perfection, coloration, dot) or a modern one.
+    That grammar is mOOsicae's, vendored verbatim, so both libraries read **mens alike. A **mens cell is
+    read from its own entry rule, ``startMens``: several letters mean something else in **kern (``L``,
+    ``S``, ``M``, ``m``, ``X``, ``p``, ``i``, ``u``...), so the spine type decides, as in humlib.
+
+    **mens does not fix the order of the signifiers in a token (``si~d``, ``s~id``, ``sa~``, ``aS``): the
+    figure, its perfection mark (``p``, ``i``, ``I``, ``+`` altera), the coloration (``~``) and the dot
+    (``.`` or ``:``) are collected wherever they are and written back as one duration subtoken in a fixed
+    order, figure, perfection, coloration, dot (``s~id`` is exported ``si~d``), so the exporter never
+    splits and sorts them (it would write ``:s`` for ``s:``).
     """
 
-    def exitDuration(self, ctx: kernMensSpineParser.DurationContext):
-        mensural = ctx.mensuralDuration()
-        if mensural is not None:
-            # One subtoken, as written: the figure and what qualifies it, in the grammar's order,
-            # p/i/I (perfect, imperfect, imperfect by alteration), ~ (coloured), . or : (augmentation
-            # or division dot). Split, the exporter would sort the parts and write ':s' for 's:'.
-            self.duration_subtokens = [Subtoken(mensural.getText(), TokenCategory.DURATION)]
-            return
-        modern = ctx.modernDuration()
-        self.duration_subtokens = [Subtoken(modern.modernFigure().getText(), TokenCategory.DURATION)]
-        for _ in modern.augmentationDot():
-            self.duration_subtokens.append(Subtoken(".", TokenCategory.DURATION))
-        if modern.graceNote():
-            self.duration_subtokens.append(Subtoken(modern.graceNote().getText(), TokenCategory.DURATION))
-        if modern.appoggiatura():
-            self.duration_subtokens.append(Subtoken(modern.appoggiatura().getText(), TokenCategory.DURATION))
+    def enterStartMens(self, ctx: kernMensSpineParser.StartMensContext):
+        self.enterStart(ctx)
 
-    # Perfection marks. The grammar wants them right after the figure (`si~d`); written after the
-    # coloration (`s~id`, as SEILS does) it still accepts the token, but reads the mark as a note
-    # decoration (`i` user-assignable, `p` appoggiatura), so the duration silently loses it.
-    MISPLACED_PERFECTION = {'p', 'i', 'I'}
+    def _reset_mensural_duration(self):
+        self.mensural_figure = None
+        self.mensural_perfection = ''
+        self.mensural_coloured = ''
+        self.mensural_dots = ''
+        self.mensural_alterations = []
 
-    def enterNote(self, ctx: kernMensSpineParser.NoteContext):
-        after_mensural_duration = False
-        for child in ctx.getChildren():
-            if isinstance(child, kernMensSpineParser.DurationContext):
-                after_mensural_duration = child.mensuralDuration() is not None
-            elif isinstance(child, kernMensSpineParser.DiatonicPitchAndOctaveContext):
-                break
-            elif after_mensural_duration and isinstance(child, kernMensSpineParser.NoteDecorationContext) \
-                    and child.getText() in self.MISPLACED_PERFECTION:
-                raise ValueError(
-                    f"'{ctx.getText()}': the perfection mark '{child.getText()}' must follow the mensural "
-                    f"figure, before the coloration and the dot (e.g. 'si~d', not 's~id')")
+    def enterMensNote(self, ctx: kernMensSpineParser.MensNoteContext):
+        self._reset_mensural_duration()
 
-    def exitNote(self, ctx: kernMensSpineParser.NoteContext):
-        # The combined grammar takes ligature, tie, slur, phrase and stem marks as a PREFIX of the note
-        # (`<S~a`, `[sB`), outside noteDecoration; keep them as decorations, as **kern keeps its own.
-        prefixes = (
-            kernMensSpineParser.LigatureTieStartContext,
-            kernMensSpineParser.SlurStartContext,
-            kernMensSpineParser.SlurEndContext,
-            kernMensSpineParser.PhraseContext,
-            kernMensSpineParser.StemContext,
-        )
-        for child in ctx.getChildren():
-            if isinstance(child, prefixes):
-                self._add_decoration(Subtoken(child.getText(), TokenCategory.DECORATION))
-        super().exitNote(ctx)
+    def enterMensRest(self, ctx: kernMensSpineParser.MensRestContext):
+        self._reset_mensural_duration()
+
+    def exitMensuralFigure(self, ctx: kernMensSpineParser.MensuralFigureContext):
+        self.mensural_figure = ctx.getText()
+
+    def exitMensuralPerfection(self, ctx: kernMensSpineParser.MensuralPerfectionContext):
+        self.mensural_perfection += ctx.getText()
+
+    def exitColoured(self, ctx: kernMensSpineParser.ColouredContext):
+        self.mensural_coloured = '~'
+
+    def exitMensuralDot(self, ctx: kernMensSpineParser.MensuralDotContext):
+        self.mensural_dots += ctx.getText()
+
+    def _mensural_duration_subtokens(self):
+        if self.mensural_figure is None:
+            return []
+        encoding = self.mensural_figure + self.mensural_perfection + self.mensural_coloured + self.mensural_dots
+        return [Subtoken(encoding, TokenCategory.DURATION)]
+
+    def exitMensAlteration(self, ctx: kernMensSpineParser.MensAlterationContext):
+        self.mensural_alterations.append(Subtoken(ctx.getText(), TokenCategory.ALTERATION))
+
+    def exitMensNoteDecoration(self, ctx: kernMensSpineParser.MensNoteDecorationContext):
+        self._add_decoration(Subtoken(ctx.getText(), TokenCategory.DECORATION))
+
+    def exitMensNoteSignifierAfterFigure(self, ctx: kernMensSpineParser.MensNoteSignifierAfterFigureContext):
+        # Beams and the editorial mark are not mensNoteDecorations: after the figure `L` is a beam (`UaL`)
+        # and `X` an editorial mark (`MbX#`); before it they are the longa and the maxima.
+        if ctx.beam() is not None or ctx.editorialIntervention() is not None:
+            self._add_decoration(Subtoken(ctx.getText(), TokenCategory.DECORATION))
+
+    def exitMensNote(self, ctx: kernMensSpineParser.MensNoteContext):
+        subtokens = self._mensural_duration_subtokens()
+        subtokens.append(self.diatonic_pitch_and_octave_subtoken)
+        subtokens.extend(self.mensural_alterations)
+        self.addNoteRest(ctx, subtokens)
+
+    def exitMensRest(self, ctx: kernMensSpineParser.MensRestContext):
+        subtokens = self._mensural_duration_subtokens()
+        subtokens.append(Subtoken('r', TokenCategory.REST))
+        self.addNoteRest(ctx, subtokens)
+
+    def enterMensChord(self, ctx: kernMensSpineParser.MensChordContext):
+        self.enterChord(ctx)
+
+    def exitMensChord(self, ctx: kernMensSpineParser.MensChordContext):
+        self.exitChord(ctx)
 
     def exitCustos(self, ctx: kernMensSpineParser.CustosContext):
         self.token = SimpleToken(ctx.getText(), TokenCategory.ENGRAVED_SYMBOLS)
@@ -96,16 +115,7 @@ class MensSpineImporter(SpineImporter):
         self._raise_error_if_wrong_input(encoding)
         self.error_listener.errors = []
 
-        lexer = kernMensSpineLexer(InputStream(encoding))
-        lexer.removeErrorListeners()
-        lexer.addErrorListener(self.error_listener)
-        stream = CommonTokenStream(lexer)
-        parser = kernMensSpineParser(stream)
-        parser._interp.predictionMode = PredictionMode.SLL  # it improves a lot the parsing
-        parser.removeErrorListeners()
-        parser.addErrorListener(self.error_listener)
-        parser.errHandler = BailErrorStrategy()
-        tree = parser.start()
+        tree = self._parse(encoding, kernMensSpineLexer, kernMensSpineParser, 'startMens')
         listener = MensSpineListener()
         ParseTreeWalker().walk(listener, tree)
         if self.error_listener.getNumberErrorsFound() > 0:

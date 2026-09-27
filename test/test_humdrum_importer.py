@@ -420,28 +420,32 @@ class ImporterTestCase(unittest.TestCase):
         expected_ekern = "**ekern\n4@c\n4@d\n4@e\n4@f\n*-\n"
         self.assertEqual(expected_ekern, output_kern)
 
+    # The malformed cells below are chosen to stay malformed: `c4` used to be one, but Humdrum does not fix
+    # the order of a token's signifiers and `c4` is `4c`; `cleF4` now reads as a chord (the grammar allows
+    # chord notes without the space between them, for OMR output). `§` is no **kern character at all, and
+    # a duration without a pitch or a rest (`4`) is no note.
     def testLexicalError(self):
-        input_kern = "**kern\ncleF4\n4c\n4d\n4e\n4f\n*-"
+        input_kern = "**kern\n4c§\n4c\n4d\n4e\n4f\n*-"
         importer = kp.Importer()
         importer.import_string(input_kern)
         self.assertEqual(1, len(importer.errors))
 
     def testParserError_only_the_last(self):
-        input_kern = "**kern\n*clefF4\n4d\n4e\n4f\nc4\n*-"
+        input_kern = "**kern\n*clefF4\n4d\n4e\n4f\n4\n*-"
         importer = kp.Importer()
         importer.import_string(input_kern)
         self.assertEqual(1, len(importer.errors))
 
 
     def testParserError_only_the_first_ensure_one_error_is_not_being_propagated(self):
-        input_kern = "**kern\n*clefF4\nc4\n4d\n4e\n4f\n*-"
+        input_kern = "**kern\n*clefF4\n4\n4d\n4e\n4f\n*-"
         importer = kp.Importer()
         importer.import_string(input_kern)
         self.assertNotEqual(4, len(importer.errors))
         self.assertEqual(1, len(importer.errors))
 
     def testLexicalParserError(self):
-        input_kern = "**kern\ncleF4\nc4\n4d\n4e\n4f\n*-"
+        input_kern = "**kern\n4c§\n4\n4d\n4e\n4f\n*-"
         importer = kp.Importer()
         importer.import_string(input_kern)
         self.assertEqual(2, len(importer.errors))

@@ -2,6 +2,11 @@
 This grammar is used in mOOsicae and kernpy. It must be kept synchronised
 Changes (please, add here the authors and date of each change):
 23th july 2024. David Rizo. **kern and **mens integrated
+27th september 2026. David Rizo. Signifiers in any order inside a note or rest, as Humdrum allows
+    (`a4`, `4a`, `r2`, `cc#8`, `s~id`, `si~d`, `sa:`); separate entry rules for **kern (`start`) and
+    **mens (`startMens`), because the same letter means different things in each (`L` beam / longa,
+    `S` turn / breve, `M` `m` mordent / minim, semiminim, `X` editorial / maxima, `p` appoggiatura /
+    perfect, `i` user-assignable / imperfect, `u` down-bow / semifusa)
 
 @author: David Rizo (drizo@dlsi.ua.es) February, 2024.
 It parses just a token inside **kern or **mens spine
@@ -11,11 +16,41 @@ parser grammar kernMensSpineParser;
 // https://github.com/antlr/antlr4/blob/master/doc/tool-options.md
 options { tokenVocab=kernMensSpineLexer;} // use tokens from kernMensSpineLexer.g4
 
-start: field;
+// A spine cell. The spine type decides which entry rule reads it, exactly as Humdrum does: the
+// signifiers of a data token are order-free, and several letters mean different things in **kern and
+// in **mens, so no single note rule can read both without guessing.
+start: field;          // **kern (and the modern spines that share its syntax)
+startMens: fieldMens;  // **mens
 
 field
     :
     notes_rests_chords
+    |
+    structural
+    |
+    contextual
+    |
+    barline
+    |
+    custos
+    |
+    signumCongruentiae
+    |
+    empty
+    |
+    visualTandemInterpretation
+    |
+    nonVisualTandemInterpretation
+    |
+    boundingBox
+    |
+    layout
+    ;
+
+// `field` for a **mens spine: the same records, with the mensural notes, rests and chords.
+fieldMens
+    :
+    mensNotes_rests_chords
     |
     structural
     |
@@ -47,7 +82,10 @@ pageBreak: PB;
 
 
 
-notes_rests_chords: note | rest | chord | multirest;
+// `multirest` before `rest`: `rr4` is a multi-measure rest, never the rest `rr` with a pitch-first duration.
+notes_rests_chords: note | multirest | rest | chord;
+
+mensNotes_rests_chords: mensNote | multirest | mensRest | mensChord;
 
 structural: staff;
 // those that must be maintained if the file is divided into segments
@@ -68,8 +106,14 @@ otherContextual: octaveShift
 empty: nullInterpretation | placeHolder;
 
 
-rest: restDecoration* duration? restChar_r // duration not used in some grace notes (rests)
-    restDecoration*;
+// Humdrum does not fix the order of the signifiers in a token (humlib reads every one of them wherever
+// it is in the token), so the duration may come before or after the `r`: `4r`, `r4`. At most one.
+// The duration is optional: not used in some grace notes (rests).
+rest:
+    restDecoration* duration restDecoration* restChar_r restDecoration*
+    |
+    restDecoration* restChar_r (restDecoration* duration)? restDecoration*
+    ;
 
 restChar_r: CHAR_r CHAR_r?;
 
@@ -77,6 +121,8 @@ restDecoration: (slurStart | graceNote | staffChange | restPosition | fermata | 
     staccato | // staccato found in a rest in beethoven/quartets/quartet14-5.krn
     phrase |
     augmentationDot |
+    breath |
+    userAssignable |
     stem // even it does not make sense, it has appeared sometimes, we'l discard it in the code
     CHAR_j);
 
@@ -89,23 +135,48 @@ multirest: (CHAR_r) (CHAR_r) number;
 //2.D	8r 8r	8r 8r	2.dd
 chord: (note | rest) (chordSpace (note | rest))+;
 
+mensChord: (mensNote | mensRest) (chordSpace (mensNote | mensRest))+;
 
-// The correct orderEntities of notes is: beforeNote duration name staffChange afterNote, however, if changes in some encodings - as it does not work, we use noteDecorations? for any decoration in any position
+
+// Humdrum does not fix the order of the signifiers in a **kern token: humlib reads the duration, the
+// pitch, the accidental and every decoration wherever they are (Convert::kernToRecip, kernToBase40,
+// kernToAccidentalCount scan the whole token), so `4a`, `a4`, `cc#8`, `#8cc` and `(4c` / `4c(` are all
+// the same kind of note. The two alternatives say "exactly one pitch, at most one duration, anything
+// else anywhere": the duration before the pitch, or after it, or absent: grace notes (`cq`) and, in
+// real data, the second and later notes of a chord (`(16aaLL ff`) leave it out.
 note:
-    //TODO Julio 2024 - quitado para que Lg no sea un inicio de ligadura, y sí una longa - noteDecoration* // TODO Regla semantica (boolean) para que no se repitan
-    // Humdrum places slur/phrase marks at the START of the token, e.g. "(8b-L", and it does not fix
-    // their order relative to a tie start or a stem: KernScores' own Mozart sonatas write "([4cc"
-    // (slur then tie) and "(\4g 4cc" (slur then stem). Requiring the tie FIRST rejected 8 real tokens
-    // in K. 332 alone — dropped notes, silently.
-    (ligatureTieStart | slurStart | slurEnd | phrase | stem)*
-    duration? // grace notes can be specified without durations
-    noteDecoration*
-    diatonicPitchAndOctave
-    noteDecoration*
-    alteration?
-    //name
-    noteDecoration*;
-    // TODO in aferNote staffChange? // it must be placed immediately after the name+accidental tokens. This is because they also can modify the beam, as well as articulation, slur and tie positions
+    (noteDecoration | alteration)* duration (noteDecoration | alteration)* diatonicPitchAndOctave (noteDecoration | alteration)*
+    |
+    (noteDecoration | alteration)* diatonicPitchAndOctave ((noteDecoration | alteration)* duration)? (noteDecoration | alteration)*
+    ;
+
+// A **mens note, order-free like a **kern one (humlib's Convert::mensToDuration and Verovio's
+// convertMensuralToken find each signifier anywhere in the token): `Sa`, `aS`, `si~d`, `s~id`, `sa:`,
+// `Sa~` (Sapp's own mens writers put the coloration last). The figure opens `mensuralDuration`, which
+// also takes the perfection, coloration and dot written right after it; written elsewhere in the
+// token they are `mensuralQualifier`s of the note, with the same meaning.
+// Beams: the FIRST figure letter is the figure, as in humlib (Convert::mensToDuration takes the first
+// [XLSsMmUu]), so an `L` or `J` after it is a beam (`UaL`, `UdLJ`, as MuRET and mei2hum write them),
+// and before it `L` can only be the longa; likewise `X` (see mensNoteSignifierAfterFigure).
+mensNote:
+    mensNoteSignifier* mensuralDuration mensNoteSignifierAfterFigure* diatonicPitchAndOctave mensNoteSignifierAfterFigure*
+    |
+    mensNoteSignifier* diatonicPitchAndOctave
+        (mensNoteSignifier* mensuralDuration mensNoteSignifierAfterFigure* | mensNoteSignifier*)
+    ;
+
+mensNoteSignifier: mensuralQualifier | mensAlteration | mensNoteDecoration;
+
+// `X` is the maxima before the figure; after it, the editorial/cautionary mark MuRET writes (`MbX#`).
+mensNoteSignifierAfterFigure: mensNoteSignifier | beam | editorialIntervention;
+
+mensRest:
+    mensRestSignifier* mensuralDuration mensRestSignifier* restChar_r mensRestSignifier*
+    |
+    mensRestSignifier* restChar_r (mensRestSignifier* mensuralDuration)? mensRestSignifier*
+    ;
+
+mensRestSignifier: mensuralQualifier | restDecoration;
 
 
 // those ones that are not engraved
@@ -340,18 +411,19 @@ custos: TANDEM_CUSTOS diatonicPitchAndOctave alteration?;
 restPosition: diatonicPitchAndOctave | restLinePosition; // diatonicPitchAndOctave is the original way to do it, restLinePosition is the MuRET way. TODO Correct it!!
 restLinePosition: UNDERSCORE number;
 
-duration: mensuralDuration | modernDuration;
-modernDuration: modernFigure augmentationDot* (graceNote | appoggiatura)?; // sometimes we've found a grace note between the duration and the name
-modernFigure: number (PERCENT number)?; //TODO 40%3...
+duration: modernDuration augmentationDot* (graceNote | appoggiatura)?; // sometimes we've found a grace note between the duration and the name
+modernDuration: number (PERCENT number)?; //TODO 40%3...
 augmentationDot: DOT;
 fermata: SEMICOLON; // pause
 
-mensuralDuration: mensuralFigure mensuralPerfection? coloured? mensuralDot;
-mensuralDot: (augmentationDot | divisionDot)?; //TODO Modelar los puntillos que van solos
+// The figure and what qualifies it, in any order after it: `si~d`, `s~id`, `Mp:~`.
+mensuralDuration: mensuralFigure mensuralQualifier*;
+mensuralQualifier: mensuralPerfection | coloured | mensuralDot;
+mensuralDot: augmentationDot | divisionDot; //TODO Modelar los puntillos que van solos
 coloured: TILDE;
 mensuralFigure: CHAR_X | CHAR_L | CHAR_S | CHAR_s | CHAR_M | CHAR_m | CHAR_U | CHAR_u;
-// p=perfect, i=imperfect, I=imperfect by alteratio
-mensuralPerfection: CHAR_p | CHAR_i | CHAR_I;
+// p=perfect, i=imperfect, I=imperfect by alteratio, +=altera (Sapp's **mens)
+mensuralPerfection: CHAR_p | CHAR_i | CHAR_I | PLUS;
 divisionDot: COLON;
 
 
@@ -370,6 +442,23 @@ divisionDot: COLON;
 // e.g. 4e#j -> this is for accidental in brackets
 alteration: accidental alterationDisplay?;
 
+
+// A **mens accidental. Its display marks leave out `i`/`I` (imperfect, and imperfect by alteration),
+// which are read as such wherever they are in a **mens token. `X` right after the accidental is the
+// cautionary mark, as Sapp's mei2hum writes it; so a pitch-first maxima after an accidental (`b#X`)
+// must be written figure-first (`Xb#`).
+mensAlteration: accidental mensAlterationDisplay?;
+
+mensAlterationDisplay:
+        CHAR_x
+        |
+        CHAR_X
+        |
+        CHAR_j
+        |
+        CHAR_Z
+        |
+        (CHAR_y CHAR_y?) | (CHAR_Y CHAR_Y?);
 
 staffChange: ANGLE_BRACKET_OPEN | ANGLE_BRACKET_CLOSE;
 
@@ -396,10 +485,12 @@ appoggiaturaMode: CHAR_p | CHAR_P;
 ligatureTie:
     (ligatureTieStart | ligatureTieEnd | tieContinue) staffChange?;
 
+// The **kern decorations. The **mens ones are `mensNoteDecoration`: `M`, `m`, `S`, `X`, `L`, `p` and
+// `i` are durations or perfection marks there.
 noteDecoration:
     accent 
     | appoggiatura
-    //| articulation TODO ponerlo de nuevo con opción modern - ahora colisiona con la duración mensural
+    | articulation 
     | barLineCrossedNoteStart
     | barLineCrossedNoteEnd
     | beam
@@ -409,14 +500,14 @@ noteDecoration:
     | glissando   
     | graceNote
     | ligatureTie
-    //| mordent TODO ponerlo de nuevo con opción modern - ahora colisiona con la duración mensural
+    | mordent
     | augmentationDot // sometimes found TODO Verlo con la duración
     | phrase
     | slurStart
     | slurEnd  
     | staffChange 
     | stem
-    //| turn TODO ponerlo de nuevo con opción modern - ahora colisiona con la duración mensural
+    | turn
     | trill
     | userAssignable
     | CHAR_N // sometimes found - user assignable?
@@ -427,6 +518,55 @@ noteDecoration:
     | CHAR_l // sometimes found - ???
     | CHAR_V // sometimes found - ???
     | noteDecorationCharX // TODO?
+    | bowing
+    | sforzando
+    | breath
+    | harmonic
+    | glissandoMark
+    | unpitched
+    | groupetto
+    ;
+
+bowing: CHAR_u | CHAR_v; // down-bow, up-bow
+
+sforzando: CHAR_z;
+
+breath: COMMA;
+
+harmonic: CHAR_o;
+
+glissandoMark: CHAR_H | CHAR_h; // begin, end
+
+unpitched: CHAR_R;
+
+groupetto: CHAR_Q;
+
+// The decorations a **mens note may carry. Not here, because in **mens they are something else: the
+// figures (`X`, `L`, `S`, `s`, `M`, `m`, `U`, `u`), the perfection marks (`p`, `i`, `I`), and the
+// coloration and dots, which are `mensuralQualifier`s (so no glissando: `:` is the division dot).
+// Beams are not here: `L` is the longa before the figure and a beam after it, see `mensNote` (`k`/`K`
+// are plicas in Sapp's **mens, not read yet). No articulations or ornaments.
+mensNoteDecoration:
+    accent
+    | barLineCrossedNoteStart
+    | barLineCrossedNoteEnd
+    | fermata
+    | footnote
+    | graceNote
+    | ligatureTie
+    | phrase
+    | slurStart
+    | slurEnd
+    | staffChange
+    | stem
+    | trill
+    | CHAR_N
+    | CHAR_j
+    | CHAR_Z
+    | CHAR_O
+    | CHAR_l
+    | CHAR_V
+    | noteDecorationCharX
     ;
 
 noteDecorationCharX: CHAR_x CHAR_x?; // sometimes found - ???
@@ -470,7 +610,9 @@ turn: CHAR_S // regular turn
     DOLLAR // wagnerian turn
     ;
 
-userAssignable: CHAR_i;
+// Humdrum leaves these to the user (defined per file with !!!RDF**kern): i, @, +, |. (j, l, N, V and Z
+// are alternatives of noteDecoration; < and > are staff changes; % is the rational duration.)
+userAssignable: CHAR_i | AT | PLUS | PIPE;
 
 glissando: COLON;
 

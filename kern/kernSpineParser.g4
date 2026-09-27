@@ -1,6 +1,8 @@
 /*
 This grammar is used in mOOsicae and kernpy. It must be kept synchronised
 Changes (please, add here the authors and date of each change):
+27th september 2026. David Rizo. Signifiers in any order inside a note or rest, as Humdrum allows
+    (`a4`, `4a`, `r2`, `cc#8`), same rules as mOOsicae's combined grammar.
 
 @author: David Rizo (drizo@dlsi.ua.es) Feb, 2024.
 It parses just a token inside a **kern spine
@@ -51,8 +53,14 @@ otherContextual: octaveShift
 empty: nullInterpretation | placeHolder;
 
 
-rest: restDecoration* duration? restChar_r // duration not used in some grace notes (rests)
-    restDecoration*;
+// Humdrum does not fix the order of the signifiers in a token (humlib reads every one of them wherever
+// it is in the token), so the duration may come before or after the `r`: `4r`, `r4`. At most one.
+// The duration is optional: not used in some grace notes (rests).
+rest:
+    restDecoration* duration restDecoration* restChar_r restDecoration*
+    |
+    restDecoration* restChar_r (restDecoration* duration)? restDecoration*
+    ;
 
 restChar_r: CHAR_r CHAR_r?;
 
@@ -60,6 +68,8 @@ restDecoration: (slurStart | graceNote | staffChange | restPosition | fermata | 
     staccato | // staccato found in a rest in beethoven/quartets/quartet14-5.krn
     phrase |
     augmentationDot |
+    breath |
+    userAssignable |
     stem // even it does not make sense, it has appeared sometimes, we'l discard it in the code
     CHAR_j);
 
@@ -70,17 +80,17 @@ restDecoration: (slurStart | graceNote | staffChange | restPosition | fermata | 
 chord: (note | rest) (chordSpace (note | rest))+;
 
 
-// The correct orderEntities of notes is: beforeNote duration name staffChange afterNote, however, if changes in some encodings - as it does not work, we use noteDecorations? for any decoration in any position
+// Humdrum does not fix the order of the signifiers in a **kern token: humlib reads the duration, the
+// pitch, the accidental and every decoration wherever they are (Convert::kernToRecip, kernToBase40,
+// kernToAccidentalCount scan the whole token), so `4a`, `a4`, `cc#8`, `#8cc` and `(4c` / `4c(` are all
+// the same kind of note. The two alternatives say "exactly one pitch, at most one duration, anything
+// else anywhere": the duration before the pitch, or after it, or absent: grace notes (`cq`) and, in
+// real data, the second and later notes of a chord (`(16aaLL ff`) leave it out.
 note:
-    noteDecoration* // TODO Regla semantica (boolean) para que no se repitan
-    duration? // grace notes can be specified without durations
-    noteDecoration*
-    diatonicPitchAndOctave
-    noteDecoration*
-    alteration?
-    //name
-    noteDecoration*;
-    // TODO in aferNote staffChange? // it must be placed immediately after the name+accidental tokens. This is because they also can modify the beam, as well as articulation, slur and tie positions
+    (noteDecoration | alteration)* duration (noteDecoration | alteration)* diatonicPitchAndOctave (noteDecoration | alteration)*
+    |
+    (noteDecoration | alteration)* diatonicPitchAndOctave ((noteDecoration | alteration)* duration)? (noteDecoration | alteration)*
+    ;
 
 
 // those ones that are not engraved
@@ -389,7 +399,28 @@ noteDecoration:
     | CHAR_l // sometimes found - ???
     | CHAR_V // sometimes found - ???
     | noteDecorationCharX // TODO?
+    | bowing
+    | sforzando
+    | breath
+    | harmonic
+    | glissandoMark
+    | unpitched
+    | groupetto
     ;
+
+bowing: CHAR_u | CHAR_v; // down-bow, up-bow
+
+sforzando: CHAR_z;
+
+breath: COMMA;
+
+harmonic: CHAR_o;
+
+glissandoMark: CHAR_H | CHAR_h; // begin, end
+
+unpitched: CHAR_R;
+
+groupetto: CHAR_Q;
 
 noteDecorationCharX: CHAR_x CHAR_x?; // sometimes found - ???
 
@@ -432,7 +463,9 @@ turn: CHAR_S // regular turn
     DOLLAR // wagnerian turn
     ;
 
-userAssignable: CHAR_i;
+// Humdrum leaves these to the user (defined per file with !!!RDF**kern): i, @, +, |. (j, l, N, V and Z
+// are alternatives of noteDecoration; < and > are staff changes; % is the rational duration.)
+userAssignable: CHAR_i | AT | PLUS | PIPE;
 
 glissando: COLON;
 

@@ -7,10 +7,10 @@ it (`kernpy/core/mens_spine_importer.py`), so kernpy and mOOsicae read `**mens` 
 
 - **Never edit these two files here.** Change them in mOOsicae, copy them back, run `./antlr4.sh`
   and commit the regenerated `kernpy/core/generated/kernMensSpine*`.
-- Why two grammars and not one: in the combined grammar the mensural figures (`M`, `m`, `S`...)
-  collide with `**kern` articulations and ornaments, which mOOsicae strips before the parse. The
-  `**kern` grammar is shared too, rule by rule, with its differences declared in mOOsicae's
-  `antlr/humdrum/kern-grammar-agreement.json`.
+- `**mens` cells are read from the entry rule `startMens`: the spine type decides what a letter means
+  (`L`, `S`, `M`, `m`, `X`, `u`, `p`, `i` are mensural figures and perfection marks there), as in
+  humlib. Signifiers may come in any order inside a cell, as Humdrum allows (`s~id` is `si~d`).
+- Why kernpy keeps `kernSpine*.g4` for `**kern`: it is the same `**kern` grammar, shared with mOOsicae
+  rule by rule, with its differences declared in mOOsicae's `antlr/humdrum/kern-grammar-agreement.json`.
 - **Dialects stay out.** The public SEILS dataset writes a bare `*custos` (the grammar wants its
-  pitch, `*custosG`), puts the coloration after a division dot (`Mp:~`) and has a stray `ui6G`.
-  Readers of such sources normalise them before parsing; the shared grammar reads the standard.
+  pitch, `*custosG`) and has a stray `ui6G`. Its signifier orders (`s~id`, `Mp:~`) are valid and read.

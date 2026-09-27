@@ -20,12 +20,14 @@ import kernpy as kp
 
 MENS_DIR = Path('test/resources/mens')
 APEL = sorted((MENS_DIR / 'apel').glob('*.krn'))
+REFERENCE = sorted((MENS_DIR / 'reference').glob('*.mens'))
 SEILS_CLEAN = MENS_DIR / 'seils' / 'perue_seitu_choral.mns'
 SEILS_DIALECT = MENS_DIR / 'seils' / 'belli_amorcon_C.mns'
 
-# What the shared grammar rejects in SEILS, and SEILS only: a bare custos, and the perfection mark
-# written after the coloration (`s~id`), or the coloration after the dot (`Mp:~ee]`).
-SEILS_DIALECT_PREFIXES = ('*custos', 's~i', 's~p', 'S~i', 'M~i', 'M~p', 'm~i', 'Mp:~', 'ui6', 'Uii')
+# What the shared grammar rejects in SEILS, and SEILS only: a bare custos (the grammar wants its pitch,
+# `*custosG`) and a stray `ui6G`. The orders SEILS writes (`s~id`, `Mp:~ee]`) are valid **mens: Humdrum
+# does not fix the order of a token's signifiers.
+SEILS_DIALECT_PREFIXES = ('*custos', 'ui6')
 
 
 def mens_note_cells(text: str):
@@ -80,27 +82,46 @@ class MensRoundTripTest(RoundTripCase):
             with self.subTest(path=path.name):
                 self.assert_round_trip(path)
 
+    def test_reference_set(self):
+        # Sapp's **mens syntax, signifiers in several orders (see SOURCES.md)
+        self.assertEqual(3, len(REFERENCE))
+        for path in REFERENCE:
+            with self.subTest(path=path.name):
+                self.assert_round_trip(path)
+
     def test_seils_choral_score(self):
         self.assert_round_trip(SEILS_CLEAN)
 
     def test_seils_dialect_is_reported_and_kept_verbatim(self):
         errors = self.assert_round_trip(SEILS_DIALECT, expect_errors=True)
-        # 5 bare custodes + 4 perfection marks after the coloration
-        self.assertEqual(9, len(errors))
+        # the 5 bare custodes; the perfection marks after the coloration (`s~id`) are read
+        self.assertEqual(5, len(errors))
         document, _ = kp.load(SEILS_DIALECT)
-        exported = kp.dumps(document)
+        exported = kp.dumps(document).split()
         for line in SEILS_DIALECT.read_text(encoding='utf-8').splitlines():
             for cell in line.split('\t'):
-                if cell.startswith('s~i') or cell == '*custos':
-                    self.assertIn(cell, exported.split())
+                if cell == '*custos':
+                    self.assertIn(cell, exported)
+                if cell.startswith('s~i'):
+                    self.assertIn('si~' + cell[3:], exported)
 
-    def test_a_perfection_mark_after_the_coloration_is_an_error_not_a_decoration(self):
-        # Parsed as it stands, `s~id` would read `i` as a user-assignable mark and lose the imperfection
-        _, errors = kp.loads('**mens\n*met(O)\ns~id\n*-\n')
-        self.assertEqual(1, len(errors))
-        self.assertIn("perfection mark 'i'", errors[0])
-        document, errors = kp.loads('**mens\n*met(O)\nsi~d\n*-\n', raise_on_errors=True)
-        self.assertIn('si~d', kp.dumps(document).splitlines())
+    def test_a_perfection_mark_after_the_coloration_is_the_perfection_mark(self):
+        # Humdrum does not fix the order of a token's signifiers: `s~id` is `si~d`, and the `i` is the
+        # imperfection, never a user-assignable decoration (it once was, and the imperfection was lost).
+        for token in ('s~id', 'si~d', 'd~is', 'sd~i'):
+            with self.subTest(token=token):
+                document, errors = kp.loads(f'**mens\n*met(O)\n{token}\n*-\n', raise_on_errors=True)
+                self.assertIn('si~d', kp.dumps(document).splitlines())
+
+    def test_the_spine_type_decides_what_a_letter_means(self):
+        # `L` is a beam in **kern and the longa in **mens (before the figure; after it, a beam: `UaL`)
+        kern, _ = kp.loads('**kern\nL8c\n*-\n', raise_on_errors=True)
+        self.assertIn('8cL', kp.dumps(kern).splitlines())
+        mens, _ = kp.loads('**mens\naL\nUaL\n*-\n', raise_on_errors=True)
+        self.assertEqual(['La', 'UaL'], kp.dumps(mens).splitlines()[1:3])
+        # `p` is perfect in **mens, never an appoggiatura; `+` is altera
+        mens, _ = kp.loads('**mens\ns~pa\nSd+\n*-\n', raise_on_errors=True)
+        self.assertEqual(['sp~a', 'S+d'], kp.dumps(mens).splitlines()[1:3])
 
     def test_hidden_barlines_are_not_exported_but_still_count_measures(self):
         document, _ = kp.load(SEILS_CLEAN)

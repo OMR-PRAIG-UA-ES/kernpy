@@ -124,8 +124,9 @@ class BaseANTLRSpineParserListener(kernSpineParserListener):
         for duration_subtoken in self.duration_subtokens:
             pitch_duration_tokens.append(duration_subtoken)
         pitch_duration_tokens.append(self.diatonic_pitch_and_octave_subtoken)
-        if ctx.alteration():
-            pitch_duration_tokens.append(Subtoken(ctx.alteration().getText(), TokenCategory.ALTERATION))
+        # Humdrum does not fix where the accidental goes (`4c#`, `#4c`), so the rule may hold it anywhere.
+        for alteration in ctx.alteration():
+            pitch_duration_tokens.append(Subtoken(alteration.getText(), TokenCategory.ALTERATION))
 
         self.addNoteRest(ctx, pitch_duration_tokens)
 

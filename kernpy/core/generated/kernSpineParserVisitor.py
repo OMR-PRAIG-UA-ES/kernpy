@@ -519,6 +519,41 @@ class kernSpineParserVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by kernSpineParser#bowing.
+    def visitBowing(self, ctx:kernSpineParser.BowingContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernSpineParser#sforzando.
+    def visitSforzando(self, ctx:kernSpineParser.SforzandoContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernSpineParser#breath.
+    def visitBreath(self, ctx:kernSpineParser.BreathContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernSpineParser#harmonic.
+    def visitHarmonic(self, ctx:kernSpineParser.HarmonicContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernSpineParser#glissandoMark.
+    def visitGlissandoMark(self, ctx:kernSpineParser.GlissandoMarkContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernSpineParser#unpitched.
+    def visitUnpitched(self, ctx:kernSpineParser.UnpitchedContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernSpineParser#groupetto.
+    def visitGroupetto(self, ctx:kernSpineParser.GroupettoContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by kernSpineParser#noteDecorationCharX.
     def visitNoteDecorationCharX(self, ctx:kernSpineParser.NoteDecorationCharXContext):
         return self.visitChildren(ctx)

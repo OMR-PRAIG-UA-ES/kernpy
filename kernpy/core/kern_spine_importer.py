@@ -54,18 +54,7 @@ class KernSpineImporter(SpineImporter):
         self._raise_error_if_wrong_input(encoding)
         self.error_listener.errors = []
 
-        # self.listenerImporter = KernListenerImporter(token) # TODO ¿Por qué no va esto?
-        # self.listenerImporter.start()
-        lexer = kernSpineLexer(InputStream(encoding))
-        lexer.removeErrorListeners()
-        lexer.addErrorListener(self.error_listener)
-        stream = CommonTokenStream(lexer)
-        parser = kernSpineParser(stream)
-        parser._interp.predictionMode = PredictionMode.SLL  # it improves a lot the parsing
-        parser.removeErrorListeners()
-        parser.addErrorListener(self.error_listener)
-        parser.errHandler = BailErrorStrategy()
-        tree = parser.start()
+        tree = self._parse(encoding, kernSpineLexer, kernSpineParser, 'start')
         walker = ParseTreeWalker()
         listener = KernSpineListener()
         walker.walk(listener, tree)

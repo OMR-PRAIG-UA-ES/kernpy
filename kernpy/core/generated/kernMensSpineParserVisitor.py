@@ -14,8 +14,18 @@ class kernMensSpineParserVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by kernMensSpineParser#startMens.
+    def visitStartMens(self, ctx:kernMensSpineParser.StartMensContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by kernMensSpineParser#field.
     def visitField(self, ctx:kernMensSpineParser.FieldContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernMensSpineParser#fieldMens.
+    def visitFieldMens(self, ctx:kernMensSpineParser.FieldMensContext):
         return self.visitChildren(ctx)
 
 
@@ -36,6 +46,11 @@ class kernMensSpineParserVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by kernMensSpineParser#notes_rests_chords.
     def visitNotes_rests_chords(self, ctx:kernMensSpineParser.Notes_rests_chordsContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernMensSpineParser#mensNotes_rests_chords.
+    def visitMensNotes_rests_chords(self, ctx:kernMensSpineParser.MensNotes_rests_chordsContext):
         return self.visitChildren(ctx)
 
 
@@ -89,8 +104,38 @@ class kernMensSpineParserVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by kernMensSpineParser#mensChord.
+    def visitMensChord(self, ctx:kernMensSpineParser.MensChordContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by kernMensSpineParser#note.
     def visitNote(self, ctx:kernMensSpineParser.NoteContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernMensSpineParser#mensNote.
+    def visitMensNote(self, ctx:kernMensSpineParser.MensNoteContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernMensSpineParser#mensNoteSignifier.
+    def visitMensNoteSignifier(self, ctx:kernMensSpineParser.MensNoteSignifierContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernMensSpineParser#mensNoteSignifierAfterFigure.
+    def visitMensNoteSignifierAfterFigure(self, ctx:kernMensSpineParser.MensNoteSignifierAfterFigureContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernMensSpineParser#mensRest.
+    def visitMensRest(self, ctx:kernMensSpineParser.MensRestContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernMensSpineParser#mensRestSignifier.
+    def visitMensRestSignifier(self, ctx:kernMensSpineParser.MensRestSignifierContext):
         return self.visitChildren(ctx)
 
 
@@ -519,11 +564,6 @@ class kernMensSpineParserVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by kernMensSpineParser#modernFigure.
-    def visitModernFigure(self, ctx:kernMensSpineParser.ModernFigureContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by kernMensSpineParser#augmentationDot.
     def visitAugmentationDot(self, ctx:kernMensSpineParser.AugmentationDotContext):
         return self.visitChildren(ctx)
@@ -536,6 +576,11 @@ class kernMensSpineParserVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by kernMensSpineParser#mensuralDuration.
     def visitMensuralDuration(self, ctx:kernMensSpineParser.MensuralDurationContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernMensSpineParser#mensuralQualifier.
+    def visitMensuralQualifier(self, ctx:kernMensSpineParser.MensuralQualifierContext):
         return self.visitChildren(ctx)
 
 
@@ -566,6 +611,16 @@ class kernMensSpineParserVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by kernMensSpineParser#alteration.
     def visitAlteration(self, ctx:kernMensSpineParser.AlterationContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernMensSpineParser#mensAlteration.
+    def visitMensAlteration(self, ctx:kernMensSpineParser.MensAlterationContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernMensSpineParser#mensAlterationDisplay.
+    def visitMensAlterationDisplay(self, ctx:kernMensSpineParser.MensAlterationDisplayContext):
         return self.visitChildren(ctx)
 
 
@@ -601,6 +656,46 @@ class kernMensSpineParserVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by kernMensSpineParser#noteDecoration.
     def visitNoteDecoration(self, ctx:kernMensSpineParser.NoteDecorationContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernMensSpineParser#bowing.
+    def visitBowing(self, ctx:kernMensSpineParser.BowingContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernMensSpineParser#sforzando.
+    def visitSforzando(self, ctx:kernMensSpineParser.SforzandoContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernMensSpineParser#breath.
+    def visitBreath(self, ctx:kernMensSpineParser.BreathContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernMensSpineParser#harmonic.
+    def visitHarmonic(self, ctx:kernMensSpineParser.HarmonicContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernMensSpineParser#glissandoMark.
+    def visitGlissandoMark(self, ctx:kernMensSpineParser.GlissandoMarkContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernMensSpineParser#unpitched.
+    def visitUnpitched(self, ctx:kernMensSpineParser.UnpitchedContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernMensSpineParser#groupetto.
+    def visitGroupetto(self, ctx:kernMensSpineParser.GroupettoContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by kernMensSpineParser#mensNoteDecoration.
+    def visitMensNoteDecoration(self, ctx:kernMensSpineParser.MensNoteDecorationContext):
         return self.visitChildren(ctx)
 
 

@@ -5,13 +5,6 @@ from pathlib import Path
 import kernpy as kp
 
 
-# Known gap (pitch-first order, e.g. 'a4'): the **kern grammar shared with mOOsicae
-# (kern/kernSpineParser.g4) wants the duration before the pitch or rest, and
-# ImporterTestCase.testParserError_* pin 'c4' as a parse error. Accepting it is a change to the
-# shared grammar, to be decided and made in both libraries; expectedFailure makes these tests
-# fail loudly the day it lands.
-
-
 class KernSpineImporterTest(unittest.TestCase):
     """Used to test individual tokens"""
 
@@ -52,16 +45,21 @@ class KernSpineImporterTest(unittest.TestCase):
     def test_duration_pitch(self):
         self.do_test_token_exported("4a", "4@a")
 
-    @unittest.expectedFailure  # known gap: pitch-first order, see the top of this file
     def test_pitch_duration(self):
         self.do_test_token_exported("a4", "4@a")
 
     def test_duration_rest(self):
         self.do_test_token_exported("2r", "2@r")
 
-    @unittest.expectedFailure  # known gap: pitch-first order, see the top of this file
     def test_rest_duration(self):
         self.do_test_token_exported("r2", "2@r")
+
+    def test_signifiers_in_any_order(self):
+        # Humdrum does not fix the order of a token's signifiers (humlib reads each one anywhere).
+        self.do_test_token_exported("cc#8", "8@cc@#")
+        self.do_test_token_exported("#8cc", "8@cc@#")
+        self.do_test_token_exported("c4..", "4@.@.@c")
+        self.do_test_token_exported("L8c", "8@c·L")
 
     def test_open_slur_wrong_order(self):
         self.do_test_token_exported("4E#(", "4@E@#·(")

@@ -926,6 +926,69 @@ class kernSpineParserListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by kernSpineParser#bowing.
+    def enterBowing(self, ctx:kernSpineParser.BowingContext):
+        pass
+
+    # Exit a parse tree produced by kernSpineParser#bowing.
+    def exitBowing(self, ctx:kernSpineParser.BowingContext):
+        pass
+
+
+    # Enter a parse tree produced by kernSpineParser#sforzando.
+    def enterSforzando(self, ctx:kernSpineParser.SforzandoContext):
+        pass
+
+    # Exit a parse tree produced by kernSpineParser#sforzando.
+    def exitSforzando(self, ctx:kernSpineParser.SforzandoContext):
+        pass
+
+
+    # Enter a parse tree produced by kernSpineParser#breath.
+    def enterBreath(self, ctx:kernSpineParser.BreathContext):
+        pass
+
+    # Exit a parse tree produced by kernSpineParser#breath.
+    def exitBreath(self, ctx:kernSpineParser.BreathContext):
+        pass
+
+
+    # Enter a parse tree produced by kernSpineParser#harmonic.
+    def enterHarmonic(self, ctx:kernSpineParser.HarmonicContext):
+        pass
+
+    # Exit a parse tree produced by kernSpineParser#harmonic.
+    def exitHarmonic(self, ctx:kernSpineParser.HarmonicContext):
+        pass
+
+
+    # Enter a parse tree produced by kernSpineParser#glissandoMark.
+    def enterGlissandoMark(self, ctx:kernSpineParser.GlissandoMarkContext):
+        pass
+
+    # Exit a parse tree produced by kernSpineParser#glissandoMark.
+    def exitGlissandoMark(self, ctx:kernSpineParser.GlissandoMarkContext):
+        pass
+
+
+    # Enter a parse tree produced by kernSpineParser#unpitched.
+    def enterUnpitched(self, ctx:kernSpineParser.UnpitchedContext):
+        pass
+
+    # Exit a parse tree produced by kernSpineParser#unpitched.
+    def exitUnpitched(self, ctx:kernSpineParser.UnpitchedContext):
+        pass
+
+
+    # Enter a parse tree produced by kernSpineParser#groupetto.
+    def enterGroupetto(self, ctx:kernSpineParser.GroupettoContext):
+        pass
+
+    # Exit a parse tree produced by kernSpineParser#groupetto.
+    def exitGroupetto(self, ctx:kernSpineParser.GroupettoContext):
+        pass
+
+
     # Enter a parse tree produced by kernSpineParser#noteDecorationCharX.
     def enterNoteDecorationCharX(self, ctx:kernSpineParser.NoteDecorationCharXContext):
         pass
