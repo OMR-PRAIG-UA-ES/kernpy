@@ -17,24 +17,31 @@ print(kp.dumps(document))
 TypeScript library of the same ecosystem, **vendored verbatim** in `kern/kernMensSpine*.g4`. Both
 libraries therefore accept and reject the same `**mens` tokens. The grammar is never edited in
 kernpy: it is changed in mOOsicae and copied back (`kern/README-mens.md`). `**kern` spines keep
-their own grammar, `kern/kernSpine*.g4`, because in the combined one the mensural figures (`M`,
-`m`, `S`...) collide with `**kern` articulations and ornaments.
+their own grammar, `kern/kernSpine*.g4`, shared with mOOsicae rule by rule. The combined grammar reads a
+`**mens` cell from its own entry rule, `startMens`: the same letter means different things in the two
+representations (`L` beam / longa, `S` turn / breve, `m` mordent / semiminima, `X` editorial mark /
+maxima, `u` down-bow / semifusa, `p` appoggiatura / perfect), and, as in Craig Sapp's humlib, the spine
+type decides.
 
 ## What a mensural note looks like
 
-A note is its duration, then its pitch, then its marks:
+A note is a figure, a pitch and its marks, **in any order**: Humdrum does not fix the order of the
+signifiers inside a token (humlib and Verovio find each one anywhere in it), so `si~d`, `s~id` and
+`d~is` are the same note, and so are `Sa` and `aS`.
 
 | Part | Signifiers | Example |
 |---|---|---|
 | Figure | `X` maxima, `L` longa, `S` breve, `s` semibreve, `M` minima, `m` semiminima, `U` fusa, `u` semifusa | `Sc` |
-| Perfection | `p` perfect, `i` imperfect, `I` imperfect by alteration, **right after the figure** | `Sic` |
-| Coloration | `~`, after the perfection | `si~d` |
-| Dot | `.` augmentation, `:` division, last | `sp:a` |
-| Ligature | `<` starts, `>` ends | `<Sa`, `Sg>` |
+| Perfection | `p` perfect, `i` imperfect, `I` imperfect by alteration, `+` altera | `Sic`, `Sd+` |
+| Coloration | `~` | `si~d`, `sc~` |
+| Dot | `.` augmentation, `:` division | `sp:a`, `sa:` |
+| Ligature | `[` `]` recta, `<` `>` obliqua | `<Sa`, `Sg>` |
+| Beam | `L` and `J`, **after** the figure (before it, `L` is the longa) | `UaL` |
 | Rest | the figure and `r` | `sr` |
 
 kernpy keeps the whole mensural duration (figure, perfection, coloration and dot) as **one**
-duration subtoken, as written, so the export never reorders it.
+duration subtoken, written in a fixed order, figure, perfection, coloration, dot (`s~id` is exported
+`si~d`), so the export never splits it.
 
 Tandem interpretations include mensurations (`*met(O)`, `*met(C|)`, with the optional
 `*met(O)_2232` specification of maximodus, modus, tempus and prolatio), clefs, key signatures,
@@ -62,9 +69,7 @@ list returned by `kp.load`/`kp.loads` (or raised with `raise_on_errors=True`) an
 the document and in the export. SEILS, for instance, writes:
 
 - a bare `*custos`: the grammar wants its pitch, `*custosG`;
-- the perfection mark after the coloration, `s~id`: the grammar wants `si~d`. Read as it stands,
-  the `i` would become a note decoration and the note would lose its imperfection, so kernpy
-  reports it instead;
-- the coloration after the dot, `Mp:~`.
+- a stray `ui6G`.
 
-Readers of such sources normalise them before parsing if they want those cells as notes.
+Its orders (`s~id`, the coloration after the dot in `Mp:~`) are valid `**mens` and are read as
+written. Readers of such sources normalise the rest before parsing if they want those cells.
