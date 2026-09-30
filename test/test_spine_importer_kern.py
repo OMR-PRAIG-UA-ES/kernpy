@@ -42,6 +42,13 @@ class KernSpineImporterTest(unittest.TestCase):
         self.do_test_token_exported(encoding_input, "=:|!")
         self.do_test_token_category(encoding_input, kp.TokenCategory.BARLINES)
 
+    def test_percussion_clef(self):
+        # *clefX is Humdrum's percussion clef (Verovio reads it); it used to fail to parse.
+        self.do_test_token_exported("*clefX", "*clefX")
+        self.do_test_token_category("*clefX", kp.TokenCategory.CLEF)
+        # the other clefs are unchanged
+        self.do_test_token_category("*clefG2", kp.TokenCategory.CLEF)
+
     def test_duration_pitch(self):
         self.do_test_token_exported("4a", "4@a")
 

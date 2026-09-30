@@ -1,6 +1,7 @@
 /*
 This grammar is used in mOOsicae and kernpy. It must be kept synchronised
 Changes (please, add here the authors and date of each change):
+30th september 2026. David Rizo. `*clefX`, Humdrum's percussion clef (Verovio and humlib read it).
 27th september 2026. David Rizo. Signifiers in any order inside a note or rest, as Humdrum allows
     (`a4`, `4a`, `r2`, `cc#8`), same rules as mOOsicae's combined grammar.
 
@@ -224,7 +225,7 @@ staff: TANDEM_STAFF
 clef: TANDEM_CLEF  clefValue;
 
 clefValue: clefSign clefOctave? clefLine?;
-clefSign: CHAR_C | CHAR_F | CHAR_G | CHAR_P | CHAR_T;
+clefSign: CHAR_C | CHAR_F | CHAR_G | CHAR_P | CHAR_T | CHAR_X; // X: Humdrum's percussion clef (*clefX)
 clefLine: DIGIT_1 | DIGIT_2 | DIGIT_3 | DIGIT_4 | DIGIT_5;
 clefOctave: CHAR_v CHAR_v? | CIRCUMFLEX CIRCUMFLEX?;
 
